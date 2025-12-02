@@ -47,7 +47,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             menuItemEdit = new ToolStripMenuItem();
             menuItemRemove = new ToolStripMenuItem();
             menuItemReorder = new ToolStripMenuItem();
-            Control_QuickButtons_TableLayoutPanel_Main.SuspendLayout();
+            Control_QuickButtons_ContextMenu.SuspendLayout();
             SuspendLayout();
             // 
             // Control_QuickButtons_TableLayoutPanel_Main
@@ -57,48 +57,43 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_QuickButtons_TableLayoutPanel_Main.Dock = DockStyle.Fill;
             Control_QuickButtons_TableLayoutPanel_Main.Location = new Point(0, 0);
             Control_QuickButtons_TableLayoutPanel_Main.Name = "Control_QuickButtons_TableLayoutPanel_Main";
-            Control_QuickButtons_TableLayoutPanel_Main.Padding = new Padding(0);
-            Control_QuickButtons_TableLayoutPanel_Main.RowCount = 10;
-            Control_QuickButtons_TableLayoutPanel_Main.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
-            Control_QuickButtons_TableLayoutPanel_Main.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
-            Control_QuickButtons_TableLayoutPanel_Main.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
-            Control_QuickButtons_TableLayoutPanel_Main.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
-            Control_QuickButtons_TableLayoutPanel_Main.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
-            Control_QuickButtons_TableLayoutPanel_Main.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
-            Control_QuickButtons_TableLayoutPanel_Main.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
-            Control_QuickButtons_TableLayoutPanel_Main.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
-            Control_QuickButtons_TableLayoutPanel_Main.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
-            Control_QuickButtons_TableLayoutPanel_Main.RowStyles.Add(new RowStyle(SizeType.Percent, 10F));
+            Control_QuickButtons_TableLayoutPanel_Main.RowCount = 11;
+            Control_QuickButtons_TableLayoutPanel_Main.RowStyles.Add(new RowStyle());
+            Control_QuickButtons_TableLayoutPanel_Main.RowStyles.Add(new RowStyle());
+            Control_QuickButtons_TableLayoutPanel_Main.RowStyles.Add(new RowStyle());
+            Control_QuickButtons_TableLayoutPanel_Main.RowStyles.Add(new RowStyle());
+            Control_QuickButtons_TableLayoutPanel_Main.RowStyles.Add(new RowStyle());
+            Control_QuickButtons_TableLayoutPanel_Main.RowStyles.Add(new RowStyle());
+            Control_QuickButtons_TableLayoutPanel_Main.RowStyles.Add(new RowStyle());
+            Control_QuickButtons_TableLayoutPanel_Main.RowStyles.Add(new RowStyle());
+            Control_QuickButtons_TableLayoutPanel_Main.RowStyles.Add(new RowStyle());
+            Control_QuickButtons_TableLayoutPanel_Main.RowStyles.Add(new RowStyle());
+            Control_QuickButtons_TableLayoutPanel_Main.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             Control_QuickButtons_TableLayoutPanel_Main.Size = new Size(236, 520);
             Control_QuickButtons_TableLayoutPanel_Main.TabIndex = 0;
             // 
             // Control_QuickButtons_ContextMenu
             // 
-            Control_QuickButtons_ContextMenu.Items.AddRange(new ToolStripItem[] {
-                menuItemEdit,
-                menuItemRemove,
-                new ToolStripSeparator(),
-                menuItemReorder
-            });
+            Control_QuickButtons_ContextMenu.Items.AddRange(new ToolStripItem[] { menuItemEdit, menuItemRemove, menuItemReorder });
             Control_QuickButtons_ContextMenu.Name = "Control_QuickButtons_ContextMenu";
-            Control_QuickButtons_ContextMenu.Size = new Size(180, 76);
+            Control_QuickButtons_ContextMenu.Size = new Size(149, 76);
             // 
             // menuItemEdit
             // 
             menuItemEdit.Name = "menuItemEdit";
-            menuItemEdit.Size = new Size(179, 22);
+            menuItemEdit.Size = new Size(148, 22);
             menuItemEdit.Text = "Edit";
             // 
             // menuItemRemove
             // 
             menuItemRemove.Name = "menuItemRemove";
-            menuItemRemove.Size = new Size(179, 22);
+            menuItemRemove.Size = new Size(148, 22);
             menuItemRemove.Text = "Remove";
             // 
             // menuItemReorder
             // 
             menuItemReorder.Name = "menuItemReorder";
-            menuItemReorder.Size = new Size(179, 22);
+            menuItemReorder.Size = new Size(148, 22);
             menuItemReorder.Text = "Change Order";
             // 
             // Control_QuickButtons
@@ -109,10 +104,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Controls.Add(Control_QuickButtons_TableLayoutPanel_Main);
             Name = "Control_QuickButtons";
             Size = new Size(236, 520);
-            Control_QuickButtons_TableLayoutPanel_Main.ResumeLayout(false);
-            Control_QuickButtons_TableLayoutPanel_Main.PerformLayout();
+            Control_QuickButtons_ContextMenu.ResumeLayout(false);
             ResumeLayout(false);
-            PerformLayout();
         }
     }
 

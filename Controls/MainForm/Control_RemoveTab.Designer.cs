@@ -70,8 +70,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_RemoveTab_Button_Print = new Button();
             Control_RemoveTab_Button_Undo = new Button();
             Control_RemoveTab_TableLayout_SearchToggle = new TableLayoutPanel();
-            Control_RemoveTab_Button_Toggle_InputPanel = new Button();
             Control_RemoveTab_Button_SearchVisual = new Button();
+            Control_RemoveTab_Button_Toggle_InputPanel = new Button();
             Control_RemoveTab_GroupBox_MainControl.SuspendLayout();
             Control_RemoveTab_Panel_Main.SuspendLayout();
             Control_RemoveTab_Panel_DataGridView.SuspendLayout();
@@ -212,10 +212,11 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_RemoveTab_TextBox_Part.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_RemoveTab_TextBox_Part.Dock = DockStyle.Fill;
             Control_RemoveTab_TextBox_Part.LabelText = "Part Number";
+            Control_RemoveTab_TextBox_Part.LabelVisible = "True";
             Control_RemoveTab_TextBox_Part.Location = new Point(3, 3);
-            Control_RemoveTab_TextBox_Part.MaxLength = 130;
+            Control_RemoveTab_TextBox_Part.MaxLength = 150;
             Control_RemoveTab_TextBox_Part.MinimumSize = new Size(0, 23);
-            Control_RemoveTab_TextBox_Part.MinLength = 130;
+            Control_RemoveTab_TextBox_Part.MinLength = 10;
             Control_RemoveTab_TextBox_Part.Name = "Control_RemoveTab_TextBox_Part";
             Control_RemoveTab_TextBox_Part.PlaceholderText = "Enter Part Number";
             Control_RemoveTab_TextBox_Part.Size = new Size(373, 23);
@@ -227,10 +228,11 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_RemoveTab_TextBox_Operation.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_RemoveTab_TextBox_Operation.Dock = DockStyle.Fill;
             Control_RemoveTab_TextBox_Operation.LabelText = "Operation";
+            Control_RemoveTab_TextBox_Operation.LabelVisible = "True";
             Control_RemoveTab_TextBox_Operation.Location = new Point(382, 3);
             Control_RemoveTab_TextBox_Operation.MaxLength = 130;
             Control_RemoveTab_TextBox_Operation.MinimumSize = new Size(0, 23);
-            Control_RemoveTab_TextBox_Operation.MinLength = 130;
+            Control_RemoveTab_TextBox_Operation.MinLength = 0;
             Control_RemoveTab_TextBox_Operation.Name = "Control_RemoveTab_TextBox_Operation";
             Control_RemoveTab_TextBox_Operation.PlaceholderText = "Enter Operation";
             Control_RemoveTab_TextBox_Operation.Size = new Size(373, 23);
@@ -418,19 +420,6 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_RemoveTab_TableLayout_SearchToggle.Size = new Size(278, 38);
             Control_RemoveTab_TableLayout_SearchToggle.TabIndex = 11;
             // 
-            // Control_RemoveTab_Button_Toggle_InputPanel
-            // 
-            Control_RemoveTab_Button_Toggle_InputPanel.Dock = DockStyle.Fill;
-            Control_RemoveTab_Button_Toggle_InputPanel.Font = new Font("Segoe UI Emoji", 9F);
-            Control_RemoveTab_Button_Toggle_InputPanel.Location = new Point(171, 3);
-            Control_RemoveTab_Button_Toggle_InputPanel.MaximumSize = new Size(64, 32);
-            Control_RemoveTab_Button_Toggle_InputPanel.MinimumSize = new Size(64, 32);
-            Control_RemoveTab_Button_Toggle_InputPanel.Name = "Control_RemoveTab_Button_Toggle_InputPanel";
-            Control_RemoveTab_Button_Toggle_InputPanel.Size = new Size(64, 32);
-            Control_RemoveTab_Button_Toggle_InputPanel.TabIndex = 10;
-            Control_RemoveTab_Button_Toggle_InputPanel.UseVisualStyleBackColor = true;
-            Control_RemoveTab_Button_Toggle_InputPanel.Click += Control_RemoveTab_Button_Toggle_InputPanel_Click;
-            // 
             // Control_RemoveTab_Button_SearchVisual
             // 
             Control_RemoveTab_Button_SearchVisual.AutoSize = true;
@@ -445,6 +434,19 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_RemoveTab_Button_SearchVisual.Size = new Size(86, 32);
             Control_RemoveTab_Button_SearchVisual.TabIndex = 17;
             Control_RemoveTab_Button_SearchVisual.Text = "Search Visual";
+            // 
+            // Control_RemoveTab_Button_Toggle_InputPanel
+            // 
+            Control_RemoveTab_Button_Toggle_InputPanel.Dock = DockStyle.Fill;
+            Control_RemoveTab_Button_Toggle_InputPanel.Font = new Font("Segoe UI Emoji", 9F);
+            Control_RemoveTab_Button_Toggle_InputPanel.Location = new Point(171, 3);
+            Control_RemoveTab_Button_Toggle_InputPanel.MaximumSize = new Size(64, 32);
+            Control_RemoveTab_Button_Toggle_InputPanel.MinimumSize = new Size(64, 32);
+            Control_RemoveTab_Button_Toggle_InputPanel.Name = "Control_RemoveTab_Button_Toggle_InputPanel";
+            Control_RemoveTab_Button_Toggle_InputPanel.Size = new Size(64, 32);
+            Control_RemoveTab_Button_Toggle_InputPanel.TabIndex = 10;
+            Control_RemoveTab_Button_Toggle_InputPanel.UseVisualStyleBackColor = true;
+            Control_RemoveTab_Button_Toggle_InputPanel.Click += Control_RemoveTab_Button_Toggle_InputPanel_Click;
             // 
             // Control_RemoveTab
             // 
