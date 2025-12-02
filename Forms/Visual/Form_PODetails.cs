@@ -44,6 +44,8 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
         #region Methods
         private void InitializeComponent()
         {
+            this.AutoScaleMode = AutoScaleMode.Dpi;
+            this.AutoScaleDimensions = new SizeF(96F, 96F);
             _dataGridView = new DataGridView();
             _lblLoading = new Label();
             ((System.ComponentModel.ISupportInitialize)_dataGridView).BeginInit();

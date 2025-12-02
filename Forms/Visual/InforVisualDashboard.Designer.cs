@@ -194,6 +194,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             // InforVisualDashboard
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
             AutoSize = true;
             AutoSizeMode = AutoSizeMode.GrowAndShrink;
             ClientSize = new Size(1100, 700);
