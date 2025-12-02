@@ -108,7 +108,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         
         private void OnSearchBySelected()
         {
-            string selection = _txtSearchBy.Text;
+            string selection = _txtSearchBy.Text ?? "";
             
             // Prevent unnecessary updates if selection hasn't changed
             if (string.Equals(selection, _lastSearchSelection, StringComparison.OrdinalIgnoreCase))
@@ -345,7 +345,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                 // Populate filter based on active tab and search selection
                 if (_tabControl.SelectedTab == _tabLifecycle)
                 {
-                    string searchBy = _txtSearchBy.Text;
+                    string searchBy = _txtSearchBy.Text ?? "Part Number";
                     string searchTerm = _txtLifecyclePart.Text?.Trim() ?? "";
                     
                     filter.StartDate = _dtpLifecycleStart.Value;

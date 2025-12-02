@@ -305,6 +305,7 @@
             _txtSearchBy.Size = new Size(754, 23);
             _txtSearchBy.TabIndex = 2;
             _txtSearchBy.ValidatorType = null;
+            _txtSearchBy.Visible = false;
             // 
             // pnlUserAnalytics
             // 
@@ -481,8 +482,8 @@
             // 
             // Control_InventoryAudit
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
-            AutoScaleMode = AutoScaleMode.Font;
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
             AutoSize = true;
             AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Controls.Add(mainLayout);

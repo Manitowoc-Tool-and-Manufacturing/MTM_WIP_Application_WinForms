@@ -575,8 +575,8 @@ namespace MTM_WIP_Application_Winforms.Forms.Maintenance
             // 
             // Form_DatabaseMaintenance
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
-            AutoScaleMode = AutoScaleMode.Font;
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
             ClientSize = new Size(1003, 600);
             Controls.Add(Form_DatabaseMaintenance_TableLayout_Main);
             Name = "Form_DatabaseMaintenance";

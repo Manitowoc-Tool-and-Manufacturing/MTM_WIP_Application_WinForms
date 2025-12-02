@@ -569,8 +569,8 @@ namespace MTM_WIP_Application_Winforms.Forms.Analytics
             // 
             // Form_Analytics
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(1000, 600);
             this.Controls.Add(this.Form_Analytics_TableLayout_Main);
             this.Name = "Form_Analytics";
