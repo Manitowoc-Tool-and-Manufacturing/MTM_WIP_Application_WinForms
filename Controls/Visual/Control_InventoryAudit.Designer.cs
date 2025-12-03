@@ -32,39 +32,39 @@
             _tabControl = new TabControl();
             _tabLifecycle = new TabPage();
             pnlLifecycle = new TableLayoutPanel();
+            _txtSearchBy = new MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBoxWithLabel();
+            _dataGridView = new DataGridView();
             tableLayoutPanel1 = new TableLayoutPanel();
             lblLifecycleStart = new Label();
             _dtpLifecycleStart = new DateTimePicker();
             lblLifecycleEnd = new Label();
             _dtpLifecycleEnd = new DateTimePicker();
-            _txtLifecyclePart = new MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBoxWithLabel();
-            _tabUserAnalytics = new TabPage();
-            _dataGridView = new DataGridView();
             tableLayoutPanel3 = new TableLayoutPanel();
             _btnExport = new Button();
             _btnSearch = new Button();
-            _txtSearchBy = new MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBoxWithLabel();
+            _txtLifecyclePart = new MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBoxWithLabel();
+            _tabUserAnalytics = new TabPage();
             pnlUserAnalytics = new TableLayoutPanel();
             tableLayoutPanel4 = new TableLayoutPanel();
             lblAnalyticsStart = new Label();
             _dtpAnalyticsStart = new DateTimePicker();
-            _lblUserCount = new Label();
-            _btnGenerateReport = new Button();
             lblAnalyticsEnd = new Label();
             _dtpAnalyticsEnd = new DateTimePicker();
             _btnLoadUsers = new Button();
+            _lblUserCount = new Label();
+            _btnGenerateReport = new Button();
             _btnSelectAllUsers = new Button();
-            _clbUsers = new CheckedListBox();
             groupBox1 = new GroupBox();
             _ProcessUserAnalytics = new CheckedListBox();
+            _clbUsers = new CheckedListBox();
             mainLayout.SuspendLayout();
             _tabControl.SuspendLayout();
             _tabLifecycle.SuspendLayout();
             pnlLifecycle.SuspendLayout();
-            tableLayoutPanel1.SuspendLayout();
-            _tabUserAnalytics.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)_dataGridView).BeginInit();
+            tableLayoutPanel1.SuspendLayout();
             tableLayoutPanel3.SuspendLayout();
+            _tabUserAnalytics.SuspendLayout();
             pnlUserAnalytics.SuspendLayout();
             tableLayoutPanel4.SuspendLayout();
             groupBox1.SuspendLayout();
@@ -132,6 +132,39 @@
             pnlLifecycle.Size = new Size(780, 466);
             pnlLifecycle.TabIndex = 0;
             // 
+            // _txtSearchBy
+            // 
+            _txtSearchBy.AutoSize = true;
+            _txtSearchBy.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            _txtSearchBy.Dock = DockStyle.Fill;
+            _txtSearchBy.LabelText = "Search By";
+            _txtSearchBy.LabelVisible = "False";
+            _txtSearchBy.Location = new Point(13, 13);
+            _txtSearchBy.MaxLength = 130;
+            _txtSearchBy.MinimumSize = new Size(0, 23);
+            _txtSearchBy.MinLength = 130;
+            _txtSearchBy.Name = "_txtSearchBy";
+            _txtSearchBy.PlaceholderText = "Enter Search Filter";
+            _txtSearchBy.ShowValidationColor = false;
+            _txtSearchBy.Size = new Size(754, 23);
+            _txtSearchBy.TabIndex = 2;
+            _txtSearchBy.ValidatorType = null;
+            _txtSearchBy.Visible = false;
+            // 
+            // _dataGridView
+            // 
+            _dataGridView.AllowUserToAddRows = false;
+            _dataGridView.AllowUserToDeleteRows = false;
+            _dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            _dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            _dataGridView.Dock = DockStyle.Fill;
+            _dataGridView.Location = new Point(13, 181);
+            _dataGridView.Name = "_dataGridView";
+            _dataGridView.ReadOnly = true;
+            _dataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            _dataGridView.Size = new Size(754, 272);
+            _dataGridView.TabIndex = 2;
+            // 
             // tableLayoutPanel1
             // 
             tableLayoutPanel1.AutoSize = true;
@@ -197,50 +230,6 @@
             _dtpLifecycleEnd.Size = new Size(359, 23);
             _dtpLifecycleEnd.TabIndex = 3;
             // 
-            // _txtLifecyclePart
-            // 
-            _txtLifecyclePart.AutoSize = true;
-            _txtLifecyclePart.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            _txtLifecyclePart.Dock = DockStyle.Fill;
-            _txtLifecyclePart.LabelText = "Enter Part ID";
-            _txtLifecyclePart.LabelVisible = "False";
-            _txtLifecyclePart.Location = new Point(13, 42);
-            _txtLifecyclePart.MaxLength = 130;
-            _txtLifecyclePart.MinimumSize = new Size(0, 23);
-            _txtLifecyclePart.MinLength = 130;
-            _txtLifecyclePart.Name = "_txtLifecyclePart";
-            _txtLifecyclePart.PlaceholderText = "Enter Part Number";
-            _txtLifecyclePart.ShowF4Button = false;
-            _txtLifecyclePart.ShowValidationColor = false;
-            _txtLifecyclePart.Size = new Size(754, 23);
-            _txtLifecyclePart.TabIndex = 0;
-            _txtLifecyclePart.ValidatorType = null;
-            // 
-            // _tabUserAnalytics
-            // 
-            _tabUserAnalytics.Controls.Add(pnlUserAnalytics);
-            _tabUserAnalytics.Location = new Point(4, 24);
-            _tabUserAnalytics.Name = "_tabUserAnalytics";
-            _tabUserAnalytics.Padding = new Padding(3);
-            _tabUserAnalytics.Size = new Size(786, 472);
-            _tabUserAnalytics.TabIndex = 6;
-            _tabUserAnalytics.Text = "User Analytics";
-            _tabUserAnalytics.UseVisualStyleBackColor = true;
-            // 
-            // _dataGridView
-            // 
-            _dataGridView.AllowUserToAddRows = false;
-            _dataGridView.AllowUserToDeleteRows = false;
-            _dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            _dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            _dataGridView.Dock = DockStyle.Fill;
-            _dataGridView.Location = new Point(13, 181);
-            _dataGridView.Name = "_dataGridView";
-            _dataGridView.ReadOnly = true;
-            _dataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            _dataGridView.Size = new Size(754, 272);
-            _dataGridView.TabIndex = 2;
-            // 
             // tableLayoutPanel3
             // 
             tableLayoutPanel3.AutoSize = true;
@@ -287,25 +276,34 @@
             _btnSearch.Text = "Search";
             _btnSearch.UseVisualStyleBackColor = true;
             // 
-            // _txtSearchBy
+            // _txtLifecyclePart
             // 
-            _txtSearchBy.AutoSize = true;
-            _txtSearchBy.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            _txtSearchBy.Dock = DockStyle.Fill;
-            _txtSearchBy.LabelText = "Search By";
-            _txtSearchBy.LabelVisible = "False";
-            _txtSearchBy.Location = new Point(13, 13);
-            _txtSearchBy.MaxLength = 130;
-            _txtSearchBy.MinimumSize = new Size(0, 23);
-            _txtSearchBy.MinLength = 130;
-            _txtSearchBy.Name = "_txtSearchBy";
-            _txtSearchBy.PlaceholderText = "Enter Search Filter";
-            _txtSearchBy.ShowF4Button = false;
-            _txtSearchBy.ShowValidationColor = false;
-            _txtSearchBy.Size = new Size(754, 23);
-            _txtSearchBy.TabIndex = 2;
-            _txtSearchBy.ValidatorType = null;
-            _txtSearchBy.Visible = false;
+            _txtLifecyclePart.AutoSize = true;
+            _txtLifecyclePart.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            _txtLifecyclePart.Dock = DockStyle.Fill;
+            _txtLifecyclePart.LabelText = "Enter Part ID";
+            _txtLifecyclePart.LabelVisible = "False";
+            _txtLifecyclePart.Location = new Point(13, 42);
+            _txtLifecyclePart.MaxLength = 130;
+            _txtLifecyclePart.MinimumSize = new Size(0, 23);
+            _txtLifecyclePart.MinLength = 130;
+            _txtLifecyclePart.Name = "_txtLifecyclePart";
+            _txtLifecyclePart.PlaceholderText = "Enter Part Number";
+            _txtLifecyclePart.ShowValidationColor = false;
+            _txtLifecyclePart.Size = new Size(754, 23);
+            _txtLifecyclePart.TabIndex = 0;
+            _txtLifecyclePart.ValidatorType = null;
+            // 
+            // _tabUserAnalytics
+            // 
+            _tabUserAnalytics.Controls.Add(pnlUserAnalytics);
+            _tabUserAnalytics.Location = new Point(4, 24);
+            _tabUserAnalytics.Name = "_tabUserAnalytics";
+            _tabUserAnalytics.Padding = new Padding(3);
+            _tabUserAnalytics.Size = new Size(786, 472);
+            _tabUserAnalytics.TabIndex = 6;
+            _tabUserAnalytics.Text = "User Analytics";
+            _tabUserAnalytics.UseVisualStyleBackColor = true;
             // 
             // pnlUserAnalytics
             // 
@@ -378,31 +376,6 @@
             _dtpAnalyticsStart.Size = new Size(300, 23);
             _dtpAnalyticsStart.TabIndex = 7;
             // 
-            // _lblUserCount
-            // 
-            _lblUserCount.AutoSize = true;
-            tableLayoutPanel4.SetColumnSpan(_lblUserCount, 2);
-            _lblUserCount.Dock = DockStyle.Fill;
-            _lblUserCount.Location = new Point(3, 175);
-            _lblUserCount.Margin = new Padding(3);
-            _lblUserCount.Name = "_lblUserCount";
-            _lblUserCount.Size = new Size(367, 15);
-            _lblUserCount.TabIndex = 6;
-            _lblUserCount.Text = "Selected: 0";
-            _lblUserCount.TextAlign = ContentAlignment.MiddleCenter;
-            // 
-            // _btnGenerateReport
-            // 
-            tableLayoutPanel4.SetColumnSpan(_btnGenerateReport, 2);
-            _btnGenerateReport.Dock = DockStyle.Fill;
-            _btnGenerateReport.Enabled = false;
-            _btnGenerateReport.Location = new Point(3, 137);
-            _btnGenerateReport.Name = "_btnGenerateReport";
-            _btnGenerateReport.Size = new Size(367, 32);
-            _btnGenerateReport.TabIndex = 2;
-            _btnGenerateReport.Text = "Generate Report";
-            _btnGenerateReport.UseVisualStyleBackColor = true;
-            // 
             // lblAnalyticsEnd
             // 
             lblAnalyticsEnd.AutoSize = true;
@@ -435,6 +408,31 @@
             _btnLoadUsers.Text = "Load Users";
             _btnLoadUsers.UseVisualStyleBackColor = true;
             // 
+            // _lblUserCount
+            // 
+            _lblUserCount.AutoSize = true;
+            tableLayoutPanel4.SetColumnSpan(_lblUserCount, 2);
+            _lblUserCount.Dock = DockStyle.Fill;
+            _lblUserCount.Location = new Point(3, 175);
+            _lblUserCount.Margin = new Padding(3);
+            _lblUserCount.Name = "_lblUserCount";
+            _lblUserCount.Size = new Size(367, 15);
+            _lblUserCount.TabIndex = 6;
+            _lblUserCount.Text = "Selected: 0";
+            _lblUserCount.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // _btnGenerateReport
+            // 
+            tableLayoutPanel4.SetColumnSpan(_btnGenerateReport, 2);
+            _btnGenerateReport.Dock = DockStyle.Fill;
+            _btnGenerateReport.Enabled = false;
+            _btnGenerateReport.Location = new Point(3, 137);
+            _btnGenerateReport.Name = "_btnGenerateReport";
+            _btnGenerateReport.Size = new Size(367, 32);
+            _btnGenerateReport.TabIndex = 2;
+            _btnGenerateReport.Text = "Generate Report";
+            _btnGenerateReport.UseVisualStyleBackColor = true;
+            // 
             // _btnSelectAllUsers
             // 
             tableLayoutPanel4.SetColumnSpan(_btnSelectAllUsers, 2);
@@ -445,16 +443,6 @@
             _btnSelectAllUsers.TabIndex = 11;
             _btnSelectAllUsers.Text = "Select All Users";
             _btnSelectAllUsers.UseVisualStyleBackColor = true;
-            // 
-            // _clbUsers
-            // 
-            _clbUsers.Dock = DockStyle.Fill;
-            _clbUsers.FormattingEnabled = true;
-            _clbUsers.Location = new Point(16, 215);
-            _clbUsers.Margin = new Padding(6);
-            _clbUsers.Name = "_clbUsers";
-            _clbUsers.Size = new Size(748, 235);
-            _clbUsers.TabIndex = 5;
             // 
             // groupBox1
             // 
@@ -479,6 +467,16 @@
             _ProcessUserAnalytics.Size = new Size(356, 159);
             _ProcessUserAnalytics.TabIndex = 0;
             // 
+            // _clbUsers
+            // 
+            _clbUsers.Dock = DockStyle.Fill;
+            _clbUsers.FormattingEnabled = true;
+            _clbUsers.Location = new Point(16, 215);
+            _clbUsers.Margin = new Padding(6);
+            _clbUsers.Name = "_clbUsers";
+            _clbUsers.Size = new Size(748, 235);
+            _clbUsers.TabIndex = 5;
+            // 
             // Control_InventoryAudit
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
@@ -494,13 +492,13 @@
             _tabLifecycle.PerformLayout();
             pnlLifecycle.ResumeLayout(false);
             pnlLifecycle.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)_dataGridView).EndInit();
             tableLayoutPanel1.ResumeLayout(false);
             tableLayoutPanel1.PerformLayout();
-            _tabUserAnalytics.ResumeLayout(false);
-            _tabUserAnalytics.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)_dataGridView).EndInit();
             tableLayoutPanel3.ResumeLayout(false);
             tableLayoutPanel3.PerformLayout();
+            _tabUserAnalytics.ResumeLayout(false);
+            _tabUserAnalytics.PerformLayout();
             pnlUserAnalytics.ResumeLayout(false);
             pnlUserAnalytics.PerformLayout();
             tableLayoutPanel4.ResumeLayout(false);
