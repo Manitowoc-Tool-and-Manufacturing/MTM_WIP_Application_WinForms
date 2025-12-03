@@ -295,6 +295,39 @@ namespace MTM_WIP_Application_Winforms.Helpers
         }
 
         /// <summary>
+        /// Configures a SuggestionTextBox for Warehouse suggestions.
+        /// Standard configuration: MaxResults=50, EnableWildcards=true, ClearOnNoMatch=true
+        /// </summary>
+        public static void ConfigureForWarehouses(SuggestionTextBox suggestionTextBox, Func<Task<List<string>>> dataProvider, bool enableF4 = true)
+        {
+            if (suggestionTextBox == null)
+                throw new ArgumentNullException(nameof(suggestionTextBox));
+
+            suggestionTextBox.DataProvider = dataProvider;
+            suggestionTextBox.MaxResults = 50;
+            suggestionTextBox.EnableWildcards = true;
+            suggestionTextBox.ClearOnNoMatch = true;
+            suggestionTextBox.SuppressExactMatch = true;
+
+            if (enableF4)
+            {
+                RegisterF4Handler(suggestionTextBox);
+            }
+        }
+
+        /// <summary>
+        /// Configures a SuggestionTextBoxWithLabel for Warehouse suggestions.
+        /// Standard configuration: MaxResults=50, EnableWildcards=true, ClearOnNoMatch=true, F4 button enabled.
+        /// </summary>
+        public static void ConfigureForWarehouses(SuggestionTextBoxWithLabel control, Func<Task<List<string>>> dataProvider)
+        {
+            if (control == null)
+                throw new ArgumentNullException(nameof(control));
+
+            ConfigureForWarehouses(control.TextBox, dataProvider, enableF4: false); // F4 handled by button
+        }
+
+        /// <summary>
         /// Configures a SuggestionTextBoxWithLabel for Item Type suggestions.
         /// Standard configuration: MaxResults=50, EnableWildcards=false, ClearOnNoMatch=true, F4 button enabled.
         /// </summary>

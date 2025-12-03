@@ -148,6 +148,17 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
         /// Retrieves a list of all Part IDs from the Visual database.
         /// </summary>
         Task<Model_Dao_Result<List<string>>> GetPartIdsAsync();
+
+        /// <summary>
+        /// Retrieves a list of all Location IDs from the Visual database.
+        /// </summary>
+        Task<Model_Dao_Result<List<string>>> GetLocationIdsAsync();
+
+        /// <summary>
+        /// Retrieves a list of all Warehouse IDs from the Visual database.
+        /// </summary>
+        Task<Model_Dao_Result<List<string>>> GetWarehouseIdsAsync();
+
         /// <summary>
         /// Retrieves a list of distinct users who have performed transactions within the specified date range.
         /// </summary>

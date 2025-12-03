@@ -56,12 +56,26 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             // Warehouse
             Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse.LabelText = "Warehouse";
             Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse.EnableSuggestions = true;
-            // TODO: Add warehouse provider if available
+            if (_visualService != null)
+            {
+                Helper_SuggestionTextBox.ConfigureForWarehouses(Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse, async () =>
+                {
+                    var result = await _visualService.GetWarehouseIdsAsync();
+                    return result.IsSuccess && result.Data != null ? result.Data : new List<string>();
+                });
+            }
 
             // Location
             Control_VisualInventory_SuggestionTextBoxWithLabel_Location.LabelText = "Location";
             Control_VisualInventory_SuggestionTextBoxWithLabel_Location.EnableSuggestions = true;
-            // TODO: Add location provider if available
+            if (_visualService != null)
+            {
+                Helper_SuggestionTextBox.ConfigureForLocations(Control_VisualInventory_SuggestionTextBoxWithLabel_Location, async () =>
+                {
+                    var result = await _visualService.GetLocationIdsAsync();
+                    return result.IsSuccess && result.Data != null ? result.Data : new List<string>();
+                });
+            }
         }
 
         private void WireUpEvents()

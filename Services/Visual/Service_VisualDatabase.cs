@@ -1133,6 +1133,22 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
             return await GetDistinctColumnValuesAsync("ID", "PART");
         }
 
+        /// <summary>
+        /// Retrieves a list of all Location IDs from the Visual database.
+        /// </summary>
+        public async Task<Model_Dao_Result<List<string>>> GetLocationIdsAsync()
+        {
+            return await GetDistinctColumnValuesAsync("ID", "LOCATION");
+        }
+
+        /// <summary>
+        /// Retrieves a list of all Warehouse IDs from the Visual database.
+        /// </summary>
+        public async Task<Model_Dao_Result<List<string>>> GetWarehouseIdsAsync()
+        {
+            return await GetDistinctColumnValuesAsync("ID", "WAREHOUSE");
+        }
+
         private async Task<Model_Dao_Result<List<string>>> GetDistinctColumnValuesAsync(string columnName, string tableName)
         {
             if (_useSampleData)
