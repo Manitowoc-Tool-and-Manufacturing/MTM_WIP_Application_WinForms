@@ -453,7 +453,6 @@
             _clbUsers.Location = new Point(16, 215);
             _clbUsers.Margin = new Padding(6);
             _clbUsers.Name = "_clbUsers";
-            _clbUsers.SelectionMode = SelectionMode.None;
             _clbUsers.Size = new Size(748, 235);
             _clbUsers.TabIndex = 5;
             // 
