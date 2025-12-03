@@ -28,6 +28,15 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         public Control_DieToolDiscovery()
         {
             InitializeComponent();
+
+            // Ensure event handler is wired up (remove first to prevent duplicates)
+            btnSearch.Click -= btnSearch_Click;
+            btnSearch.Click += btnSearch_Click;
+
+            // Wire up Coil Search button
+            btnCoilSearch.Click -= btnCoilSearch_Click;
+            btnCoilSearch.Click += btnCoilSearch_Click;
+
             _visualService = Program.ServiceProvider?.GetService<IService_VisualDatabase>();
 
             if (_visualService == null)
@@ -50,7 +59,23 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         /// </summary>
         private async void btnSearch_Click(object? sender, EventArgs e)
         {
+            LoggingUtility.Log("[Control_DieToolDiscovery] Search button clicked");
             await PerformSearch();
+        }
+
+        /// <summary>
+        /// Handles the KeyDown event of the search textbox.
+        /// Triggers search when Enter key is pressed.
+        /// </summary>
+        private async void txtSearch_KeyDown(object? sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.SuppressKeyPress = true;
+                e.Handled = true;
+                LoggingUtility.Log("[Control_DieToolDiscovery] Enter key pressed in search box");
+                await PerformSearch();
+            }
         }
 
         /// <summary>
@@ -58,7 +83,23 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         /// </summary>
         private async void btnCoilSearch_Click(object? sender, EventArgs e)
         {
+            LoggingUtility.Log("[Control_DieToolDiscovery] Coil Search button clicked");
             await PerformCoilSearch();
+        }
+
+        /// <summary>
+        /// Handles the KeyDown event of the coil search textbox.
+        /// Triggers search when Enter key is pressed.
+        /// </summary>
+        private async void txtCoilSearch_KeyDown(object? sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.SuppressKeyPress = true;
+                e.Handled = true;
+                LoggingUtility.Log("[Control_DieToolDiscovery] Enter key pressed in coil search box");
+                await PerformCoilSearch();
+            }
         }
 
         #endregion
@@ -70,19 +111,8 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             if (_visualService == null) return;
 
             // Configure Die Search Suggestion Box
-            // We use a custom configuration here since Helper_SuggestionTextBox might not have a specific method for Dies yet
-            // or we can use a generic configuration if available.
-            // Assuming we can set the DataProvider directly or use a helper.
-            // Let's use the pattern from Control_VisualInventory.cs
-            
-            // Die Search
             txtSearch.EnableSuggestions = true;
             txtSearch.ShowF4Button = true;
-            // We need to configure the suggestion provider. 
-            // Since Helper_SuggestionTextBox.ConfigureFor... methods are specific, we might need to add one or do it manually.
-            // Let's try to do it manually if we can access the inner TextBox, or use a generic helper if exists.
-            // Looking at Helper_SuggestionTextBox.cs (not provided fully), but usually it has methods like ConfigureForPartNumbers.
-            // I'll use a similar pattern:
             
             if (txtSearch.TextBox != null)
             {
@@ -91,6 +121,9 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                     var result = await _visualService.GetDieIdsAsync();
                     return result.IsSuccess && result.Data != null ? result.Data : new List<string>();
                 };
+
+                // Wire up Enter key for search
+                txtSearch.TextBox.KeyDown += txtSearch_KeyDown;
             }
 
             // Coil Search
@@ -103,6 +136,9 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                     var result = await _visualService.GetCoilFlatstockPartIdsAsync();
                     return result.IsSuccess && result.Data != null ? result.Data : new List<string>();
                 };
+
+                // Wire up Enter key for coil search
+                txtCoilSearch.TextBox.KeyDown += txtCoilSearch_KeyDown;
             }
         }
 
@@ -119,7 +155,9 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                 return;
             }
 
-            string searchTerm = txtSearch.Text.Trim();
+            string searchTerm = txtSearch.Text?.Trim() ?? "";
+            LoggingUtility.Log($"[Control_DieToolDiscovery] PerformSearch | Term='{searchTerm}'");
+
             if (string.IsNullOrEmpty(searchTerm))
             {
                 Service_ErrorHandler.HandleValidationError(
@@ -269,6 +307,11 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                     if (btnSearch != null)
                     {
                         btnSearch.Click -= btnSearch_Click;
+                    }
+
+                    if (btnCoilSearch != null)
+                    {
+                        btnCoilSearch.Click -= btnCoilSearch_Click;
                     }
 
                     // txtSearch KeyDown removed
