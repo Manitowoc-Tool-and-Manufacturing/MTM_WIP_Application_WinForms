@@ -174,7 +174,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             tabCoilFlatstock.Location = new Point(4, 24);
             tabCoilFlatstock.Name = "tabCoilFlatstock";
             tabCoilFlatstock.Padding = new Padding(10);
-            tabCoilFlatstock.Size = new Size(192, 72);
+            tabCoilFlatstock.Size = new Size(792, 322);
             tabCoilFlatstock.TabIndex = 1;
             tabCoilFlatstock.Text = "Coil/Flatstock Search";
             tabCoilFlatstock.UseVisualStyleBackColor = true;
@@ -193,7 +193,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             tableLayoutCoil.RowStyles.Add(new RowStyle());
             tableLayoutCoil.RowStyles.Add(new RowStyle());
             tableLayoutCoil.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutCoil.Size = new Size(172, 52);
+            tableLayoutCoil.Size = new Size(772, 302);
             tableLayoutCoil.TabIndex = 0;
             // 
             // txtCoilSearch
@@ -209,8 +209,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             txtCoilSearch.MinLength = 130;
             txtCoilSearch.Name = "txtCoilSearch";
             txtCoilSearch.PlaceholderText = "Coil / Flatstock Number";
-            txtCoilSearch.ShowF4Button = false;
-            txtCoilSearch.Size = new Size(160, 23);
+            txtCoilSearch.Size = new Size(760, 23);
             txtCoilSearch.TabIndex = 3;
             // 
             // btnCoilSearch
@@ -219,7 +218,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             btnCoilSearch.Location = new Point(6, 41);
             btnCoilSearch.Margin = new Padding(6);
             btnCoilSearch.Name = "btnCoilSearch";
-            btnCoilSearch.Size = new Size(160, 30);
+            btnCoilSearch.Size = new Size(760, 30);
             btnCoilSearch.TabIndex = 4;
             btnCoilSearch.Text = "Search";
             btnCoilSearch.UseVisualStyleBackColor = true;
@@ -249,7 +248,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             tableLayoutCoilDetails.RowStyles.Add(new RowStyle());
             tableLayoutCoilDetails.RowStyles.Add(new RowStyle());
             tableLayoutCoilDetails.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutCoilDetails.Size = new Size(166, 1);
+            tableLayoutCoilDetails.Size = new Size(766, 219);
             tableLayoutCoilDetails.TabIndex = 5;
             // 
             // txtThickness
@@ -260,7 +259,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             txtThickness.Enabled = false;
             txtThickness.EnableSuggestions = false;
             txtThickness.LabelText = "Thickness";
-            txtThickness.LabelVisible = "False";
+            txtThickness.LabelVisible = "True";
             txtThickness.Location = new Point(6, 6);
             txtThickness.Margin = new Padding(6);
             txtThickness.MaxLength = 130;
@@ -268,7 +267,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             txtThickness.MinLength = 130;
             txtThickness.Name = "txtThickness";
             txtThickness.ShowF4Button = false;
-            txtThickness.Size = new Size(71, 23);
+            txtThickness.Size = new Size(371, 23);
             txtThickness.TabIndex = 10;
             // 
             // txtWidth
@@ -279,15 +278,15 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             txtWidth.Enabled = false;
             txtWidth.EnableSuggestions = false;
             txtWidth.LabelText = "Width";
-            txtWidth.LabelVisible = "False";
-            txtWidth.Location = new Point(89, 6);
+            txtWidth.LabelVisible = "True";
+            txtWidth.Location = new Point(389, 6);
             txtWidth.Margin = new Padding(6);
             txtWidth.MaxLength = 130;
             txtWidth.MinimumSize = new Size(0, 23);
             txtWidth.MinLength = 130;
             txtWidth.Name = "txtWidth";
             txtWidth.ShowF4Button = false;
-            txtWidth.Size = new Size(71, 23);
+            txtWidth.Size = new Size(371, 23);
             txtWidth.TabIndex = 11;
             // 
             // txtLength
@@ -298,7 +297,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             txtLength.Enabled = false;
             txtLength.EnableSuggestions = false;
             txtLength.LabelText = "Length";
-            txtLength.LabelVisible = "False";
+            txtLength.LabelVisible = "True";
             txtLength.Location = new Point(6, 41);
             txtLength.Margin = new Padding(6);
             txtLength.MaxLength = 130;
@@ -306,7 +305,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             txtLength.MinLength = 130;
             txtLength.Name = "txtLength";
             txtLength.ShowF4Button = false;
-            txtLength.Size = new Size(71, 23);
+            txtLength.Size = new Size(371, 23);
             txtLength.TabIndex = 12;
             // 
             // txtGauge
@@ -317,15 +316,15 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             txtGauge.Enabled = false;
             txtGauge.EnableSuggestions = false;
             txtGauge.LabelText = "Ga.";
-            txtGauge.LabelVisible = "False";
-            txtGauge.Location = new Point(89, 41);
+            txtGauge.LabelVisible = "True";
+            txtGauge.Location = new Point(389, 41);
             txtGauge.Margin = new Padding(6);
             txtGauge.MaxLength = 130;
             txtGauge.MinimumSize = new Size(0, 23);
             txtGauge.MinLength = 130;
             txtGauge.Name = "txtGauge";
             txtGauge.ShowF4Button = false;
-            txtGauge.Size = new Size(71, 23);
+            txtGauge.Size = new Size(371, 23);
             txtGauge.TabIndex = 13;
             // 
             // txtWhereUsed
@@ -336,7 +335,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             txtWhereUsed.Enabled = false;
             txtWhereUsed.EnableSuggestions = false;
             txtWhereUsed.LabelText = "Where Used";
-            txtWhereUsed.LabelVisible = "False";
+            txtWhereUsed.LabelVisible = "True";
             txtWhereUsed.Location = new Point(6, 76);
             txtWhereUsed.Margin = new Padding(6);
             txtWhereUsed.MaxLength = 130;
@@ -344,7 +343,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             txtWhereUsed.MinLength = 130;
             txtWhereUsed.Name = "txtWhereUsed";
             txtWhereUsed.ShowF4Button = false;
-            txtWhereUsed.Size = new Size(71, 23);
+            txtWhereUsed.Size = new Size(371, 23);
             txtWhereUsed.TabIndex = 14;
             // 
             // txtProgression
@@ -355,15 +354,15 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             txtProgression.Enabled = false;
             txtProgression.EnableSuggestions = false;
             txtProgression.LabelText = "Progression";
-            txtProgression.LabelVisible = "False";
-            txtProgression.Location = new Point(89, 76);
+            txtProgression.LabelVisible = "True";
+            txtProgression.Location = new Point(389, 76);
             txtProgression.Margin = new Padding(6);
             txtProgression.MaxLength = 130;
             txtProgression.MinimumSize = new Size(0, 23);
             txtProgression.MinLength = 130;
             txtProgression.Name = "txtProgression";
             txtProgression.ShowF4Button = false;
-            txtProgression.Size = new Size(71, 23);
+            txtProgression.Size = new Size(371, 23);
             txtProgression.TabIndex = 15;
             // 
             // txtCustomer
@@ -374,7 +373,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             txtCustomer.Enabled = false;
             txtCustomer.EnableSuggestions = false;
             txtCustomer.LabelText = "Customer";
-            txtCustomer.LabelVisible = "False";
+            txtCustomer.LabelVisible = "True";
             txtCustomer.Location = new Point(6, 111);
             txtCustomer.Margin = new Padding(6);
             txtCustomer.MaxLength = 130;
@@ -382,7 +381,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             txtCustomer.MinLength = 130;
             txtCustomer.Name = "txtCustomer";
             txtCustomer.ShowF4Button = false;
-            txtCustomer.Size = new Size(71, 23);
+            txtCustomer.Size = new Size(371, 23);
             txtCustomer.TabIndex = 16;
             // 
             // txtScrapLocation
@@ -393,15 +392,15 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             txtScrapLocation.Enabled = false;
             txtScrapLocation.EnableSuggestions = false;
             txtScrapLocation.LabelText = "Scrap Location";
-            txtScrapLocation.LabelVisible = "False";
-            txtScrapLocation.Location = new Point(89, 111);
+            txtScrapLocation.LabelVisible = "True";
+            txtScrapLocation.Location = new Point(389, 111);
             txtScrapLocation.Margin = new Padding(6);
             txtScrapLocation.MaxLength = 130;
             txtScrapLocation.MinimumSize = new Size(0, 23);
             txtScrapLocation.MinLength = 130;
             txtScrapLocation.Name = "txtScrapLocation";
             txtScrapLocation.ShowF4Button = false;
-            txtScrapLocation.Size = new Size(71, 23);
+            txtScrapLocation.Size = new Size(371, 23);
             txtScrapLocation.TabIndex = 17;
             // 
             // txtGenericType
@@ -412,7 +411,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             txtGenericType.Enabled = false;
             txtGenericType.EnableSuggestions = false;
             txtGenericType.LabelText = "Generic Type";
-            txtGenericType.LabelVisible = "False";
+            txtGenericType.LabelVisible = "True";
             txtGenericType.Location = new Point(6, 146);
             txtGenericType.Margin = new Padding(6);
             txtGenericType.MaxLength = 130;
@@ -420,7 +419,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             txtGenericType.MinLength = 130;
             txtGenericType.Name = "txtGenericType";
             txtGenericType.ShowF4Button = false;
-            txtGenericType.Size = new Size(71, 23);
+            txtGenericType.Size = new Size(371, 23);
             txtGenericType.TabIndex = 18;
             // 
             // txtDetailedType
@@ -431,15 +430,15 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             txtDetailedType.Enabled = false;
             txtDetailedType.EnableSuggestions = false;
             txtDetailedType.LabelText = "Detailed Type";
-            txtDetailedType.LabelVisible = "False";
-            txtDetailedType.Location = new Point(89, 146);
+            txtDetailedType.LabelVisible = "True";
+            txtDetailedType.Location = new Point(389, 146);
             txtDetailedType.Margin = new Padding(6);
             txtDetailedType.MaxLength = 130;
             txtDetailedType.MinimumSize = new Size(0, 23);
             txtDetailedType.MinLength = 130;
             txtDetailedType.Name = "txtDetailedType";
             txtDetailedType.ShowF4Button = false;
-            txtDetailedType.Size = new Size(71, 23);
+            txtDetailedType.Size = new Size(371, 23);
             txtDetailedType.TabIndex = 19;
             // 
             // Control_DieToolDiscovery
