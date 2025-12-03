@@ -1478,8 +1478,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         Control_TransferTab_Panel_Inputs.Enabled = true;
                     }
 
-                    inputsColumn.SizeType = SizeType.Absolute;
-                    inputsColumn.Width = _inputPanelStoredWidth;
+                    inputsColumn.SizeType = SizeType.AutoSize;
 
                     UpdateInputPanelArrow(false);
                 }

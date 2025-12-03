@@ -74,17 +74,18 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
 
         private void InitializeComponent()
         {
-            this.SuspendLayout();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form_HtmlViewer));
+            SuspendLayout();
             // 
             // Form_HtmlViewer
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(1000, 800);
-            this.Name = "Form_HtmlViewer";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Viewer";
-            this.ResumeLayout(false);
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            ClientSize = new Size(1000, 800);
+            Name = "Form_HtmlViewer";
+            StartPosition = FormStartPosition.CenterParent;
+            Text = "Viewer";
+            ResumeLayout(false);
         }
     }
 }

@@ -46,11 +46,25 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
                 _visualService = Program.ServiceProvider?.GetService<IService_VisualDatabase>();
             }
             
-            Load += InforVisualDashboard_Load;
+            WireUpEvents();
         }
         #endregion
 
         #region Methods
+        private void WireUpEvents()
+        {
+            Load += InforVisualDashboard_Load;
+            
+            // Wire up category buttons
+            btnInventory.Click += CategoryButton_Click;
+            btnReceiving.Click += CategoryButton_Click;
+            btnShipping.Click += CategoryButton_Click;
+            btnInventoryAuditing.Click += CategoryButton_Click;
+            btnDieToolDiscovery.Click += CategoryButton_Click;
+            btnMaterialHandlerGeneral.Click += CategoryButton_Click;
+            btnMaterialHandlerTeam.Click += CategoryButton_Click;
+        }
+
         private async Task LoadCategoryDataAsync(Enum_VisualDashboardCategory category)
         {
             if (_visualService == null)
@@ -61,25 +75,53 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
 
             if (category == Enum_VisualDashboardCategory.DieToolDiscovery)
             {
-                ShowDieToolDiscoveryControl();
+                try
+                {
+                    ShowDieToolDiscoveryControl();
+                }
+                catch (Exception ex)
+                {
+                    Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: nameof(LoadCategoryDataAsync), controlName: Name);
+                }
                 return;
             }
 
             if (category == Enum_VisualDashboardCategory.Receiving)
             {
-                ShowReceivingAnalyticsControl();
+                try
+                {
+                    ShowReceivingAnalyticsControl();
+                }
+                catch (Exception ex)
+                {
+                    Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: nameof(LoadCategoryDataAsync), controlName: Name);
+                }
                 return;
             }
 
             if (category == Enum_VisualDashboardCategory.Inventory)
             {
-                ShowVisualInventoryControl();
+                try
+                {
+                    ShowVisualInventoryControl();
+                }
+                catch (Exception ex)
+                {
+                    Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: nameof(LoadCategoryDataAsync), controlName: Name);
+                }
                 return;
             }
 
             if (category == Enum_VisualDashboardCategory.InventoryAuditing)
             {
-                ShowInventoryAuditControl();
+                try
+                {
+                    ShowInventoryAuditControl();
+                }
+                catch (Exception ex)
+                {
+                    Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: nameof(LoadCategoryDataAsync), controlName: Name);
+                }
                 return;
             }
 
@@ -144,7 +186,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
         private void SetLoadingState(bool isLoading)
         {
             labelLoading.Visible = isLoading;
-            panelSidebar.Enabled = !isLoading;
+            panelNavigation.Enabled = !isLoading;
 
 
             if (isLoading)
@@ -187,8 +229,35 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
 
         private async void CategoryButton_Click(object? sender, EventArgs e)
         {
-            if (sender is Button btn && btn.Tag is Enum_VisualDashboardCategory category)
+            if (sender is Button btn)
             {
+                LoggingUtility.Log($"Category button clicked: {btn.Name}, Tag: {btn.Tag}");
+                
+                Enum_VisualDashboardCategory category;
+                if (btn.Tag is Enum_VisualDashboardCategory cat)
+                {
+                    category = cat;
+                }
+                else
+                {
+                    // Fallback based on name
+                    if (btn.Name == "btnReceiving") category = Enum_VisualDashboardCategory.Receiving;
+                    else if (btn.Name == "btnInventory") category = Enum_VisualDashboardCategory.Inventory;
+                    else if (btn.Name == "btnShipping") category = Enum_VisualDashboardCategory.Shipping;
+                    else if (btn.Name == "btnInventoryAuditing") category = Enum_VisualDashboardCategory.InventoryAuditing;
+                    else if (btn.Name == "btnDieToolDiscovery") category = Enum_VisualDashboardCategory.DieToolDiscovery;
+                    else if (btn.Name == "btnMaterialHandlerGeneral") category = Enum_VisualDashboardCategory.MaterialHandlerAnalytics_General;
+                    else if (btn.Name == "btnMaterialHandlerTeam") category = Enum_VisualDashboardCategory.MaterialHandlerAnalytics_Team;
+                    else
+                    {
+                        Service_ErrorHandler.ShowUserError($"Invalid category configuration for button: {btn.Name}. Tag is {btn.Tag?.GetType().Name ?? "null"}");
+                        return;
+                    }
+                    
+                    // Fix the tag for next time
+                    btn.Tag = category;
+                }
+
                 await LoadCategoryDataAsync(category);
             }
         }

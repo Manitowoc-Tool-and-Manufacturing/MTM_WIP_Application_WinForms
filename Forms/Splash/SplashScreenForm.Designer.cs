@@ -103,10 +103,10 @@ namespace MTM_WIP_Application_Winforms.Forms.Splash
             _titleLabel.Dock = DockStyle.Fill;
             _titleLabel.Font = new Font("PMingLiU-ExtB", 18F, FontStyle.Bold, GraphicsUnit.Point, 0);
             _titleLabel.ForeColor = Color.White;
-            _titleLabel.Location = new Point(283, 25);
+            _titleLabel.Location = new Point(283, 38);
             _titleLabel.Margin = new Padding(4);
             _titleLabel.Name = "_titleLabel";
-            _titleLabel.Size = new Size(564, 72);
+            _titleLabel.Size = new Size(564, 48);
             _titleLabel.TabIndex = 1;
             _titleLabel.Text = "Manitowoc Tool and Manufacturing\r\nWork in Progress Application";
             _titleLabel.TextAlign = ContentAlignment.MiddleCenter;
@@ -117,10 +117,10 @@ namespace MTM_WIP_Application_Winforms.Forms.Splash
             _versionLabel.Dock = DockStyle.Fill;
             _versionLabel.Font = new Font("PMingLiU-ExtB", 18F, FontStyle.Regular, GraphicsUnit.Point, 0);
             _versionLabel.ForeColor = Color.LightGray;
-            _versionLabel.Location = new Point(283, 123);
+            _versionLabel.Location = new Point(283, 125);
             _versionLabel.Margin = new Padding(4);
             _versionLabel.Name = "_versionLabel";
-            _versionLabel.Size = new Size(564, 36);
+            _versionLabel.Size = new Size(564, 24);
             _versionLabel.TabIndex = 2;
             _versionLabel.Text = "18.3.0.0";
             _versionLabel.TextAlign = ContentAlignment.MiddleCenter;

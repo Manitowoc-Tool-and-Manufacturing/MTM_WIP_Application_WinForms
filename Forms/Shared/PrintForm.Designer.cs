@@ -16,6 +16,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PrintForm));
             PrintForm_Panel_Main = new Panel();
             PrintForm_TableLayout_Master = new TableLayoutPanel();
             PrintForm_Panel_LeftSidebar = new Panel();
@@ -80,6 +81,9 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_Button_ColumnUp = new Button();
             PrintForm_Button_ColumnDown = new Button();
             PrintForm_CheckBox_AddNotesColumn = new CheckBox();
+            tableLayoutPanel1 = new TableLayoutPanel();
+            PrintForm_NumericUpDown_AddNotesColumn = new NumericUpDown();
+            PrintForm_Label_AddNotesColumn = new Label();
             PrintForm_Label_Columns = new Label();
             PrintForm_CheckedListBox_Columns = new CheckedListBox();
             PrintForm_TableLayout_OptionsSection = new TableLayoutPanel();
@@ -97,9 +101,6 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_Button_Cancel = new Button();
             PrintForm_TableLayoutPanel_RightPanelHeader = new TableLayoutPanel();
             PrintForm_Button_RightPanelToggle = new Button();
-            tableLayoutPanel1 = new TableLayoutPanel();
-            PrintForm_NumericUpDown_AddNotesColumn = new NumericUpDown();
-            PrintForm_Label_AddNotesColumn = new Label();
             PrintForm_Panel_Main.SuspendLayout();
             PrintForm_TableLayout_Master.SuspendLayout();
             PrintForm_Panel_LeftSidebar.SuspendLayout();
@@ -131,14 +132,14 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_Panel_ColumnSettingsContent.SuspendLayout();
             PrintForm_TableLayout_ColumnSettingsContent.SuspendLayout();
             PrintForm_TableLayoutPanel_ColumnButtons.SuspendLayout();
+            tableLayoutPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)PrintForm_NumericUpDown_AddNotesColumn).BeginInit();
             PrintForm_TableLayout_OptionsSection.SuspendLayout();
             PrintForm_TableLayoutPanel_OptionsHeader.SuspendLayout();
             PrintForm_Panel_OptionsContent.SuspendLayout();
             PrintForm_TableLayout_OptionsContent.SuspendLayout();
             PrintForm_TableLayoutPanel_ColorMode.SuspendLayout();
             PrintForm_TableLayoutPanel_RightPanelHeader.SuspendLayout();
-            tableLayoutPanel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)PrintForm_NumericUpDown_AddNotesColumn).BeginInit();
             SuspendLayout();
             // 
             // PrintForm_Panel_Main
@@ -150,7 +151,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_Panel_Main.Location = new Point(0, 0);
             PrintForm_Panel_Main.Margin = new Padding(0);
             PrintForm_Panel_Main.Name = "PrintForm_Panel_Main";
-            PrintForm_Panel_Main.Size = new Size(1384, 636);
+            PrintForm_Panel_Main.Size = new Size(1259, 501);
             PrintForm_Panel_Main.TabIndex = 0;
             // 
             // PrintForm_TableLayout_Master
@@ -170,7 +171,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_TableLayout_Master.Name = "PrintForm_TableLayout_Master";
             PrintForm_TableLayout_Master.RowCount = 1;
             PrintForm_TableLayout_Master.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            PrintForm_TableLayout_Master.Size = new Size(1384, 636);
+            PrintForm_TableLayout_Master.Size = new Size(1259, 501);
             PrintForm_TableLayout_Master.TabIndex = 0;
             // 
             // PrintForm_Panel_LeftSidebar
@@ -184,7 +185,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_Panel_LeftSidebar.Margin = new Padding(0);
             PrintForm_Panel_LeftSidebar.Name = "PrintForm_Panel_LeftSidebar";
             PrintForm_Panel_LeftSidebar.Padding = new Padding(10);
-            PrintForm_Panel_LeftSidebar.Size = new Size(413, 636);
+            PrintForm_Panel_LeftSidebar.Size = new Size(413, 501);
             PrintForm_Panel_LeftSidebar.TabIndex = 0;
             // 
             // PrintForm_TableLayout_LeftSidebar
@@ -203,7 +204,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_TableLayout_LeftSidebar.Name = "PrintForm_TableLayout_LeftSidebar";
             PrintForm_TableLayout_LeftSidebar.RowCount = 1;
             PrintForm_TableLayout_LeftSidebar.RowStyles.Add(new RowStyle());
-            PrintForm_TableLayout_LeftSidebar.Size = new Size(393, 616);
+            PrintForm_TableLayout_LeftSidebar.Size = new Size(393, 481);
             PrintForm_TableLayout_LeftSidebar.TabIndex = 0;
             // 
             // PrintForm_Panel_LeftPanel_Contents
@@ -215,7 +216,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_Panel_LeftPanel_Contents.Dock = DockStyle.Fill;
             PrintForm_Panel_LeftPanel_Contents.Location = new Point(36, 4);
             PrintForm_Panel_LeftPanel_Contents.Name = "PrintForm_Panel_LeftPanel_Contents";
-            PrintForm_Panel_LeftPanel_Contents.Size = new Size(353, 608);
+            PrintForm_Panel_LeftPanel_Contents.Size = new Size(353, 473);
             PrintForm_Panel_LeftPanel_Contents.TabIndex = 5;
             // 
             // PrintForm_TableLayoutPanel_LeftPanel_Contents
@@ -233,7 +234,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_TableLayoutPanel_LeftPanel_Contents.RowStyles.Add(new RowStyle());
             PrintForm_TableLayoutPanel_LeftPanel_Contents.RowStyles.Add(new RowStyle());
             PrintForm_TableLayoutPanel_LeftPanel_Contents.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            PrintForm_TableLayoutPanel_LeftPanel_Contents.Size = new Size(351, 606);
+            PrintForm_TableLayoutPanel_LeftPanel_Contents.Size = new Size(351, 471);
             PrintForm_TableLayoutPanel_LeftPanel_Contents.TabIndex = 0;
             // 
             // PrintForm_TableLayout_PrinterSettingsSection
@@ -281,7 +282,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_Label_PrinterSettingsHeader.Location = new Point(3, 3);
             PrintForm_Label_PrinterSettingsHeader.Margin = new Padding(3);
             PrintForm_Label_PrinterSettingsHeader.Name = "PrintForm_Label_PrinterSettingsHeader";
-            PrintForm_Label_PrinterSettingsHeader.Size = new Size(300, 25);
+            PrintForm_Label_PrinterSettingsHeader.Size = new Size(275, 25);
             PrintForm_Label_PrinterSettingsHeader.TabIndex = 0;
             PrintForm_Label_PrinterSettingsHeader.Text = "🖨️ Printer Settings";
             PrintForm_Label_PrinterSettingsHeader.TextAlign = ContentAlignment.MiddleLeft;
@@ -291,11 +292,9 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_Button_PrinterSettingsToggle.AutoSize = true;
             PrintForm_Button_PrinterSettingsToggle.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             PrintForm_Button_PrinterSettingsToggle.Dock = DockStyle.Fill;
-            PrintForm_Button_PrinterSettingsToggle.FlatAppearance.BorderSize = 1;
             PrintForm_Button_PrinterSettingsToggle.FlatAppearance.BorderColor = Color.SteelBlue;
-
             PrintForm_Button_PrinterSettingsToggle.FlatStyle = FlatStyle.Flat;
-            PrintForm_Button_PrinterSettingsToggle.Location = new Point(309, 3);
+            PrintForm_Button_PrinterSettingsToggle.Location = new Point(284, 3);
             PrintForm_Button_PrinterSettingsToggle.MaximumSize = new Size(50, 25);
             PrintForm_Button_PrinterSettingsToggle.MinimumSize = new Size(50, 25);
             PrintForm_Button_PrinterSettingsToggle.Name = "PrintForm_Button_PrinterSettingsToggle";
@@ -433,7 +432,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_TableLayout_PageSettingsSection.RowStyles.Add(new RowStyle());
             PrintForm_TableLayout_PageSettingsSection.RowStyles.Add(new RowStyle());
             PrintForm_TableLayout_PageSettingsSection.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            PrintForm_TableLayout_PageSettingsSection.Size = new Size(345, 446);
+            PrintForm_TableLayout_PageSettingsSection.Size = new Size(345, 311);
             PrintForm_TableLayout_PageSettingsSection.TabIndex = 1;
             // 
             // PrintForm_TableLayout_ActionButtons
@@ -445,7 +444,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_TableLayout_ActionButtons.Controls.Add(PrintForm_Button_Export, 0, 1);
             PrintForm_TableLayout_ActionButtons.Controls.Add(PrintForm_Button_Print, 0, 0);
             PrintForm_TableLayout_ActionButtons.Dock = DockStyle.Bottom;
-            PrintForm_TableLayout_ActionButtons.Location = new Point(4, 363);
+            PrintForm_TableLayout_ActionButtons.Location = new Point(4, 228);
             PrintForm_TableLayout_ActionButtons.Name = "PrintForm_TableLayout_ActionButtons";
             PrintForm_TableLayout_ActionButtons.RowCount = 2;
             PrintForm_TableLayout_ActionButtons.RowStyles.Add(new RowStyle());
@@ -524,7 +523,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_Label_PageSettingsHeader.Location = new Point(3, 3);
             PrintForm_Label_PageSettingsHeader.Margin = new Padding(3);
             PrintForm_Label_PageSettingsHeader.Name = "PrintForm_Label_PageSettingsHeader";
-            PrintForm_Label_PageSettingsHeader.Size = new Size(300, 25);
+            PrintForm_Label_PageSettingsHeader.Size = new Size(275, 25);
             PrintForm_Label_PageSettingsHeader.TabIndex = 0;
             PrintForm_Label_PageSettingsHeader.Text = "📄 Page Settings";
             PrintForm_Label_PageSettingsHeader.TextAlign = ContentAlignment.MiddleLeft;
@@ -534,10 +533,9 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_Button_PageSettingsToggle.AutoSize = true;
             PrintForm_Button_PageSettingsToggle.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             PrintForm_Button_PageSettingsToggle.Dock = DockStyle.Fill;
-            PrintForm_Button_PageSettingsToggle.FlatAppearance.BorderSize = 1;
             PrintForm_Button_PageSettingsToggle.FlatAppearance.BorderColor = Color.SteelBlue;
             PrintForm_Button_PageSettingsToggle.FlatStyle = FlatStyle.Flat;
-            PrintForm_Button_PageSettingsToggle.Location = new Point(309, 3);
+            PrintForm_Button_PageSettingsToggle.Location = new Point(284, 3);
             PrintForm_Button_PageSettingsToggle.MaximumSize = new Size(50, 25);
             PrintForm_Button_PageSettingsToggle.MinimumSize = new Size(50, 25);
             PrintForm_Button_PageSettingsToggle.Name = "PrintForm_Button_PageSettingsToggle";
@@ -711,20 +709,20 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_TableLayoutPanel_LeftPanelHeader.RowCount = 2;
             PrintForm_TableLayoutPanel_LeftPanelHeader.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             PrintForm_TableLayoutPanel_LeftPanelHeader.RowStyles.Add(new RowStyle());
-            PrintForm_TableLayoutPanel_LeftPanelHeader.Size = new Size(31, 614);
+            PrintForm_TableLayoutPanel_LeftPanelHeader.Size = new Size(31, 479);
             PrintForm_TableLayoutPanel_LeftPanelHeader.TabIndex = 5;
             // 
             // PrintForm_Button_LeftPanelToggle
             // 
+            PrintForm_Button_LeftPanelToggle.AutoSize = true;
             PrintForm_Button_LeftPanelToggle.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            PrintForm_Button_LeftPanelToggle.FlatAppearance.BorderSize = 1;
             PrintForm_Button_LeftPanelToggle.FlatAppearance.BorderColor = Color.SteelBlue;
             PrintForm_Button_LeftPanelToggle.FlatStyle = FlatStyle.Flat;
-            PrintForm_Button_LeftPanelToggle.Location = new Point(3, 586);
-            PrintForm_Button_LeftPanelToggle.MaximumSize = new Size(50, 25);
-            PrintForm_Button_LeftPanelToggle.MinimumSize = new Size(50, 25);
+            PrintForm_Button_LeftPanelToggle.Location = new Point(3, 426);
+            PrintForm_Button_LeftPanelToggle.MaximumSize = new Size(25, 50);
+            PrintForm_Button_LeftPanelToggle.MinimumSize = new Size(25, 50);
             PrintForm_Button_LeftPanelToggle.Name = "PrintForm_Button_LeftPanelToggle";
-            PrintForm_Button_LeftPanelToggle.Size = new Size(50, 25);
+            PrintForm_Button_LeftPanelToggle.Size = new Size(25, 50);
             PrintForm_Button_LeftPanelToggle.TabIndex = 2;
             PrintForm_Button_LeftPanelToggle.Text = "🡰 📋";
             PrintForm_Button_LeftPanelToggle.UseVisualStyleBackColor = true;
@@ -739,7 +737,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_Panel_PreviewViewport.MinimumSize = new Size(400, 300);
             PrintForm_Panel_PreviewViewport.Name = "PrintForm_Panel_PreviewViewport";
             PrintForm_Panel_PreviewViewport.Padding = new Padding(10);
-            PrintForm_Panel_PreviewViewport.Size = new Size(555, 636);
+            PrintForm_Panel_PreviewViewport.Size = new Size(430, 501);
             PrintForm_Panel_PreviewViewport.TabIndex = 1;
             // 
             // PrintForm_TableLayout_PreviewArea
@@ -756,7 +754,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_TableLayout_PreviewArea.RowCount = 2;
             PrintForm_TableLayout_PreviewArea.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             PrintForm_TableLayout_PreviewArea.RowStyles.Add(new RowStyle());
-            PrintForm_TableLayout_PreviewArea.Size = new Size(535, 616);
+            PrintForm_TableLayout_PreviewArea.Size = new Size(410, 481);
             PrintForm_TableLayout_PreviewArea.TabIndex = 0;
             // 
             // PrintForm_PrintPreviewControl
@@ -766,7 +764,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_PrintPreviewControl.ForeColor = Color.Black;
             PrintForm_PrintPreviewControl.Location = new Point(3, 3);
             PrintForm_PrintPreviewControl.Name = "PrintForm_PrintPreviewControl";
-            PrintForm_PrintPreviewControl.Size = new Size(529, 558);
+            PrintForm_PrintPreviewControl.Size = new Size(404, 423);
             PrintForm_PrintPreviewControl.TabIndex = 2;
             PrintForm_PrintPreviewControl.UseAntiAlias = true;
             // 
@@ -786,12 +784,12 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_TableLayout_PreviewNavigation.Controls.Add(PrintForm_Button_NextPage, 3, 0);
             PrintForm_TableLayout_PreviewNavigation.Controls.Add(PrintForm_Button_LastPage, 4, 0);
             PrintForm_TableLayout_PreviewNavigation.Dock = DockStyle.Fill;
-            PrintForm_TableLayout_PreviewNavigation.Location = new Point(3, 567);
+            PrintForm_TableLayout_PreviewNavigation.Location = new Point(3, 432);
             PrintForm_TableLayout_PreviewNavigation.Name = "PrintForm_TableLayout_PreviewNavigation";
             PrintForm_TableLayout_PreviewNavigation.RowCount = 1;
             PrintForm_TableLayout_PreviewNavigation.RowStyles.Add(new RowStyle());
             PrintForm_TableLayout_PreviewNavigation.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            PrintForm_TableLayout_PreviewNavigation.Size = new Size(529, 46);
+            PrintForm_TableLayout_PreviewNavigation.Size = new Size(404, 46);
             PrintForm_TableLayout_PreviewNavigation.TabIndex = 1;
             // 
             // PrintForm_Button_FirstPage
@@ -830,7 +828,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_Label_PageCounter.Location = new Point(95, 3);
             PrintForm_Label_PageCounter.Margin = new Padding(3);
             PrintForm_Label_PageCounter.Name = "PrintForm_Label_PageCounter";
-            PrintForm_Label_PageCounter.Size = new Size(339, 40);
+            PrintForm_Label_PageCounter.Size = new Size(214, 40);
             PrintForm_Label_PageCounter.TabIndex = 2;
             PrintForm_Label_PageCounter.Text = "Page 0 / 0";
             PrintForm_Label_PageCounter.TextAlign = ContentAlignment.MiddleCenter;
@@ -841,7 +839,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_Button_NextPage.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             PrintForm_Button_NextPage.Dock = DockStyle.Fill;
             PrintForm_Button_NextPage.Enabled = false;
-            PrintForm_Button_NextPage.Location = new Point(440, 3);
+            PrintForm_Button_NextPage.Location = new Point(315, 3);
             PrintForm_Button_NextPage.MaximumSize = new Size(40, 40);
             PrintForm_Button_NextPage.MinimumSize = new Size(40, 40);
             PrintForm_Button_NextPage.Name = "PrintForm_Button_NextPage";
@@ -856,7 +854,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_Button_LastPage.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             PrintForm_Button_LastPage.Dock = DockStyle.Fill;
             PrintForm_Button_LastPage.Enabled = false;
-            PrintForm_Button_LastPage.Location = new Point(486, 3);
+            PrintForm_Button_LastPage.Location = new Point(361, 3);
             PrintForm_Button_LastPage.MaximumSize = new Size(40, 40);
             PrintForm_Button_LastPage.MinimumSize = new Size(40, 40);
             PrintForm_Button_LastPage.Name = "PrintForm_Button_LastPage";
@@ -871,11 +869,11 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_Panel_RightSidebar.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             PrintForm_Panel_RightSidebar.Controls.Add(PrintForm_TableLayout_RightSidebar);
             PrintForm_Panel_RightSidebar.Dock = DockStyle.Fill;
-            PrintForm_Panel_RightSidebar.Location = new Point(968, 0);
+            PrintForm_Panel_RightSidebar.Location = new Point(843, 0);
             PrintForm_Panel_RightSidebar.Margin = new Padding(0);
             PrintForm_Panel_RightSidebar.Name = "PrintForm_Panel_RightSidebar";
             PrintForm_Panel_RightSidebar.Padding = new Padding(10);
-            PrintForm_Panel_RightSidebar.Size = new Size(416, 636);
+            PrintForm_Panel_RightSidebar.Size = new Size(416, 501);
             PrintForm_Panel_RightSidebar.TabIndex = 2;
             // 
             // PrintForm_TableLayout_RightSidebar
@@ -893,7 +891,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_TableLayout_RightSidebar.Name = "PrintForm_TableLayout_RightSidebar";
             PrintForm_TableLayout_RightSidebar.RowCount = 1;
             PrintForm_TableLayout_RightSidebar.RowStyles.Add(new RowStyle());
-            PrintForm_TableLayout_RightSidebar.Size = new Size(396, 616);
+            PrintForm_TableLayout_RightSidebar.Size = new Size(396, 481);
             PrintForm_TableLayout_RightSidebar.TabIndex = 3;
             // 
             // PrintForm_Panel_RightSidebar_Content
@@ -905,7 +903,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_Panel_RightSidebar_Content.Dock = DockStyle.Fill;
             PrintForm_Panel_RightSidebar_Content.Location = new Point(4, 4);
             PrintForm_Panel_RightSidebar_Content.Name = "PrintForm_Panel_RightSidebar_Content";
-            PrintForm_Panel_RightSidebar_Content.Size = new Size(356, 608);
+            PrintForm_Panel_RightSidebar_Content.Size = new Size(356, 473);
             PrintForm_Panel_RightSidebar_Content.TabIndex = 7;
             // 
             // PrintForm_TableLayout_RightSidebar_Content
@@ -923,7 +921,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_TableLayout_RightSidebar_Content.RowStyles.Add(new RowStyle());
             PrintForm_TableLayout_RightSidebar_Content.RowStyles.Add(new RowStyle());
             PrintForm_TableLayout_RightSidebar_Content.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            PrintForm_TableLayout_RightSidebar_Content.Size = new Size(354, 606);
+            PrintForm_TableLayout_RightSidebar_Content.Size = new Size(354, 471);
             PrintForm_TableLayout_RightSidebar_Content.TabIndex = 0;
             // 
             // PrintForm_TableLayout_ColumnSettingsSection
@@ -967,10 +965,9 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_Button_ColumnSettingsToggle.AutoSize = true;
             PrintForm_Button_ColumnSettingsToggle.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             PrintForm_Button_ColumnSettingsToggle.Dock = DockStyle.Fill;
-            PrintForm_Button_ColumnSettingsToggle.FlatAppearance.BorderSize = 1;
             PrintForm_Button_ColumnSettingsToggle.FlatAppearance.BorderColor = Color.SteelBlue;
             PrintForm_Button_ColumnSettingsToggle.FlatStyle = FlatStyle.Flat;
-            PrintForm_Button_ColumnSettingsToggle.Location = new Point(315, 3);
+            PrintForm_Button_ColumnSettingsToggle.Location = new Point(287, 3);
             PrintForm_Button_ColumnSettingsToggle.MaximumSize = new Size(50, 25);
             PrintForm_Button_ColumnSettingsToggle.MinimumSize = new Size(50, 25);
             PrintForm_Button_ColumnSettingsToggle.Name = "PrintForm_Button_ColumnSettingsToggle";
@@ -987,7 +984,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_Label_ColumnSettingsHeader.Location = new Point(3, 3);
             PrintForm_Label_ColumnSettingsHeader.Margin = new Padding(3);
             PrintForm_Label_ColumnSettingsHeader.Name = "PrintForm_Label_ColumnSettingsHeader";
-            PrintForm_Label_ColumnSettingsHeader.Size = new Size(306, 25);
+            PrintForm_Label_ColumnSettingsHeader.Size = new Size(278, 25);
             PrintForm_Label_ColumnSettingsHeader.TabIndex = 0;
             PrintForm_Label_ColumnSettingsHeader.Text = "📑 Column Settings";
             PrintForm_Label_ColumnSettingsHeader.TextAlign = ContentAlignment.MiddleLeft;
@@ -1073,6 +1070,48 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_CheckBox_AddNotesColumn.Text = "Corrections Column?";
             PrintForm_CheckBox_AddNotesColumn.UseVisualStyleBackColor = true;
             // 
+            // tableLayoutPanel1
+            // 
+            tableLayoutPanel1.AutoSize = true;
+            tableLayoutPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            tableLayoutPanel1.ColumnCount = 2;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel1.Controls.Add(PrintForm_NumericUpDown_AddNotesColumn, 0, 0);
+            tableLayoutPanel1.Controls.Add(PrintForm_Label_AddNotesColumn, 1, 0);
+            tableLayoutPanel1.Dock = DockStyle.Fill;
+            tableLayoutPanel1.Location = new Point(170, 34);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 1;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.Size = new Size(161, 29);
+            tableLayoutPanel1.TabIndex = 5;
+            // 
+            // PrintForm_NumericUpDown_AddNotesColumn
+            // 
+            PrintForm_NumericUpDown_AddNotesColumn.AutoSize = true;
+            PrintForm_NumericUpDown_AddNotesColumn.Dock = DockStyle.Fill;
+            PrintForm_NumericUpDown_AddNotesColumn.Location = new Point(3, 3);
+            PrintForm_NumericUpDown_AddNotesColumn.Maximum = new decimal(new int[] { 75, 0, 0, 0 });
+            PrintForm_NumericUpDown_AddNotesColumn.Minimum = new decimal(new int[] { 5, 0, 0, 0 });
+            PrintForm_NumericUpDown_AddNotesColumn.Name = "PrintForm_NumericUpDown_AddNotesColumn";
+            PrintForm_NumericUpDown_AddNotesColumn.Size = new Size(89, 23);
+            PrintForm_NumericUpDown_AddNotesColumn.TabIndex = 0;
+            PrintForm_NumericUpDown_AddNotesColumn.TextAlign = HorizontalAlignment.Center;
+            PrintForm_NumericUpDown_AddNotesColumn.Value = new decimal(new int[] { 30, 0, 0, 0 });
+            // 
+            // PrintForm_Label_AddNotesColumn
+            // 
+            PrintForm_Label_AddNotesColumn.AutoSize = true;
+            PrintForm_Label_AddNotesColumn.Dock = DockStyle.Fill;
+            PrintForm_Label_AddNotesColumn.Location = new Point(98, 3);
+            PrintForm_Label_AddNotesColumn.Margin = new Padding(3);
+            PrintForm_Label_AddNotesColumn.Name = "PrintForm_Label_AddNotesColumn";
+            PrintForm_Label_AddNotesColumn.Size = new Size(60, 23);
+            PrintForm_Label_AddNotesColumn.TabIndex = 1;
+            PrintForm_Label_AddNotesColumn.Text = "% of Page";
+            PrintForm_Label_AddNotesColumn.TextAlign = ContentAlignment.MiddleCenter;
+            // 
             // PrintForm_Label_Columns
             // 
             PrintForm_Label_Columns.AutoSize = true;
@@ -1114,7 +1153,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_TableLayout_OptionsSection.RowStyles.Add(new RowStyle());
             PrintForm_TableLayout_OptionsSection.RowStyles.Add(new RowStyle());
             PrintForm_TableLayout_OptionsSection.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            PrintForm_TableLayout_OptionsSection.Size = new Size(348, 329);
+            PrintForm_TableLayout_OptionsSection.Size = new Size(348, 194);
             PrintForm_TableLayout_OptionsSection.TabIndex = 4;
             // 
             // PrintForm_TableLayoutPanel_OptionsHeader
@@ -1139,10 +1178,9 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_Button_OptionsToggle.AutoSize = true;
             PrintForm_Button_OptionsToggle.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             PrintForm_Button_OptionsToggle.Dock = DockStyle.Fill;
-            PrintForm_Button_OptionsToggle.FlatAppearance.BorderSize = 1;
             PrintForm_Button_OptionsToggle.FlatAppearance.BorderColor = Color.SteelBlue;
             PrintForm_Button_OptionsToggle.FlatStyle = FlatStyle.Flat;
-            PrintForm_Button_OptionsToggle.Location = new Point(312, 3);
+            PrintForm_Button_OptionsToggle.Location = new Point(287, 3);
             PrintForm_Button_OptionsToggle.MaximumSize = new Size(50, 25);
             PrintForm_Button_OptionsToggle.MinimumSize = new Size(50, 25);
             PrintForm_Button_OptionsToggle.Name = "PrintForm_Button_OptionsToggle";
@@ -1159,7 +1197,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_Label_OptionsHeader.Location = new Point(3, 3);
             PrintForm_Label_OptionsHeader.Margin = new Padding(3);
             PrintForm_Label_OptionsHeader.Name = "PrintForm_Label_OptionsHeader";
-            PrintForm_Label_OptionsHeader.Size = new Size(303, 25);
+            PrintForm_Label_OptionsHeader.Size = new Size(278, 25);
             PrintForm_Label_OptionsHeader.TabIndex = 0;
             PrintForm_Label_OptionsHeader.Text = "⚙️ Options";
             PrintForm_Label_OptionsHeader.TextAlign = ContentAlignment.MiddleLeft;
@@ -1276,7 +1314,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             // PrintForm_Button_Cancel
             // 
             PrintForm_Button_Cancel.Dock = DockStyle.Bottom;
-            PrintForm_Button_Cancel.Location = new Point(4, 293);
+            PrintForm_Button_Cancel.Location = new Point(4, 158);
             PrintForm_Button_Cancel.MinimumSize = new Size(175, 32);
             PrintForm_Button_Cancel.Name = "PrintForm_Button_Cancel";
             PrintForm_Button_Cancel.Size = new Size(340, 32);
@@ -1299,18 +1337,16 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_TableLayoutPanel_RightPanelHeader.RowCount = 2;
             PrintForm_TableLayoutPanel_RightPanelHeader.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             PrintForm_TableLayoutPanel_RightPanelHeader.RowStyles.Add(new RowStyle());
-            PrintForm_TableLayoutPanel_RightPanelHeader.Size = new Size(31, 614);
+            PrintForm_TableLayoutPanel_RightPanelHeader.Size = new Size(31, 479);
             PrintForm_TableLayoutPanel_RightPanelHeader.TabIndex = 6;
             // 
             // PrintForm_Button_RightPanelToggle
             // 
             PrintForm_Button_RightPanelToggle.AutoSize = true;
             PrintForm_Button_RightPanelToggle.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            PrintForm_Button_RightPanelToggle.FlatAppearance.BorderSize = 1;
             PrintForm_Button_RightPanelToggle.FlatAppearance.BorderColor = Color.SteelBlue;
             PrintForm_Button_RightPanelToggle.FlatStyle = FlatStyle.Flat;
-            PrintForm_Button_RightPanelToggle.TextAlign = ContentAlignment.MiddleCenter;
-            PrintForm_Button_RightPanelToggle.Location = new Point(3, 586);
+            PrintForm_Button_RightPanelToggle.Location = new Point(3, 426);
             PrintForm_Button_RightPanelToggle.MaximumSize = new Size(25, 50);
             PrintForm_Button_RightPanelToggle.MinimumSize = new Size(25, 50);
             PrintForm_Button_RightPanelToggle.Name = "PrintForm_Button_RightPanelToggle";
@@ -1319,55 +1355,14 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_Button_RightPanelToggle.Text = "📋 🡲";
             PrintForm_Button_RightPanelToggle.UseVisualStyleBackColor = true;
             // 
-            // tableLayoutPanel1
-            // 
-            tableLayoutPanel1.AutoSize = true;
-            tableLayoutPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            tableLayoutPanel1.ColumnCount = 2;
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanel1.Controls.Add(PrintForm_NumericUpDown_AddNotesColumn, 0, 0);
-            tableLayoutPanel1.Controls.Add(PrintForm_Label_AddNotesColumn, 1, 0);
-            tableLayoutPanel1.Dock = DockStyle.Fill;
-            tableLayoutPanel1.Location = new Point(170, 34);
-            tableLayoutPanel1.Name = "tableLayoutPanel1";
-            tableLayoutPanel1.RowCount = 1;
-            tableLayoutPanel1.RowStyles.Add(new RowStyle());
-            tableLayoutPanel1.Size = new Size(161, 29);
-            tableLayoutPanel1.TabIndex = 5;
-            // 
-            // PrintForm_NumericUpDown_AddNotesColumn
-            // 
-            PrintForm_NumericUpDown_AddNotesColumn.AutoSize = true;
-            PrintForm_NumericUpDown_AddNotesColumn.Dock = DockStyle.Fill;
-            PrintForm_NumericUpDown_AddNotesColumn.Location = new Point(3, 3);
-            PrintForm_NumericUpDown_AddNotesColumn.Name = "PrintForm_NumericUpDown_AddNotesColumn";
-            PrintForm_NumericUpDown_AddNotesColumn.Size = new Size(89, 23);
-            PrintForm_NumericUpDown_AddNotesColumn.TabIndex = 0;
-            PrintForm_NumericUpDown_AddNotesColumn.Text = "30";
-            PrintForm_NumericUpDown_AddNotesColumn.Minimum = 5;
-            PrintForm_NumericUpDown_AddNotesColumn.Maximum = 75;
-            PrintForm_NumericUpDown_AddNotesColumn.TextAlign = HorizontalAlignment.Center;
-            // 
-            // PrintForm_Label_AddNotesColumn
-            // 
-            PrintForm_Label_AddNotesColumn.AutoSize = true;
-            PrintForm_Label_AddNotesColumn.Dock = DockStyle.Fill;
-            PrintForm_Label_AddNotesColumn.Location = new Point(98, 3);
-            PrintForm_Label_AddNotesColumn.Margin = new Padding(3);
-            PrintForm_Label_AddNotesColumn.Name = "PrintForm_Label_AddNotesColumn";
-            PrintForm_Label_AddNotesColumn.Size = new Size(60, 23);
-            PrintForm_Label_AddNotesColumn.TabIndex = 1;
-            PrintForm_Label_AddNotesColumn.Text = "% of Page";
-            PrintForm_Label_AddNotesColumn.TextAlign = ContentAlignment.MiddleCenter;
-            // 
             // PrintForm
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
-            ClientSize = new Size(1384, 636);
+            ClientSize = new Size(1259, 501);
             Controls.Add(PrintForm_Panel_Main);
-            MinimumSize = new Size(1400, 675);
+            Icon = (Icon)resources.GetObject("$this.Icon");
+            MinimumSize = new Size(1275, 540);
             Name = "PrintForm";
             StartPosition = FormStartPosition.CenterParent;
             Text = "Print Preview";
@@ -1406,6 +1401,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_TableLayout_CustomPageRange.ResumeLayout(false);
             PrintForm_TableLayout_CustomPageRange.PerformLayout();
             PrintForm_TableLayoutPanel_LeftPanelHeader.ResumeLayout(false);
+            PrintForm_TableLayoutPanel_LeftPanelHeader.PerformLayout();
             PrintForm_Panel_PreviewViewport.ResumeLayout(false);
             PrintForm_Panel_PreviewViewport.PerformLayout();
             PrintForm_TableLayout_PreviewArea.ResumeLayout(false);
@@ -1430,6 +1426,9 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_TableLayout_ColumnSettingsContent.PerformLayout();
             PrintForm_TableLayoutPanel_ColumnButtons.ResumeLayout(false);
             PrintForm_TableLayoutPanel_ColumnButtons.PerformLayout();
+            tableLayoutPanel1.ResumeLayout(false);
+            tableLayoutPanel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)PrintForm_NumericUpDown_AddNotesColumn).EndInit();
             PrintForm_TableLayout_OptionsSection.ResumeLayout(false);
             PrintForm_TableLayout_OptionsSection.PerformLayout();
             PrintForm_TableLayoutPanel_OptionsHeader.ResumeLayout(false);
@@ -1442,9 +1441,6 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_TableLayoutPanel_ColorMode.PerformLayout();
             PrintForm_TableLayoutPanel_RightPanelHeader.ResumeLayout(false);
             PrintForm_TableLayoutPanel_RightPanelHeader.PerformLayout();
-            tableLayoutPanel1.ResumeLayout(false);
-            tableLayoutPanel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)PrintForm_NumericUpDown_AddNotesColumn).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -1525,7 +1521,6 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
         private Label PrintForm_Label_Columns;
         private CheckedListBox PrintForm_CheckedListBox_Columns;
         private TableLayoutPanel PrintForm_TableLayoutPanel_LeftPanelHeader;
-        private Button PrintForm_Button_LeftPanelToggle;
         private TableLayoutPanel PrintForm_TableLayoutPanel_RightPanelHeader;
         private Button PrintForm_Button_RightPanelToggle;
         private Panel PrintForm_Panel_RightSidebar_Content;
@@ -1535,5 +1530,6 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
         private TableLayoutPanel tableLayoutPanel1;
         private NumericUpDown PrintForm_NumericUpDown_AddNotesColumn;
         private Label PrintForm_Label_AddNotesColumn;
+        protected Button PrintForm_Button_LeftPanelToggle;
     }
 }

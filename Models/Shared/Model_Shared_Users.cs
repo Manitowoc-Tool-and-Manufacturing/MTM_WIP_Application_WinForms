@@ -18,7 +18,7 @@ namespace MTM_WIP_Application_Winforms.Models
         public bool VitsUser { get; set; } = false;
         public static string? Database { get; set ; } = "mtm_wip_application_winforms";
 
-        public static string WipServerAddress { get; set; } = "172.16.1.104";
+        public static string WipServerAddress { get; set; } = "localhost";
 
 
         public static string WipServerPort { get; set; } = "3306";

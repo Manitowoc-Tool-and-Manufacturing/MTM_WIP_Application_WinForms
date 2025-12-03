@@ -30,14 +30,14 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         {
             Control_VisualInventory_TableLayoutPanel_Main = new TableLayoutPanel();
             Control_VisualInventory_TableLayoutPanel_Search = new TableLayoutPanel();
-            Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber = new MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBoxWithLabel();
-            Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse = new MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBoxWithLabel();
-            Control_VisualInventory_SuggestionTextBoxWithLabel_Location = new MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBoxWithLabel();
-            Control_VisualInventory_CheckBox_NonZeroOnly = new CheckBox();
-            Control_VisualInventory_Button_Search = new Button();
             tableLayoutPanel1 = new TableLayoutPanel();
-            Control_VisualInventory_Button_Export = new Button();
+            Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse = new MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBoxWithLabel();
+            Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber = new MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBoxWithLabel();
+            Control_VisualInventory_SuggestionTextBoxWithLabel_Location = new MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBoxWithLabel();
             tableLayoutPanel2 = new TableLayoutPanel();
+            Control_VisualInventory_Button_Search = new Button();
+            Control_VisualInventory_CheckBox_NonZeroOnly = new CheckBox();
+            Control_VisualInventory_Button_Export = new Button();
             panel1 = new Panel();
             Control_VisualInventory_DataGridView_Results = new DataGridView();
             Control_VisualInventory_TableLayoutPanel_Main.SuspendLayout();
@@ -83,81 +83,6 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_VisualInventory_TableLayoutPanel_Search.Size = new Size(776, 137);
             Control_VisualInventory_TableLayoutPanel_Search.TabIndex = 0;
             // 
-            // Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber
-            // 
-            Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber.AutoSize = true;
-            Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber.Dock = DockStyle.Fill;
-            Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber.LabelText = "Part Number";
-            Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber.Location = new Point(3, 3);
-            Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber.MaxLength = 90;
-            Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber.MinLength = 90;
-            Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber.Name = "Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber";
-            Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber.ShowValidationColor = false;
-            Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber.Size = new Size(764, 23);
-            Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber.TabIndex = 0;
-            Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber.ValidatorType = null;
-            // 
-            // Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse
-            // 
-            Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse.AutoSize = true;
-            Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse.Dock = DockStyle.Fill;
-            Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse.LabelText = "Warehouse";
-            Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse.Location = new Point(3, 61);
-            Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse.MaxLength = 90;
-            Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse.MinLength = 90;
-            Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse.Name = "Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse";
-            Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse.ShowValidationColor = false;
-            Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse.Size = new Size(764, 23);
-            Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse.TabIndex = 1;
-            Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse.ValidatorType = null;
-            Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse.Visible = false;
-            // 
-            // Control_VisualInventory_SuggestionTextBoxWithLabel_Location
-            // 
-            Control_VisualInventory_SuggestionTextBoxWithLabel_Location.AutoSize = true;
-            Control_VisualInventory_SuggestionTextBoxWithLabel_Location.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            Control_VisualInventory_SuggestionTextBoxWithLabel_Location.Dock = DockStyle.Fill;
-            Control_VisualInventory_SuggestionTextBoxWithLabel_Location.LabelText = "Location";
-            Control_VisualInventory_SuggestionTextBoxWithLabel_Location.Location = new Point(3, 32);
-            Control_VisualInventory_SuggestionTextBoxWithLabel_Location.MaxLength = 90;
-            Control_VisualInventory_SuggestionTextBoxWithLabel_Location.MinLength = 90;
-            Control_VisualInventory_SuggestionTextBoxWithLabel_Location.Name = "Control_VisualInventory_SuggestionTextBoxWithLabel_Location";
-            Control_VisualInventory_SuggestionTextBoxWithLabel_Location.ShowValidationColor = false;
-            Control_VisualInventory_SuggestionTextBoxWithLabel_Location.Size = new Size(764, 23);
-            Control_VisualInventory_SuggestionTextBoxWithLabel_Location.TabIndex = 2;
-            Control_VisualInventory_SuggestionTextBoxWithLabel_Location.ValidatorType = null;
-            // 
-            // Control_VisualInventory_CheckBox_NonZeroOnly
-            // 
-            Control_VisualInventory_CheckBox_NonZeroOnly.Checked = true;
-            Control_VisualInventory_CheckBox_NonZeroOnly.CheckState = CheckState.Checked;
-            Control_VisualInventory_CheckBox_NonZeroOnly.Dock = DockStyle.Fill;
-            Control_VisualInventory_CheckBox_NonZeroOnly.Location = new Point(3, 3);
-            Control_VisualInventory_CheckBox_NonZeroOnly.MaximumSize = new Size(0, 32);
-            Control_VisualInventory_CheckBox_NonZeroOnly.MinimumSize = new Size(0, 32);
-            Control_VisualInventory_CheckBox_NonZeroOnly.Name = "Control_VisualInventory_CheckBox_NonZeroOnly";
-            Control_VisualInventory_CheckBox_NonZeroOnly.Size = new Size(583, 32);
-            Control_VisualInventory_CheckBox_NonZeroOnly.TabIndex = 3;
-            Control_VisualInventory_CheckBox_NonZeroOnly.Text = "Non-Zero";
-            Control_VisualInventory_CheckBox_NonZeroOnly.UseVisualStyleBackColor = true;
-            // 
-            // Control_VisualInventory_Button_Search
-            // 
-            Control_VisualInventory_Button_Search.BackColor = Color.Teal;
-            Control_VisualInventory_Button_Search.Dock = DockStyle.Fill;
-            Control_VisualInventory_Button_Search.FlatStyle = FlatStyle.Flat;
-            Control_VisualInventory_Button_Search.ForeColor = Color.White;
-            Control_VisualInventory_Button_Search.Location = new Point(592, 3);
-            Control_VisualInventory_Button_Search.MaximumSize = new Size(0, 32);
-            Control_VisualInventory_Button_Search.MinimumSize = new Size(0, 32);
-            Control_VisualInventory_Button_Search.Name = "Control_VisualInventory_Button_Search";
-            Control_VisualInventory_Button_Search.Size = new Size(74, 32);
-            Control_VisualInventory_Button_Search.TabIndex = 4;
-            Control_VisualInventory_Button_Search.Text = "Search";
-            Control_VisualInventory_Button_Search.UseVisualStyleBackColor = false;
-            // 
             // tableLayoutPanel1
             // 
             tableLayoutPanel1.ColumnCount = 1;
@@ -175,20 +100,60 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             tableLayoutPanel1.Size = new Size(770, 87);
             tableLayoutPanel1.TabIndex = 5;
             // 
-            // Control_VisualInventory_Button_Export
+            // Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse
             // 
-            Control_VisualInventory_Button_Export.BackColor = Color.SteelBlue;
-            Control_VisualInventory_Button_Export.Dock = DockStyle.Fill;
-            Control_VisualInventory_Button_Export.FlatStyle = FlatStyle.Flat;
-            Control_VisualInventory_Button_Export.ForeColor = Color.White;
-            Control_VisualInventory_Button_Export.Location = new Point(672, 3);
-            Control_VisualInventory_Button_Export.MaximumSize = new Size(0, 32);
-            Control_VisualInventory_Button_Export.MinimumSize = new Size(0, 32);
-            Control_VisualInventory_Button_Export.Name = "Control_VisualInventory_Button_Export";
-            Control_VisualInventory_Button_Export.Size = new Size(95, 32);
-            Control_VisualInventory_Button_Export.TabIndex = 2;
-            Control_VisualInventory_Button_Export.Text = "Export to Excel";
-            Control_VisualInventory_Button_Export.UseVisualStyleBackColor = false;
+            Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse.AutoSize = true;
+            Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse.Dock = DockStyle.Fill;
+            Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse.LabelText = "Warehouse";
+            Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse.LabelVisible = "False";
+            Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse.Location = new Point(3, 61);
+            Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse.MaxLength = 90;
+            Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse.MinimumSize = new Size(0, 23);
+            Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse.MinLength = 90;
+            Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse.Name = "Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse";
+            Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse.PlaceholderText = "Enter Warehouse (002)";
+            Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse.ShowValidationColor = false;
+            Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse.Size = new Size(764, 23);
+            Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse.TabIndex = 1;
+            Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse.ValidatorType = null;
+            Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse.Visible = false;
+            // 
+            // Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber
+            // 
+            Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber.AutoSize = true;
+            Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber.Dock = DockStyle.Fill;
+            Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber.LabelText = "Part Number";
+            Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber.LabelVisible = "False";
+            Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber.Location = new Point(3, 3);
+            Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber.MaxLength = 90;
+            Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber.MinimumSize = new Size(0, 23);
+            Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber.MinLength = 90;
+            Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber.Name = "Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber";
+            Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber.PlaceholderText = "Enter Part Number";
+            Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber.ShowValidationColor = false;
+            Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber.Size = new Size(764, 23);
+            Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber.TabIndex = 0;
+            Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber.ValidatorType = null;
+            // 
+            // Control_VisualInventory_SuggestionTextBoxWithLabel_Location
+            // 
+            Control_VisualInventory_SuggestionTextBoxWithLabel_Location.AutoSize = true;
+            Control_VisualInventory_SuggestionTextBoxWithLabel_Location.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_VisualInventory_SuggestionTextBoxWithLabel_Location.Dock = DockStyle.Fill;
+            Control_VisualInventory_SuggestionTextBoxWithLabel_Location.LabelText = "Location";
+            Control_VisualInventory_SuggestionTextBoxWithLabel_Location.LabelVisible = "False";
+            Control_VisualInventory_SuggestionTextBoxWithLabel_Location.Location = new Point(3, 32);
+            Control_VisualInventory_SuggestionTextBoxWithLabel_Location.MaxLength = 90;
+            Control_VisualInventory_SuggestionTextBoxWithLabel_Location.MinimumSize = new Size(0, 23);
+            Control_VisualInventory_SuggestionTextBoxWithLabel_Location.MinLength = 90;
+            Control_VisualInventory_SuggestionTextBoxWithLabel_Location.Name = "Control_VisualInventory_SuggestionTextBoxWithLabel_Location";
+            Control_VisualInventory_SuggestionTextBoxWithLabel_Location.PlaceholderText = "Enter Location";
+            Control_VisualInventory_SuggestionTextBoxWithLabel_Location.ShowValidationColor = false;
+            Control_VisualInventory_SuggestionTextBoxWithLabel_Location.Size = new Size(764, 23);
+            Control_VisualInventory_SuggestionTextBoxWithLabel_Location.TabIndex = 2;
+            Control_VisualInventory_SuggestionTextBoxWithLabel_Location.ValidatorType = null;
             // 
             // tableLayoutPanel2
             // 
@@ -206,6 +171,50 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             tableLayoutPanel2.RowStyles.Add(new RowStyle());
             tableLayoutPanel2.Size = new Size(770, 38);
             tableLayoutPanel2.TabIndex = 6;
+            // 
+            // Control_VisualInventory_Button_Search
+            // 
+            Control_VisualInventory_Button_Search.BackColor = Color.Teal;
+            Control_VisualInventory_Button_Search.Dock = DockStyle.Fill;
+            Control_VisualInventory_Button_Search.FlatStyle = FlatStyle.Flat;
+            Control_VisualInventory_Button_Search.ForeColor = Color.White;
+            Control_VisualInventory_Button_Search.Location = new Point(592, 3);
+            Control_VisualInventory_Button_Search.MaximumSize = new Size(0, 32);
+            Control_VisualInventory_Button_Search.MinimumSize = new Size(0, 32);
+            Control_VisualInventory_Button_Search.Name = "Control_VisualInventory_Button_Search";
+            Control_VisualInventory_Button_Search.Size = new Size(74, 32);
+            Control_VisualInventory_Button_Search.TabIndex = 4;
+            Control_VisualInventory_Button_Search.Text = "Search";
+            Control_VisualInventory_Button_Search.UseVisualStyleBackColor = false;
+            // 
+            // Control_VisualInventory_CheckBox_NonZeroOnly
+            // 
+            Control_VisualInventory_CheckBox_NonZeroOnly.Checked = true;
+            Control_VisualInventory_CheckBox_NonZeroOnly.CheckState = CheckState.Checked;
+            Control_VisualInventory_CheckBox_NonZeroOnly.Dock = DockStyle.Fill;
+            Control_VisualInventory_CheckBox_NonZeroOnly.Location = new Point(3, 3);
+            Control_VisualInventory_CheckBox_NonZeroOnly.MaximumSize = new Size(0, 32);
+            Control_VisualInventory_CheckBox_NonZeroOnly.MinimumSize = new Size(0, 32);
+            Control_VisualInventory_CheckBox_NonZeroOnly.Name = "Control_VisualInventory_CheckBox_NonZeroOnly";
+            Control_VisualInventory_CheckBox_NonZeroOnly.Size = new Size(583, 32);
+            Control_VisualInventory_CheckBox_NonZeroOnly.TabIndex = 3;
+            Control_VisualInventory_CheckBox_NonZeroOnly.Text = "Non-Zero";
+            Control_VisualInventory_CheckBox_NonZeroOnly.UseVisualStyleBackColor = true;
+            // 
+            // Control_VisualInventory_Button_Export
+            // 
+            Control_VisualInventory_Button_Export.BackColor = Color.SteelBlue;
+            Control_VisualInventory_Button_Export.Dock = DockStyle.Fill;
+            Control_VisualInventory_Button_Export.FlatStyle = FlatStyle.Flat;
+            Control_VisualInventory_Button_Export.ForeColor = Color.White;
+            Control_VisualInventory_Button_Export.Location = new Point(672, 3);
+            Control_VisualInventory_Button_Export.MaximumSize = new Size(0, 32);
+            Control_VisualInventory_Button_Export.MinimumSize = new Size(0, 32);
+            Control_VisualInventory_Button_Export.Name = "Control_VisualInventory_Button_Export";
+            Control_VisualInventory_Button_Export.Size = new Size(95, 32);
+            Control_VisualInventory_Button_Export.TabIndex = 2;
+            Control_VisualInventory_Button_Export.Text = "Export to Excel";
+            Control_VisualInventory_Button_Export.UseVisualStyleBackColor = false;
             // 
             // panel1
             // 

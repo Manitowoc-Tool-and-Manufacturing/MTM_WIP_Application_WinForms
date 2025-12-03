@@ -30,11 +30,13 @@ namespace MTM_WIP_Application_Winforms.Forms.ErrorReports
 
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form_ViewErrorReports));
             controlErrorReportsGrid = new Control_ErrorReportsGrid();
             panelExportButtons = new Panel();
             btnExportCsv = new Button();
             btnExportExcel = new Button();
             btnExportSelected = new Button();
+            panelExportButtons.SuspendLayout();
             SuspendLayout();
             // 
             // controlErrorReportsGrid
@@ -47,14 +49,14 @@ namespace MTM_WIP_Application_Winforms.Forms.ErrorReports
             // 
             // panelExportButtons
             // 
+            panelExportButtons.Controls.Add(btnExportCsv);
+            panelExportButtons.Controls.Add(btnExportExcel);
+            panelExportButtons.Controls.Add(btnExportSelected);
             panelExportButtons.Dock = DockStyle.Bottom;
             panelExportButtons.Location = new Point(0, 560);
             panelExportButtons.Name = "panelExportButtons";
             panelExportButtons.Size = new Size(1000, 40);
             panelExportButtons.TabIndex = 1;
-            panelExportButtons.Controls.Add(btnExportCsv);
-            panelExportButtons.Controls.Add(btnExportExcel);
-            panelExportButtons.Controls.Add(btnExportSelected);
             // 
             // btnExportCsv
             // 
@@ -76,13 +78,13 @@ namespace MTM_WIP_Application_Winforms.Forms.ErrorReports
             // 
             // btnExportSelected
             // 
+            btnExportSelected.Enabled = false;
             btnExportSelected.Location = new Point(270, 8);
             btnExportSelected.Name = "btnExportSelected";
             btnExportSelected.Size = new Size(120, 25);
             btnExportSelected.TabIndex = 2;
             btnExportSelected.Text = "Export Selected";
             btnExportSelected.UseVisualStyleBackColor = true;
-            btnExportSelected.Enabled = false;
             // 
             // Form_ViewErrorReports
             // 
@@ -91,10 +93,12 @@ namespace MTM_WIP_Application_Winforms.Forms.ErrorReports
             ClientSize = new Size(1000, 600);
             Controls.Add(controlErrorReportsGrid);
             Controls.Add(panelExportButtons);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             MinimumSize = new Size(800, 500);
             Name = "Form_ViewErrorReports";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "View Error Reports";
+            panelExportButtons.ResumeLayout(false);
             ResumeLayout(false);
         }
 

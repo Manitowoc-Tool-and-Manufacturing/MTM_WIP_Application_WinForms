@@ -77,6 +77,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_AdvancedRemove_TextBox_Operation = new TextBox();
             Control_AdvancedRemove_Label_Part = new Label();
             Control_AdvancedRemove_TableLayout_Buttons_Left = new TableLayoutPanel();
+            Control_AdvancedRemove_Button_SearchVisual = new Button();
             Control_AdvancedRemove_Button_Search = new Button();
             Control_AdvancedRemove_Button_Delete = new Button();
             Control_AdvancedRemove_Button_Undo = new Button();
@@ -99,7 +100,6 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_AdvancedRemove_RadioButton_Everything = new RadioButton();
             Control_AdvancedRemove_RadioButton_Custom = new RadioButton();
             Control_AdvancedRemove_SuggestionBox_User = new SuggestionTextBoxWithLabel();
-            Control_AdvancedRemove_Button_SearchVisual = new Button();
             Control_AdvancedRemove_GroupBox_Main.SuspendLayout();
             Control_AdvancedRemove_TableLayout_Main.SuspendLayout();
             Control_AdvancedRemove_TableLayout_Bottom_Buttons.SuspendLayout();
@@ -286,7 +286,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_AdvancedRemove_Image_NothingFound.Location = new Point(3, 3);
             Control_AdvancedRemove_Image_NothingFound.Name = "Control_AdvancedRemove_Image_NothingFound";
             Control_AdvancedRemove_Image_NothingFound.Size = new Size(468, 348);
-            Control_AdvancedRemove_Image_NothingFound.SizeMode = PictureBoxSizeMode.Zoom;
+            Control_AdvancedRemove_Image_NothingFound.SizeMode = PictureBoxSizeMode.CenterImage;
             Control_AdvancedRemove_Image_NothingFound.TabIndex = 0;
             Control_AdvancedRemove_Image_NothingFound.TabStop = false;
             Control_AdvancedRemove_Image_NothingFound.Visible = false;
@@ -452,6 +452,21 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_AdvancedRemove_TableLayout_Buttons_Left.RowStyles.Add(new RowStyle());
             Control_AdvancedRemove_TableLayout_Buttons_Left.Size = new Size(292, 38);
             Control_AdvancedRemove_TableLayout_Buttons_Left.TabIndex = 6;
+            // 
+            // Control_AdvancedRemove_Button_SearchVisual
+            // 
+            Control_AdvancedRemove_Button_SearchVisual.AutoSize = true;
+            Control_AdvancedRemove_Button_SearchVisual.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_AdvancedRemove_Button_SearchVisual.Dock = DockStyle.Fill;
+            Control_AdvancedRemove_Button_SearchVisual.Enabled = false;
+            Control_AdvancedRemove_Button_SearchVisual.Font = new Font("Segoe UI Emoji", 9F);
+            Control_AdvancedRemove_Button_SearchVisual.Location = new Point(202, 3);
+            Control_AdvancedRemove_Button_SearchVisual.MaximumSize = new Size(0, 32);
+            Control_AdvancedRemove_Button_SearchVisual.MinimumSize = new Size(0, 32);
+            Control_AdvancedRemove_Button_SearchVisual.Name = "Control_AdvancedRemove_Button_SearchVisual";
+            Control_AdvancedRemove_Button_SearchVisual.Size = new Size(87, 32);
+            Control_AdvancedRemove_Button_SearchVisual.TabIndex = 16;
+            Control_AdvancedRemove_Button_SearchVisual.Text = "Search Visual";
             // 
             // Control_AdvancedRemove_Button_Search
             // 
@@ -760,6 +775,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_AdvancedRemove_TableLayout_Inputs.SetColumnSpan(Control_AdvancedRemove_SuggestionBox_User, 2);
             Control_AdvancedRemove_SuggestionBox_User.Dock = DockStyle.Fill;
             Control_AdvancedRemove_SuggestionBox_User.LabelText = "User";
+            Control_AdvancedRemove_SuggestionBox_User.LabelVisible = "False";
             Control_AdvancedRemove_SuggestionBox_User.Location = new Point(3, 284);
             Control_AdvancedRemove_SuggestionBox_User.MaxLength = 130;
             Control_AdvancedRemove_SuggestionBox_User.MinimumSize = new Size(0, 23);
@@ -768,21 +784,6 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_AdvancedRemove_SuggestionBox_User.PlaceholderText = "Select or Enter User";
             Control_AdvancedRemove_SuggestionBox_User.Size = new Size(292, 23);
             Control_AdvancedRemove_SuggestionBox_User.TabIndex = 7;
-            // 
-            // Control_AdvancedRemove_Button_SearchVisual
-            // 
-            Control_AdvancedRemove_Button_SearchVisual.AutoSize = true;
-            Control_AdvancedRemove_Button_SearchVisual.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            Control_AdvancedRemove_Button_SearchVisual.Dock = DockStyle.Fill;
-            Control_AdvancedRemove_Button_SearchVisual.Enabled = false;
-            Control_AdvancedRemove_Button_SearchVisual.Font = new Font("Segoe UI Emoji", 9F);
-            Control_AdvancedRemove_Button_SearchVisual.Location = new Point(202, 3);
-            Control_AdvancedRemove_Button_SearchVisual.MaximumSize = new Size(0, 32);
-            Control_AdvancedRemove_Button_SearchVisual.MinimumSize = new Size(0, 32);
-            Control_AdvancedRemove_Button_SearchVisual.Name = "Control_AdvancedRemove_Button_SearchVisual";
-            Control_AdvancedRemove_Button_SearchVisual.Size = new Size(87, 32);
-            Control_AdvancedRemove_Button_SearchVisual.TabIndex = 16;
-            Control_AdvancedRemove_Button_SearchVisual.Text = "Search Visual";
             // 
             // Control_AdvancedRemove
             // 

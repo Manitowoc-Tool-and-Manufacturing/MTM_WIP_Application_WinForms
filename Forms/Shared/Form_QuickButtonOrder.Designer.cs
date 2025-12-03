@@ -28,34 +28,35 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
         /// </summary>
         private void InitializeComponent()
         {
-            Form_QuickButtonOrder_ListView_Main = new System.Windows.Forms.ListView();
-            Form_QuickButtonOrder_ColumnHeader_Position = new System.Windows.Forms.ColumnHeader();
-            Form_QuickButtonOrder_ColumnHeader_PartId = new System.Windows.Forms.ColumnHeader();
-            Form_QuickButtonOrder_ColumnHeader_Operation = new System.Windows.Forms.ColumnHeader();
-            Form_QuickButtonOrder_ColumnHeader_Quantity = new System.Windows.Forms.ColumnHeader();
-            Form_QuickButtonOrder_Label_Instructions = new System.Windows.Forms.Label();
-            Form_QuickButtonOrder_Button_OK = new System.Windows.Forms.Button();
-            Form_QuickButtonOrder_Button_Cancel = new System.Windows.Forms.Button();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form_QuickButtonOrder));
+            Form_QuickButtonOrder_ListView_Main = new ListView();
+            Form_QuickButtonOrder_ColumnHeader_Position = new ColumnHeader();
+            Form_QuickButtonOrder_ColumnHeader_PartId = new ColumnHeader();
+            Form_QuickButtonOrder_ColumnHeader_Operation = new ColumnHeader();
+            Form_QuickButtonOrder_ColumnHeader_Quantity = new ColumnHeader();
+            Form_QuickButtonOrder_Label_Instructions = new Label();
+            Form_QuickButtonOrder_Button_OK = new Button();
+            Form_QuickButtonOrder_Button_Cancel = new Button();
             SuspendLayout();
             // 
             // Form_QuickButtonOrder_ListView_Main
             // 
             Form_QuickButtonOrder_ListView_Main.AllowDrop = true;
-            Form_QuickButtonOrder_ListView_Main.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] { Form_QuickButtonOrder_ColumnHeader_Position, Form_QuickButtonOrder_ColumnHeader_PartId, Form_QuickButtonOrder_ColumnHeader_Operation, Form_QuickButtonOrder_ColumnHeader_Quantity });
-            Form_QuickButtonOrder_ListView_Main.Dock = System.Windows.Forms.DockStyle.Top;
+            Form_QuickButtonOrder_ListView_Main.Columns.AddRange(new ColumnHeader[] { Form_QuickButtonOrder_ColumnHeader_Position, Form_QuickButtonOrder_ColumnHeader_PartId, Form_QuickButtonOrder_ColumnHeader_Operation, Form_QuickButtonOrder_ColumnHeader_Quantity });
+            Form_QuickButtonOrder_ListView_Main.Dock = DockStyle.Top;
             Form_QuickButtonOrder_ListView_Main.FullRowSelect = true;
-            Form_QuickButtonOrder_ListView_Main.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            Form_QuickButtonOrder_ListView_Main.Location = new System.Drawing.Point(0, 0);
+            Form_QuickButtonOrder_ListView_Main.HeaderStyle = ColumnHeaderStyle.Nonclickable;
+            Form_QuickButtonOrder_ListView_Main.Location = new Point(0, 0);
             Form_QuickButtonOrder_ListView_Main.Name = "Form_QuickButtonOrder_ListView_Main";
-            Form_QuickButtonOrder_ListView_Main.Size = new System.Drawing.Size(484, 250);
+            Form_QuickButtonOrder_ListView_Main.Size = new Size(484, 250);
             Form_QuickButtonOrder_ListView_Main.TabIndex = 0;
             Form_QuickButtonOrder_ListView_Main.UseCompatibleStateImageBehavior = false;
-            Form_QuickButtonOrder_ListView_Main.View = System.Windows.Forms.View.Details;
+            Form_QuickButtonOrder_ListView_Main.View = View.Details;
             // 
             // Form_QuickButtonOrder_ColumnHeader_Position
             // 
             Form_QuickButtonOrder_ColumnHeader_Position.Text = "Position";
-            Form_QuickButtonOrder_ColumnHeader_Position.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            Form_QuickButtonOrder_ColumnHeader_Position.TextAlign = HorizontalAlignment.Center;
             Form_QuickButtonOrder_ColumnHeader_Position.Width = 70;
             // 
             // Form_QuickButtonOrder_ColumnHeader_PartId
@@ -71,38 +72,38 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             // Form_QuickButtonOrder_ColumnHeader_Quantity
             // 
             Form_QuickButtonOrder_ColumnHeader_Quantity.Text = "Quantity";
-            Form_QuickButtonOrder_ColumnHeader_Quantity.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            Form_QuickButtonOrder_ColumnHeader_Quantity.TextAlign = HorizontalAlignment.Right;
             Form_QuickButtonOrder_ColumnHeader_Quantity.Width = 80;
             // 
             // Form_QuickButtonOrder_Label_Instructions
             // 
-            Form_QuickButtonOrder_Label_Instructions.Dock = System.Windows.Forms.DockStyle.Top;
-            Form_QuickButtonOrder_Label_Instructions.Location = new System.Drawing.Point(0, 250);
+            Form_QuickButtonOrder_Label_Instructions.Dock = DockStyle.Top;
+            Form_QuickButtonOrder_Label_Instructions.Location = new Point(0, 250);
             Form_QuickButtonOrder_Label_Instructions.Name = "Form_QuickButtonOrder_Label_Instructions";
-            Form_QuickButtonOrder_Label_Instructions.Padding = new System.Windows.Forms.Padding(8);
-            Form_QuickButtonOrder_Label_Instructions.Size = new System.Drawing.Size(484, 90);
+            Form_QuickButtonOrder_Label_Instructions.Padding = new Padding(8);
+            Form_QuickButtonOrder_Label_Instructions.Size = new Size(484, 90);
             Form_QuickButtonOrder_Label_Instructions.TabIndex = 1;
             Form_QuickButtonOrder_Label_Instructions.Text = "How to use this form:\r\n\r\n- Drag and drop rows to change the order.\r\n- Use Shift+Up/Down to move a selected row.\r\n- Click OK to save your changes.";
-            Form_QuickButtonOrder_Label_Instructions.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            Form_QuickButtonOrder_Label_Instructions.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // Form_QuickButtonOrder_Button_OK
             // 
-            Form_QuickButtonOrder_Button_OK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            Form_QuickButtonOrder_Button_OK.Dock = System.Windows.Forms.DockStyle.Bottom;
-            Form_QuickButtonOrder_Button_OK.Location = new System.Drawing.Point(0, 418);
+            Form_QuickButtonOrder_Button_OK.DialogResult = DialogResult.OK;
+            Form_QuickButtonOrder_Button_OK.Dock = DockStyle.Bottom;
+            Form_QuickButtonOrder_Button_OK.Location = new Point(0, 418);
             Form_QuickButtonOrder_Button_OK.Name = "Form_QuickButtonOrder_Button_OK";
-            Form_QuickButtonOrder_Button_OK.Size = new System.Drawing.Size(484, 23);
+            Form_QuickButtonOrder_Button_OK.Size = new Size(484, 23);
             Form_QuickButtonOrder_Button_OK.TabIndex = 2;
             Form_QuickButtonOrder_Button_OK.Text = "OK";
             Form_QuickButtonOrder_Button_OK.UseVisualStyleBackColor = true;
             // 
             // Form_QuickButtonOrder_Button_Cancel
             // 
-            Form_QuickButtonOrder_Button_Cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            Form_QuickButtonOrder_Button_Cancel.Dock = System.Windows.Forms.DockStyle.Bottom;
-            Form_QuickButtonOrder_Button_Cancel.Location = new System.Drawing.Point(0, 441);
+            Form_QuickButtonOrder_Button_Cancel.DialogResult = DialogResult.Cancel;
+            Form_QuickButtonOrder_Button_Cancel.Dock = DockStyle.Bottom;
+            Form_QuickButtonOrder_Button_Cancel.Location = new Point(0, 441);
             Form_QuickButtonOrder_Button_Cancel.Name = "Form_QuickButtonOrder_Button_Cancel";
-            Form_QuickButtonOrder_Button_Cancel.Size = new System.Drawing.Size(484, 23);
+            Form_QuickButtonOrder_Button_Cancel.Size = new Size(484, 23);
             Form_QuickButtonOrder_Button_Cancel.TabIndex = 3;
             Form_QuickButtonOrder_Button_Cancel.Text = "Cancel";
             Form_QuickButtonOrder_Button_Cancel.UseVisualStyleBackColor = true;
@@ -110,20 +111,21 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             // Form_QuickButtonOrder
             // 
             AcceptButton = Form_QuickButtonOrder_Button_OK;
-            AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
             CancelButton = Form_QuickButtonOrder_Button_Cancel;
-            ClientSize = new System.Drawing.Size(484, 464);
+            ClientSize = new Size(484, 464);
             Controls.Add(Form_QuickButtonOrder_Label_Instructions);
             Controls.Add(Form_QuickButtonOrder_ListView_Main);
             Controls.Add(Form_QuickButtonOrder_Button_OK);
             Controls.Add(Form_QuickButtonOrder_Button_Cancel);
-            FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            FormBorderStyle = FormBorderStyle.FixedDialog;
+            Icon = (Icon)resources.GetObject("$this.Icon");
             MaximizeBox = false;
             MinimizeBox = false;
             Name = "Form_QuickButtonOrder";
             ShowInTaskbar = false;
-            StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            StartPosition = FormStartPosition.CenterParent;
             Text = "Change Quick Button Order";
             ResumeLayout(false);
         }

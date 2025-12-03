@@ -44,13 +44,14 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
         #region Methods
         private void InitializeComponent()
         {
-            this.AutoScaleMode = AutoScaleMode.Dpi;
-            this.AutoScaleDimensions = new SizeF(96F, 96F);
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form_PODetails));
             _dataGridView = new DataGridView();
             _lblLoading = new Label();
             ((System.ComponentModel.ISupportInitialize)_dataGridView).BeginInit();
             SuspendLayout();
-
+            // 
+            // _dataGridView
+            // 
             _dataGridView.AllowUserToAddRows = false;
             _dataGridView.AllowUserToDeleteRows = false;
             _dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
@@ -63,19 +64,28 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             _dataGridView.ReadOnly = true;
             _dataGridView.RowHeadersVisible = false;
             _dataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            _dataGridView.Size = new Size(284, 261);
             _dataGridView.TabIndex = 0;
             _dataGridView.Visible = false;
-
+            // 
+            // _lblLoading
+            // 
             _lblLoading.AutoSize = true;
-            _lblLoading.Font = new Font("Segoe UI Emoji", 12F, FontStyle.Regular, GraphicsUnit.Point);
+            _lblLoading.Font = new Font("Segoe UI Emoji", 12F);
             _lblLoading.Location = new Point(350, 220);
             _lblLoading.Name = "_lblLoading";
-            _lblLoading.Size = new Size(78, 21);
+            _lblLoading.Size = new Size(75, 21);
             _lblLoading.TabIndex = 1;
             _lblLoading.Text = "Loading...";
-
+            // 
+            // Form_PODetails
+            // 
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            ClientSize = new Size(284, 261);
             Controls.Add(_dataGridView);
             Controls.Add(_lblLoading);
+            Name = "Form_PODetails";
             ((System.ComponentModel.ISupportInitialize)_dataGridView).EndInit();
             ResumeLayout(false);
             PerformLayout();

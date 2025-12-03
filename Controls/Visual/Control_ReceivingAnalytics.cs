@@ -24,6 +24,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         private readonly Control_TextAnimationSequence _deliveryStatesAnimation;
         private readonly Control_TextAnimationSequence _receivingScopeAnimation;
         private readonly Control_TextAnimationSequence _outsideScopeAnimation;
+        private readonly Control_TextAnimationSequence _searchPanelAnimation;
         
         // Expanded state tracking
         private bool _isDateRangeExpanded = true;
@@ -32,6 +33,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         private bool _isDeliveryStatesExpanded = true;
         private bool _isReceivingScopeExpanded = true;
         private bool _isOutsideScopeExpanded = true;
+        private bool _isSearchPanelExpanded = true;
         #endregion
 
         #region Constructors
@@ -73,6 +75,12 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             _outsideScopeAnimation.TargetButton = Control_ReceivingAnalytics_Button_OutsideScopeHeader;
             _outsideScopeAnimation.UsePreset(TextAnimationPreset.Up);
             _outsideScopeAnimation.StartAnimation();
+
+            _searchPanelAnimation = new Control_TextAnimationSequence();
+            _searchPanelAnimation.TargetButton = button1;
+            _searchPanelAnimation.SuffixText = " All";
+            _searchPanelAnimation.UsePreset(TextAnimationPreset.Up);
+            _searchPanelAnimation.StartAnimation();
 
             // Initialize Suggestion Boxes
             InitializeSuggestionBoxes();
@@ -180,6 +188,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_ReceivingAnalytics_Button_DeliveryStatesHeader.Click += ToggleDeliveryStatesSection;
             Control_ReceivingAnalytics_Button_ReceivingScopeHeader.Click += ToggleReceivingScopeSection;
             Control_ReceivingAnalytics_Button_OutsideScopeHeader.Click += ToggleOutsideScopeSection;
+            button1.Click += ToggleSearchPanel;
         }
 
         private void InitializeSuggestionBoxes()
@@ -619,6 +628,25 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             else
             {
                 _outsideScopeAnimation.UsePreset(TextAnimationPreset.Down);
+            }
+        }
+void ToggleSearchPanel(object? sender, EventArgs e)
+        {
+            _isSearchPanelExpanded = !_isSearchPanelExpanded;
+
+            // Toggle visibility of all search/filter panels
+            tableLayoutPanel2.Visible = _isSearchPanelExpanded;
+            tableLayoutPanel3.Visible = _isSearchPanelExpanded;
+            tableLayoutPanel5.Visible = _isSearchPanelExpanded;
+            Control_ReceivingAnalytics_TableLayoutPanel_DateRangeMain.Visible = _isSearchPanelExpanded;
+
+            if (_isSearchPanelExpanded)
+            {
+                _searchPanelAnimation.UsePreset(TextAnimationPreset.Up);
+            }
+            else
+            {
+                _searchPanelAnimation.UsePreset(TextAnimationPreset.Down);
             }
         }
 

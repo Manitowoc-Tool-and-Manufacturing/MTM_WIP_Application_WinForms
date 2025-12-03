@@ -29,12 +29,13 @@ namespace MTM_WIP_Application_Winforms.Forms.Transactions
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TransactionLifecycleForm));
             TransactionLifecycleForm_TableLayout_Main = new TableLayoutPanel();
             TransactionLifecycleForm_Panel_TreeView = new Panel();
             TransactionLifecycleForm_TreeView_Lifecycle = new TreeView();
             TransactionLifecycleForm_ImageList_Icons = new ImageList(components);
             TransactionLifecycleForm_Panel_DetailView = new Panel();
-            TransactionLifecycleForm_DetailPanel = new Controls.Transactions.TransactionDetailPanel();
+            TransactionLifecycleForm_DetailPanel = new MTM_WIP_Application_Winforms.Controls.Transactions.TransactionDetailPanel();
             TransactionLifecycleForm_Panel_Buttons = new Panel();
             TransactionLifecycleForm_TableLayout_Buttons = new TableLayoutPanel();
             TransactionLifecycleForm_Button_Export = new Button();
@@ -98,6 +99,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Transactions
             // 
             TransactionLifecycleForm_ImageList_Icons.ColorDepth = ColorDepth.Depth32Bit;
             TransactionLifecycleForm_ImageList_Icons.ImageSize = new Size(16, 16);
+            TransactionLifecycleForm_ImageList_Icons.TransparentColor = Color.Transparent;
             // 
             // TransactionLifecycleForm_Panel_DetailView
             // 
@@ -111,6 +113,8 @@ namespace MTM_WIP_Application_Winforms.Forms.Transactions
             // 
             // TransactionLifecycleForm_DetailPanel
             // 
+            TransactionLifecycleForm_DetailPanel.AutoSize = true;
+            TransactionLifecycleForm_DetailPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             TransactionLifecycleForm_DetailPanel.Dock = DockStyle.Fill;
             TransactionLifecycleForm_DetailPanel.Location = new Point(0, 0);
             TransactionLifecycleForm_DetailPanel.Name = "TransactionLifecycleForm_DetailPanel";
@@ -155,11 +159,11 @@ namespace MTM_WIP_Application_Winforms.Forms.Transactions
             TransactionLifecycleForm_Button_Export.FlatStyle = FlatStyle.Flat;
             TransactionLifecycleForm_Button_Export.Font = new Font("Segoe UI Emoji", 9F, FontStyle.Bold);
             TransactionLifecycleForm_Button_Export.ForeColor = Color.White;
-            TransactionLifecycleForm_Button_Export.Location = new Point(267, 5);
+            TransactionLifecycleForm_Button_Export.Location = new Point(198, 5);
             TransactionLifecycleForm_Button_Export.Margin = new Padding(5);
             TransactionLifecycleForm_Button_Export.MinimumSize = new Size(75, 32);
             TransactionLifecycleForm_Button_Export.Name = "TransactionLifecycleForm_Button_Export";
-            TransactionLifecycleForm_Button_Export.Size = new Size(75, 34);
+            TransactionLifecycleForm_Button_Export.Size = new Size(79, 32);
             TransactionLifecycleForm_Button_Export.TabIndex = 0;
             TransactionLifecycleForm_Button_Export.Text = "📊 Export";
             TransactionLifecycleForm_Button_Export.UseVisualStyleBackColor = false;
@@ -172,11 +176,11 @@ namespace MTM_WIP_Application_Winforms.Forms.Transactions
             TransactionLifecycleForm_Button_Print.FlatStyle = FlatStyle.Flat;
             TransactionLifecycleForm_Button_Print.Font = new Font("Segoe UI Emoji", 9F, FontStyle.Bold);
             TransactionLifecycleForm_Button_Print.ForeColor = Color.White;
-            TransactionLifecycleForm_Button_Print.Location = new Point(357, 5);
+            TransactionLifecycleForm_Button_Print.Location = new Point(297, 5);
             TransactionLifecycleForm_Button_Print.Margin = new Padding(5);
             TransactionLifecycleForm_Button_Print.MinimumSize = new Size(75, 32);
             TransactionLifecycleForm_Button_Print.Name = "TransactionLifecycleForm_Button_Print";
-            TransactionLifecycleForm_Button_Print.Size = new Size(75, 34);
+            TransactionLifecycleForm_Button_Print.Size = new Size(75, 32);
             TransactionLifecycleForm_Button_Print.TabIndex = 1;
             TransactionLifecycleForm_Button_Print.Text = "🖨️ Print";
             TransactionLifecycleForm_Button_Print.UseVisualStyleBackColor = false;
@@ -189,11 +193,11 @@ namespace MTM_WIP_Application_Winforms.Forms.Transactions
             TransactionLifecycleForm_Button_Close.DialogResult = DialogResult.Cancel;
             TransactionLifecycleForm_Button_Close.FlatStyle = FlatStyle.Flat;
             TransactionLifecycleForm_Button_Close.Font = new Font("Segoe UI Emoji", 9F, FontStyle.Bold);
-            TransactionLifecycleForm_Button_Close.Location = new Point(442, 5);
+            TransactionLifecycleForm_Button_Close.Location = new Point(382, 5);
             TransactionLifecycleForm_Button_Close.Margin = new Padding(5);
             TransactionLifecycleForm_Button_Close.MinimumSize = new Size(75, 32);
             TransactionLifecycleForm_Button_Close.Name = "TransactionLifecycleForm_Button_Close";
-            TransactionLifecycleForm_Button_Close.Size = new Size(75, 34);
+            TransactionLifecycleForm_Button_Close.Size = new Size(75, 32);
             TransactionLifecycleForm_Button_Close.TabIndex = 2;
             TransactionLifecycleForm_Button_Close.Text = "❌ Close";
             TransactionLifecycleForm_Button_Close.UseVisualStyleBackColor = false;
@@ -210,7 +214,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Transactions
             // TransactionLifecycleForm_ToolStripStatusLabel_Legend
             // 
             TransactionLifecycleForm_ToolStripStatusLabel_Legend.Name = "TransactionLifecycleForm_ToolStripStatusLabel_Legend";
-            TransactionLifecycleForm_ToolStripStatusLabel_Legend.Size = new Size(271, 17);
+            TransactionLifecycleForm_ToolStripStatusLabel_Legend.Size = new Size(384, 17);
             TransactionLifecycleForm_ToolStripStatusLabel_Legend.Text = "📥 IN (Green)  |  🔄 TRANSFER (Blue)  |  📤 OUT (Red)  |  📦 Split (Orange)";
             // 
             // TransactionLifecycleForm
@@ -221,17 +225,18 @@ namespace MTM_WIP_Application_Winforms.Forms.Transactions
             ClientSize = new Size(800, 494);
             Controls.Add(TransactionLifecycleForm_TableLayout_Main);
             Controls.Add(TransactionLifecycleForm_StatusStrip);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             MaximizeBox = false;
             MinimizeBox = false;
             MinimumSize = new Size(600, 400);
             Name = "TransactionLifecycleForm";
-            ShowIcon = false;
             ShowInTaskbar = false;
             StartPosition = FormStartPosition.CenterParent;
             Text = "Transaction Lifecycle";
             TransactionLifecycleForm_TableLayout_Main.ResumeLayout(false);
             TransactionLifecycleForm_Panel_TreeView.ResumeLayout(false);
             TransactionLifecycleForm_Panel_DetailView.ResumeLayout(false);
+            TransactionLifecycleForm_Panel_DetailView.PerformLayout();
             TransactionLifecycleForm_Panel_Buttons.ResumeLayout(false);
             TransactionLifecycleForm_Panel_Buttons.PerformLayout();
             TransactionLifecycleForm_TableLayout_Buttons.ResumeLayout(false);

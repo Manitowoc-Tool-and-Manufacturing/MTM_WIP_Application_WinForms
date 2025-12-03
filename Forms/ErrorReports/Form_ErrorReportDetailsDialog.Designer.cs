@@ -30,19 +30,20 @@ namespace MTM_WIP_Application_Winforms.Forms.ErrorReports
 
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form_ErrorReportDetailsDialog));
             tableLayoutPanelMain = new TableLayoutPanel();
             controlErrorReportDetails = new Control_ErrorReportDetails();
             tableLayoutPanelMain.SuspendLayout();
             SuspendLayout();
             // 
-            // Control_ReceivingAnalytics_TableLayoutPanel_Main
+            // tableLayoutPanelMain
             // 
             tableLayoutPanelMain.ColumnCount = 1;
             tableLayoutPanelMain.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             tableLayoutPanelMain.Controls.Add(controlErrorReportDetails, 0, 0);
             tableLayoutPanelMain.Dock = DockStyle.Fill;
             tableLayoutPanelMain.Location = new Point(0, 0);
-            tableLayoutPanelMain.Name = "Control_ReceivingAnalytics_TableLayoutPanel_Main";
+            tableLayoutPanelMain.Name = "tableLayoutPanelMain";
             tableLayoutPanelMain.Padding = new Padding(10);
             tableLayoutPanelMain.RowCount = 1;
             tableLayoutPanelMain.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
@@ -64,12 +65,10 @@ namespace MTM_WIP_Application_Winforms.Forms.ErrorReports
             AutoScaleMode = AutoScaleMode.Dpi;
             ClientSize = new Size(750, 550);
             Controls.Add(tableLayoutPanelMain);
-            FormBorderStyle = FormBorderStyle.Sizable;
-            MaximizeBox = true;
+            Icon = (Icon)resources.GetObject("$this.Icon");
             MinimizeBox = false;
             MinimumSize = new Size(670, 470);
             Name = "Form_ErrorReportDetailsDialog";
-            ShowIcon = false;
             ShowInTaskbar = false;
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Error Report Details";

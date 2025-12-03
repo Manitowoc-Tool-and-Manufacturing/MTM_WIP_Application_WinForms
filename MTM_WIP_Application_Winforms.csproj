@@ -86,9 +86,6 @@
     <!-- ================================================================== -->
     <ItemGroup>
         <!-- Root Files -->
-        <Content Include="MTMWIPApp.ico">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
         <Content Include="RELEASE_NOTES.json">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>

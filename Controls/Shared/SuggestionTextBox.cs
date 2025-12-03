@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.InteropServices;
 using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Models;
@@ -17,6 +18,15 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
     [Description("TextBox with intelligent suggestion/autocomplete support")]
     public partial class SuggestionTextBox : ThemedUserControl
     {
+        #region Native Interop
+
+        private const int EM_SETCUEBANNER = 0x1501;
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        private static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wParam, [MarshalAs(UnmanagedType.LPWStr)] string lParam);
+
+        #endregion
+
         #region Fields
 
         private SuggestionOverlayForm? _currentOverlay;
@@ -173,6 +183,15 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
         }
 
         /// <summary>
+        /// Gets or sets whether the placeholder text remains visible when the control has focus
+        /// (until the user starts typing).
+        /// </summary>
+        [Category("Appearance")]
+        [Description("Keep placeholder text visible when control has focus")]
+        [DefaultValue(true)]
+        public bool KeepPlaceholderOnFocus { get; set; } = true;
+
+        /// <summary>
         /// Gets or sets the placeholder text shown when the control is empty.
         /// </summary>
         [Category("Appearance")]
@@ -180,7 +199,11 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
         public string PlaceholderText
         {
             get => SuggestionTextBox_TextBox.PlaceholderText;
-            set => SuggestionTextBox_TextBox.PlaceholderText = value;
+            set
+            {
+                SuggestionTextBox_TextBox.PlaceholderText = value;
+                UpdateCueBanner();
+            }
         }
 
         #endregion
@@ -223,6 +246,8 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
         [Description("Occurs when suggestion overlay opens")]
         public event EventHandler<EventArgs>? SuggestionOverlayOpened;
 
+
+
         /// <summary>
         /// Occurs when suggestion overlay is closed (any reason).
         /// </summary>
@@ -244,8 +269,19 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
                 SuggestionTextBox_TextBox.TextChanged += InnerTextBox_TextChanged;
                 SuggestionTextBox_TextBox.Click += InnerTextBox_Click;
                 SuggestionTextBox_TextBox.DoubleClick += InnerTextBox_DoubleClick;
+                HandleCreated += (s, e) => UpdateCueBanner();
+                SuggestionTextBox_TextBox.HandleCreated += (s, e) => UpdateCueBanner();
             }
+private void UpdateCueBanner()
+        {
+            if (SuggestionTextBox_TextBox.IsHandleCreated && !string.IsNullOrEmpty(SuggestionTextBox_TextBox.PlaceholderText))
+            {
+                // wParam = 1 (TRUE) to show when focused
+                SendMessage(SuggestionTextBox_TextBox.Handle, EM_SETCUEBANNER, (IntPtr)(KeepPlaceholderOnFocus ? 1 : 0), SuggestionTextBox_TextBox.PlaceholderText);
+            }
+        }
 
+        
         /// <summary>
         /// Manually triggers suggestion display for current Text value.
         /// Useful for programmatically showing suggestions without focus change.

@@ -78,9 +78,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             tableLayoutPanel2.SuspendLayout();
             Control_Database_FlowPanel_Actions.SuspendLayout();
             SuspendLayout();
-            //
+            // 
             // Control_Database_TableLayout_Main
-            //
+            // 
             Control_Database_TableLayout_Main.AutoSize = true;
             Control_Database_TableLayout_Main.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_Database_TableLayout_Main.ColumnCount = 1;
@@ -99,9 +99,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Database_TableLayout_Main.RowStyles.Add(new RowStyle());
             Control_Database_TableLayout_Main.Size = new Size(479, 371);
             Control_Database_TableLayout_Main.TabIndex = 0;
-            //
+            // 
             // Control_Database_Label_Header
-            //
+            // 
             Control_Database_Label_Header.AutoSize = true;
             Control_Database_Label_Header.Dock = DockStyle.Fill;
             Control_Database_Label_Header.Font = new Font("Segoe UI Emoji", 18F, FontStyle.Bold);
@@ -114,9 +114,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Database_Label_Header.TabIndex = 0;
             Control_Database_Label_Header.Text = "Database Connection Settings";
             Control_Database_Label_Header.TextAlign = ContentAlignment.MiddleLeft;
-            //
+            // 
             // Control_Database_Panel_Content
-            //
+            // 
             Control_Database_Panel_Content.AutoSize = true;
             Control_Database_Panel_Content.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_Database_Panel_Content.Controls.Add(tableLayoutPanel4);
@@ -125,9 +125,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Database_Panel_Content.Name = "Control_Database_Panel_Content";
             Control_Database_Panel_Content.Size = new Size(433, 246);
             Control_Database_Panel_Content.TabIndex = 1;
-            //
-            // Control_ReceivingAnalytics_TableLayoutPanel_ReceivingScopeContents
-            //
+            // 
+            // tableLayoutPanel4
+            // 
             tableLayoutPanel4.AutoSize = true;
             tableLayoutPanel4.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             tableLayoutPanel4.ColumnCount = 1;
@@ -137,16 +137,16 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             tableLayoutPanel4.Controls.Add(Control_Database_Panel_PortCard, 0, 1);
             tableLayoutPanel4.Dock = DockStyle.Fill;
             tableLayoutPanel4.Location = new Point(0, 0);
-            tableLayoutPanel4.Name = "Control_ReceivingAnalytics_TableLayoutPanel_ReceivingScopeContents";
+            tableLayoutPanel4.Name = "tableLayoutPanel4";
             tableLayoutPanel4.RowCount = 3;
             tableLayoutPanel4.RowStyles.Add(new RowStyle());
             tableLayoutPanel4.RowStyles.Add(new RowStyle());
             tableLayoutPanel4.RowStyles.Add(new RowStyle());
             tableLayoutPanel4.Size = new Size(433, 246);
             tableLayoutPanel4.TabIndex = 3;
-            //
+            // 
             // Control_Database_Panel_ServerCard
-            //
+            // 
             Control_Database_Panel_ServerCard.AutoSize = true;
             Control_Database_Panel_ServerCard.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_Database_Panel_ServerCard.BackColor = Color.White;
@@ -159,9 +159,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Database_Panel_ServerCard.Padding = new Padding(5);
             Control_Database_Panel_ServerCard.Size = new Size(433, 72);
             Control_Database_Panel_ServerCard.TabIndex = 0;
-            //
+            // 
             // tableLayoutPanel1
-            //
+            // 
             tableLayoutPanel1.AutoSize = true;
             tableLayoutPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             tableLayoutPanel1.ColumnCount = 2;
@@ -178,21 +178,21 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
             tableLayoutPanel1.Size = new Size(421, 60);
             tableLayoutPanel1.TabIndex = 3;
-            //
+            // 
             // Control_Database_TextBox_Server
-            //
+            // 
             Control_Database_TextBox_Server.Dock = DockStyle.Fill;
             Control_Database_TextBox_Server.Font = new Font("Segoe UI Emoji", 11F);
             Control_Database_TextBox_Server.Location = new Point(68, 30);
             Control_Database_TextBox_Server.MaximumSize = new Size(350, 0);
             Control_Database_TextBox_Server.MinimumSize = new Size(350, 0);
             Control_Database_TextBox_Server.Name = "Control_Database_TextBox_Server";
-            Control_Database_TextBox_Server.PlaceholderText = "Enter MySQL server address (e.g., 172.16.1.104 or IP)";
+            Control_Database_TextBox_Server.PlaceholderText = "Enter MySQL server address (e.g., localhost or IP)";
             Control_Database_TextBox_Server.Size = new Size(350, 27);
             Control_Database_TextBox_Server.TabIndex = 2;
-            //
+            // 
             // Control_Database_Label_ServerTitle
-            //
+            // 
             Control_Database_Label_ServerTitle.AutoSize = true;
             Control_Database_Label_ServerTitle.Dock = DockStyle.Fill;
             Control_Database_Label_ServerTitle.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold);
@@ -206,9 +206,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Database_Label_ServerTitle.TabIndex = 1;
             Control_Database_Label_ServerTitle.Text = "Server Address";
             Control_Database_Label_ServerTitle.TextAlign = ContentAlignment.BottomLeft;
-            //
+            // 
             // Control_Database_Label_ServerIcon
-            //
+            // 
             Control_Database_Label_ServerIcon.AutoSize = true;
             Control_Database_Label_ServerIcon.Dock = DockStyle.Fill;
             Control_Database_Label_ServerIcon.Font = new Font("Segoe UI Emoji", 24F);
@@ -220,9 +220,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Database_Label_ServerIcon.TabIndex = 0;
             Control_Database_Label_ServerIcon.Text = "🖥️";
             Control_Database_Label_ServerIcon.TextAlign = ContentAlignment.MiddleCenter;
-            //
+            // 
             // Control_Database_Panel_DatabaseCard
-            //
+            // 
             Control_Database_Panel_DatabaseCard.AutoSize = true;
             Control_Database_Panel_DatabaseCard.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_Database_Panel_DatabaseCard.BackColor = Color.White;
@@ -235,9 +235,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Database_Panel_DatabaseCard.Padding = new Padding(5);
             Control_Database_Panel_DatabaseCard.Size = new Size(433, 72);
             Control_Database_Panel_DatabaseCard.TabIndex = 2;
-            //
-            // Control_ReceivingAnalytics_TableLayoutPanel_ReceivingScopeHeader
-            //
+            // 
+            // tableLayoutPanel3
+            // 
             tableLayoutPanel3.AutoSize = true;
             tableLayoutPanel3.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             tableLayoutPanel3.ColumnCount = 2;
@@ -248,15 +248,15 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             tableLayoutPanel3.Controls.Add(Control_Database_Label_DatabaseIcon, 0, 0);
             tableLayoutPanel3.Dock = DockStyle.Fill;
             tableLayoutPanel3.Location = new Point(5, 5);
-            tableLayoutPanel3.Name = "Control_ReceivingAnalytics_TableLayoutPanel_ReceivingScopeHeader";
+            tableLayoutPanel3.Name = "tableLayoutPanel3";
             tableLayoutPanel3.RowCount = 2;
             tableLayoutPanel3.RowStyles.Add(new RowStyle());
             tableLayoutPanel3.RowStyles.Add(new RowStyle());
             tableLayoutPanel3.Size = new Size(421, 60);
             tableLayoutPanel3.TabIndex = 4;
-            //
+            // 
             // Control_Database_TextBox_Database
-            //
+            // 
             Control_Database_TextBox_Database.Dock = DockStyle.Fill;
             Control_Database_TextBox_Database.Font = new Font("Segoe UI Emoji", 11F);
             Control_Database_TextBox_Database.Location = new Point(68, 30);
@@ -266,9 +266,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Database_TextBox_Database.PlaceholderText = "Enter database name";
             Control_Database_TextBox_Database.Size = new Size(350, 27);
             Control_Database_TextBox_Database.TabIndex = 2;
-            //
+            // 
             // Control_Database_Label_DatabaseTitle
-            //
+            // 
             Control_Database_Label_DatabaseTitle.AutoSize = true;
             Control_Database_Label_DatabaseTitle.Dock = DockStyle.Fill;
             Control_Database_Label_DatabaseTitle.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold);
@@ -282,9 +282,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Database_Label_DatabaseTitle.TabIndex = 1;
             Control_Database_Label_DatabaseTitle.Text = "Database Name";
             Control_Database_Label_DatabaseTitle.TextAlign = ContentAlignment.BottomLeft;
-            //
+            // 
             // Control_Database_Label_DatabaseIcon
-            //
+            // 
             Control_Database_Label_DatabaseIcon.AutoSize = true;
             Control_Database_Label_DatabaseIcon.Dock = DockStyle.Fill;
             Control_Database_Label_DatabaseIcon.Font = new Font("Segoe UI Emoji", 24F);
@@ -296,9 +296,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Database_Label_DatabaseIcon.TabIndex = 0;
             Control_Database_Label_DatabaseIcon.Text = "💾";
             Control_Database_Label_DatabaseIcon.TextAlign = ContentAlignment.MiddleCenter;
-            //
+            // 
             // Control_Database_Panel_PortCard
-            //
+            // 
             Control_Database_Panel_PortCard.AutoSize = true;
             Control_Database_Panel_PortCard.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_Database_Panel_PortCard.BackColor = Color.White;
@@ -311,9 +311,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Database_Panel_PortCard.Padding = new Padding(5);
             Control_Database_Panel_PortCard.Size = new Size(433, 72);
             Control_Database_Panel_PortCard.TabIndex = 1;
-            //
+            // 
             // tableLayoutPanel2
-            //
+            // 
             tableLayoutPanel2.AutoSize = true;
             tableLayoutPanel2.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             tableLayoutPanel2.ColumnCount = 2;
@@ -330,9 +330,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             tableLayoutPanel2.RowStyles.Add(new RowStyle());
             tableLayoutPanel2.Size = new Size(421, 60);
             tableLayoutPanel2.TabIndex = 4;
-            //
+            // 
             // Control_Database_TextBox_Port
-            //
+            // 
             Control_Database_TextBox_Port.Dock = DockStyle.Fill;
             Control_Database_TextBox_Port.Font = new Font("Segoe UI Emoji", 11F);
             Control_Database_TextBox_Port.Location = new Point(68, 30);
@@ -342,9 +342,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Database_TextBox_Port.PlaceholderText = "Enter MySQL port (default: 3306)";
             Control_Database_TextBox_Port.Size = new Size(350, 27);
             Control_Database_TextBox_Port.TabIndex = 2;
-            //
+            // 
             // Control_Database_Label_PortTitle
-            //
+            // 
             Control_Database_Label_PortTitle.AutoSize = true;
             Control_Database_Label_PortTitle.Dock = DockStyle.Fill;
             Control_Database_Label_PortTitle.Font = new Font("Segoe UI Semibold", 12F, FontStyle.Bold);
@@ -358,9 +358,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Database_Label_PortTitle.TabIndex = 1;
             Control_Database_Label_PortTitle.Text = "Port Number";
             Control_Database_Label_PortTitle.TextAlign = ContentAlignment.BottomLeft;
-            //
+            // 
             // Control_Database_Label_PortIcon
-            //
+            // 
             Control_Database_Label_PortIcon.AutoSize = true;
             Control_Database_Label_PortIcon.Dock = DockStyle.Fill;
             Control_Database_Label_PortIcon.Font = new Font("Segoe UI Emoji", 24F);
@@ -372,9 +372,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Database_Label_PortIcon.TabIndex = 0;
             Control_Database_Label_PortIcon.Text = "🔌";
             Control_Database_Label_PortIcon.TextAlign = ContentAlignment.MiddleCenter;
-            //
+            // 
             // Control_Database_FlowPanel_Actions
-            //
+            // 
             Control_Database_FlowPanel_Actions.AutoSize = true;
             Control_Database_FlowPanel_Actions.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_Database_FlowPanel_Actions.Controls.Add(Control_Database_Button_TestConnection);
@@ -386,9 +386,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Database_FlowPanel_Actions.Name = "Control_Database_FlowPanel_Actions";
             Control_Database_FlowPanel_Actions.Size = new Size(433, 41);
             Control_Database_FlowPanel_Actions.TabIndex = 2;
-            //
+            // 
             // Control_Database_Button_TestConnection
-            //
+            // 
             Control_Database_Button_TestConnection.BackColor = Color.FromArgb(0, 120, 215);
             Control_Database_Button_TestConnection.FlatStyle = FlatStyle.Flat;
             Control_Database_Button_TestConnection.Font = new Font("Segoe UI Semibold", 10F, FontStyle.Bold);
@@ -400,9 +400,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Database_Button_TestConnection.Text = "🔍 Test Connection";
             Control_Database_Button_TestConnection.UseVisualStyleBackColor = false;
             Control_Database_Button_TestConnection.Click += Control_Database_Button_TestConnection_Click;
-            //
+            // 
             // Control_Database_Button_Reset
-            //
+            // 
             Control_Database_Button_Reset.BackColor = Color.FromArgb(96, 94, 92);
             Control_Database_Button_Reset.FlatStyle = FlatStyle.Flat;
             Control_Database_Button_Reset.Font = new Font("Segoe UI Semibold", 10F, FontStyle.Bold);
@@ -414,9 +414,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Database_Button_Reset.Text = "Reset";
             Control_Database_Button_Reset.UseVisualStyleBackColor = false;
             Control_Database_Button_Reset.Click += Control_Database_Button_Reset_Click;
-            //
+            // 
             // Control_Database_Button_Save
-            //
+            // 
             Control_Database_Button_Save.BackColor = Color.FromArgb(16, 124, 16);
             Control_Database_Button_Save.FlatStyle = FlatStyle.Flat;
             Control_Database_Button_Save.Font = new Font("Segoe UI Semibold", 10F, FontStyle.Bold);
@@ -428,9 +428,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Database_Button_Save.Text = "💾 Save";
             Control_Database_Button_Save.UseVisualStyleBackColor = false;
             Control_Database_Button_Save.Click += Control_Database_Button_Save_Click;
-            //
+            // 
             // Control_Database
-            //
+            // 
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
             AutoSize = true;

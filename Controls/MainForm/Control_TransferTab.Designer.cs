@@ -53,11 +53,11 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_TransferTab_Button_Search = new Button();
             Control_TransferTab_TableLayout_Print = new TableLayoutPanel();
             Control_TransferTab_Button_Print = new Button();
+            Control_TransferTab_NumericUpDown_Quantity = new NumericUpDown();
             tableLayoutPanel3 = new TableLayoutPanel();
             Control_TransferTab_Button_Toggle_Split = new Button();
             Control_TransferTab_Button_Reset = new Button();
             Control_TransferTab_Button_Toggle_RightPanel = new Button();
-            Control_TransferTab_NumericUpDown_Quantity = new NumericUpDown();
             Control_TransferTab_GroupBox_MainControl.SuspendLayout();
             Control_TransferTab_Panel_Main.SuspendLayout();
             Control_TransferTab_TableLayout_Main.SuspendLayout();
@@ -69,8 +69,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             tableLayoutPanel2.SuspendLayout();
             Control_TransferTab_TableLayout_SaveSearch.SuspendLayout();
             Control_TransferTab_TableLayout_Print.SuspendLayout();
-            tableLayoutPanel3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)Control_TransferTab_NumericUpDown_Quantity).BeginInit();
+            tableLayoutPanel3.SuspendLayout();
             SuspendLayout();
             // 
             // Control_TransferTab_GroupBox_MainControl
@@ -110,15 +110,15 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_TransferTab_TableLayout_Main.AutoSize = true;
             Control_TransferTab_TableLayout_Main.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_TransferTab_TableLayout_Main.ColumnCount = 2;
-            Control_TransferTab_TableLayout_Main.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 40F));
-            Control_TransferTab_TableLayout_Main.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 60F));
+            Control_TransferTab_TableLayout_Main.ColumnStyles.Add(new ColumnStyle());
+            Control_TransferTab_TableLayout_Main.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             Control_TransferTab_TableLayout_Main.Controls.Add(Control_TransferTab_Panel_DataGridView, 1, 0);
             Control_TransferTab_TableLayout_Main.Controls.Add(Control_TransferTab_Panel_Inputs, 0, 0);
             Control_TransferTab_TableLayout_Main.Dock = DockStyle.Fill;
             Control_TransferTab_TableLayout_Main.Location = new Point(3, 3);
             Control_TransferTab_TableLayout_Main.Name = "Control_TransferTab_TableLayout_Main";
             Control_TransferTab_TableLayout_Main.RowCount = 1;
-            Control_TransferTab_TableLayout_Main.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            Control_TransferTab_TableLayout_Main.RowStyles.Add(new RowStyle());
             Control_TransferTab_TableLayout_Main.Size = new Size(824, 303);
             Control_TransferTab_TableLayout_Main.TabIndex = 0;
             // 
@@ -233,7 +233,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_TransferTab_TableLayout_Inputs.SetColumnSpan(Control_TransferTab_TextBox_Part, 2);
             Control_TransferTab_TextBox_Part.Dock = DockStyle.Fill;
             Control_TransferTab_TextBox_Part.LabelText = "Part Number";
-            Control_TransferTab_TextBox_Part.LabelVisible = "True";
+            Control_TransferTab_TextBox_Part.LabelVisible = "False";
             Control_TransferTab_TextBox_Part.Location = new Point(3, 3);
             Control_TransferTab_TextBox_Part.MaxLength = 100;
             Control_TransferTab_TextBox_Part.MinimumSize = new Size(0, 23);
@@ -250,7 +250,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_TransferTab_TableLayout_Inputs.SetColumnSpan(Control_TransferTab_TextBox_Operation, 2);
             Control_TransferTab_TextBox_Operation.Dock = DockStyle.Fill;
             Control_TransferTab_TextBox_Operation.LabelText = "Operation";
-            Control_TransferTab_TextBox_Operation.LabelVisible = "True";
+            Control_TransferTab_TextBox_Operation.LabelVisible = "False";
             Control_TransferTab_TextBox_Operation.Location = new Point(3, 32);
             Control_TransferTab_TextBox_Operation.MaxLength = 100;
             Control_TransferTab_TextBox_Operation.MinimumSize = new Size(0, 23);
@@ -268,7 +268,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_TransferTab_TextBox_ToLocation.Dock = DockStyle.Fill;
             Control_TransferTab_TextBox_ToLocation.Enabled = false;
             Control_TransferTab_TextBox_ToLocation.LabelText = "To Location";
-            Control_TransferTab_TextBox_ToLocation.LabelVisible = "True";
+            Control_TransferTab_TextBox_ToLocation.LabelVisible = "False";
             Control_TransferTab_TextBox_ToLocation.Location = new Point(3, 61);
             Control_TransferTab_TextBox_ToLocation.MaxLength = 100;
             Control_TransferTab_TextBox_ToLocation.MinimumSize = new Size(0, 23);
@@ -390,6 +390,19 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_TransferTab_Button_Print.Text = "Print";
             Control_TransferTab_Button_Print.UseVisualStyleBackColor = true;
             // 
+            // Control_TransferTab_NumericUpDown_Quantity
+            // 
+            Control_TransferTab_NumericUpDown_Quantity.Dock = DockStyle.Fill;
+            Control_TransferTab_NumericUpDown_Quantity.Enabled = false;
+            Control_TransferTab_NumericUpDown_Quantity.Font = new Font("Segoe UI Emoji", 9F);
+            Control_TransferTab_NumericUpDown_Quantity.Location = new Point(104, 90);
+            Control_TransferTab_NumericUpDown_Quantity.Maximum = new decimal(new int[] { 1000000, 0, 0, 0 });
+            Control_TransferTab_NumericUpDown_Quantity.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
+            Control_TransferTab_NumericUpDown_Quantity.Name = "Control_TransferTab_NumericUpDown_Quantity";
+            Control_TransferTab_NumericUpDown_Quantity.Size = new Size(214, 23);
+            Control_TransferTab_NumericUpDown_Quantity.TabIndex = 4;
+            Control_TransferTab_NumericUpDown_Quantity.Value = new decimal(new int[] { 1, 0, 0, 0 });
+            // 
             // tableLayoutPanel3
             // 
             tableLayoutPanel3.AutoSize = true;
@@ -454,19 +467,6 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_TransferTab_Button_Toggle_RightPanel.UseVisualStyleBackColor = true;
             Control_TransferTab_Button_Toggle_RightPanel.Click += Control_TransferTab_Button_Toggle_RightPanel_Click;
             // 
-            // Control_TransferTab_NumericUpDown_Quantity
-            // 
-            Control_TransferTab_NumericUpDown_Quantity.Dock = DockStyle.Fill;
-            Control_TransferTab_NumericUpDown_Quantity.Enabled = false;
-            Control_TransferTab_NumericUpDown_Quantity.Font = new Font("Segoe UI Emoji", 9F);
-            Control_TransferTab_NumericUpDown_Quantity.Location = new Point(104, 90);
-            Control_TransferTab_NumericUpDown_Quantity.Maximum = new decimal(new int[] { 1000000, 0, 0, 0 });
-            Control_TransferTab_NumericUpDown_Quantity.Minimum = new decimal(new int[] { 1, 0, 0, 0 });
-            Control_TransferTab_NumericUpDown_Quantity.Name = "Control_TransferTab_NumericUpDown_Quantity";
-            Control_TransferTab_NumericUpDown_Quantity.Size = new Size(214, 23);
-            Control_TransferTab_NumericUpDown_Quantity.TabIndex = 4;
-            Control_TransferTab_NumericUpDown_Quantity.Value = new decimal(new int[] { 1, 0, 0, 0 });
-            // 
             // Control_TransferTab
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
@@ -494,9 +494,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_TransferTab_TableLayout_SaveSearch.PerformLayout();
             Control_TransferTab_TableLayout_Print.ResumeLayout(false);
             Control_TransferTab_TableLayout_Print.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)Control_TransferTab_NumericUpDown_Quantity).EndInit();
             tableLayoutPanel3.ResumeLayout(false);
             tableLayoutPanel3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)Control_TransferTab_NumericUpDown_Quantity).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }

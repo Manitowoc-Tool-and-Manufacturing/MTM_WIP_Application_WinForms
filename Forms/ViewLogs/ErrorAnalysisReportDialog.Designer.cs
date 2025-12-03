@@ -28,6 +28,7 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ErrorAnalysisReportDialog));
             tableLayoutMain = new TableLayoutPanel();
             panelBottom = new Panel();
             tableLayoutPanel1 = new TableLayoutPanel();
@@ -267,6 +268,7 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
             AutoScaleMode = AutoScaleMode.Dpi;
             ClientSize = new Size(684, 361);
             Controls.Add(tableLayoutMain);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Margin = new Padding(41, 19, 41, 19);
             Name = "ErrorAnalysisReportDialog";
             Padding = new Padding(6);
