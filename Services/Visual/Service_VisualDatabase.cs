@@ -1152,7 +1152,7 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 };
             }
 
-            string sql = "SELECT DISTINCT ID FROM PART WHERE ID LIKE 'FGT%-01' AND ID <> 'FGT0001-01' ORDER BY ID";
+            string sql = "SELECT DISTINCT ID FROM PART WHERE ID LIKE 'FGT%-01' AND ID <> 'FGT0001-01' OR ID LIKE 'MMC%' OR ID LIKE 'MMF%' ORDER BY ID";
 
             try
             {
