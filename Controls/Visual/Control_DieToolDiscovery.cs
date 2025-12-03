@@ -4,6 +4,7 @@ using MTM_WIP_Application_Winforms.Services;
 using MTM_WIP_Application_Winforms.Services.Visual;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services.Logging;
+using MTM_WIP_Application_Winforms.Helpers;
 
 namespace MTM_WIP_Application_Winforms.Controls.Visual
 {
@@ -33,6 +34,10 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             {
                 LoggingUtility.Log("[Control_DieToolDiscovery] Visual Database Service not available in DI container");
             }
+            else
+            {
+                InitializeSuggestionBoxes();
+            }
         }
 
         #endregion
@@ -49,19 +54,6 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         }
 
         /// <summary>
-        /// Handles the KeyDown event of the search textbox.
-        /// Triggers search when Enter key is pressed.
-        /// </summary>
-        private async void txtSearch_KeyDown(object? sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                e.SuppressKeyPress = true;
-                await PerformSearch();
-            }
-        }
-
-        /// <summary>
         /// Handles the Click event of the coil search button.
         /// </summary>
         private async void btnCoilSearch_Click(object? sender, EventArgs e)
@@ -72,6 +64,47 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         #endregion
 
         #region Private Methods
+
+        private void InitializeSuggestionBoxes()
+        {
+            if (_visualService == null) return;
+
+            // Configure Die Search Suggestion Box
+            // We use a custom configuration here since Helper_SuggestionTextBox might not have a specific method for Dies yet
+            // or we can use a generic configuration if available.
+            // Assuming we can set the DataProvider directly or use a helper.
+            // Let's use the pattern from Control_VisualInventory.cs
+            
+            // Die Search
+            txtSearch.EnableSuggestions = true;
+            txtSearch.ShowF4Button = true;
+            // We need to configure the suggestion provider. 
+            // Since Helper_SuggestionTextBox.ConfigureFor... methods are specific, we might need to add one or do it manually.
+            // Let's try to do it manually if we can access the inner TextBox, or use a generic helper if exists.
+            // Looking at Helper_SuggestionTextBox.cs (not provided fully), but usually it has methods like ConfigureForPartNumbers.
+            // I'll use a similar pattern:
+            
+            if (txtSearch.TextBox != null)
+            {
+                txtSearch.TextBox.DataProvider = async () =>
+                {
+                    var result = await _visualService.GetDieIdsAsync();
+                    return result.IsSuccess && result.Data != null ? result.Data : new List<string>();
+                };
+            }
+
+            // Coil Search
+            txtCoilSearch.EnableSuggestions = true;
+            txtCoilSearch.ShowF4Button = true;
+            if (txtCoilSearch.TextBox != null)
+            {
+                txtCoilSearch.TextBox.DataProvider = async () =>
+                {
+                    var result = await _visualService.GetCoilFlatstockPartIdsAsync();
+                    return result.IsSuccess && result.Data != null ? result.Data : new List<string>();
+                };
+            }
+        }
 
         /// <summary>
         /// Performs the die/tool search operation based on current search criteria.
@@ -238,10 +271,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                         btnSearch.Click -= btnSearch_Click;
                     }
 
-                    if (txtSearch != null)
-                    {
-                        txtSearch.KeyDown -= txtSearch_KeyDown;
-                    }
+                    // txtSearch KeyDown removed
 
                     // Dispose components if present
                     components?.Dispose();

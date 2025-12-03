@@ -150,6 +150,16 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
         Task<Model_Dao_Result<List<string>>> GetPartIdsAsync();
 
         /// <summary>
+        /// Retrieves a list of all Die IDs from the Visual database (FGT%-01).
+        /// </summary>
+        Task<Model_Dao_Result<List<string>>> GetDieIdsAsync();
+
+        /// <summary>
+        /// Retrieves a list of all Coil/Flatstock Part IDs from the Visual database (MMC% or MMF%).
+        /// </summary>
+        Task<Model_Dao_Result<List<string>>> GetCoilFlatstockPartIdsAsync();
+
+        /// <summary>
         /// Retrieves a list of all Location IDs from the Visual database.
         /// </summary>
         Task<Model_Dao_Result<List<string>>> GetLocationIdsAsync();

@@ -1134,6 +1134,116 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
         }
 
         /// <summary>
+        /// Retrieves a list of all Die IDs from the Visual database (FGT%-01).
+        /// </summary>
+        public async Task<Model_Dao_Result<List<string>>> GetDieIdsAsync()
+        {
+            if (_useSampleData)
+            {
+                return new Model_Dao_Result<List<string>> { IsSuccess = true, Data = new List<string> { "FGT1001-01", "FGT1002-01" } };
+            }
+
+            if (string.IsNullOrEmpty(_userName) || string.IsNullOrEmpty(_password))
+            {
+                return new Model_Dao_Result<List<string>>
+                {
+                    IsSuccess = false,
+                    ErrorMessage = "Visual ERP credentials are not configured."
+                };
+            }
+
+            string sql = "SELECT DISTINCT ID FROM PART WHERE ID LIKE 'FGT%-01' AND ID <> 'FGT0001-01' ORDER BY ID";
+
+            try
+            {
+                using (var connection = new SqlConnection(GetConnectionString()))
+                {
+                    await connection.OpenAsync();
+                    using (var command = new SqlCommand(sql, connection))
+                    {
+                        using (var reader = await command.ExecuteReaderAsync())
+                        {
+                            var list = new List<string>();
+                            while (await reader.ReadAsync())
+                            {
+                                list.Add(reader[0].ToString() ?? "");
+                            }
+                            return new Model_Dao_Result<List<string>>
+                            {
+                                IsSuccess = true,
+                                Data = list
+                            };
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+                return new Model_Dao_Result<List<string>>
+                {
+                    IsSuccess = false,
+                    ErrorMessage = $"Error retrieving Die IDs: {ex.Message}"
+                };
+            }
+        }
+
+        /// <summary>
+        /// Retrieves a list of all Coil/Flatstock Part IDs from the Visual database (MMC% or MMF%).
+        /// </summary>
+        public async Task<Model_Dao_Result<List<string>>> GetCoilFlatstockPartIdsAsync()
+        {
+            if (_useSampleData)
+            {
+                return new Model_Dao_Result<List<string>> { IsSuccess = true, Data = new List<string> { "MMC-1001", "MMF-2002" } };
+            }
+
+            if (string.IsNullOrEmpty(_userName) || string.IsNullOrEmpty(_password))
+            {
+                return new Model_Dao_Result<List<string>>
+                {
+                    IsSuccess = false,
+                    ErrorMessage = "Visual ERP credentials are not configured."
+                };
+            }
+
+            string sql = "SELECT DISTINCT ID FROM PART WHERE ID LIKE 'MMC%' OR ID LIKE 'MMF%' ORDER BY ID";
+
+            try
+            {
+                using (var connection = new SqlConnection(GetConnectionString()))
+                {
+                    await connection.OpenAsync();
+                    using (var command = new SqlCommand(sql, connection))
+                    {
+                        using (var reader = await command.ExecuteReaderAsync())
+                        {
+                            var list = new List<string>();
+                            while (await reader.ReadAsync())
+                            {
+                                list.Add(reader[0].ToString() ?? "");
+                            }
+                            return new Model_Dao_Result<List<string>>
+                            {
+                                IsSuccess = true,
+                                Data = list
+                            };
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+                return new Model_Dao_Result<List<string>>
+                {
+                    IsSuccess = false,
+                    ErrorMessage = $"Error retrieving Coil/Flatstock IDs: {ex.Message}"
+                };
+            }
+        }
+
+        /// <summary>
         /// Retrieves a list of all Location IDs from the Visual database.
         /// </summary>
         public async Task<Model_Dao_Result<List<string>>> GetLocationIdsAsync()

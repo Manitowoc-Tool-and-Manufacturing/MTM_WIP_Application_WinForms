@@ -20,7 +20,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             grpSearch = new GroupBox();
             tableLayoutPanel1 = new TableLayoutPanel();
             tableLayoutPanel2 = new TableLayoutPanel();
-            txtSearch = new TextBox();
+            txtSearch = new MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBoxWithLabel();
             btnSearch = new Button();
             panel1 = new Panel();
             gridResults = new DataGridView();
@@ -110,25 +110,31 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             tableLayoutPanel2.AutoSize = true;
             tableLayoutPanel2.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             tableLayoutPanel2.ColumnCount = 1;
-            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             tableLayoutPanel2.Controls.Add(txtSearch, 0, 0);
             tableLayoutPanel2.Dock = DockStyle.Fill;
             tableLayoutPanel2.Location = new Point(3, 3);
             tableLayoutPanel2.Name = "tableLayoutPanel2";
             tableLayoutPanel2.RowCount = 1;
-            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel2.RowStyles.Add(new RowStyle());
             tableLayoutPanel2.Size = new Size(760, 29);
             tableLayoutPanel2.TabIndex = 6;
             // 
             // txtSearch
             // 
+            txtSearch.AutoSize = true;
+            txtSearch.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             txtSearch.Dock = DockStyle.Fill;
+            txtSearch.EnableSuggestions = true;
+            txtSearch.LabelText = "Search Term";
+            txtSearch.LabelVisible = "False";
             txtSearch.Location = new Point(3, 3);
+            txtSearch.Margin = new Padding(3, 3, 3, 3);
             txtSearch.Name = "txtSearch";
+            txtSearch.PlaceholderText = "Enter Part Number or Die Number";
+            txtSearch.ShowF4Button = true;
             txtSearch.Size = new Size(754, 23);
             txtSearch.TabIndex = 3;
-            txtSearch.KeyDown += txtSearch_KeyDown;
             // 
             // btnSearch
             // 
@@ -476,7 +482,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         private System.Windows.Forms.TabControl tabControlMain;
         private System.Windows.Forms.TabPage tabLocator;
         private System.Windows.Forms.GroupBox grpSearch;
-        private System.Windows.Forms.TextBox txtSearch;
+        private Shared.SuggestionTextBoxWithLabel txtSearch;
         private System.Windows.Forms.Button btnSearch;
         private TableLayoutPanel tableLayoutPanel1;
         private TableLayoutPanel tableLayoutPanel2;
