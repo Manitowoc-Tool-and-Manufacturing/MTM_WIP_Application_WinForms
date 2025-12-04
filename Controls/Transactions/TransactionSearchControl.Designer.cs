@@ -1,6 +1,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using MTM_WIP_Application_Winforms.Controls.Shared;
+using MTM_WIP_Application_Winforms.Models.Enums;
 
 namespace MTM_WIP_Application_Winforms.Controls.Transactions
 {
@@ -112,7 +113,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionSearchControl_Button_InfoPanel.BackColor = Color.FromArgb(248, 250, 252);
             TransactionSearchControl_Button_InfoPanel.FlatStyle = FlatStyle.Flat;
             TransactionSearchControl_Button_InfoPanel.Font = new Font("Segoe UI Emoji", 11.25F, FontStyle.Bold);
-            TransactionSearchControl_Button_InfoPanel.Location = new Point(558, 3);
+            TransactionSearchControl_Button_InfoPanel.Location = new Point(554, 3);
             TransactionSearchControl_Button_InfoPanel.MaximumSize = new Size(80, 40);
             TransactionSearchControl_Button_InfoPanel.MinimumSize = new Size(80, 40);
             TransactionSearchControl_Button_InfoPanel.Name = "TransactionSearchControl_Button_InfoPanel";
@@ -333,7 +334,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionSearchControl_GroupBox_Right.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             TransactionSearchControl_GroupBox_Right.Controls.Add(TransactionSearchControl_TableLayout_Right);
             TransactionSearchControl_GroupBox_Right.Dock = DockStyle.Fill;
-            TransactionSearchControl_GroupBox_Right.Location = new Point(686, 5);
+            TransactionSearchControl_GroupBox_Right.Location = new Point(682, 5);
             TransactionSearchControl_GroupBox_Right.Name = "TransactionSearchControl_GroupBox_Right";
             TransactionSearchControl_GroupBox_Right.Size = new Size(379, 197);
             TransactionSearchControl_GroupBox_Right.TabIndex = 22;
@@ -468,7 +469,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionSearchControl_GroupBox_Search.FlatStyle = FlatStyle.Flat;
             TransactionSearchControl_GroupBox_Search.Location = new Point(5, 5);
             TransactionSearchControl_GroupBox_Search.Name = "TransactionSearchControl_GroupBox_Search";
-            TransactionSearchControl_GroupBox_Search.Size = new Size(675, 197);
+            TransactionSearchControl_GroupBox_Search.Size = new Size(671, 197);
             TransactionSearchControl_GroupBox_Search.TabIndex = 21;
             TransactionSearchControl_GroupBox_Search.TabStop = false;
             TransactionSearchControl_GroupBox_Search.Text = "Step 1: Enter Search Criteria";
@@ -489,7 +490,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionSearchControl_TableLayout_Left.RowStyles.Add(new RowStyle());
             TransactionSearchControl_TableLayout_Left.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             TransactionSearchControl_TableLayout_Left.RowStyles.Add(new RowStyle());
-            TransactionSearchControl_TableLayout_Left.Size = new Size(669, 175);
+            TransactionSearchControl_TableLayout_Left.Size = new Size(665, 175);
             TransactionSearchControl_TableLayout_Left.TabIndex = 0;
             // 
             // TransactionSearchControl_TableLayout_Search
@@ -513,7 +514,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionSearchControl_TableLayout_Search.RowStyles.Add(new RowStyle());
             TransactionSearchControl_TableLayout_Search.RowStyles.Add(new RowStyle());
             TransactionSearchControl_TableLayout_Search.RowStyles.Add(new RowStyle());
-            TransactionSearchControl_TableLayout_Search.Size = new Size(663, 103);
+            TransactionSearchControl_TableLayout_Search.Size = new Size(659, 103);
             TransactionSearchControl_TableLayout_Search.TabIndex = 1;
             // 
             // TransactionSearchControl_Suggestion_Operation
@@ -523,13 +524,16 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionSearchControl_Suggestion_Operation.Dock = DockStyle.Fill;
             TransactionSearchControl_Suggestion_Operation.Font = new Font("Segoe UI Emoji", 9F);
             TransactionSearchControl_Suggestion_Operation.LabelText = "⚙️ Operation";
+            TransactionSearchControl_Suggestion_Operation.LabelVisibility = Enum_LabelVisibility.Hidden;
             TransactionSearchControl_Suggestion_Operation.Location = new Point(5, 73);
             TransactionSearchControl_Suggestion_Operation.Margin = new Padding(4);
+            TransactionSearchControl_Suggestion_Operation.MaxLength = 130;
             TransactionSearchControl_Suggestion_Operation.MinimumSize = new Size(320, 23);
+            TransactionSearchControl_Suggestion_Operation.MinLength = 130;
             TransactionSearchControl_Suggestion_Operation.Name = "TransactionSearchControl_Suggestion_Operation";
             TransactionSearchControl_Suggestion_Operation.Padding = new Padding(1);
             TransactionSearchControl_Suggestion_Operation.PlaceholderText = "e.g., 90, 100";
-            TransactionSearchControl_Suggestion_Operation.Size = new Size(322, 25);
+            TransactionSearchControl_Suggestion_Operation.Size = new Size(320, 25);
             TransactionSearchControl_Suggestion_Operation.TabIndex = 3;
             // 
             // TransactionSearchControl_Suggestion_User
@@ -539,13 +543,16 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionSearchControl_Suggestion_User.Dock = DockStyle.Fill;
             TransactionSearchControl_Suggestion_User.Font = new Font("Segoe UI Emoji", 9F);
             TransactionSearchControl_Suggestion_User.LabelText = "👤 User";
+            TransactionSearchControl_Suggestion_User.LabelVisibility = Enum_LabelVisibility.Hidden;
             TransactionSearchControl_Suggestion_User.Location = new Point(5, 5);
             TransactionSearchControl_Suggestion_User.Margin = new Padding(4);
+            TransactionSearchControl_Suggestion_User.MaxLength = 130;
             TransactionSearchControl_Suggestion_User.MinimumSize = new Size(320, 23);
+            TransactionSearchControl_Suggestion_User.MinLength = 130;
             TransactionSearchControl_Suggestion_User.Name = "TransactionSearchControl_Suggestion_User";
             TransactionSearchControl_Suggestion_User.Padding = new Padding(1);
             TransactionSearchControl_Suggestion_User.PlaceholderText = "Leave blank for all users";
-            TransactionSearchControl_Suggestion_User.Size = new Size(322, 25);
+            TransactionSearchControl_Suggestion_User.Size = new Size(320, 25);
             TransactionSearchControl_Suggestion_User.TabIndex = 1;
             // 
             // TransactionSearchControl_Suggestion_FromLocation
@@ -555,13 +562,16 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionSearchControl_Suggestion_FromLocation.Dock = DockStyle.Fill;
             TransactionSearchControl_Suggestion_FromLocation.Font = new Font("Segoe UI Emoji", 9F);
             TransactionSearchControl_Suggestion_FromLocation.LabelText = "📍 From Location";
-            TransactionSearchControl_Suggestion_FromLocation.Location = new Point(336, 5);
+            TransactionSearchControl_Suggestion_FromLocation.LabelVisibility = Enum_LabelVisibility.Hidden;
+            TransactionSearchControl_Suggestion_FromLocation.Location = new Point(334, 5);
             TransactionSearchControl_Suggestion_FromLocation.Margin = new Padding(4);
+            TransactionSearchControl_Suggestion_FromLocation.MaxLength = 130;
             TransactionSearchControl_Suggestion_FromLocation.MinimumSize = new Size(320, 23);
+            TransactionSearchControl_Suggestion_FromLocation.MinLength = 130;
             TransactionSearchControl_Suggestion_FromLocation.Name = "TransactionSearchControl_Suggestion_FromLocation";
             TransactionSearchControl_Suggestion_FromLocation.Padding = new Padding(1);
             TransactionSearchControl_Suggestion_FromLocation.PlaceholderText = "Optional filter";
-            TransactionSearchControl_Suggestion_FromLocation.Size = new Size(322, 25);
+            TransactionSearchControl_Suggestion_FromLocation.Size = new Size(320, 25);
             TransactionSearchControl_Suggestion_FromLocation.TabIndex = 4;
             // 
             // TransactionSearchControl_Suggestion_Notes
@@ -572,15 +582,18 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionSearchControl_Suggestion_Notes.EnableSuggestions = false;
             TransactionSearchControl_Suggestion_Notes.Font = new Font("Segoe UI Emoji", 9F);
             TransactionSearchControl_Suggestion_Notes.LabelText = "📝 Notes Keyword";
-            TransactionSearchControl_Suggestion_Notes.Location = new Point(336, 73);
+            TransactionSearchControl_Suggestion_Notes.LabelVisibility = Enum_LabelVisibility.Hidden;
+            TransactionSearchControl_Suggestion_Notes.Location = new Point(334, 73);
             TransactionSearchControl_Suggestion_Notes.Margin = new Padding(4);
+            TransactionSearchControl_Suggestion_Notes.MaxLength = 130;
             TransactionSearchControl_Suggestion_Notes.MinimumSize = new Size(320, 23);
+            TransactionSearchControl_Suggestion_Notes.MinLength = 130;
             TransactionSearchControl_Suggestion_Notes.Name = "TransactionSearchControl_Suggestion_Notes";
             TransactionSearchControl_Suggestion_Notes.Padding = new Padding(1);
             TransactionSearchControl_Suggestion_Notes.PlaceholderText = "Partial match supported";
             TransactionSearchControl_Suggestion_Notes.ShowF4Button = false;
             TransactionSearchControl_Suggestion_Notes.ShowValidationColor = false;
-            TransactionSearchControl_Suggestion_Notes.Size = new Size(322, 25);
+            TransactionSearchControl_Suggestion_Notes.Size = new Size(320, 25);
             TransactionSearchControl_Suggestion_Notes.TabIndex = 6;
             // 
             // TransactionSearchControl_Suggestion_PartNumber
@@ -590,13 +603,16 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionSearchControl_Suggestion_PartNumber.Dock = DockStyle.Fill;
             TransactionSearchControl_Suggestion_PartNumber.Font = new Font("Segoe UI Emoji", 9F);
             TransactionSearchControl_Suggestion_PartNumber.LabelText = "🔍 Part Number";
+            TransactionSearchControl_Suggestion_PartNumber.LabelVisibility = Enum_LabelVisibility.Hidden;
             TransactionSearchControl_Suggestion_PartNumber.Location = new Point(5, 39);
             TransactionSearchControl_Suggestion_PartNumber.Margin = new Padding(4);
+            TransactionSearchControl_Suggestion_PartNumber.MaxLength = 130;
             TransactionSearchControl_Suggestion_PartNumber.MinimumSize = new Size(320, 23);
+            TransactionSearchControl_Suggestion_PartNumber.MinLength = 130;
             TransactionSearchControl_Suggestion_PartNumber.Name = "TransactionSearchControl_Suggestion_PartNumber";
             TransactionSearchControl_Suggestion_PartNumber.Padding = new Padding(1);
             TransactionSearchControl_Suggestion_PartNumber.PlaceholderText = "Enter or select part";
-            TransactionSearchControl_Suggestion_PartNumber.Size = new Size(322, 25);
+            TransactionSearchControl_Suggestion_PartNumber.Size = new Size(320, 25);
             TransactionSearchControl_Suggestion_PartNumber.TabIndex = 2;
             // 
             // TransactionSearchControl_Suggestion_ToLocation
@@ -606,12 +622,15 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionSearchControl_Suggestion_ToLocation.Dock = DockStyle.Fill;
             TransactionSearchControl_Suggestion_ToLocation.Font = new Font("Segoe UI Emoji", 9F);
             TransactionSearchControl_Suggestion_ToLocation.LabelText = "📍 To Location";
-            TransactionSearchControl_Suggestion_ToLocation.Location = new Point(336, 39);
+            TransactionSearchControl_Suggestion_ToLocation.LabelVisibility = Enum_LabelVisibility.Hidden;
+            TransactionSearchControl_Suggestion_ToLocation.Location = new Point(334, 39);
             TransactionSearchControl_Suggestion_ToLocation.Margin = new Padding(4);
+            TransactionSearchControl_Suggestion_ToLocation.MaxLength = 130;
             TransactionSearchControl_Suggestion_ToLocation.MinimumSize = new Size(320, 23);
+            TransactionSearchControl_Suggestion_ToLocation.MinLength = 130;
             TransactionSearchControl_Suggestion_ToLocation.Name = "TransactionSearchControl_Suggestion_ToLocation";
             TransactionSearchControl_Suggestion_ToLocation.PlaceholderText = "Optional filter";
-            TransactionSearchControl_Suggestion_ToLocation.Size = new Size(322, 25);
+            TransactionSearchControl_Suggestion_ToLocation.Size = new Size(320, 25);
             TransactionSearchControl_Suggestion_ToLocation.TabIndex = 5;
             // 
             // TransactionSearchControl_Panel_Buttons
@@ -623,7 +642,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionSearchControl_Panel_Buttons.Dock = DockStyle.Fill;
             TransactionSearchControl_Panel_Buttons.Location = new Point(3, 124);
             TransactionSearchControl_Panel_Buttons.Name = "TransactionSearchControl_Panel_Buttons";
-            TransactionSearchControl_Panel_Buttons.Size = new Size(663, 48);
+            TransactionSearchControl_Panel_Buttons.Size = new Size(659, 48);
             TransactionSearchControl_Panel_Buttons.TabIndex = 5;
             // 
             // TransactionSearchControl_TableLayoutPanel_LeftLow
@@ -640,7 +659,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionSearchControl_TableLayoutPanel_LeftLow.RowCount = 2;
             TransactionSearchControl_TableLayoutPanel_LeftLow.RowStyles.Add(new RowStyle());
             TransactionSearchControl_TableLayoutPanel_LeftLow.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            TransactionSearchControl_TableLayoutPanel_LeftLow.Size = new Size(661, 46);
+            TransactionSearchControl_TableLayoutPanel_LeftLow.Size = new Size(657, 46);
             TransactionSearchControl_TableLayoutPanel_LeftLow.TabIndex = 0;
             // 
             // TransactionSearchControl_TableLayout_Buttons
@@ -670,7 +689,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionSearchControl_TableLayout_Buttons.Name = "TransactionSearchControl_TableLayout_Buttons";
             TransactionSearchControl_TableLayout_Buttons.RowCount = 1;
             TransactionSearchControl_TableLayout_Buttons.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            TransactionSearchControl_TableLayout_Buttons.Size = new Size(661, 46);
+            TransactionSearchControl_TableLayout_Buttons.Size = new Size(657, 46);
             TransactionSearchControl_TableLayout_Buttons.TabIndex = 0;
             // 
             // TransactionSearchControl_TableLayout_Filters
@@ -689,7 +708,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionSearchControl_TableLayout_Filters.Padding = new Padding(2);
             TransactionSearchControl_TableLayout_Filters.RowCount = 1;
             TransactionSearchControl_TableLayout_Filters.RowStyles.Add(new RowStyle());
-            TransactionSearchControl_TableLayout_Filters.Size = new Size(1070, 207);
+            TransactionSearchControl_TableLayout_Filters.Size = new Size(1066, 207);
             TransactionSearchControl_TableLayout_Filters.TabIndex = 2;
             // 
             // TransactionSearchControl
@@ -701,7 +720,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             Controls.Add(TransactionSearchControl_TableLayout_Filters);
             Margin = new Padding(0);
             Name = "TransactionSearchControl";
-            Size = new Size(1070, 207);
+            Size = new Size(1066, 207);
             TransactionSearchControl_GroupBox_RadioButtons.ResumeLayout(false);
             TransactionSearchControl_GroupBox_RadioButtons.PerformLayout();
             TransactionSearchControl_TableLayout_QuickFilters.ResumeLayout(false);

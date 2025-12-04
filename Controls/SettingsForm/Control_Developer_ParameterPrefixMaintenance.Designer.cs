@@ -159,7 +159,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // lblDetailsTitle
             // 
             this.lblDetailsTitle.AutoSize = true;
-            this.lblDetailsTitle.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
+            this.lblDetailsTitle.Font = new System.Drawing.Font("Segoe UI Emoji", 10F, System.Drawing.FontStyle.Bold);
             this.lblDetailsTitle.Location = new System.Drawing.Point(10, 10);
             this.lblDetailsTitle.Name = "lblDetailsTitle";
             this.lblDetailsTitle.Size = new System.Drawing.Size(115, 19);

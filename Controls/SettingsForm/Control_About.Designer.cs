@@ -142,7 +142,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             tableLayoutPanel2.Size = new Size(359, 225);
             tableLayoutPanel2.TabIndex = 3;
             // 
-            // tableLayoutPanel3
+            // Control_ReceivingAnalytics_TableLayoutPanel_ReceivingScopeHeader
             // 
             tableLayoutPanel3.AutoSize = true;
             tableLayoutPanel3.AutoSizeMode = AutoSizeMode.GrowAndShrink;
@@ -154,7 +154,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             tableLayoutPanel3.Dock = DockStyle.Fill;
             tableLayoutPanel3.Location = new Point(6, 173);
             tableLayoutPanel3.Margin = new Padding(6);
-            tableLayoutPanel3.Name = "tableLayoutPanel3";
+            tableLayoutPanel3.Name = "Control_ReceivingAnalytics_TableLayoutPanel_ReceivingScopeHeader";
             tableLayoutPanel3.RowCount = 1;
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tableLayoutPanel3.Size = new Size(347, 46);
@@ -164,7 +164,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             Control_About_Button_ViewReleaseNotes.BackColor = Color.FromArgb(0, 120, 212);
             Control_About_Button_ViewReleaseNotes.FlatStyle = FlatStyle.Flat;
-            Control_About_Button_ViewReleaseNotes.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            Control_About_Button_ViewReleaseNotes.Font = new Font("Segoe UI Emoji", 10F, FontStyle.Bold);
             Control_About_Button_ViewReleaseNotes.ForeColor = Color.White;
             Control_About_Button_ViewReleaseNotes.Location = new Point(73, 3);
             Control_About_Button_ViewReleaseNotes.Name = "Control_About_Button_ViewReleaseNotes";
@@ -178,7 +178,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             Control_About_Label_DevInfo_Title.AutoSize = true;
             Control_About_Label_DevInfo_Title.Dock = DockStyle.Fill;
-            Control_About_Label_DevInfo_Title.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
+            Control_About_Label_DevInfo_Title.Font = new Font("Segoe UI Emoji", 14F, FontStyle.Bold);
             Control_About_Label_DevInfo_Title.ForeColor = Color.FromArgb(0, 120, 212);
             Control_About_Label_DevInfo_Title.Location = new Point(6, 6);
             Control_About_Label_DevInfo_Title.Margin = new Padding(6);
@@ -191,7 +191,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // Control_About_Label_ReleaseNotes_Desc
             // 
             Control_About_Label_ReleaseNotes_Desc.AutoSize = true;
-            Control_About_Label_ReleaseNotes_Desc.Font = new Font("Segoe UI", 10F);
+            Control_About_Label_ReleaseNotes_Desc.Font = new Font("Segoe UI Emoji", 10F);
             Control_About_Label_ReleaseNotes_Desc.Location = new Point(6, 142);
             Control_About_Label_ReleaseNotes_Desc.Margin = new Padding(6);
             Control_About_Label_ReleaseNotes_Desc.Name = "Control_About_Label_ReleaseNotes_Desc";
@@ -203,7 +203,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             Control_About_Label_DevInfo_Contact.AutoSize = true;
             Control_About_Label_DevInfo_Contact.Dock = DockStyle.Fill;
-            Control_About_Label_DevInfo_Contact.Font = new Font("Segoe UI", 10F);
+            Control_About_Label_DevInfo_Contact.Font = new Font("Segoe UI Emoji", 10F);
             Control_About_Label_DevInfo_Contact.Location = new Point(6, 74);
             Control_About_Label_DevInfo_Contact.Margin = new Padding(6);
             Control_About_Label_DevInfo_Contact.Name = "Control_About_Label_DevInfo_Contact";
@@ -216,7 +216,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             Control_About_Label_DevInfo_Name.AutoSize = true;
             Control_About_Label_DevInfo_Name.Dock = DockStyle.Fill;
-            Control_About_Label_DevInfo_Name.Font = new Font("Segoe UI", 10F);
+            Control_About_Label_DevInfo_Name.Font = new Font("Segoe UI Emoji", 10F);
             Control_About_Label_DevInfo_Name.Location = new Point(6, 43);
             Control_About_Label_DevInfo_Name.Margin = new Padding(6);
             Control_About_Label_DevInfo_Name.Name = "Control_About_Label_DevInfo_Name";
@@ -228,7 +228,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // Control_About_Label_ReleaseNotes_Title
             // 
             Control_About_Label_ReleaseNotes_Title.AutoSize = true;
-            Control_About_Label_ReleaseNotes_Title.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
+            Control_About_Label_ReleaseNotes_Title.Font = new Font("Segoe UI Emoji", 14F, FontStyle.Bold);
             Control_About_Label_ReleaseNotes_Title.ForeColor = Color.FromArgb(0, 120, 212);
             Control_About_Label_ReleaseNotes_Title.Location = new Point(6, 105);
             Control_About_Label_ReleaseNotes_Title.Margin = new Padding(6);
@@ -237,7 +237,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_About_Label_ReleaseNotes_Title.TabIndex = 0;
             Control_About_Label_ReleaseNotes_Title.Text = "Release Notes";
             // 
-            // tableLayoutPanel4
+            // Control_ReceivingAnalytics_TableLayoutPanel_ReceivingScopeContents
             // 
             tableLayoutPanel4.AutoSize = true;
             tableLayoutPanel4.AutoSizeMode = AutoSizeMode.GrowAndShrink;
@@ -248,7 +248,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             tableLayoutPanel4.Controls.Add(pictureBox1, 1, 1);
             tableLayoutPanel4.Dock = DockStyle.Fill;
             tableLayoutPanel4.Location = new Point(3, 133);
-            tableLayoutPanel4.Name = "tableLayoutPanel4";
+            tableLayoutPanel4.Name = "Control_ReceivingAnalytics_TableLayoutPanel_ReceivingScopeContents";
             tableLayoutPanel4.RowCount = 3;
             tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 49.9999962F));
             tableLayoutPanel4.RowStyles.Add(new RowStyle());
@@ -272,7 +272,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             Control_About_Label_AppInfo_Version.AutoSize = true;
             Control_About_Label_AppInfo_Version.Dock = DockStyle.Fill;
-            Control_About_Label_AppInfo_Version.Font = new Font("Segoe UI", 10F);
+            Control_About_Label_AppInfo_Version.Font = new Font("Segoe UI Emoji", 10F);
             Control_About_Label_AppInfo_Version.Location = new Point(6, 43);
             Control_About_Label_AppInfo_Version.Margin = new Padding(6);
             Control_About_Label_AppInfo_Version.Name = "Control_About_Label_AppInfo_Version";
@@ -285,7 +285,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             Control_About_Label_AppInfo_Title.AutoSize = true;
             Control_About_Label_AppInfo_Title.Dock = DockStyle.Fill;
-            Control_About_Label_AppInfo_Title.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
+            Control_About_Label_AppInfo_Title.Font = new Font("Segoe UI Emoji", 14F, FontStyle.Bold);
             Control_About_Label_AppInfo_Title.ForeColor = Color.FromArgb(0, 120, 212);
             Control_About_Label_AppInfo_Title.Location = new Point(6, 6);
             Control_About_Label_AppInfo_Title.Margin = new Padding(6);
@@ -299,7 +299,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             Control_About_Label_AppInfo_Owner.AutoSize = true;
             Control_About_Label_AppInfo_Owner.Dock = DockStyle.Fill;
-            Control_About_Label_AppInfo_Owner.Font = new Font("Segoe UI", 10F);
+            Control_About_Label_AppInfo_Owner.Font = new Font("Segoe UI Emoji", 10F);
             Control_About_Label_AppInfo_Owner.Location = new Point(6, 105);
             Control_About_Label_AppInfo_Owner.Margin = new Padding(6);
             Control_About_Label_AppInfo_Owner.Name = "Control_About_Label_AppInfo_Owner";
@@ -312,7 +312,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             Control_About_Label_AppInfo_Copyright.AutoSize = true;
             Control_About_Label_AppInfo_Copyright.Dock = DockStyle.Fill;
-            Control_About_Label_AppInfo_Copyright.Font = new Font("Segoe UI", 10F);
+            Control_About_Label_AppInfo_Copyright.Font = new Font("Segoe UI Emoji", 10F);
             Control_About_Label_AppInfo_Copyright.Location = new Point(6, 74);
             Control_About_Label_AppInfo_Copyright.Margin = new Padding(6);
             Control_About_Label_AppInfo_Copyright.Name = "Control_About_Label_AppInfo_Copyright";

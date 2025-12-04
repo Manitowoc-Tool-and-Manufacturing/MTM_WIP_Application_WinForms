@@ -28,89 +28,91 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
         /// </summary>
         private void InitializeComponent()
         {
-            this.labelUsername = new System.Windows.Forms.Label();
-            this.textBoxUsername = new System.Windows.Forms.TextBox();
-            this.labelPin = new System.Windows.Forms.Label();
-            this.textBoxPin = new System.Windows.Forms.TextBox();
-            this.buttonLogin = new System.Windows.Forms.Button();
-            this.buttonCancel = new System.Windows.Forms.Button();
-            this.SuspendLayout();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form_SharedLogin));
+            labelUsername = new Label();
+            textBoxUsername = new TextBox();
+            labelPin = new Label();
+            textBoxPin = new TextBox();
+            buttonLogin = new Button();
+            buttonCancel = new Button();
+            SuspendLayout();
             // 
             // labelUsername
             // 
-            this.labelUsername.AutoSize = true;
-            this.labelUsername.Location = new System.Drawing.Point(30, 30);
-            this.labelUsername.Name = "labelUsername";
-            this.labelUsername.Size = new System.Drawing.Size(63, 15);
-            this.labelUsername.TabIndex = 0;
-            this.labelUsername.Text = "Username:";
+            labelUsername.AutoSize = true;
+            labelUsername.Location = new Point(30, 30);
+            labelUsername.Name = "labelUsername";
+            labelUsername.Size = new Size(63, 15);
+            labelUsername.TabIndex = 0;
+            labelUsername.Text = "Username:";
             // 
             // textBoxUsername
             // 
-            this.textBoxUsername.Location = new System.Drawing.Point(30, 48);
-            this.textBoxUsername.Name = "textBoxUsername";
-            this.textBoxUsername.Size = new System.Drawing.Size(200, 23);
-            this.textBoxUsername.TabIndex = 1;
+            textBoxUsername.Location = new Point(30, 48);
+            textBoxUsername.Name = "textBoxUsername";
+            textBoxUsername.Size = new Size(200, 23);
+            textBoxUsername.TabIndex = 1;
             // 
             // labelPin
             // 
-            this.labelPin.AutoSize = true;
-            this.labelPin.Location = new System.Drawing.Point(30, 80);
-            this.labelPin.Name = "labelPin";
-            this.labelPin.Size = new System.Drawing.Size(29, 15);
-            this.labelPin.TabIndex = 2;
-            this.labelPin.Text = "PIN:";
+            labelPin.AutoSize = true;
+            labelPin.Location = new Point(30, 80);
+            labelPin.Name = "labelPin";
+            labelPin.Size = new Size(29, 15);
+            labelPin.TabIndex = 2;
+            labelPin.Text = "PIN:";
             // 
             // textBoxPin
             // 
-            this.textBoxPin.Location = new System.Drawing.Point(30, 98);
-            this.textBoxPin.Name = "textBoxPin";
-            this.textBoxPin.PasswordChar = '*';
-            this.textBoxPin.Size = new System.Drawing.Size(200, 23);
-            this.textBoxPin.TabIndex = 3;
+            textBoxPin.Location = new Point(30, 98);
+            textBoxPin.Name = "textBoxPin";
+            textBoxPin.PasswordChar = '*';
+            textBoxPin.Size = new Size(200, 23);
+            textBoxPin.TabIndex = 3;
             // 
             // buttonLogin
             // 
-            this.buttonLogin.Location = new System.Drawing.Point(30, 140);
-            this.buttonLogin.Name = "buttonLogin";
-            this.buttonLogin.Size = new System.Drawing.Size(90, 30);
-            this.buttonLogin.TabIndex = 4;
-            this.buttonLogin.Text = "Login";
-            this.buttonLogin.UseVisualStyleBackColor = true;
-            this.buttonLogin.Click += new System.EventHandler(this.buttonLogin_Click);
+            buttonLogin.Location = new Point(30, 140);
+            buttonLogin.Name = "buttonLogin";
+            buttonLogin.Size = new Size(90, 30);
+            buttonLogin.TabIndex = 4;
+            buttonLogin.Text = "Login";
+            buttonLogin.UseVisualStyleBackColor = true;
+            buttonLogin.Click += buttonLogin_Click;
             // 
             // buttonCancel
             // 
-            this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(140, 140);
-            this.buttonCancel.Name = "buttonCancel";
-            this.buttonCancel.Size = new System.Drawing.Size(90, 30);
-            this.buttonCancel.TabIndex = 5;
-            this.buttonCancel.Text = "Cancel";
-            this.buttonCancel.UseVisualStyleBackColor = true;
-            this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
+            buttonCancel.DialogResult = DialogResult.Cancel;
+            buttonCancel.Location = new Point(140, 140);
+            buttonCancel.Name = "buttonCancel";
+            buttonCancel.Size = new Size(90, 30);
+            buttonCancel.TabIndex = 5;
+            buttonCancel.Text = "Cancel";
+            buttonCancel.UseVisualStyleBackColor = true;
+            buttonCancel.Click += buttonCancel_Click;
             // 
             // Form_SharedLogin
             // 
-            this.AcceptButton = this.buttonLogin;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.CancelButton = this.buttonCancel;
-            this.ClientSize = new System.Drawing.Size(264, 201);
-            this.Controls.Add(this.buttonCancel);
-            this.Controls.Add(this.buttonLogin);
-            this.Controls.Add(this.textBoxPin);
-            this.Controls.Add(this.labelPin);
-            this.Controls.Add(this.textBoxUsername);
-            this.Controls.Add(this.labelUsername);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.Name = "Form_SharedLogin";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Shared Workstation Login";
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AcceptButton = buttonLogin;
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            CancelButton = buttonCancel;
+            ClientSize = new Size(264, 201);
+            Controls.Add(buttonCancel);
+            Controls.Add(buttonLogin);
+            Controls.Add(textBoxPin);
+            Controls.Add(labelPin);
+            Controls.Add(textBoxUsername);
+            Controls.Add(labelUsername);
+            FormBorderStyle = FormBorderStyle.FixedDialog;
+            Icon = (Icon)resources.GetObject("$this.Icon");
+            MaximizeBox = false;
+            MinimizeBox = false;
+            Name = "Form_SharedLogin";
+            StartPosition = FormStartPosition.CenterScreen;
+            Text = "Shared Workstation Login";
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 

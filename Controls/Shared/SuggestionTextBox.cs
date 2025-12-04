@@ -1,9 +1,12 @@
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.InteropServices;
 using MTM_WIP_Application_Winforms.Forms.Shared;
-using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Models;
+using MTM_WIP_Application_Winforms.Models.Enums;
 using MTM_WIP_Application_Winforms.Services;
+using MTM_WIP_Application_Winforms.Helpers;
 
 namespace MTM_WIP_Application_Winforms.Controls.Shared
 {
@@ -17,6 +20,15 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
     [Description("TextBox with intelligent suggestion/autocomplete support")]
     public partial class SuggestionTextBox : ThemedUserControl
     {
+        #region Native Interop
+
+        private const int EM_SETCUEBANNER = 0x1501;
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        private static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wParam, [MarshalAs(UnmanagedType.LPWStr)] string lParam);
+
+        #endregion
+
         #region Fields
 
         private SuggestionOverlayForm? _currentOverlay;
@@ -27,6 +39,28 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
         #endregion
 
         #region Properties
+
+        private Enum_SuggestionDataSource _suggestionDataSource = Enum_SuggestionDataSource.None;
+
+        /// <summary>
+        /// Gets or sets the data source type for suggestions.
+        /// Automatically configures the DataProvider based on the selected type.
+        /// </summary>
+        [Category("Suggestion Data")]
+        [Description("The type of dataset to use for suggestions")]
+        [DefaultValue(Enum_SuggestionDataSource.None)]
+        public Enum_SuggestionDataSource SuggestionDataSource
+        {
+            get => _suggestionDataSource;
+            set
+            {
+                _suggestionDataSource = value;
+                if (!DesignMode)
+                {
+                    ConfigureDataSource();
+                }
+            }
+        }
 
         /// <summary>
         /// Gets or sets the async data provider that returns suggestion strings.
@@ -85,6 +119,24 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
         public bool SuppressExactMatch { get; set; } = true;
 
         /// <summary>
+        /// Gets or sets the action to take when no matches are found.
+        /// Default: ShowWarningAndClear.
+        /// </summary>
+        [Category("Behavior")]
+        [Description("Action to take when no suggestions match")]
+        [DefaultValue(Enum_SuggestionNoMatchAction.ShowWarningAndClear)]
+        public Enum_SuggestionNoMatchAction NoMatchAction { get; set; } = Enum_SuggestionNoMatchAction.ShowWarningAndClear;
+
+        /// <summary>
+        /// Gets or sets the action to take when a suggestion is selected.
+        /// Default: MoveFocusToNextControl.
+        /// </summary>
+        [Category("Behavior")]
+        [Description("Action to take when a suggestion is selected")]
+        [DefaultValue(Enum_SuggestionSelectionAction.MoveFocusToNextControl)]
+        public Enum_SuggestionSelectionAction SelectionAction { get; set; } = Enum_SuggestionSelectionAction.MoveFocusToNextControl;
+
+        /// <summary>
         /// Gets or sets whether to clear field when no matches found.
         /// Follows MTM validation pattern: invalid input is cleared.
         /// Default: true.
@@ -92,7 +144,13 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
         [Category("Behavior")]
         [Description("Clear field when no suggestions match (MTM pattern)")]
         [DefaultValue(true)]
-        public bool ClearOnNoMatch { get; set; } = true;
+        [Browsable(false)]
+        [Obsolete("Use NoMatchAction instead")]
+        public bool ClearOnNoMatch
+        {
+            get => NoMatchAction == Enum_SuggestionNoMatchAction.ShowWarningAndClear || NoMatchAction == Enum_SuggestionNoMatchAction.ClearField;
+            set => NoMatchAction = value ? Enum_SuggestionNoMatchAction.ShowWarningAndClear : Enum_SuggestionNoMatchAction.None;
+        }
 
         /// <summary>
         /// Gets or sets the minimum input length before triggering suggestions.
@@ -130,6 +188,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
 
         /// <inheritdoc />
         [AllowNull]
+        [Category("Appearance")]
         public override Font Font
         {
             get => SuggestionTextBox_TextBox.Font;
@@ -137,6 +196,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
         }
 
         /// <inheritdoc />
+        [Category("Appearance")]
         public override Color BackColor
         {
             get => SuggestionTextBox_TextBox.BackColor;
@@ -144,6 +204,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
         }
 
         /// <inheritdoc />
+        [Category("Appearance")]
         public override Color ForeColor
         {
             get => SuggestionTextBox_TextBox.ForeColor;
@@ -173,6 +234,15 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
         }
 
         /// <summary>
+        /// Gets or sets whether the placeholder text remains visible when the control has focus
+        /// (until the user starts typing).
+        /// </summary>
+        [Category("Appearance")]
+        [Description("Keep placeholder text visible when control has focus")]
+        [DefaultValue(true)]
+        public bool KeepPlaceholderOnFocus { get; set; } = true;
+
+        /// <summary>
         /// Gets or sets the placeholder text shown when the control is empty.
         /// </summary>
         [Category("Appearance")]
@@ -180,7 +250,11 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
         public string PlaceholderText
         {
             get => SuggestionTextBox_TextBox.PlaceholderText;
-            set => SuggestionTextBox_TextBox.PlaceholderText = value;
+            set
+            {
+                SuggestionTextBox_TextBox.PlaceholderText = value;
+                UpdateCueBanner();
+            }
         }
 
         #endregion
@@ -206,7 +280,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
         /// </summary>
         [Category("Action")]
         [Description("Occurs when user selects a suggestion")]
-        public event EventHandler<SuggestionSelectedEventArgs>? SuggestionSelected;
+        public event EventHandler<EventArgs_SuggestionSelectedEventArgs>? SuggestionSelected;
 
         /// <summary>
         /// Occurs when user cancels suggestion selection.
@@ -214,7 +288,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
         /// </summary>
         [Category("Action")]
         [Description("Occurs when user cancels suggestion selection")]
-        public event EventHandler<SuggestionCancelledEventArgs>? SuggestionCancelled;
+        public event EventHandler<EventArgs_SuggestionCancelledEventArgs>? SuggestionCancelled;
 
         /// <summary>
         /// Occurs when suggestion overlay is opened.
@@ -222,6 +296,8 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
         [Category("Action")]
         [Description("Occurs when suggestion overlay opens")]
         public event EventHandler<EventArgs>? SuggestionOverlayOpened;
+
+
 
         /// <summary>
         /// Occurs when suggestion overlay is closed (any reason).
@@ -234,6 +310,44 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
 
         #region Methods
 
+        private void ConfigureDataSource()
+        {
+            switch (_suggestionDataSource)
+            {
+                case Enum_SuggestionDataSource.MTM_PartNumber:
+                    Helper_SuggestionTextBox.ConfigureForPartNumbers(this, Helper_SuggestionTextBox.GetCachedPartNumbersAsync, enableF4: true);
+                    break;
+                case Enum_SuggestionDataSource.MTM_Operation:
+                    Helper_SuggestionTextBox.ConfigureForOperations(this, Helper_SuggestionTextBox.GetCachedOperationsAsync, enableF4: true);
+                    break;
+                case Enum_SuggestionDataSource.MTM_Location:
+                    Helper_SuggestionTextBox.ConfigureForLocations(this, Helper_SuggestionTextBox.GetCachedLocationsAsync, enableF4: true);
+                    break;
+                case Enum_SuggestionDataSource.MTM_Color:
+                    Helper_SuggestionTextBox.ConfigureForColorCodes(this, Helper_SuggestionTextBox.GetCachedColorsAsync, enableF4: true);
+                    break;
+                case Enum_SuggestionDataSource.MTM_User:
+                    Helper_SuggestionTextBox.ConfigureForUsers(this, Helper_SuggestionTextBox.GetCachedUsersAsync, enableF4: true);
+                    break;
+                // InforVisual types - Placeholder for now as logic is not implemented
+                case Enum_SuggestionDataSource.Infor_PartNumber:
+                case Enum_SuggestionDataSource.Infor_User:
+                case Enum_SuggestionDataSource.Infor_Location:
+                case Enum_SuggestionDataSource.Infor_Operation:
+                case Enum_SuggestionDataSource.Infor_PONumber:
+                case Enum_SuggestionDataSource.Infor_CONumber:
+                case Enum_SuggestionDataSource.Infor_WONumber:
+                case Enum_SuggestionDataSource.Infor_FGTNumber:
+                case Enum_SuggestionDataSource.Infor_MMCNumber:
+                case Enum_SuggestionDataSource.Infor_MMFNumber:
+                    // TODO: Implement InforVisual data providers
+                    break;
+                case Enum_SuggestionDataSource.None:
+                default:
+                    break;
+            }
+        }
+
             private void WireInnerTextBoxEvents()
             {
                 SuggestionTextBox_TextBox.LostFocus += InnerTextBox_LostFocus;
@@ -244,8 +358,19 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
                 SuggestionTextBox_TextBox.TextChanged += InnerTextBox_TextChanged;
                 SuggestionTextBox_TextBox.Click += InnerTextBox_Click;
                 SuggestionTextBox_TextBox.DoubleClick += InnerTextBox_DoubleClick;
+                HandleCreated += (s, e) => UpdateCueBanner();
+                SuggestionTextBox_TextBox.HandleCreated += (s, e) => UpdateCueBanner();
             }
+private void UpdateCueBanner()
+        {
+            if (SuggestionTextBox_TextBox.IsHandleCreated && !string.IsNullOrEmpty(SuggestionTextBox_TextBox.PlaceholderText))
+            {
+                // wParam = 1 (TRUE) to show when focused
+                SendMessage(SuggestionTextBox_TextBox.Handle, EM_SETCUEBANNER, (IntPtr)(KeepPlaceholderOnFocus ? 1 : 0), SuggestionTextBox_TextBox.PlaceholderText);
+            }
+        }
 
+        
         /// <summary>
         /// Manually triggers suggestion display for current Text value.
         /// Useful for programmatically showing suggestions without focus change.
@@ -265,7 +390,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
         /// Used by helper methods to trigger event after programmatic selection.
         /// </summary>
         /// <param name="e">Event arguments</param>
-        public void RaiseSuggestionSelectedEvent(SuggestionSelectedEventArgs e)
+        public void RaiseSuggestionSelectedEvent(EventArgs_SuggestionSelectedEventArgs e)
         {
             OnSuggestionSelected(e);
         }
@@ -314,7 +439,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
             this.ShowLoadingIndicator = config.ShowLoadingIndicator;
             this.LoadingThresholdMs = config.LoadingThresholdMs;
             this.SuppressExactMatch = config.SuppressExactMatch;
-            this.ClearOnNoMatch = config.ClearOnNoMatch;
+            this.NoMatchAction = config.ClearOnNoMatch ? Enum_SuggestionNoMatchAction.ShowWarningAndClear : Enum_SuggestionNoMatchAction.None;
             this.MinimumInputLength = config.MinimumInputLength;
         }
 
@@ -427,7 +552,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
                 // Check for empty input
                 if (string.IsNullOrWhiteSpace(_originalInput))
                 {
-                    OnSuggestionCancelled(new SuggestionCancelledEventArgs
+                    OnSuggestionCancelled(new EventArgs_SuggestionCancelledEventArgs
                     {
                         OriginalInput = _originalInput,
                         Reason = SuggestionCancelReason.EmptyInput,
@@ -553,7 +678,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
 
 
 
-                    OnSuggestionSelected(new SuggestionSelectedEventArgs
+                    OnSuggestionSelected(new EventArgs_SuggestionSelectedEventArgs
                     {
                         OriginalInput = _originalInput,
                         SelectedValue = selectedValue,
@@ -561,18 +686,19 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
                         FieldName = this.Name
                     });
 
-
-
-                    // Move focus to next control
-                    var nextControlFocused = this.FindForm()?.SelectNextControl(this, forward: true, tabStopOnly: true, nested: true, wrap: false);
-
+                    // Handle Selection Action
+                    if (SelectionAction == Enum_SuggestionSelectionAction.MoveFocusToNextControl)
+                    {
+                        // Move focus to next control
+                        var nextControlFocused = this.FindForm()?.SelectNextControl(this, forward: true, tabStopOnly: true, nested: true, wrap: false);
+                    }
                 }
                 else
                 {
                     // User cancelled - restore focus to this field
 
 
-                    OnSuggestionCancelled(new SuggestionCancelledEventArgs
+                    OnSuggestionCancelled(new EventArgs_SuggestionCancelledEventArgs
                     {
                         OriginalInput = _originalInput,
                         Reason = SuggestionCancelReason.Escape,
@@ -599,26 +725,28 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
         /// </summary>
         private void HandleNoMatches()
         {
-            OnSuggestionCancelled(new SuggestionCancelledEventArgs
+            OnSuggestionCancelled(new EventArgs_SuggestionCancelledEventArgs
             {
                 OriginalInput = _originalInput,
                 Reason = SuggestionCancelReason.NoMatches,
                 FieldName = this.Name
             });
 
-
-
-            if (ClearOnNoMatch)
+            if (NoMatchAction == Enum_SuggestionNoMatchAction.ShowWarningAndClear)
             {
                 this.Text = string.Empty;
                 Service_ErrorHandler.ShowWarning($"No matching values found for '{_originalInput}'");
+            }
+            else if (NoMatchAction == Enum_SuggestionNoMatchAction.ClearField)
+            {
+                this.Text = string.Empty;
             }
         }
 
         /// <summary>
         /// Raises the SuggestionSelected event.
         /// </summary>
-        protected virtual void OnSuggestionSelected(SuggestionSelectedEventArgs e)
+        protected virtual void OnSuggestionSelected(EventArgs_SuggestionSelectedEventArgs e)
         {
             SuggestionSelected?.Invoke(this, e);
         }
@@ -626,7 +754,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
         /// <summary>
         /// Raises the SuggestionCancelled event.
         /// </summary>
-        protected virtual void OnSuggestionCancelled(SuggestionCancelledEventArgs e)
+        protected virtual void OnSuggestionCancelled(EventArgs_SuggestionCancelledEventArgs e)
         {
             SuggestionCancelled?.Invoke(this, e);
         }
@@ -790,7 +918,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
             }
 
             var selectionIndex = source.FindIndex(s => s.Equals(matchedValue, StringComparison.OrdinalIgnoreCase));
-            OnSuggestionSelected(new SuggestionSelectedEventArgs
+            OnSuggestionSelected(new EventArgs_SuggestionSelectedEventArgs
             {
                 OriginalInput = _originalInput,
                 SelectedValue = matchedValue,

@@ -15,6 +15,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Transactions
 
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Transactions));
             Transactions_Panel_Main = new Panel();
             Transactions_TableLayout_Main = new TableLayoutPanel();
             Transactions_Label_Title = new Label();
@@ -59,7 +60,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Transactions
             // 
             Transactions_Label_Title.AutoSize = true;
             Transactions_Label_Title.Dock = DockStyle.Fill;
-            Transactions_Label_Title.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
+            Transactions_Label_Title.Font = new Font("Segoe UI Emoji", 10F, FontStyle.Bold);
             Transactions_Label_Title.Location = new Point(3, 3);
             Transactions_Label_Title.Margin = new Padding(3);
             Transactions_Label_Title.Name = "Transactions_Label_Title";
@@ -74,9 +75,9 @@ namespace MTM_WIP_Application_Winforms.Forms.Transactions
             Transactions_Panel_Grid.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Transactions_Panel_Grid.Controls.Add(Transactions_UserControl_Grid);
             Transactions_Panel_Grid.Dock = DockStyle.Fill;
-            Transactions_Panel_Grid.Location = new Point(3, 306);
+            Transactions_Panel_Grid.Location = new Point(3, 241);
             Transactions_Panel_Grid.Name = "Transactions_Panel_Grid";
-            Transactions_Panel_Grid.Size = new Size(1153, 352);
+            Transactions_Panel_Grid.Size = new Size(1153, 417);
             Transactions_Panel_Grid.TabIndex = 1;
             // 
             // Transactions_UserControl_Grid
@@ -88,7 +89,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Transactions
             Transactions_UserControl_Grid.Margin = new Padding(0);
             Transactions_UserControl_Grid.Name = "Transactions_UserControl_Grid";
             Transactions_UserControl_Grid.Padding = new Padding(2);
-            Transactions_UserControl_Grid.Size = new Size(1153, 352);
+            Transactions_UserControl_Grid.Size = new Size(1153, 417);
             Transactions_UserControl_Grid.TabIndex = 0;
             // 
             // Transactions_Panel_Search
@@ -99,7 +100,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Transactions
             Transactions_Panel_Search.Dock = DockStyle.Fill;
             Transactions_Panel_Search.Location = new Point(3, 28);
             Transactions_Panel_Search.Name = "Transactions_Panel_Search";
-            Transactions_Panel_Search.Size = new Size(1153, 272);
+            Transactions_Panel_Search.Size = new Size(1153, 207);
             Transactions_Panel_Search.TabIndex = 0;
             // 
             // Transactions_UserControl_Search
@@ -110,7 +111,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Transactions
             Transactions_UserControl_Search.Location = new Point(0, 0);
             Transactions_UserControl_Search.Margin = new Padding(0);
             Transactions_UserControl_Search.Name = "Transactions_UserControl_Search";
-            Transactions_UserControl_Search.Size = new Size(1153, 272);
+            Transactions_UserControl_Search.Size = new Size(1153, 207);
             Transactions_UserControl_Search.TabIndex = 0;
             // 
             // Transactions
@@ -119,6 +120,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Transactions
             AutoScaleMode = AutoScaleMode.Dpi;
             ClientSize = new Size(1159, 661);
             Controls.Add(Transactions_Panel_Main);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             MinimumSize = new Size(1175, 700);
             Name = "Transactions";
             StartPosition = FormStartPosition.CenterScreen;

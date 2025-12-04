@@ -1,8 +1,10 @@
 using MTM_WIP_Application_Winforms.Controls.Shared;
 using MTM_WIP_Application_Winforms.Forms.Shared;
-using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Models;
+using MTM_WIP_Application_Winforms.Models.Enums;
 using MTM_WIP_Application_Winforms.Services;
+using System.Data;
 
 namespace MTM_WIP_Application_Winforms.Helpers
 {
@@ -78,7 +80,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
                     suggestionTextBox.Text = overlay.SelectedItem.ToUpperInvariant();
                     
                     // Manually trigger SuggestionSelected event
-                    suggestionTextBox.RaiseSuggestionSelectedEvent(new SuggestionSelectedEventArgs
+                    suggestionTextBox.RaiseSuggestionSelectedEvent(new EventArgs_SuggestionSelectedEventArgs
                     {
                         OriginalInput = suggestionTextBox.Text,
                         SelectedValue = overlay.SelectedItem,
@@ -86,8 +88,12 @@ namespace MTM_WIP_Application_Winforms.Helpers
                         FieldName = suggestionTextBox.Name
                     });
 
-                    // Move to next control
-                    parentForm.SelectNextControl(suggestionTextBox, forward: true, tabStopOnly: true, nested: true, wrap: false);
+                    // Handle Selection Action
+                    if (suggestionTextBox.SelectionAction == Enum_SuggestionSelectionAction.MoveFocusToNextControl)
+                    {
+                        // Move to next control
+                        parentForm.SelectNextControl(suggestionTextBox, forward: true, tabStopOnly: true, nested: true, wrap: false);
+                    }
                 }
                 else
                 {
@@ -295,6 +301,39 @@ namespace MTM_WIP_Application_Winforms.Helpers
         }
 
         /// <summary>
+        /// Configures a SuggestionTextBox for Warehouse suggestions.
+        /// Standard configuration: MaxResults=50, EnableWildcards=true, ClearOnNoMatch=true
+        /// </summary>
+        public static void ConfigureForWarehouses(SuggestionTextBox suggestionTextBox, Func<Task<List<string>>> dataProvider, bool enableF4 = true)
+        {
+            if (suggestionTextBox == null)
+                throw new ArgumentNullException(nameof(suggestionTextBox));
+
+            suggestionTextBox.DataProvider = dataProvider;
+            suggestionTextBox.MaxResults = 50;
+            suggestionTextBox.EnableWildcards = true;
+            suggestionTextBox.ClearOnNoMatch = true;
+            suggestionTextBox.SuppressExactMatch = true;
+
+            if (enableF4)
+            {
+                RegisterF4Handler(suggestionTextBox);
+            }
+        }
+
+        /// <summary>
+        /// Configures a SuggestionTextBoxWithLabel for Warehouse suggestions.
+        /// Standard configuration: MaxResults=50, EnableWildcards=true, ClearOnNoMatch=true, F4 button enabled.
+        /// </summary>
+        public static void ConfigureForWarehouses(SuggestionTextBoxWithLabel control, Func<Task<List<string>>> dataProvider)
+        {
+            if (control == null)
+                throw new ArgumentNullException(nameof(control));
+
+            ConfigureForWarehouses(control.TextBox, dataProvider, enableF4: false); // F4 handled by button
+        }
+
+        /// <summary>
         /// Configures a SuggestionTextBoxWithLabel for Item Type suggestions.
         /// Standard configuration: MaxResults=50, EnableWildcards=false, ClearOnNoMatch=true, F4 button enabled.
         /// </summary>
@@ -354,6 +393,96 @@ namespace MTM_WIP_Application_Winforms.Helpers
 
             ConfigureForUsers(control.TextBox, dataProvider, enableF4: false); // F4 handled by button
             
+        }
+
+        /// <summary>
+        /// Configures a SuggestionTextBox for Work Order suggestions.
+        /// Standard configuration: MaxResults=50, EnableWildcards=true, ClearOnNoMatch=true
+        /// </summary>
+        public static void ConfigureForWorkOrders(SuggestionTextBox suggestionTextBox, Func<Task<List<string>>> dataProvider, bool enableF4 = true)
+        {
+            if (suggestionTextBox == null)
+                throw new ArgumentNullException(nameof(suggestionTextBox));
+
+            suggestionTextBox.DataProvider = dataProvider;
+            suggestionTextBox.MaxResults = 50;
+            suggestionTextBox.EnableWildcards = true;
+            suggestionTextBox.ClearOnNoMatch = true;
+            suggestionTextBox.SuppressExactMatch = true;
+
+            if (enableF4)
+            {
+                RegisterF4Handler(suggestionTextBox);
+            }
+        }
+
+        /// <summary>
+        /// Configures a SuggestionTextBoxWithLabel for Work Order suggestions.
+        /// </summary>
+        public static void ConfigureForWorkOrders(SuggestionTextBoxWithLabel control, Func<Task<List<string>>> dataProvider)
+        {
+            if (control == null) throw new ArgumentNullException(nameof(control));
+            ConfigureForWorkOrders(control.TextBox, dataProvider, enableF4: false);
+        }
+
+        /// <summary>
+        /// Configures a SuggestionTextBox for Purchase Order suggestions.
+        /// Standard configuration: MaxResults=50, EnableWildcards=true, ClearOnNoMatch=true
+        /// </summary>
+        public static void ConfigureForPurchaseOrders(SuggestionTextBox suggestionTextBox, Func<Task<List<string>>> dataProvider, bool enableF4 = true)
+        {
+            if (suggestionTextBox == null)
+                throw new ArgumentNullException(nameof(suggestionTextBox));
+
+            suggestionTextBox.DataProvider = dataProvider;
+            suggestionTextBox.MaxResults = 50;
+            suggestionTextBox.EnableWildcards = true;
+            suggestionTextBox.ClearOnNoMatch = true;
+            suggestionTextBox.SuppressExactMatch = true;
+
+            if (enableF4)
+            {
+                RegisterF4Handler(suggestionTextBox);
+            }
+        }
+
+        /// <summary>
+        /// Configures a SuggestionTextBoxWithLabel for Purchase Order suggestions.
+        /// </summary>
+        public static void ConfigureForPurchaseOrders(SuggestionTextBoxWithLabel control, Func<Task<List<string>>> dataProvider)
+        {
+            if (control == null) throw new ArgumentNullException(nameof(control));
+            ConfigureForPurchaseOrders(control.TextBox, dataProvider, enableF4: false);
+        }
+
+        /// <summary>
+        /// Configures a SuggestionTextBox for Customer Order suggestions.
+        /// Standard configuration: MaxResults=50, EnableWildcards=true, ClearOnNoMatch=true
+        /// </summary>
+        public static void ConfigureForCustomerOrders(SuggestionTextBox suggestionTextBox, Func<Task<List<string>>> dataProvider, bool enableF4 = true)
+        {
+            if (suggestionTextBox == null)
+                throw new ArgumentNullException(nameof(suggestionTextBox));
+
+            suggestionTextBox.DataProvider = dataProvider;
+            suggestionTextBox.MaxResults = 50;
+            suggestionTextBox.EnableWildcards = true;
+            suggestionTextBox.ClearOnNoMatch = true;
+            suggestionTextBox.SuppressExactMatch = true;
+
+            if (enableF4)
+            {
+                RegisterF4Handler(suggestionTextBox);
+            }
+        }
+
+        /// <summary>
+        /// Configures a SuggestionTextBoxWithLabel for Customer Order suggestions.
+        /// </summary>
+        public static void ConfigureForCustomerOrders(SuggestionTextBoxWithLabel control, Func<Task<List<string>>> dataProvider)
+        {
+            if (control == null) throw new ArgumentNullException(nameof(control));
+            ConfigureForCustomerOrders(control.TextBox, dataProvider, enableF4: false);
         }
 
         /// <summary>
@@ -584,6 +713,39 @@ namespace MTM_WIP_Application_Winforms.Helpers
             {
                 LoggingUtility.LogApplicationError(ex);
                 return Task.FromResult(new List<string>());
+            }
+        }
+
+        /// <summary>
+        /// Gets color codes from the database.
+        /// </summary>
+        /// <returns>List of color codes</returns>
+        public static async Task<List<string>> GetCachedColorsAsync()
+        {
+            try
+            {
+                var dao = new Data.Dao_ColorCode();
+                var result = await dao.GetAllAsync();
+                
+                if (result.IsSuccess && result.Data != null)
+                {
+                    var colors = new List<string>();
+                    foreach (DataRow row in result.Data.Rows)
+                    {
+                        if (row["ColorCode"] != DBNull.Value)
+                        {
+                            colors.Add(row["ColorCode"].ToString() ?? string.Empty);
+                        }
+                    }
+                    return colors;
+                }
+                
+                return new List<string>();
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+                return new List<string>();
             }
         }
 

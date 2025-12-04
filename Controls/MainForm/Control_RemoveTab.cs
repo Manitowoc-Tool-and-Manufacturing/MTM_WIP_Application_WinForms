@@ -6,11 +6,12 @@ using MTM_WIP_Application_Winforms.Core;
 using MTM_WIP_Application_Winforms.Data;
 using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Helpers;
-using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
 using Microsoft.Extensions.DependencyInjection;
 using static System.Int32;
+using MTM_WIP_Application_Winforms.Services.Visual;
 
 namespace MTM_WIP_Application_Winforms.Controls.MainForm
 {
@@ -178,6 +179,12 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_RemoveTab_Button_Toggle_RightPanel.Visible = true;
             Control_RemoveTab_Button_Undo.Visible = hasAdminAccess || isNormal;
 
+            // Visual Search Button Visibility
+            if (Control_RemoveTab_Button_SearchVisual != null)
+            {
+                var visualService = Program.ServiceProvider?.GetService<IService_VisualDatabase>();
+                Control_RemoveTab_Button_SearchVisual.Visible = visualService != null;
+            }
 
             // For Read-Only, hide buttons and disable ComboBoxes
             if (isReadOnly)
@@ -202,6 +209,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 Control_RemoveTab_Button_Search.TabIndex = 2;
                 Control_RemoveTab_Button_Delete.TabIndex = 3;
                 Control_RemoveTab_Button_Reset.TabIndex = 4;
+                if (Control_RemoveTab_Button_SearchVisual != null) Control_RemoveTab_Button_SearchVisual.TabIndex = 5;
 
                 // Ensure TabStop is true for navigation chain
                 Control_RemoveTab_TextBox_Part.TabStop = true;
@@ -209,6 +217,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 Control_RemoveTab_Button_Search.TabStop = true;
                 Control_RemoveTab_Button_Delete.TabStop = true;
                 Control_RemoveTab_Button_Reset.TabStop = true;
+                if (Control_RemoveTab_Button_SearchVisual != null) Control_RemoveTab_Button_SearchVisual.TabStop = true;
 
                 // Disable TabStop for F4 buttons and non-navigation controls
                 Control_RemoveTab_TextBox_Part.SetF4ButtonTabStop(false);
@@ -1132,6 +1141,24 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_RemoveTab_Button_Print_Click(sender, e);
         }
 
+        private async void Control_RemoveTab_Button_SearchVisual_Click(object? sender, EventArgs e)
+        {
+            try
+            {
+                string partNumber = Control_RemoveTab_TextBox_Part.Text?.Trim() ?? "";
+                if (string.IsNullOrWhiteSpace(partNumber)) return;
+
+                var dashboard = new Forms.Visual.InforVisualDashboard();
+                dashboard.Show();
+                await dashboard.OpenInventorySearchAsync(partNumber);
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, controlName: nameof(Control_RemoveTab));
+            }
+        }
+
         #endregion
 
         #region ComboBox & UI Events
@@ -1141,6 +1168,12 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             try
             {
                 Control_RemoveTab_Button_Search.Enabled = !string.IsNullOrWhiteSpace(Control_RemoveTab_TextBox_Part.Text);
+                
+                if (Control_RemoveTab_Button_SearchVisual != null)
+                {
+                    Control_RemoveTab_Button_SearchVisual.Enabled = !string.IsNullOrWhiteSpace(Control_RemoveTab_TextBox_Part.Text);
+                }
+
                 bool hasData = Control_RemoveTab_DataGridView_Main?.Rows.Count > 0;
                 bool hasSelection = Control_RemoveTab_DataGridView_Main?.SelectedRows.Count > 0;
                 Control_RemoveTab_Button_Delete.Enabled = hasData && hasSelection;
@@ -1163,6 +1196,12 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             try
             {
                 Control_RemoveTab_Button_Reset.Click += (s, e) => Control_RemoveTab_Button_Reset_Click();
+
+                if (Control_RemoveTab_Button_SearchVisual != null)
+                {
+                    Control_RemoveTab_Button_SearchVisual.Click -= Control_RemoveTab_Button_SearchVisual_Click;
+                    Control_RemoveTab_Button_SearchVisual.Click += Control_RemoveTab_Button_SearchVisual_Click;
+                }
 
                 // SuggestionTextBox event handlers - simplified
                 Control_RemoveTab_TextBox_Part.TextBox.TextChanged += (s, e) => Control_RemoveTab_Update_ButtonStates();

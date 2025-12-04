@@ -1,5 +1,5 @@
 using System.Data;
-using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Services.Logging;
 
 namespace MTM_WIP_Application_Winforms.Services
 {
@@ -36,7 +36,7 @@ namespace MTM_WIP_Application_Winforms.Services
                     Margin = new Padding(3),
                     Dock = DockStyle.Fill,
                     AutoSize = true,
-                    Font = new Font("Segoe UI", 9F, FontStyle.Bold)
+                    Font = new Font("Segoe UI Emoji", 9F, FontStyle.Bold)
                 };
 
                 // Label: Value
@@ -48,7 +48,7 @@ namespace MTM_WIP_Application_Winforms.Services
                     Margin = new Padding(3),
                     Dock = DockStyle.Fill,
                     AutoSize = true,
-                    Font = new Font("Segoe UI", 9F, FontStyle.Bold)
+                    Font = new Font("Segoe UI Emoji", 9F, FontStyle.Bold)
                 };
 
                 // Add controls

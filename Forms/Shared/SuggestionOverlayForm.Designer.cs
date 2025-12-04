@@ -28,60 +28,58 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
         /// </summary>
         private void InitializeComponent()
         {
-            this.suggestionListBox = new System.Windows.Forms.ListBox();
-            this.lblMatchCount = new System.Windows.Forms.Label();
-            this.SuspendLayout();
+            suggestionListBox = new ListBox();
+            lblMatchCount = new Label();
+            SuspendLayout();
             // 
             // suggestionListBox
             // 
-            this.suggestionListBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.suggestionListBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.suggestionListBox.FormattingEnabled = true;
-            this.suggestionListBox.IntegralHeight = false;
-            this.suggestionListBox.ItemHeight = 18;
-            this.suggestionListBox.Location = new System.Drawing.Point(1, 30);
-            this.suggestionListBox.Name = "suggestionListBox";
-            this.suggestionListBox.Size = new System.Drawing.Size(398, 268);
-            this.suggestionListBox.TabIndex = 0;
-            this.suggestionListBox.DoubleClick += new System.EventHandler(this.suggestionListBox_DoubleClick);
+            suggestionListBox.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            suggestionListBox.BorderStyle = BorderStyle.FixedSingle;
+            suggestionListBox.FormattingEnabled = true;
+            suggestionListBox.IntegralHeight = false;
+            suggestionListBox.ItemHeight = 15;
+            suggestionListBox.Location = new Point(0, 27);
+            suggestionListBox.Margin = new Padding(0);
+            suggestionListBox.Name = "suggestionListBox";
+            suggestionListBox.Size = new Size(400, 265);
+            suggestionListBox.TabIndex = 0;
+            suggestionListBox.DoubleClick += suggestionListBox_DoubleClick;
             // 
             // lblMatchCount
             // 
-            this.lblMatchCount.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblMatchCount.BackColor = System.Drawing.SystemColors.Control;
-            this.lblMatchCount.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lblMatchCount.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.lblMatchCount.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.lblMatchCount.Location = new System.Drawing.Point(1, 1);
-            this.lblMatchCount.Name = "lblMatchCount";
-            this.lblMatchCount.Padding = new System.Windows.Forms.Padding(5, 2, 5, 2);
-            this.lblMatchCount.Size = new System.Drawing.Size(398, 28);
-            this.lblMatchCount.TabIndex = 1;
-            this.lblMatchCount.Text = "0 matches found";
-            this.lblMatchCount.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            lblMatchCount.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            lblMatchCount.BackColor = SystemColors.Control;
+            lblMatchCount.BorderStyle = BorderStyle.FixedSingle;
+            lblMatchCount.Font = new Font("Segoe UI Emoji", 9F, FontStyle.Bold);
+            lblMatchCount.ForeColor = Color.FromArgb(64, 64, 64);
+            lblMatchCount.Location = new Point(0, 0);
+            lblMatchCount.Margin = new Padding(0);
+            lblMatchCount.Name = "lblMatchCount";
+            lblMatchCount.Padding = new Padding(5, 2, 5, 2);
+            lblMatchCount.Size = new Size(400, 28);
+            lblMatchCount.TabIndex = 1;
+            lblMatchCount.Text = "0 matches found";
+            lblMatchCount.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // SuggestionOverlayForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(400, 300);
-            this.Controls.Add(this.lblMatchCount);
-            this.Controls.Add(this.suggestionListBox);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.KeyPreview = true;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.Name = "SuggestionOverlayForm";
-            this.Padding = new System.Windows.Forms.Padding(1);
-            this.ShowIcon = false;
-            this.ShowInTaskbar = false;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
-            this.Text = "Suggestions";
-            this.ResumeLayout(false);
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            BackColor = Color.White;
+            ClientSize = new Size(400, 295);
+            Controls.Add(lblMatchCount);
+            Controls.Add(suggestionListBox);
+            FormBorderStyle = FormBorderStyle.None;
+            KeyPreview = true;
+            MaximizeBox = false;
+            MinimizeBox = false;
+            Name = "SuggestionOverlayForm";
+            ShowIcon = false;
+            ShowInTaskbar = false;
+            StartPosition = FormStartPosition.Manual;
+            Text = "Suggestions";
+            ResumeLayout(false);
 
         }
 

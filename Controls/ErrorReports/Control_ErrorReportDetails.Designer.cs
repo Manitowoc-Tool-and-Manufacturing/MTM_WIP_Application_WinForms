@@ -102,7 +102,7 @@ namespace MTM_WIP_Application_Winforms.Controls.ErrorReports
             // 
             lblHeader.AutoSize = true;
             lblHeader.Dock = DockStyle.Fill;
-            lblHeader.Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point);
+            lblHeader.Font = new Font("Segoe UI Emoji", 12F, FontStyle.Bold, GraphicsUnit.Point);
             lblHeader.Location = new Point(4, 0);
             lblHeader.Margin = new Padding(4, 0, 4, 8);
             lblHeader.Name = "lblHeader";
@@ -324,7 +324,7 @@ namespace MTM_WIP_Application_Winforms.Controls.ErrorReports
             // 
             grpErrorSummary.Controls.Add(txtErrorSummary);
             grpErrorSummary.Dock = DockStyle.Fill;
-            grpErrorSummary.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            grpErrorSummary.Font = new Font("Segoe UI Emoji", 9F, FontStyle.Bold, GraphicsUnit.Point);
             grpErrorSummary.Location = new Point(4, 177);
             grpErrorSummary.Margin = new Padding(4, 0, 4, 8);
             grpErrorSummary.Name = "grpErrorSummary";
@@ -350,7 +350,7 @@ namespace MTM_WIP_Application_Winforms.Controls.ErrorReports
             // 
             grpUserNotes.Controls.Add(txtUserNotes);
             grpUserNotes.Dock = DockStyle.Fill;
-            grpUserNotes.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            grpUserNotes.Font = new Font("Segoe UI Emoji", 9F, FontStyle.Bold, GraphicsUnit.Point);
             grpUserNotes.Location = new Point(4, 297);
             grpUserNotes.Margin = new Padding(4, 0, 4, 8);
             grpUserNotes.Name = "grpUserNotes";
@@ -395,7 +395,7 @@ namespace MTM_WIP_Application_Winforms.Controls.ErrorReports
             grpDeveloperNotes.Controls.Add(txtDeveloperNotes);
             tableLayoutDetails.SetColumnSpan(grpDeveloperNotes, 2);
             grpDeveloperNotes.Dock = DockStyle.Fill;
-            grpDeveloperNotes.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            grpDeveloperNotes.Font = new Font("Segoe UI Emoji", 9F, FontStyle.Bold, GraphicsUnit.Point);
             grpDeveloperNotes.Location = new Point(0, 0);
             grpDeveloperNotes.Margin = new Padding(0, 0, 0, 8);
             grpDeveloperNotes.Name = "grpDeveloperNotes";
@@ -421,7 +421,7 @@ namespace MTM_WIP_Application_Winforms.Controls.ErrorReports
             // 
             grpTechnicalDetails.Controls.Add(txtTechnicalDetails);
             grpTechnicalDetails.Dock = DockStyle.Fill;
-            grpTechnicalDetails.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            grpTechnicalDetails.Font = new Font("Segoe UI Emoji", 9F, FontStyle.Bold, GraphicsUnit.Point);
             grpTechnicalDetails.Location = new Point(0, 120);
             grpTechnicalDetails.Margin = new Padding(0, 0, 4, 0);
             grpTechnicalDetails.Name = "grpTechnicalDetails";
@@ -448,7 +448,7 @@ namespace MTM_WIP_Application_Winforms.Controls.ErrorReports
             // 
             grpCallStack.Controls.Add(txtCallStack);
             grpCallStack.Dock = DockStyle.Fill;
-            grpCallStack.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            grpCallStack.Font = new Font("Segoe UI Emoji", 9F, FontStyle.Bold, GraphicsUnit.Point);
             grpCallStack.Location = new Point(476, 120);
             grpCallStack.Margin = new Padding(4, 0, 0, 0);
             grpCallStack.Name = "grpCallStack";

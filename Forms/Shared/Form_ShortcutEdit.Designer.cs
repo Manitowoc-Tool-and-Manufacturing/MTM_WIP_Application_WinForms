@@ -28,18 +28,19 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form_ShortcutEdit));
             _instructionLabel = new Label();
             _keyDisplayLabel = new Label();
             _buttonPanel = new Panel();
-            _clearButton = new Button();
+            tableLayoutPanel2 = new TableLayoutPanel();
             _cancelButton = new Button();
+            _clearButton = new Button();
             _saveButton = new Button();
             tableLayoutPanel1 = new TableLayoutPanel();
-            tableLayoutPanel2 = new TableLayoutPanel();
             tableLayoutPanel3 = new TableLayoutPanel();
             _buttonPanel.SuspendLayout();
-            tableLayoutPanel1.SuspendLayout();
             tableLayoutPanel2.SuspendLayout();
+            tableLayoutPanel1.SuspendLayout();
             tableLayoutPanel3.SuspendLayout();
             SuspendLayout();
             // 
@@ -47,7 +48,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             // 
             _instructionLabel.AutoSize = true;
             _instructionLabel.Dock = DockStyle.Fill;
-            _instructionLabel.Font = new Font("Segoe UI", 10F);
+            _instructionLabel.Font = new Font("Segoe UI Emoji", 10F);
             _instructionLabel.Location = new Point(3, 3);
             _instructionLabel.Margin = new Padding(3);
             _instructionLabel.Name = "_instructionLabel";
@@ -61,7 +62,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             _keyDisplayLabel.AutoSize = true;
             _keyDisplayLabel.BackColor = Color.WhiteSmoke;
             _keyDisplayLabel.Dock = DockStyle.Fill;
-            _keyDisplayLabel.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
+            _keyDisplayLabel.Font = new Font("Segoe UI Emoji", 16F, FontStyle.Bold);
             _keyDisplayLabel.ForeColor = Color.FromArgb(0, 120, 212);
             _keyDisplayLabel.Location = new Point(3, 28);
             _keyDisplayLabel.Margin = new Padding(3);
@@ -83,15 +84,25 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             _buttonPanel.Size = new Size(338, 60);
             _buttonPanel.TabIndex = 2;
             // 
-            // _clearButton
+            // tableLayoutPanel2
             // 
-            _clearButton.Dock = DockStyle.Fill;
-            _clearButton.Location = new Point(3, 3);
-            _clearButton.Name = "_clearButton";
-            _clearButton.Size = new Size(80, 34);
-            _clearButton.TabIndex = 2;
-            _clearButton.Text = "Clear";
-            _clearButton.UseVisualStyleBackColor = true;
+            tableLayoutPanel2.AutoSize = true;
+            tableLayoutPanel2.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            tableLayoutPanel2.ColumnCount = 4;
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel2.Controls.Add(_cancelButton, 3, 0);
+            tableLayoutPanel2.Controls.Add(_clearButton, 0, 0);
+            tableLayoutPanel2.Controls.Add(_saveButton, 2, 0);
+            tableLayoutPanel2.Dock = DockStyle.Fill;
+            tableLayoutPanel2.Location = new Point(10, 10);
+            tableLayoutPanel2.Name = "tableLayoutPanel2";
+            tableLayoutPanel2.RowCount = 1;
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel2.Size = new Size(318, 40);
+            tableLayoutPanel2.TabIndex = 4;
             // 
             // _cancelButton
             // 
@@ -103,6 +114,16 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             _cancelButton.TabIndex = 1;
             _cancelButton.Text = "Cancel";
             _cancelButton.UseVisualStyleBackColor = true;
+            // 
+            // _clearButton
+            // 
+            _clearButton.Dock = DockStyle.Fill;
+            _clearButton.Location = new Point(3, 3);
+            _clearButton.Name = "_clearButton";
+            _clearButton.Size = new Size(80, 34);
+            _clearButton.TabIndex = 2;
+            _clearButton.Text = "Clear";
+            _clearButton.UseVisualStyleBackColor = true;
             // 
             // _saveButton
             // 
@@ -136,26 +157,6 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             tableLayoutPanel1.Size = new Size(344, 171);
             tableLayoutPanel1.TabIndex = 3;
             // 
-            // tableLayoutPanel2
-            // 
-            tableLayoutPanel2.AutoSize = true;
-            tableLayoutPanel2.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            tableLayoutPanel2.ColumnCount = 4;
-            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanel2.Controls.Add(_cancelButton, 3, 0);
-            tableLayoutPanel2.Controls.Add(_clearButton, 0, 0);
-            tableLayoutPanel2.Controls.Add(_saveButton, 2, 0);
-            tableLayoutPanel2.Dock = DockStyle.Fill;
-            tableLayoutPanel2.Location = new Point(10, 10);
-            tableLayoutPanel2.Name = "tableLayoutPanel2";
-            tableLayoutPanel2.RowCount = 1;
-            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel2.Size = new Size(318, 40);
-            tableLayoutPanel2.TabIndex = 4;
-            // 
             // tableLayoutPanel3
             // 
             tableLayoutPanel3.AutoSize = true;
@@ -181,6 +182,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             ClientSize = new Size(344, 171);
             Controls.Add(tableLayoutPanel1);
             FormBorderStyle = FormBorderStyle.FixedDialog;
+            Icon = (Icon)resources.GetObject("$this.Icon");
             KeyPreview = true;
             MaximizeBox = false;
             MinimizeBox = false;
@@ -190,9 +192,9 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             KeyDown += Form_KeyDown;
             _buttonPanel.ResumeLayout(false);
             _buttonPanel.PerformLayout();
+            tableLayoutPanel2.ResumeLayout(false);
             tableLayoutPanel1.ResumeLayout(false);
             tableLayoutPanel1.PerformLayout();
-            tableLayoutPanel2.ResumeLayout(false);
             tableLayoutPanel3.ResumeLayout(false);
             tableLayoutPanel3.PerformLayout();
             ResumeLayout(false);

@@ -136,7 +136,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             _titleLabel.AutoSize = true;
             _titleLabel.BackColor = Color.Transparent;
             _titleLabel.Dock = DockStyle.Fill;
-            _titleLabel.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            _titleLabel.Font = new Font("Segoe UI Emoji", 12F, FontStyle.Bold);
             _titleLabel.Location = new Point(63, 0);
             _titleLabel.Margin = new Padding(0);
             _titleLabel.Name = "_titleLabel";
@@ -167,7 +167,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             _descriptionLabel.AutoSize = true;
             _descriptionLabel.BackColor = Color.Transparent;
             _descriptionLabel.Dock = DockStyle.Fill;
-            _descriptionLabel.Font = new Font("Segoe UI", 9F);
+            _descriptionLabel.Font = new Font("Segoe UI Emoji", 9F);
             _descriptionLabel.Location = new Point(63, 21);
             _descriptionLabel.Margin = new Padding(0);
             _descriptionLabel.Name = "_descriptionLabel";

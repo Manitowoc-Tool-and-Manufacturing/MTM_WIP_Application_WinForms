@@ -28,6 +28,7 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ErrorAnalysisReportDialog));
             tableLayoutMain = new TableLayoutPanel();
             panelBottom = new Panel();
             tableLayoutPanel1 = new TableLayoutPanel();
@@ -252,7 +253,7 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
             // lblTitle
             // 
             lblTitle.Dock = DockStyle.Fill;
-            lblTitle.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
+            lblTitle.Font = new Font("Segoe UI Emoji", 14F, FontStyle.Bold);
             lblTitle.Location = new Point(0, 0);
             lblTitle.Margin = new Padding(0);
             lblTitle.Name = "lblTitle";
@@ -267,6 +268,7 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
             AutoScaleMode = AutoScaleMode.Dpi;
             ClientSize = new Size(684, 361);
             Controls.Add(tableLayoutMain);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Margin = new Padding(41, 19, 41, 19);
             Name = "ErrorAnalysisReportDialog";
             Padding = new Padding(6);

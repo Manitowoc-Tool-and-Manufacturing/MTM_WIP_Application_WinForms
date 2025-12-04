@@ -151,7 +151,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Analytics
             this.txtGlossary.BackColor = System.Drawing.SystemColors.Window;
             this.txtGlossary.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.txtGlossary.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtGlossary.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.txtGlossary.Font = new System.Drawing.Font("Segoe UI Emoji", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.txtGlossary.Location = new System.Drawing.Point(3, 3);
             this.txtGlossary.Name = "txtGlossary";
             this.txtGlossary.ReadOnly = true;
@@ -569,8 +569,8 @@ namespace MTM_WIP_Application_Winforms.Forms.Analytics
             // 
             // Form_Analytics
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(1000, 600);
             this.Controls.Add(this.Form_Analytics_TableLayout_Main);
             this.Name = "Form_Analytics";

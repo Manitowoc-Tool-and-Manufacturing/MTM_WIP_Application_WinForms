@@ -1,0 +1,1 @@
+SELECT 'Shipping Placeholder' AS Status

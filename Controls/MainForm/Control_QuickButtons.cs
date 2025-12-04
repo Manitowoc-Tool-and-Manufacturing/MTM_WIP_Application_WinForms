@@ -3,7 +3,7 @@ using MTM_WIP_Application_Winforms.Data;
 using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Models;
-using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Services;
 using MySql.Data.MySqlClient;
 using MTM_WIP_Application_Winforms.Controls.Shared;
@@ -180,14 +180,17 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 if (btn.Tag != null)
                 {
                     dynamic tag = btn.Tag!;
-                    string partId = tag.partId?.ToString() ?? "";
-                    string operation = tag.operation?.ToString() ?? "";
-                    int quantity = tag.quantity != null ? Convert.ToInt32(tag.quantity) : 0;
-                    string hotkeyText = tag.shortcutDisplay?.ToString() ?? "";
-                    
-                    // Safely access new properties (handle case where Tag might be from older code version if not fully reloaded)
+                    string partId = "";
+                    string operation = "";
+                    int quantity = 0;
+                    string hotkeyText = "";
                     string workOrder = "";
                     string colorCode = "";
+
+                    try { partId = tag.partId?.ToString() ?? ""; } catch { }
+                    try { operation = tag.operation?.ToString() ?? ""; } catch { }
+                    try { quantity = tag.quantity != null ? Convert.ToInt32(tag.quantity) : 0; } catch { }
+                    try { hotkeyText = tag.shortcutDisplay?.ToString() ?? ""; } catch { }
                     try { workOrder = tag.workOrder?.ToString() ?? ""; } catch { }
                     try { colorCode = tag.colorCode?.ToString() ?? ""; } catch { }
 
@@ -272,7 +275,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                                 partId = (string?)null,
                                 operation = (string?)null,
                                 quantity = (int?)null,
-                                position = j + 1
+                                position = j + 1,
+                                shortcutDisplay = (string?)null,
+                                workOrder = (string?)null,
+                                colorCode = (string?)null
                             };
                             quickButtons[j].Visible = false;
                         }
@@ -376,7 +382,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                             quantity = (int?)null,
                             position = displayPosition,
                             workOrder = (string?)null,
-                            colorCode = (string?)null
+                            colorCode = (string?)null,
+                            shortcutDisplay = GetShortcutKey(displayPosition - 1)
                         };
                         quickButtons[i].Visible = false;
                     }

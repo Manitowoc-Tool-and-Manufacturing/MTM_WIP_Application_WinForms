@@ -110,7 +110,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             var link = new LinkLabel
             {
                 Text = $"→ {title}",
-                Font = new Font("Segoe UI", 9F),
+                Font = new Font("Segoe UI Emoji", 9F),
                 AutoSize = true,
                 Margin = new Padding(0, 2, 0, 2),
                 LinkColor = _accentColor,

@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Receiving Analytics</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f2f5;
+        }
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 20px;
+            height: 90vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .metrics-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .metric-card {
+            flex: 1;
+            min-width: 150px;
+            padding: 15px;
+            border-radius: 8px;
+            color: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+        .metric-value {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .metric-label {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+        .toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            align-items: center;
+        }
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .control-group label {
+            font-size: 12px;
+            font-weight: bold;
+            color: #666;
+        }
+        .btn-group {
+            display: flex;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .btn-group button {
+            border: none;
+            background: #fff;
+            padding: 6px 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-group button:not(:last-child) {
+            border-right: 1px solid #ccc;
+        }
+        .btn-group button:hover {
+            background: #f5f5f5;
+        }
+        .btn-group button.active {
+            background: #0078d4;
+            color: white;
+        }
+        .checkbox-group {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 13px;
+        }
+        .chart-container {
+            flex: 1;
+            position: relative;
+            min-height: 0;
+        }
+        .table-container {
+            flex: 1;
+            overflow: auto;
+            display: none; /* Hidden by default */
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        th {
+            background-color: #f8f9fa;
+            position: sticky;
+            top: 0;
+            font-weight: 600;
+            color: #444;
+        }
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 160px;
+            height: 28px;
+        }
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #0078d4;
+            transition: .4s;
+            border-radius: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            padding: 0 10px;
+            color: white;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 70px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 20px;
+        }
+        input:checked + .slider {
+            background-color: #107c10;
+        }
+        input:checked + .slider:before {
+            transform: translateX(82px);
+        }
+        .slider .label-history { 
+            opacity: 1; 
+            transition: opacity 0.4s;
+            z-index: 1;
+        }
+        .slider .label-forecast { 
+            opacity: 0.5; 
+            transition: opacity 0.4s;
+            z-index: 1;
+        }
+        input:checked + .slider .label-history { opacity: 0.5; }
+        input:checked + .slider .label-forecast { opacity: 1; }
+
+        /* Generic toggle labels */
+        .slider .label-left { opacity: 1; transition: opacity 0.4s; z-index: 1; }
+        .slider .label-right { opacity: 0.5; transition: opacity 0.4s; z-index: 1; }
+        input:checked + .slider .label-left { opacity: 0.5; }
+        input:checked + .slider .label-right { opacity: 1; }
+        
+        .export-btn {
+            margin-left: auto;
+            padding: 8px 16px;
+            background: #107c10;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+        .export-btn:hover {
+            background: #0e6b0e;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Metrics Row -->
+        <div class="metrics-row">
+            <div class="metric-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <div class="metric-value" id="metricTotalLines">0</div>
+                <div class="metric-label">Total Lines</div>
+            </div>
+            <div class="metric-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                <div class="metric-value" id="metricAvgPerDay">0</div>
+                <div class="metric-label">Avg/Day</div>
+            </div>
+            <div class="metric-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+                <div class="metric-value" id="metricPeakDay">-</div>
+                <div class="metric-label">Peak Day</div>
+            </div>
+            <div class="metric-card" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+                <div class="metric-value" id="metricTrend">-</div>
+                <div class="metric-label">Trend vs Last Week</div>
+            </div>
+        </div>
+
+        <div class="grading-info" style="margin-bottom: 20px; padding: 10px 15px; background: #f8f9fa; border-left: 4px solid #0078d4; border-radius: 4px; font-size: 13px; color: #444;">
+            <strong>⚖️ Fair Grading Policy:</strong> Performance grades are normalized based on historical shift activity levels. 
+            We analyze transaction volume from Infor Visual across all shifts to calculate a "Shift Difficulty Factor". 
+            This ensures that users on busier shifts are graded fairly against those on quieter shifts by weighting high-volume periods appropriately.
+        </div>
+
+        <div class="toolbar">
+            <div class="control-group">
+                <label>Date Range</label>
+                <div style="display: flex; gap: 5px; align-items: center;">
+                    <input type="date" id="dateStart" onchange="refreshChart()" style="border: 1px solid #ccc; border-radius: 4px; padding: 4px; font-family: inherit; color: #333;">
+                    <span style="color: #666;">-</span>
+                    <input type="date" id="dateEnd" onchange="refreshChart()" style="border: 1px solid #ccc; border-radius: 4px; padding: 4px; font-family: inherit; color: #333;">
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label>View Period</label>
+                <div class="btn-group">
+                    <button onclick="setPeriod('Day')" class="active" id="btnDay">Day</button>
+                    <button onclick="setPeriod('Week')" id="btnWeek">Week</button>
+                    <button onclick="setPeriod('Month')" id="btnMonth">Month</button>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label>View Mode</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" onchange="updateViewMode()" id="viewModeToggle" checked>
+                    <span class="slider">
+                        <span class="label-history">History</span>
+                        <span class="label-forecast">Forecast</span>
+                    </span>
+                </label>
+            </div>
+
+            <div class="control-group">
+                <label>Display</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="displayToggle" onchange="updateDisplayMode()">
+                    <span class="slider">
+                        <span class="label-left">GRAPH</span>
+                        <span class="label-right">DATA</span>
+                    </span>
+                </label>
+            </div>
+
+            <div class="control-group">
+                <label>Chart Type</label>
+                <div class="btn-group">
+                    <button onclick="setChartType('line')" class="active" id="btnLine">Line</button>
+                    <button onclick="setChartType('bar')" id="btnBar">Bar</button>
+                    <button onclick="setChartType('stacked')" id="btnStacked">Stacked</button>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label>Filters</label>
+                <div class="checkbox-group">
+                    <label class="checkbox-item">
+                        <input type="checkbox" checked onchange="refreshChart()" data-type="Part"> Parts
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" checked onchange="refreshChart()" data-type="MMC"> MMC (Coils)
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" checked onchange="refreshChart()" data-type="MMF"> MMF (Flat)
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" checked onchange="refreshChart()" data-type="Service"> Outside Svc
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" checked onchange="refreshChart()" data-type="Uninventoried"> Uninventoried
+                    </label>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label>Options</label>
+                <div class="checkbox-group">
+                    <label class="checkbox-item">
+                        <input type="checkbox" id="chkCompare" onchange="toggleComparison()"> Compare Previous Period
+                    </label>
+                </div>
+            </div>
+
+            <button onclick="exportChart()" class="export-btn">
+                📊 Export Chart
+            </button>
+        </div>
+
+        <div class="chart-container" id="chartView">
+            <canvas id="analyticsChart" role="img" aria-label="Receiving analytics chart showing workload over time"></canvas>
+        </div>
+        
+        <div class="table-container" id="tableView">
+            <table id="dataTable">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Type</th>
+                        <th>Part Number</th>
+                        <th>Received By</th>
+                        <th>Count</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Populated by JS -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        let chartInstance = null;
+        let currentPeriod = 'Day';
+        let isForecast = true;
+        let isGridView = false;
+        let currentChartType = 'line';
+        let rawData = { History: [], Forecast: [] };
+        let comparisonEnabled = false;
+
+        // Initialize Chart
+        function initChart() {
+            const ctx = document.getElementById('analyticsChart').getContext('2d');
+            chartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [
+                        {
+                            label: 'Parts',
+                            data: [],
+                            borderColor: '#0078d4',
+                            backgroundColor: 'rgba(0, 120, 212, 0.1)',
+                            borderWidth: 2,
+                            tension: 0.4,
+                            fill: true
+                        },
+                        {
+                            label: 'MMC (Coils)',
+                            data: [],
+                            borderColor: '#107c10',
+                            backgroundColor: 'rgba(16, 124, 16, 0.1)',
+                            borderWidth: 2,
+                            tension: 0.4,
+                            fill: true
+                        },
+                        {
+                            label: 'MMF (Flat)',
+                            data: [],
+                            borderColor: '#5c2d91',
+                            backgroundColor: 'rgba(92, 45, 145, 0.1)',
+                            borderWidth: 2,
+                            tension: 0.4,
+                            fill: true
+                        },
+                        {
+                            label: 'Outside Service',
+                            data: [],
+                            borderColor: '#d83b01',
+                            backgroundColor: 'rgba(216, 59, 1, 0.1)',
+                            borderWidth: 2,
+                            tension: 0.4,
+                            fill: true
+                        },
+                        {
+                            label: 'Uninventoried',
+                            data: [],
+                            borderColor: '#69797e',
+                            backgroundColor: 'rgba(105, 121, 126, 0.1)',
+                            borderWidth: 2,
+                            tension: 0.4,
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    onClick: handleChartClick,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Receiving Schedule Analytics',
+                            font: { size: 18, weight: 'bold' }
+                        },
+                        legend: { 
+                            display: true,
+                            onClick: handleLegendClick
+                        },
+                        tooltip: { 
+                            mode: 'index', 
+                            intersect: false,
+                            callbacks: {
+                                footer: function(tooltipItems) {
+                                    let total = 0;
+                                    tooltipItems.forEach(item => total += item.parsed.y);
+                                    return 'Total: ' + total;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            stacked: false,
+                            title: { display: true, text: 'Number of Lines' }
+                        },
+                        x: {
+                            stacked: false,
+                            title: { display: true, text: 'Date' }
+                        }
+                    }
+                }
+            });
+            refreshChart();
+        }
+
+        function handleChartClick(event, activeElements) {
+            if (activeElements.length > 0) {
+                const dataIndex = activeElements[0].index;
+                const date = chartInstance.data.labels[dataIndex];
+                console.log('Drill-down to date:', date);
+            }
+        }
+
+        function handleLegendClick(e, legendItem, legend) {
+            const index = legendItem.datasetIndex;
+            const ci = legend.chart;
+            
+            if (ci.isDatasetVisible(index)) {
+                ci.hide(index);
+                legendItem.hidden = true;
+            } else {
+                ci.show(index);
+                legendItem.hidden = false;
+            }
+        }
+
+        function setPeriod(period) {
+            currentPeriod = period;
+            document.querySelectorAll('#btnDay, #btnWeek, #btnMonth').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('btn' + period).classList.add('active');
+            refreshChart();
+        }
+
+        function setChartType(type) {
+            currentChartType = type;
+            document.querySelectorAll('#btnLine, #btnBar, #btnStacked').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('btn' + type.charAt(0).toUpperCase() + type.slice(1)).classList.add('active');
+            
+            if (type === 'line') {
+                chartInstance.config.type = 'line';
+                chartInstance.options.scales.y.stacked = false;
+                chartInstance.options.scales.x.stacked = false;
+            } else if (type === 'bar') {
+                chartInstance.config.type = 'bar';
+                chartInstance.options.scales.y.stacked = false;
+                chartInstance.options.scales.x.stacked = false;
+            } else if (type === 'stacked') {
+                chartInstance.config.type = 'bar';
+                chartInstance.options.scales.y.stacked = true;
+                chartInstance.options.scales.x.stacked = true;
+            }
+            
+            chartInstance.update();
+        }
+
+        function updateViewMode() {
+            isForecast = document.getElementById('viewModeToggle').checked;
+            refreshChart();
+        }
+
+        function updateDisplayMode() {
+            isGridView = document.getElementById('displayToggle').checked;
+            
+            const chartView = document.getElementById('chartView');
+            const tableView = document.getElementById('tableView');
+            
+            if (isGridView) {
+                chartView.style.display = 'none';
+                tableView.style.display = 'block';
+            } else {
+                chartView.style.display = 'block';
+                tableView.style.display = 'none';
+            }
+            
+            refreshChart();
+        }
+
+        function refreshChart() {
+            if (!chartInstance) return;
+            const dataSource = isForecast ? rawData.Forecast : rawData.History;
+            if (!dataSource || dataSource.length === 0) return;
+
+            const activeTypes = Array.from(document.querySelectorAll('.checkbox-item input:checked'))
+                .map(cb => cb.dataset.type);
+
+            // Date Filtering
+            const startDateInput = document.getElementById('dateStart').value;
+            const endDateInput = document.getElementById('dateEnd').value;
+            // Append T00:00:00 to force local time parsing to avoid timezone shifts
+            const startDate = startDateInput ? new Date(startDateInput + 'T00:00:00') : null;
+            const endDate = endDateInput ? new Date(endDateInput + 'T00:00:00') : null;
+
+            const aggregated = {};
+            const types = ['Part', 'MMC', 'MMF', 'Service', 'Uninventoried'];
+            
+            // Filter Data
+            let filteredData = dataSource.filter(item => {
+                // Determine effective type
+                let effectiveType = item.Type;
+                // Uninventoried logic moved to C# backend
+
+                if (!activeTypes.includes(effectiveType)) return false;
+                
+                // Apply Date Filter
+                // Date already has T00:00:00 appended from loadData
+                const itemDate = new Date(item.Date);
+                
+                if (startDate) {
+                    if (itemDate < startDate) return false;
+                }
+                if (endDate) {
+                    if (itemDate > endDate) return false;
+                }
+                return true;
+            });
+
+            if (isGridView) {
+                renderTable(filteredData);
+                return;
+            }
+
+            filteredData.forEach(item => {
+                let effectiveType = item.Type;
+                // Uninventoried logic moved to C# backend
+
+                const itemDate = new Date(item.Date);
+                const dateKey = getDateKey(itemDate, currentPeriod);
+                if (!aggregated[dateKey]) {
+                    aggregated[dateKey] = { Part: 0, MMC: 0, MMF: 0, Service: 0, Uninventoried: 0 };
+                }
+                aggregated[dateKey][effectiveType] = (aggregated[dateKey][effectiveType] || 0) + item.Count;
+            });
+
+            // Ensure current week is included in History view if within range
+            if (!isForecast && currentPeriod === 'Week') {
+                const today = new Date();
+                const todayKey = getDateKey(today, 'Week');
+                if (!aggregated[todayKey]) {
+                    // If no data for current week, check if we should show it (based on date filter)
+                    let showCurrentWeek = true;
+                    if (startDate && today < startDate) showCurrentWeek = false;
+                    if (endDate && today > endDate) showCurrentWeek = false;
+                    
+                    if (showCurrentWeek) {
+                        // Add empty entry for current week so it appears on the chart
+                        aggregated[todayKey] = { Part: 0, MMC: 0, MMF: 0, Service: 0, Uninventoried: 0 };
+                    }
+                }
+            }
+
+            const sortedKeys = Object.keys(aggregated).sort();
+            
+            chartInstance.data.labels = sortedKeys;
+            chartInstance.data.datasets[0].data = sortedKeys.map(key => aggregated[key].Part || 0);
+            chartInstance.data.datasets[1].data = sortedKeys.map(key => aggregated[key].MMC || 0);
+            chartInstance.data.datasets[2].data = sortedKeys.map(key => aggregated[key].MMF || 0);
+            chartInstance.data.datasets[3].data = sortedKeys.map(key => aggregated[key].Service || 0);
+            chartInstance.data.datasets[4].data = sortedKeys.map(key => aggregated[key].Uninventoried || 0);
+            
+            updateMetrics(filteredData, activeTypes);
+            chartInstance.update();
+        }
+
+        function renderTable(data) {
+            const tbody = document.querySelector('#dataTable tbody');
+            tbody.innerHTML = '';
+
+            // Sort by Date Descending
+            data.sort((a, b) => new Date(b.Date) - new Date(a.Date));
+
+            data.forEach(item => {
+                const tr = document.createElement('tr');
+                
+                // Determine display type
+                let displayType = item.Type;
+                // Uninventoried logic moved to C# backend
+
+                tr.innerHTML = `
+                    <td>${item.Date.split('T')[0]}</td>
+                    <td>${displayType}</td>
+                    <td>${item.PartNumber || '-'}</td>
+                    <td>${item.ReceivedBy || '-'}</td>
+                    <td>${item.Count}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function updateMetrics(filteredData, activeTypes) {
+            const totalLines = filteredData.reduce((sum, item) => sum + item.Count, 0);
+            
+            const uniqueDates = [...new Set(filteredData.map(item => new Date(item.Date).toDateString()))];
+            const avgPerDay = uniqueDates.length > 0 ? Math.round(totalLines / uniqueDates.length) : 0;
+            
+            const dailyTotals = {};
+            filteredData.forEach(item => {
+                const dateKey = new Date(item.Date).toDateString();
+                dailyTotals[dateKey] = (dailyTotals[dateKey] || 0) + item.Count;
+            });
+            
+            const peakDay = Object.entries(dailyTotals).reduce((max, [date, count]) => 
+                count > (max.count || 0) ? { date, count } : max, {});
+            
+            const now = new Date();
+            const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+            const fourteenDaysAgo = new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000);
+            
+            const lastWeek = filteredData.filter(item => {
+                const date = new Date(item.Date);
+                return date >= sevenDaysAgo && date <= now;
+            }).reduce((sum, item) => sum + item.Count, 0);
+            
+            const previousWeek = filteredData.filter(item => {
+                const date = new Date(item.Date);
+                return date >= fourteenDaysAgo && date < sevenDaysAgo;
+            }).reduce((sum, item) => sum + item.Count, 0);
+            
+            const trend = previousWeek > 0 ? ((lastWeek - previousWeek) / previousWeek * 100).toFixed(1) : 0;
+            const trendSymbol = trend > 0 ? '↑' : trend < 0 ? '↓' : '→';
+            
+            document.getElementById('metricTotalLines').textContent = totalLines.toLocaleString();
+            document.getElementById('metricAvgPerDay').textContent = avgPerDay.toLocaleString();
+            document.getElementById('metricPeakDay').textContent = peakDay.count || '-';
+            document.getElementById('metricTrend').textContent = `${trendSymbol} ${Math.abs(trend)}%`;
+        }
+
+        function toggleComparison() {
+            comparisonEnabled = document.getElementById('chkCompare').checked;
+            
+            if (comparisonEnabled) {
+                const dataSource = isForecast ? rawData.Forecast : rawData.History;
+                const activeTypes = Array.from(document.querySelectorAll('.checkbox-item input:checked'))
+                    .map(cb => cb.dataset.type);
+                
+                const shiftDays = currentPeriod === 'Day' ? 7 : currentPeriod === 'Week' ? 28 : 90;
+                
+                const comparisonData = dataSource.map(item => ({
+                    ...item,
+                    Date: new Date(new Date(item.Date).getTime() - shiftDays * 24 * 60 * 60 * 1000)
+                }));
+                
+                chartInstance.data.datasets.push({
+                    label: 'Previous Period (Total)',
+                    data: chartInstance.data.labels.map(label => {
+                        return comparisonData
+                            .filter(item => getDateKey(new Date(item.Date), currentPeriod) === label)
+                            .filter(item => activeTypes.includes(item.Type))
+                            .reduce((sum, item) => sum + item.Count, 0);
+                    }),
+                    borderColor: '#999',
+                    backgroundColor: 'transparent',
+                    borderWidth: 2,
+                    borderDash: [5, 5],
+                    tension: 0.4,
+                    fill: false
+                });
+            } else {
+                chartInstance.data.datasets = chartInstance.data.datasets.filter(
+                    ds => !ds.label.includes('Previous Period')
+                );
+            }
+            
+            chartInstance.update();
+        }
+
+        function exportChart() {
+            const url = chartInstance.toBase64Image();
+            const link = document.createElement('a');
+            const dateStr = new Date().toISOString().split('T')[0];
+            link.href = url;
+            link.download = `receiving-analytics-${dateStr}.png`;
+            link.click();
+        }
+
+        function getDateKey(date, period) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+
+            if (period === 'Day') {
+                return `${year}-${month}-${day}`;
+            } else if (period === 'Week') {
+                const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+                const dayNum = d.getUTCDay() || 7;
+                d.setUTCDate(d.getUTCDate() + 4 - dayNum);
+                const yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
+                const weekNo = Math.ceil((((d - yearStart) / 86400000) + 1)/7);
+                return `${d.getUTCFullYear()}-W${String(weekNo).padStart(2, '0')}`;
+            } else if (period === 'Month') {
+                return `${year}-${month}`;
+            }
+            return `${year}-${month}-${day}`;
+        }
+
+        function loadData(jsonString) {
+            try {
+                rawData = JSON.parse(jsonString);
+                
+                // Fix date parsing by appending time component to force local time
+                // This prevents timezone shifts when converting yyyy-MM-dd to Date objects
+                if (rawData.History) rawData.History.forEach(x => x.Date += 'T00:00:00');
+                if (rawData.Forecast) rawData.Forecast.forEach(x => x.Date += 'T00:00:00');
+
+                console.log('Data loaded:', rawData);
+                
+                // Set initial dates if provided
+                if (rawData.InitialStartDate) {
+                    document.getElementById('dateStart').value = rawData.InitialStartDate;
+                }
+                if (rawData.InitialEndDate) {
+                    document.getElementById('dateEnd').value = rawData.InitialEndDate;
+                }
+
+                // If no dates set, default to current week (Monday to Friday)
+                if (!document.getElementById('dateStart').value) {
+                    const d = new Date();
+                    const dayOfWeek = d.getDay();
+                    const diffToMonday = d.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1); // adjust when day is sunday
+                    
+                    // Create new date objects to avoid mutation issues
+                    const monday = new Date(d.setDate(diffToMonday));
+                    // Reset d to monday before adding 4 days
+                    const friday = new Date(new Date(monday).setDate(monday.getDate() + 4));
+                    
+                    // Format as yyyy-MM-dd using local time
+                    const formatDate = (date) => {
+                        const year = date.getFullYear();
+                        const month = String(date.getMonth() + 1).padStart(2, '0');
+                        const day = String(date.getDate()).padStart(2, '0');
+                        return `${year}-${month}-${day}`;
+                    };
+
+                    document.getElementById('dateStart').value = formatDate(monday);
+                    document.getElementById('dateEnd').value = formatDate(friday);
+                }
+
+                refreshChart();
+            } catch (e) {
+                console.error('Failed to load data:', e);
+                alert('Failed to load analytics data. Check browser console for details.');
+            }
+        }
+
+        window.onload = initChart;
+        
+        // To be populated by C#
+    </script>
+</body>
+</html>

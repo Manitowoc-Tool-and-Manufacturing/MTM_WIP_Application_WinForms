@@ -9,11 +9,13 @@ using MTM_WIP_Application_Winforms.Forms.ErrorReports;
 using MTM_WIP_Application_Winforms.Forms.Settings;
 using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Helpers;
-using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
 using Timer = System.Windows.Forms.Timer;
+using System.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using ConfigurationManager = System.Configuration.ConfigurationManager;
 
 namespace MTM_WIP_Application_Winforms.Forms.MainForm
 {
@@ -278,6 +280,9 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                         // Configure Development Menu visibility based on username
                         ConfigureDevelopmentMenuVisibility();
 
+                        // Configure Visual Menu visibility
+                        ConfigureVisualMenuVisibility();
+
                         await Task.Delay(500);
                         SetInitialFocusToInventoryTab();
 
@@ -341,7 +346,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                         });
 
                     LoggingUtility.LogApplicationInfo($"Development Menu configured for user '{Model_Application_Variables.User}': {(isDeveloper ? "Visible" : "Hidden")}");
-                    
+
                     if (isDeveloper)
                     {
                         InitializeDevelopmentMenuItems();
@@ -373,6 +378,62 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             }
 
             Service_DebugTracer.TraceMethodExit(null, nameof(ConfigureDevelopmentMenuVisibility), nameof(MainForm));
+        }
+
+        /// <summary>
+        /// Configures Visual Menu visibility based on current user credentials.
+        /// </summary>
+        private void ConfigureVisualMenuVisibility()
+        {
+            bool hasDbCredentials = !string.IsNullOrEmpty(Model_Application_Variables.VisualUserName) &&
+                                    !string.IsNullOrEmpty(Model_Application_Variables.VisualPassword);
+
+            bool hasConfigCredentials = !string.IsNullOrEmpty(ConfigurationManager.AppSettings["VisualUserName"]) &&
+                                        !string.IsNullOrEmpty(ConfigurationManager.AppSettings["VisualPassword"]);
+
+            bool isVisible = hasDbCredentials || hasConfigCredentials;
+
+#if DEBUG
+            // In DEBUG mode, always show the menu to allow testing with sample data
+            isVisible = true;
+#endif
+
+            if (MainForm_MenuStrip_Visual != null)
+            {
+                MainForm_MenuStrip_Visual.Visible = isVisible;
+                MainForm_MenuStrip_Visual.Enabled = isVisible;
+            }
+        }
+
+        private void MainForm_MenuStrip_Visual_Click(object? sender, EventArgs e)
+        {
+            try
+            {
+                bool hasDbCredentials = !string.IsNullOrEmpty(Model_Application_Variables.VisualUserName) &&
+                                        !string.IsNullOrEmpty(Model_Application_Variables.VisualPassword);
+
+                bool hasConfigCredentials = !string.IsNullOrEmpty(ConfigurationManager.AppSettings["VisualUserName"]) &&
+                                            !string.IsNullOrEmpty(ConfigurationManager.AppSettings["VisualPassword"]);
+
+#if DEBUG
+                // In DEBUG mode, bypass credential check to allow sample data testing
+#else
+                if (!hasDbCredentials && !hasConfigCredentials)
+                {
+                    Service_ErrorHandler.ShowUserError(
+                        "You do not have Infor Visual credentials configured.\n\nPlease go to File > Settings > User Management to configure your Visual ERP access.",
+                        "Access Denied");
+                    return;
+                }
+#endif
+
+                var visualForm = new Forms.Visual.InforVisualDashboard();
+                visualForm.Show();
+            }
+            catch (Exception ex)
+            {
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, controlName: nameof(MainForm));
+            }
         }
 
         private void SetInitialFocusToInventoryTab()
@@ -606,6 +667,19 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                 if (showTotalResult.IsSuccess)
                 {
                     Model_Application_Variables.ShowTotalSummaryPanel = showTotalResult.Data;
+                }
+
+                // Load Visual Credentials
+                var visualUserResult = await Dao_User.GetVisualUserNameAsync(user);
+                if (visualUserResult.IsSuccess)
+                {
+                    Model_Application_Variables.VisualUserName = visualUserResult.Data;
+                }
+
+                var visualPassResult = await Dao_User.GetVisualPasswordAsync(user);
+                if (visualPassResult.IsSuccess)
+                {
+                    Model_Application_Variables.VisualPassword = visualPassResult.Data;
                 }
             }
             catch (Exception ex)

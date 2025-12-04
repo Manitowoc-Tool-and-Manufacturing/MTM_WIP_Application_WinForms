@@ -296,7 +296,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             Control_PartIDManagement_Label_HomeTile_AddInstruction.AutoSize = true;
             Control_PartIDManagement_Label_HomeTile_AddInstruction.Dock = DockStyle.Fill;
-            Control_PartIDManagement_Label_HomeTile_AddInstruction.Font = new Font("Segoe UI", 9F, FontStyle.Italic);
+            Control_PartIDManagement_Label_HomeTile_AddInstruction.Font = new Font("Segoe UI Emoji", 9F, FontStyle.Italic);
             Control_PartIDManagement_Label_HomeTile_AddInstruction.ForeColor = Color.FromArgb(100, 100, 100);
             Control_PartIDManagement_Label_HomeTile_AddInstruction.Location = new Point(6, 167);
             Control_PartIDManagement_Label_HomeTile_AddInstruction.Margin = new Padding(3);
@@ -310,7 +310,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             Control_PartIDManagement_Label_HomeTile_AddTitle.AutoSize = true;
             Control_PartIDManagement_Label_HomeTile_AddTitle.Dock = DockStyle.Fill;
-            Control_PartIDManagement_Label_HomeTile_AddTitle.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
+            Control_PartIDManagement_Label_HomeTile_AddTitle.Font = new Font("Segoe UI Emoji", 14F, FontStyle.Bold);
             Control_PartIDManagement_Label_HomeTile_AddTitle.Location = new Point(6, 97);
             Control_PartIDManagement_Label_HomeTile_AddTitle.Margin = new Padding(3);
             Control_PartIDManagement_Label_HomeTile_AddTitle.Name = "Control_PartIDManagement_Label_HomeTile_AddTitle";
@@ -384,7 +384,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             Control_PartIDManagement_Label_HomeTile_EditTitle.AutoSize = true;
             Control_PartIDManagement_Label_HomeTile_EditTitle.Dock = DockStyle.Fill;
-            Control_PartIDManagement_Label_HomeTile_EditTitle.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
+            Control_PartIDManagement_Label_HomeTile_EditTitle.Font = new Font("Segoe UI Emoji", 14F, FontStyle.Bold);
             Control_PartIDManagement_Label_HomeTile_EditTitle.Location = new Point(6, 97);
             Control_PartIDManagement_Label_HomeTile_EditTitle.Margin = new Padding(3);
             Control_PartIDManagement_Label_HomeTile_EditTitle.Name = "Control_PartIDManagement_Label_HomeTile_EditTitle";
@@ -397,7 +397,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             Control_PartIDManagement_Label_HomeTile_EditInstruction.AutoSize = true;
             Control_PartIDManagement_Label_HomeTile_EditInstruction.Dock = DockStyle.Fill;
-            Control_PartIDManagement_Label_HomeTile_EditInstruction.Font = new Font("Segoe UI", 9F, FontStyle.Italic);
+            Control_PartIDManagement_Label_HomeTile_EditInstruction.Font = new Font("Segoe UI Emoji", 9F, FontStyle.Italic);
             Control_PartIDManagement_Label_HomeTile_EditInstruction.ForeColor = Color.FromArgb(100, 100, 100);
             Control_PartIDManagement_Label_HomeTile_EditInstruction.Location = new Point(6, 167);
             Control_PartIDManagement_Label_HomeTile_EditInstruction.Margin = new Padding(3);
@@ -459,7 +459,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             Control_PartIDManagement_Label_HomeTile_RemoveInstruction.AutoSize = true;
             Control_PartIDManagement_Label_HomeTile_RemoveInstruction.Dock = DockStyle.Fill;
-            Control_PartIDManagement_Label_HomeTile_RemoveInstruction.Font = new Font("Segoe UI", 9F, FontStyle.Italic);
+            Control_PartIDManagement_Label_HomeTile_RemoveInstruction.Font = new Font("Segoe UI Emoji", 9F, FontStyle.Italic);
             Control_PartIDManagement_Label_HomeTile_RemoveInstruction.ForeColor = Color.FromArgb(100, 100, 100);
             Control_PartIDManagement_Label_HomeTile_RemoveInstruction.Location = new Point(6, 167);
             Control_PartIDManagement_Label_HomeTile_RemoveInstruction.Margin = new Padding(3);
@@ -473,7 +473,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             Control_PartIDManagement_Label_HomeTile_RemoveTitle.AutoSize = true;
             Control_PartIDManagement_Label_HomeTile_RemoveTitle.Dock = DockStyle.Fill;
-            Control_PartIDManagement_Label_HomeTile_RemoveTitle.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
+            Control_PartIDManagement_Label_HomeTile_RemoveTitle.Font = new Font("Segoe UI Emoji", 14F, FontStyle.Bold);
             Control_PartIDManagement_Label_HomeTile_RemoveTitle.Location = new Point(6, 97);
             Control_PartIDManagement_Label_HomeTile_RemoveTitle.Margin = new Padding(3);
             Control_PartIDManagement_Label_HomeTile_RemoveTitle.Name = "Control_PartIDManagement_Label_HomeTile_RemoveTitle";
@@ -737,7 +737,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             Control_PartIDManagement_Label_RemoveTitle.AutoSize = true;
             Control_PartIDManagement_Label_RemoveTitle.Dock = DockStyle.Fill;
-            Control_PartIDManagement_Label_RemoveTitle.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
+            Control_PartIDManagement_Label_RemoveTitle.Font = new Font("Segoe UI Emoji", 16F, FontStyle.Bold);
             Control_PartIDManagement_Label_RemoveTitle.Location = new Point(86, 4);
             Control_PartIDManagement_Label_RemoveTitle.Margin = new Padding(4);
             Control_PartIDManagement_Label_RemoveTitle.Name = "Control_PartIDManagement_Label_RemoveTitle";
@@ -902,7 +902,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             Control_PartIDManagement_Label_AddTitle.AutoSize = true;
             Control_PartIDManagement_Label_AddTitle.Dock = DockStyle.Fill;
-            Control_PartIDManagement_Label_AddTitle.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
+            Control_PartIDManagement_Label_AddTitle.Font = new Font("Segoe UI Emoji", 16F, FontStyle.Bold);
             Control_PartIDManagement_Label_AddTitle.Location = new Point(86, 4);
             Control_PartIDManagement_Label_AddTitle.Margin = new Padding(4);
             Control_PartIDManagement_Label_AddTitle.Name = "Control_PartIDManagement_Label_AddTitle";
@@ -975,7 +975,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             Control_PartIDManagement_Label_EditTitle.AutoSize = true;
             Control_PartIDManagement_Label_EditTitle.Dock = DockStyle.Fill;
-            Control_PartIDManagement_Label_EditTitle.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
+            Control_PartIDManagement_Label_EditTitle.Font = new Font("Segoe UI Emoji", 16F, FontStyle.Bold);
             Control_PartIDManagement_Label_EditTitle.Location = new Point(86, 4);
             Control_PartIDManagement_Label_EditTitle.Margin = new Padding(4);
             Control_PartIDManagement_Label_EditTitle.Name = "Control_PartIDManagement_Label_EditTitle";
@@ -1123,7 +1123,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             Control_PartIDManagement_Label_Header.AutoSize = true;
             Control_PartIDManagement_Label_Header.Dock = DockStyle.Fill;
-            Control_PartIDManagement_Label_Header.Font = new Font("Segoe UI", 20F, FontStyle.Bold);
+            Control_PartIDManagement_Label_Header.Font = new Font("Segoe UI Emoji", 20F, FontStyle.Bold);
             Control_PartIDManagement_Label_Header.ForeColor = Color.FromArgb(45, 45, 45);
             Control_PartIDManagement_Label_Header.Location = new Point(23, 23);
             Control_PartIDManagement_Label_Header.Margin = new Padding(3);
@@ -1137,7 +1137,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             Control_PartIDManagement_Label_Subtitle.AutoSize = true;
             Control_PartIDManagement_Label_Subtitle.Dock = DockStyle.Fill;
-            Control_PartIDManagement_Label_Subtitle.Font = new Font("Segoe UI", 10F);
+            Control_PartIDManagement_Label_Subtitle.Font = new Font("Segoe UI Emoji", 10F);
             Control_PartIDManagement_Label_Subtitle.ForeColor = Color.FromArgb(90, 90, 90);
             Control_PartIDManagement_Label_Subtitle.Location = new Point(23, 66);
             Control_PartIDManagement_Label_Subtitle.Margin = new Padding(3);

@@ -1,6 +1,6 @@
 using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Helpers;
-using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
 using System.Text;
@@ -351,7 +351,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
             Application.DoEvents();
 
             // Determine log format from selected file
-            LogFormat logFormat = _selectedLogFile?.LogType ?? LogFormat.Normal;
+            Model_LogFormat logFormat = _selectedLogFile?.LogType ?? Model_LogFormat.Normal;
 
 
             // Load first 1000 entries (windowed loading per FR-044)
@@ -438,9 +438,9 @@ public partial class ViewApplicationLogsForm : ThemedForm
                 // Add group header
                 string groupHeader = group.Key switch
                 {
-                    LogFormat.Normal => "═══ Normal Logs ═══",
-                    LogFormat.ApplicationError => "═══ Application Errors ═══",
-                    LogFormat.DatabaseError => "═══ Database Errors ═══",
+                    Model_LogFormat.Normal => "═══ Normal Logs ═══",
+                    Model_LogFormat.ApplicationError => "═══ Application Errors ═══",
+                    Model_LogFormat.DatabaseError => "═══ Database Errors ═══",
                     _ => "═══ Unknown Format ═══"
                 };
 
@@ -593,7 +593,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
 
         switch (entry.LogType)
         {
-            case LogFormat.Normal:
+            case Model_LogFormat.Normal:
                 txtLevel.Text = $"{entry.Level ?? "N/A"} {GetEmojiDisplay(entry.Emoji)}";
                 txtEntrySource.Text = entry.Source ?? "N/A";
                 txtEntryMessage.Text = entry.Message ?? "N/A";
@@ -609,21 +609,21 @@ public partial class ViewApplicationLogsForm : ThemedForm
                 }
                 break;
 
-            case LogFormat.ApplicationError:
+            case Model_LogFormat.ApplicationError:
                 txtLevel.Text = $"ERROR - {entry.ErrorType ?? "Unknown"}";
                 txtEntrySource.Text = "Application Error";
                 txtEntryMessage.Text = entry.Message ?? "N/A";
                 txtEntryDetails.Text = entry.StackTrace ?? string.Empty;
                 break;
 
-            case LogFormat.DatabaseError:
+            case Model_LogFormat.DatabaseError:
                 txtLevel.Text = $"{entry.Severity ?? "ERROR"}";
                 txtEntrySource.Text = "Database Error";
                 txtEntryMessage.Text = entry.Message ?? "N/A";
                 txtEntryDetails.Text = entry.StackTrace ?? string.Empty;
                 break;
 
-            case LogFormat.Unknown:
+            case Model_LogFormat.Unknown:
             default:
                 txtLevel.Text = "UNKNOWN";
                 txtEntrySource.Text = "Unknown Format";
@@ -1291,7 +1291,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
 
         switch (entry.LogType)
         {
-            case LogFormat.Normal:
+            case Model_LogFormat.Normal:
                 // Normal log color coding based on level
                 backColor = entry.Level?.ToUpperInvariant() switch
                 {
@@ -1303,12 +1303,12 @@ public partial class ViewApplicationLogsForm : ThemedForm
                 };
                 break;
 
-            case LogFormat.ApplicationError:
+            case Model_LogFormat.ApplicationError:
                 // Application errors are always red
                 backColor = Color.LightCoral;
                 break;
 
-            case LogFormat.DatabaseError:
+            case Model_LogFormat.DatabaseError:
                 // Database error color coding based on severity
                 backColor = entry.Level?.ToUpperInvariant() switch
                 {
@@ -1319,7 +1319,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
                 };
                 break;
 
-            case LogFormat.Unknown:
+            case Model_LogFormat.Unknown:
             default:
                 backColor = Color.LightGray;
                 break;
@@ -1406,7 +1406,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
     /// DatabaseError logs: WARNING, ERROR, CRITICAL
     /// ApplicationError logs: No severity options (always ERROR)
     /// </remarks>
-    private void UpdateSeverityOptions(LogFormat logType)
+    private void UpdateSeverityOptions(Model_LogFormat logType)
     {
         // Note: This method will be fully implemented when filter panel controls are added in T030
         // For now, it documents the expected behavior for each log type
@@ -1558,7 +1558,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
     /// Implements filter state persistence across log files of same type (FR-027).
     /// </summary>
     /// <param name="logType">The log type to persist filter for.</param>
-    private void PersistFilterState(LogFormat logType)
+    private void PersistFilterState(Model_LogFormat logType)
     {
         // Note: This method will be fully implemented when filter persistence is added in T037
         // For now, it documents the expected behavior
@@ -1577,7 +1577,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
     /// </summary>
     /// <param name="logType">The log type to restore filter for.</param>
     /// <returns>True if filter was restored, false if no persisted state exists.</returns>
-    private bool RestoreFilterState(LogFormat logType)
+    private bool RestoreFilterState(Model_LogFormat logType)
     {
         // Note: This method will be fully implemented when filter persistence is added in T037
         // For now, it documents the expected behavior
@@ -1677,7 +1677,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
 
             switch (entry.LogType)
             {
-                case LogFormat.Normal:
+                case Model_LogFormat.Normal:
                     output.AppendLine($"Format: Normal Log");
                     output.AppendLine($"Timestamp: {entry.Timestamp:yyyy-MM-dd HH:mm:ss}");
                     output.AppendLine($"Level: {entry.Level ?? "N/A"}");
@@ -1689,7 +1689,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
                     }
                     break;
 
-                case LogFormat.ApplicationError:
+                case Model_LogFormat.ApplicationError:
                     output.AppendLine($"Format: Application Error");
                     output.AppendLine($"Timestamp: {entry.Timestamp:yyyy-MM-dd HH:mm:ss}");
                     output.AppendLine($"Error Type: {entry.ErrorType ?? "N/A"}");
@@ -1701,7 +1701,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
                     }
                     break;
 
-                case LogFormat.DatabaseError:
+                case Model_LogFormat.DatabaseError:
                     output.AppendLine($"Format: Database Error");
                     output.AppendLine($"Timestamp: {entry.Timestamp:yyyy-MM-dd HH:mm:ss}");
                     output.AppendLine($"Severity: {entry.Severity ?? "N/A"}");
@@ -1713,7 +1713,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
                     }
                     break;
 
-                case LogFormat.Unknown:
+                case Model_LogFormat.Unknown:
                 default:
                     output.AppendLine($"Format: Unknown");
                     output.AppendLine($"Timestamp: {entry.Timestamp:yyyy-MM-dd HH:mm:ss}");
@@ -1750,13 +1750,13 @@ public partial class ViewApplicationLogsForm : ThemedForm
         }
 
         // ApplicationError logs are always error severity
-        if (entry.LogType == LogFormat.ApplicationError)
+        if (entry.LogType == Model_LogFormat.ApplicationError)
         {
             return "🔴"; // Red circle for application errors
         }
 
         // DatabaseError logs - check severity
-        if (entry.LogType == LogFormat.DatabaseError)
+        if (entry.LogType == Model_LogFormat.DatabaseError)
         {
             string? severity = entry.Severity?.ToUpperInvariant();
             return severity switch
@@ -1769,7 +1769,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
         }
 
         // Normal logs - check level
-        if (entry.LogType == LogFormat.Normal)
+        if (entry.LogType == Model_LogFormat.Normal)
         {
             string? level = entry.Level?.ToUpperInvariant();
             return level switch

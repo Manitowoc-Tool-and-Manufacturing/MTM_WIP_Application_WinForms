@@ -28,56 +28,58 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
         /// </summary>
         private void InitializeComponent()
         {
-            this.webView21 = new Microsoft.Web.WebView2.WinForms.WebView2();
-            this.panelTop = new System.Windows.Forms.Panel();
-            this.btnViewComparison = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.webView21)).BeginInit();
-            this.panelTop.SuspendLayout();
-            this.SuspendLayout();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ViewReleaseNotesForm));
+            webView21 = new Microsoft.Web.WebView2.WinForms.WebView2();
+            panelTop = new Panel();
+            btnViewComparison = new Button();
+            ((System.ComponentModel.ISupportInitialize)webView21).BeginInit();
+            panelTop.SuspendLayout();
+            SuspendLayout();
             // 
             // webView21
             // 
-            this.webView21.AllowExternalDrop = true;
-            this.webView21.CreationProperties = null;
-            this.webView21.DefaultBackgroundColor = System.Drawing.Color.White;
-            this.webView21.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.webView21.Location = new System.Drawing.Point(0, 40);
-            this.webView21.Name = "webView21";
-            this.webView21.Size = new System.Drawing.Size(800, 410);
-            this.webView21.TabIndex = 1;
-            this.webView21.ZoomFactor = 1D;
+            webView21.AllowExternalDrop = true;
+            webView21.CreationProperties = null;
+            webView21.DefaultBackgroundColor = Color.White;
+            webView21.Dock = DockStyle.Fill;
+            webView21.Location = new Point(0, 40);
+            webView21.Name = "webView21";
+            webView21.Size = new Size(800, 410);
+            webView21.TabIndex = 1;
+            webView21.ZoomFactor = 1D;
             // 
             // panelTop
             // 
-            this.panelTop.Controls.Add(this.btnViewComparison);
-            this.panelTop.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panelTop.Location = new System.Drawing.Point(0, 0);
-            this.panelTop.Name = "panelTop";
-            this.panelTop.Size = new System.Drawing.Size(800, 40);
-            this.panelTop.TabIndex = 0;
+            panelTop.Controls.Add(btnViewComparison);
+            panelTop.Dock = DockStyle.Top;
+            panelTop.Location = new Point(0, 0);
+            panelTop.Name = "panelTop";
+            panelTop.Size = new Size(800, 40);
+            panelTop.TabIndex = 0;
             // 
             // btnViewComparison
             // 
-            this.btnViewComparison.Location = new System.Drawing.Point(12, 8);
-            this.btnViewComparison.Name = "btnViewComparison";
-            this.btnViewComparison.Size = new System.Drawing.Size(200, 23);
-            this.btnViewComparison.TabIndex = 0;
-            this.btnViewComparison.Text = "View Version Comparison Report";
-            this.btnViewComparison.UseVisualStyleBackColor = true;
-            this.btnViewComparison.Click += new System.EventHandler(this.btnViewComparison_Click);
+            btnViewComparison.Location = new Point(12, 8);
+            btnViewComparison.Name = "btnViewComparison";
+            btnViewComparison.Size = new Size(200, 23);
+            btnViewComparison.TabIndex = 0;
+            btnViewComparison.Text = "View Version Comparison Report";
+            btnViewComparison.UseVisualStyleBackColor = true;
+            btnViewComparison.Click += btnViewComparison_Click;
             // 
             // ViewReleaseNotesForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.webView21);
-            this.Controls.Add(this.panelTop);
-            this.Name = "ViewReleaseNotesForm";
-            this.Text = "Release Notes";
-            ((System.ComponentModel.ISupportInitialize)(this.webView21)).EndInit();
-            this.panelTop.ResumeLayout(false);
-            this.ResumeLayout(false);
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            ClientSize = new Size(800, 450);
+            Controls.Add(webView21);
+            Controls.Add(panelTop);
+            Icon = (Icon)resources.GetObject("$this.Icon");
+            Name = "ViewReleaseNotesForm";
+            Text = "Release Notes";
+            ((System.ComponentModel.ISupportInitialize)webView21).EndInit();
+            panelTop.ResumeLayout(false);
+            ResumeLayout(false);
 
         }
 

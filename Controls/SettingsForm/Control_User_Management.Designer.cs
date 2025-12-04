@@ -214,7 +214,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             Control_User_Management_Label_HomeTile_AddTitle.AutoSize = true;
             Control_User_Management_Label_HomeTile_AddTitle.Dock = DockStyle.Fill;
-            Control_User_Management_Label_HomeTile_AddTitle.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
+            Control_User_Management_Label_HomeTile_AddTitle.Font = new Font("Segoe UI Emoji", 16F, FontStyle.Bold);
             Control_User_Management_Label_HomeTile_AddTitle.ForeColor = Color.FromArgb(46, 204, 113);
             Control_User_Management_Label_HomeTile_AddTitle.Location = new Point(6, 97);
             Control_User_Management_Label_HomeTile_AddTitle.Margin = new Padding(3);
@@ -228,7 +228,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             Control_User_Management_Label_HomeTile_AddInstruction.AutoSize = true;
             Control_User_Management_Label_HomeTile_AddInstruction.Dock = DockStyle.Fill;
-            Control_User_Management_Label_HomeTile_AddInstruction.Font = new Font("Segoe UI", 9F);
+            Control_User_Management_Label_HomeTile_AddInstruction.Font = new Font("Segoe UI Emoji", 9F);
             Control_User_Management_Label_HomeTile_AddInstruction.ForeColor = Color.Gray;
             Control_User_Management_Label_HomeTile_AddInstruction.Location = new Point(6, 281);
             Control_User_Management_Label_HomeTile_AddInstruction.Margin = new Padding(3);
@@ -288,7 +288,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             Control_User_Management_Label_HomeTile_EditTitle.AutoSize = true;
             Control_User_Management_Label_HomeTile_EditTitle.Dock = DockStyle.Fill;
-            Control_User_Management_Label_HomeTile_EditTitle.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
+            Control_User_Management_Label_HomeTile_EditTitle.Font = new Font("Segoe UI Emoji", 16F, FontStyle.Bold);
             Control_User_Management_Label_HomeTile_EditTitle.ForeColor = Color.FromArgb(52, 152, 219);
             Control_User_Management_Label_HomeTile_EditTitle.Location = new Point(6, 97);
             Control_User_Management_Label_HomeTile_EditTitle.Margin = new Padding(3);
@@ -302,7 +302,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             Control_User_Management_Label_HomeTile_EditInstruction.AutoSize = true;
             Control_User_Management_Label_HomeTile_EditInstruction.Dock = DockStyle.Fill;
-            Control_User_Management_Label_HomeTile_EditInstruction.Font = new Font("Segoe UI", 9F);
+            Control_User_Management_Label_HomeTile_EditInstruction.Font = new Font("Segoe UI Emoji", 9F);
             Control_User_Management_Label_HomeTile_EditInstruction.ForeColor = Color.Gray;
             Control_User_Management_Label_HomeTile_EditInstruction.Location = new Point(6, 281);
             Control_User_Management_Label_HomeTile_EditInstruction.Margin = new Padding(3);
@@ -362,7 +362,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             Control_User_Management_Label_HomeTile_RemoveTitle.AutoSize = true;
             Control_User_Management_Label_HomeTile_RemoveTitle.Dock = DockStyle.Fill;
-            Control_User_Management_Label_HomeTile_RemoveTitle.Font = new Font("Segoe UI", 16F, FontStyle.Bold);
+            Control_User_Management_Label_HomeTile_RemoveTitle.Font = new Font("Segoe UI Emoji", 16F, FontStyle.Bold);
             Control_User_Management_Label_HomeTile_RemoveTitle.ForeColor = Color.FromArgb(231, 76, 60);
             Control_User_Management_Label_HomeTile_RemoveTitle.Location = new Point(6, 97);
             Control_User_Management_Label_HomeTile_RemoveTitle.Margin = new Padding(3);
@@ -376,7 +376,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             Control_User_Management_Label_HomeTile_RemoveInstruction.AutoSize = true;
             Control_User_Management_Label_HomeTile_RemoveInstruction.Dock = DockStyle.Fill;
-            Control_User_Management_Label_HomeTile_RemoveInstruction.Font = new Font("Segoe UI", 9F);
+            Control_User_Management_Label_HomeTile_RemoveInstruction.Font = new Font("Segoe UI Emoji", 9F);
             Control_User_Management_Label_HomeTile_RemoveInstruction.ForeColor = Color.Gray;
             Control_User_Management_Label_HomeTile_RemoveInstruction.Location = new Point(6, 281);
             Control_User_Management_Label_HomeTile_RemoveInstruction.Margin = new Padding(3);
@@ -408,7 +408,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             Control_User_Management_Button_Back.AutoSize = true;
             Control_User_Management_Button_Back.FlatStyle = FlatStyle.Flat;
-            Control_User_Management_Button_Back.Font = new Font("Segoe UI", 10F);
+            Control_User_Management_Button_Back.Font = new Font("Segoe UI Emoji", 10F);
             Control_User_Management_Button_Back.Location = new Point(3, 3);
             Control_User_Management_Button_Back.Name = "Control_User_Management_Button_Back";
             Control_User_Management_Button_Back.Size = new Size(65, 31);
@@ -421,7 +421,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             Control_User_Management_Button_Home.AutoSize = true;
             Control_User_Management_Button_Home.FlatStyle = FlatStyle.Flat;
-            Control_User_Management_Button_Home.Font = new Font("Segoe UI", 10F);
+            Control_User_Management_Button_Home.Font = new Font("Segoe UI Emoji", 10F);
             Control_User_Management_Button_Home.Location = new Point(456, 3);
             Control_User_Management_Button_Home.Name = "Control_User_Management_Button_Home";
             Control_User_Management_Button_Home.Size = new Size(65, 31);

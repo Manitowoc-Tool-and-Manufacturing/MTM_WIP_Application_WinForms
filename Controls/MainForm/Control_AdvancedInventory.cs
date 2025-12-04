@@ -11,7 +11,7 @@ using MTM_WIP_Application_Winforms.Data;
 using MTM_WIP_Application_Winforms.Forms.MainForm.Classes;
 using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Helpers;
-using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
 using Microsoft.Extensions.DependencyInjection;
@@ -393,7 +393,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         /// Checks if part requires color code and redirects to Inventory Tab if needed.
         /// Updates save button state.
         /// </summary>
-        private void AdvancedInventory_Single_TextBox_Part_SuggestionSelected(object? sender, SuggestionSelectedEventArgs e)
+        private void AdvancedInventory_Single_TextBox_Part_SuggestionSelected(object? sender, EventArgs_SuggestionSelectedEventArgs e)
         {
             string selectedPart = e.SelectedValue;
 
@@ -412,7 +412,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         /// Handles operation selection from SuggestionTextBox for Single Entry tab.
         /// Updates save button state.
         /// </summary>
-        private void AdvancedInventory_Single_TextBox_Op_SuggestionSelected(object? sender, SuggestionSelectedEventArgs e)
+        private void AdvancedInventory_Single_TextBox_Op_SuggestionSelected(object? sender, EventArgs_SuggestionSelectedEventArgs e)
         {
             UpdateSingleSaveButtonState();
         }
@@ -421,7 +421,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         /// Handles location selection from SuggestionTextBox for Single Entry tab.
         /// Updates save button state.
         /// </summary>
-        private void AdvancedInventory_Single_TextBox_Loc_SuggestionSelected(object? sender, SuggestionSelectedEventArgs e)
+        private void AdvancedInventory_Single_TextBox_Loc_SuggestionSelected(object? sender, EventArgs_SuggestionSelectedEventArgs e)
         {
             UpdateSingleSaveButtonState();
         }
@@ -491,7 +491,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         /// Checks if part requires color code and redirects to Inventory Tab if needed.
         /// Updates save button state and locks Part/Op fields after first location is added.
         /// </summary>
-        private void AdvancedInventory_MultiLoc_TextBox_Part_SuggestionSelected(object? sender, SuggestionSelectedEventArgs e)
+        private void AdvancedInventory_MultiLoc_TextBox_Part_SuggestionSelected(object? sender, EventArgs_SuggestionSelectedEventArgs e)
         {
             string selectedPart = e.SelectedValue;
 
@@ -503,7 +503,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         /// Handles operation selection from SuggestionTextBox for Multi-Location tab.
         /// Updates save button state.
         /// </summary>
-        private void AdvancedInventory_MultiLoc_TextBox_Op_SuggestionSelected(object? sender, SuggestionSelectedEventArgs e)
+        private void AdvancedInventory_MultiLoc_TextBox_Op_SuggestionSelected(object? sender, EventArgs_SuggestionSelectedEventArgs e)
         {
             string selectedOp = e.SelectedValue;
 
@@ -514,7 +514,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         /// Handles location selection from SuggestionTextBox for Multi-Location tab.
         /// Updates save button state.
         /// </summary>
-        private void AdvancedInventory_MultiLoc_TextBox_Loc_SuggestionSelected(object? sender, SuggestionSelectedEventArgs e)
+        private void AdvancedInventory_MultiLoc_TextBox_Loc_SuggestionSelected(object? sender, EventArgs_SuggestionSelectedEventArgs e)
         {
             string selectedLoc = e.SelectedValue;
 

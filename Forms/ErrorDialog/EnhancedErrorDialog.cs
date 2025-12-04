@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Text;
 using MTM_WIP_Application_Winforms.Forms.Shared;
-using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
 
@@ -205,7 +205,7 @@ namespace MTM_WIP_Application_Winforms.Forms.ErrorDialog
                 
                 // Draw a simple icon/symbol in white
                 using (var pen = new Pen(Color.White, 3))
-                using (var font = new Font("Segoe UI", 18, FontStyle.Bold))
+                using (var font = new Font("Segoe UI Emoji", 18, FontStyle.Bold))
                 using (var textBrush = new SolidBrush(Color.White))
                 {
                     // Draw appropriate symbol

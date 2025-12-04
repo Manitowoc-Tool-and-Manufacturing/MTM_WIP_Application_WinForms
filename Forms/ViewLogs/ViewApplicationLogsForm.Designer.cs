@@ -15,11 +15,11 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ViewApplicationLogsForm));
             tableLayoutMain = new TableLayoutPanel();
             panel1 = new Panel();
             lblStatus = new Label();
             panelEntryDisplay = new Panel();
-            txtRawView = new TextBox();
             tableLayoutEntryDisplay = new TableLayoutPanel();
             txtTimestamp = new TextBox();
             lblEntryDetails = new Label();
@@ -31,6 +31,7 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
             txtEntryMessage = new TextBox();
             txtEntrySource = new TextBox();
             lblEntryTimestamp = new Label();
+            txtRawView = new TextBox();
             panelUserSelection = new Panel();
             tableLayoutPanel4 = new TableLayoutPanel();
             lblSelectUser = new Label();
@@ -41,15 +42,14 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
             chkGroupErrors = new CheckBox();
             panelFileList = new Panel();
             tableLayoutPanel3 = new TableLayoutPanel();
+            lblLogFiles = new Label();
+            lblFileCount = new Label();
             lstLogFiles = new ListView();
             colFileName = new ColumnHeader();
             colModified = new ColumnHeader();
             colSize = new ColumnHeader();
-            lblLogFiles = new Label();
-            lblFileCount = new Label();
             panelNavigation = new Panel();
             tableLayoutPanel2 = new TableLayoutPanel();
-            lblEntryPosition = new Label();
             btnPrevious = new Button();
             btnNext = new Button();
             btnToggleView = new Button();
@@ -76,6 +76,7 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
             btnErrorsOnly = new Button();
             btnPerformance = new Button();
             btnToday = new Button();
+            lblEntryPosition = new Label();
             tableLayoutMain.SuspendLayout();
             panel1.SuspendLayout();
             panelEntryDisplay.SuspendLayout();
@@ -138,25 +139,11 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
             panelEntryDisplay.Controls.Add(tableLayoutEntryDisplay);
             panelEntryDisplay.Controls.Add(txtRawView);
             panelEntryDisplay.Dock = DockStyle.Fill;
-            panelEntryDisplay.Location = new Point(3, 434);
+            panelEntryDisplay.Location = new Point(3, 396);
             panelEntryDisplay.Name = "panelEntryDisplay";
             panelEntryDisplay.Padding = new Padding(10);
-            panelEntryDisplay.Size = new Size(718, 329);
+            panelEntryDisplay.Size = new Size(718, 367);
             panelEntryDisplay.TabIndex = 2;
-            // 
-            // txtRawView
-            // 
-            txtRawView.Dock = DockStyle.Fill;
-            txtRawView.Font = new Font("Consolas", 9F);
-            txtRawView.Location = new Point(10, 10);
-            txtRawView.Margin = new Padding(3, 5, 3, 3);
-            txtRawView.Multiline = true;
-            txtRawView.Name = "txtRawView";
-            txtRawView.ReadOnly = true;
-            txtRawView.ScrollBars = ScrollBars.Both;
-            txtRawView.Size = new Size(698, 309);
-            txtRawView.TabIndex = 3;
-            txtRawView.Visible = false;
             // 
             // tableLayoutEntryDisplay
             // 
@@ -182,15 +169,14 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
             tableLayoutEntryDisplay.RowStyles.Add(new RowStyle());
             tableLayoutEntryDisplay.RowStyles.Add(new RowStyle(SizeType.Percent, 40F));
             tableLayoutEntryDisplay.RowStyles.Add(new RowStyle(SizeType.Percent, 60F));
-            tableLayoutEntryDisplay.Size = new Size(698, 309);
+            tableLayoutEntryDisplay.Size = new Size(698, 347);
             tableLayoutEntryDisplay.TabIndex = 10;
             // 
             // txtTimestamp
             // 
             txtTimestamp.Dock = DockStyle.Fill;
             txtTimestamp.Font = new Font("Consolas", 9F);
-            txtTimestamp.Location = new Point(79, 5);
-            txtTimestamp.Margin = new Padding(3, 5, 3, 3);
+            txtTimestamp.Location = new Point(79, 3);
             txtTimestamp.Name = "txtTimestamp";
             txtTimestamp.ReadOnly = true;
             txtTimestamp.Size = new Size(616, 22);
@@ -201,9 +187,10 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
             // 
             lblEntryDetails.AutoSize = true;
             lblEntryDetails.Dock = DockStyle.Fill;
-            lblEntryDetails.Location = new Point(3, 177);
+            lblEntryDetails.Location = new Point(3, 192);
+            lblEntryDetails.Margin = new Padding(3);
             lblEntryDetails.Name = "lblEntryDetails";
-            lblEntryDetails.Size = new Size(70, 132);
+            lblEntryDetails.Size = new Size(70, 152);
             lblEntryDetails.TabIndex = 8;
             lblEntryDetails.Text = "Details:";
             lblEntryDetails.TextAlign = ContentAlignment.MiddleRight;
@@ -212,9 +199,10 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
             // 
             lblEntryMessage.AutoSize = true;
             lblEntryMessage.Dock = DockStyle.Fill;
-            lblEntryMessage.Location = new Point(3, 90);
+            lblEntryMessage.Location = new Point(3, 87);
+            lblEntryMessage.Margin = new Padding(3);
             lblEntryMessage.Name = "lblEntryMessage";
-            lblEntryMessage.Size = new Size(70, 87);
+            lblEntryMessage.Size = new Size(70, 99);
             lblEntryMessage.TabIndex = 6;
             lblEntryMessage.Text = "Message:";
             lblEntryMessage.TextAlign = ContentAlignment.MiddleRight;
@@ -223,9 +211,10 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
             // 
             lblEntrySource.AutoSize = true;
             lblEntrySource.Dock = DockStyle.Fill;
-            lblEntrySource.Location = new Point(3, 60);
+            lblEntrySource.Location = new Point(3, 59);
+            lblEntrySource.Margin = new Padding(3);
             lblEntrySource.Name = "lblEntrySource";
-            lblEntrySource.Size = new Size(70, 30);
+            lblEntrySource.Size = new Size(70, 22);
             lblEntrySource.TabIndex = 4;
             lblEntrySource.Text = "Source:";
             lblEntrySource.TextAlign = ContentAlignment.MiddleRight;
@@ -234,9 +223,10 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
             // 
             lblEntryLevel.AutoSize = true;
             lblEntryLevel.Dock = DockStyle.Fill;
-            lblEntryLevel.Location = new Point(3, 30);
+            lblEntryLevel.Location = new Point(3, 31);
+            lblEntryLevel.Margin = new Padding(3);
             lblEntryLevel.Name = "lblEntryLevel";
-            lblEntryLevel.Size = new Size(70, 30);
+            lblEntryLevel.Size = new Size(70, 22);
             lblEntryLevel.TabIndex = 2;
             lblEntryLevel.Text = "Level:";
             lblEntryLevel.TextAlign = ContentAlignment.MiddleRight;
@@ -245,13 +235,12 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
             // 
             txtEntryDetails.Dock = DockStyle.Fill;
             txtEntryDetails.Font = new Font("Consolas", 9F);
-            txtEntryDetails.Location = new Point(79, 182);
-            txtEntryDetails.Margin = new Padding(3, 5, 3, 3);
+            txtEntryDetails.Location = new Point(79, 192);
             txtEntryDetails.Multiline = true;
             txtEntryDetails.Name = "txtEntryDetails";
             txtEntryDetails.ReadOnly = true;
             txtEntryDetails.ScrollBars = ScrollBars.Vertical;
-            txtEntryDetails.Size = new Size(616, 124);
+            txtEntryDetails.Size = new Size(616, 152);
             txtEntryDetails.TabIndex = 9;
             txtEntryDetails.TabStop = false;
             // 
@@ -259,8 +248,7 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
             // 
             txtLevel.Dock = DockStyle.Fill;
             txtLevel.Font = new Font("Consolas", 9F, FontStyle.Bold);
-            txtLevel.Location = new Point(79, 35);
-            txtLevel.Margin = new Padding(3, 5, 3, 3);
+            txtLevel.Location = new Point(79, 31);
             txtLevel.Name = "txtLevel";
             txtLevel.ReadOnly = true;
             txtLevel.Size = new Size(616, 22);
@@ -271,13 +259,12 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
             // 
             txtEntryMessage.Dock = DockStyle.Fill;
             txtEntryMessage.Font = new Font("Consolas", 9F);
-            txtEntryMessage.Location = new Point(79, 95);
-            txtEntryMessage.Margin = new Padding(3, 5, 3, 3);
+            txtEntryMessage.Location = new Point(79, 87);
             txtEntryMessage.Multiline = true;
             txtEntryMessage.Name = "txtEntryMessage";
             txtEntryMessage.ReadOnly = true;
             txtEntryMessage.ScrollBars = ScrollBars.Vertical;
-            txtEntryMessage.Size = new Size(616, 79);
+            txtEntryMessage.Size = new Size(616, 99);
             txtEntryMessage.TabIndex = 7;
             txtEntryMessage.TabStop = false;
             // 
@@ -285,8 +272,7 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
             // 
             txtEntrySource.Dock = DockStyle.Fill;
             txtEntrySource.Font = new Font("Consolas", 9F);
-            txtEntrySource.Location = new Point(79, 65);
-            txtEntrySource.Margin = new Padding(3, 5, 3, 3);
+            txtEntrySource.Location = new Point(79, 59);
             txtEntrySource.Name = "txtEntrySource";
             txtEntrySource.ReadOnly = true;
             txtEntrySource.Size = new Size(616, 22);
@@ -297,12 +283,27 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
             // 
             lblEntryTimestamp.AutoSize = true;
             lblEntryTimestamp.Dock = DockStyle.Fill;
-            lblEntryTimestamp.Location = new Point(3, 0);
+            lblEntryTimestamp.Location = new Point(3, 3);
+            lblEntryTimestamp.Margin = new Padding(3);
             lblEntryTimestamp.Name = "lblEntryTimestamp";
-            lblEntryTimestamp.Size = new Size(70, 30);
+            lblEntryTimestamp.Size = new Size(70, 22);
             lblEntryTimestamp.TabIndex = 0;
             lblEntryTimestamp.Text = "Timestamp:";
             lblEntryTimestamp.TextAlign = ContentAlignment.MiddleRight;
+            // 
+            // txtRawView
+            // 
+            txtRawView.Dock = DockStyle.Fill;
+            txtRawView.Font = new Font("Consolas", 9F);
+            txtRawView.Location = new Point(10, 10);
+            txtRawView.Margin = new Padding(3, 5, 3, 3);
+            txtRawView.Multiline = true;
+            txtRawView.Name = "txtRawView";
+            txtRawView.ReadOnly = true;
+            txtRawView.ScrollBars = ScrollBars.Both;
+            txtRawView.Size = new Size(698, 347);
+            txtRawView.TabIndex = 3;
+            txtRawView.Visible = false;
             // 
             // panelUserSelection
             // 
@@ -343,9 +344,10 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
             // 
             lblSelectUser.AutoSize = true;
             lblSelectUser.Dock = DockStyle.Fill;
-            lblSelectUser.Location = new Point(3, 0);
+            lblSelectUser.Location = new Point(3, 3);
+            lblSelectUser.Margin = new Padding(3);
             lblSelectUser.Name = "lblSelectUser";
-            lblSelectUser.Size = new Size(67, 30);
+            lblSelectUser.Size = new Size(67, 24);
             lblSelectUser.TabIndex = 0;
             lblSelectUser.Text = "Select User:";
             lblSelectUser.TextAlign = ContentAlignment.MiddleRight;
@@ -375,9 +377,10 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
             // 
             lblUserCount.AutoSize = true;
             lblUserCount.Dock = DockStyle.Fill;
-            lblUserCount.Location = new Point(393, 0);
+            lblUserCount.Location = new Point(393, 3);
+            lblUserCount.Margin = new Padding(3);
             lblUserCount.Name = "lblUserCount";
-            lblUserCount.Size = new Size(43, 30);
+            lblUserCount.Size = new Size(43, 24);
             lblUserCount.TabIndex = 3;
             lblUserCount.Text = "0 users";
             lblUserCount.TextAlign = ContentAlignment.MiddleLeft;
@@ -434,6 +437,27 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
             tableLayoutPanel3.Size = new Size(698, 223);
             tableLayoutPanel3.TabIndex = 6;
             // 
+            // lblLogFiles
+            // 
+            lblLogFiles.AutoSize = true;
+            lblLogFiles.Font = new Font("Segoe UI Emoji", 9F, FontStyle.Bold);
+            lblLogFiles.Location = new Point(3, 3);
+            lblLogFiles.Margin = new Padding(3);
+            lblLogFiles.Name = "lblLogFiles";
+            lblLogFiles.Size = new Size(66, 16);
+            lblLogFiles.TabIndex = 0;
+            lblLogFiles.Text = "Log Files:";
+            // 
+            // lblFileCount
+            // 
+            lblFileCount.AutoSize = true;
+            lblFileCount.Location = new Point(75, 3);
+            lblFileCount.Margin = new Padding(3);
+            lblFileCount.Name = "lblFileCount";
+            lblFileCount.Size = new Size(37, 15);
+            lblFileCount.TabIndex = 1;
+            lblFileCount.Text = "0 files";
+            // 
             // lstLogFiles
             // 
             lstLogFiles.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
@@ -441,10 +465,9 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
             tableLayoutPanel3.SetColumnSpan(lstLogFiles, 3);
             lstLogFiles.FullRowSelect = true;
             lstLogFiles.GridLines = true;
-            lstLogFiles.Location = new Point(3, 26);
-            lstLogFiles.Margin = new Padding(3, 5, 3, 3);
+            lstLogFiles.Location = new Point(3, 25);
             lstLogFiles.Name = "lstLogFiles";
-            lstLogFiles.Size = new Size(692, 194);
+            lstLogFiles.Size = new Size(692, 195);
             lstLogFiles.TabIndex = 2;
             lstLogFiles.UseCompatibleStateImageBehavior = false;
             lstLogFiles.View = View.Details;
@@ -464,68 +487,38 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
             colSize.Text = "Size";
             colSize.Width = 100;
             // 
-            // lblLogFiles
-            // 
-            lblLogFiles.AutoSize = true;
-            lblLogFiles.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
-            lblLogFiles.Location = new Point(3, 3);
-            lblLogFiles.Margin = new Padding(3);
-            lblLogFiles.Name = "lblLogFiles";
-            lblLogFiles.Size = new Size(57, 15);
-            lblLogFiles.TabIndex = 0;
-            lblLogFiles.Text = "Log Files:";
-            // 
-            // lblFileCount
-            // 
-            lblFileCount.AutoSize = true;
-            lblFileCount.Location = new Point(66, 3);
-            lblFileCount.Margin = new Padding(3);
-            lblFileCount.Name = "lblFileCount";
-            lblFileCount.Size = new Size(37, 15);
-            lblFileCount.TabIndex = 1;
-            lblFileCount.Text = "0 files";
-            // 
             // panelNavigation
             // 
+            panelNavigation.AutoSize = true;
+            panelNavigation.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             panelNavigation.Controls.Add(tableLayoutPanel2);
             panelNavigation.Dock = DockStyle.Fill;
             panelNavigation.Location = new Point(3, 312);
             panelNavigation.Name = "panelNavigation";
-            panelNavigation.Size = new Size(718, 116);
+            panelNavigation.Size = new Size(718, 78);
             panelNavigation.TabIndex = 0;
             // 
             // tableLayoutPanel2
             // 
+            tableLayoutPanel2.AutoSize = true;
+            tableLayoutPanel2.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             tableLayoutPanel2.ColumnCount = 3;
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
-            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
-            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333359F));
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333359F));
             tableLayoutPanel2.Controls.Add(lblEntryPosition, 1, 0);
             tableLayoutPanel2.Controls.Add(btnPrevious, 0, 0);
             tableLayoutPanel2.Controls.Add(btnNext, 2, 0);
-            tableLayoutPanel2.Controls.Add(btnToggleView, 0, 2);
-            tableLayoutPanel2.Controls.Add(btnGenerateErrorReport, 2, 2);
+            tableLayoutPanel2.Controls.Add(btnToggleView, 0, 1);
+            tableLayoutPanel2.Controls.Add(btnGenerateErrorReport, 2, 1);
             tableLayoutPanel2.Dock = DockStyle.Fill;
             tableLayoutPanel2.Location = new Point(0, 0);
             tableLayoutPanel2.Name = "tableLayoutPanel2";
-            tableLayoutPanel2.RowCount = 3;
-            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
-            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
-            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
-            tableLayoutPanel2.Size = new Size(718, 116);
+            tableLayoutPanel2.RowCount = 2;
+            tableLayoutPanel2.RowStyles.Add(new RowStyle());
+            tableLayoutPanel2.RowStyles.Add(new RowStyle());
+            tableLayoutPanel2.Size = new Size(718, 78);
             tableLayoutPanel2.TabIndex = 8;
-            // 
-            // lblEntryPosition
-            // 
-            lblEntryPosition.AutoSize = true;
-            lblEntryPosition.Dock = DockStyle.Fill;
-            lblEntryPosition.Location = new Point(242, 3);
-            lblEntryPosition.Margin = new Padding(3);
-            lblEntryPosition.Name = "lblEntryPosition";
-            lblEntryPosition.Size = new Size(233, 32);
-            lblEntryPosition.TabIndex = 1;
-            lblEntryPosition.Text = "No entry loaded";
-            lblEntryPosition.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // btnPrevious
             // 
@@ -552,7 +545,7 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
             // btnToggleView
             // 
             btnToggleView.Dock = DockStyle.Fill;
-            btnToggleView.Location = new Point(3, 79);
+            btnToggleView.Location = new Point(3, 41);
             btnToggleView.MinimumSize = new Size(100, 30);
             btnToggleView.Name = "btnToggleView";
             btnToggleView.Size = new Size(233, 34);
@@ -563,7 +556,7 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
             // btnGenerateErrorReport
             // 
             btnGenerateErrorReport.Dock = DockStyle.Fill;
-            btnGenerateErrorReport.Location = new Point(481, 79);
+            btnGenerateErrorReport.Location = new Point(481, 41);
             btnGenerateErrorReport.MinimumSize = new Size(120, 30);
             btnGenerateErrorReport.Name = "btnGenerateErrorReport";
             btnGenerateErrorReport.Size = new Size(234, 34);
@@ -825,12 +818,25 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
             btnToday.Text = "Today";
             btnToday.UseVisualStyleBackColor = true;
             // 
+            // lblEntryPosition
+            // 
+            lblEntryPosition.AutoSize = true;
+            lblEntryPosition.Dock = DockStyle.Fill;
+            lblEntryPosition.Location = new Point(242, 3);
+            lblEntryPosition.Margin = new Padding(3);
+            lblEntryPosition.Name = "lblEntryPosition";
+            lblEntryPosition.Size = new Size(233, 32);
+            lblEntryPosition.TabIndex = 1;
+            lblEntryPosition.Text = "No entry loaded";
+            lblEntryPosition.TextAlign = ContentAlignment.MiddleCenter;
+            // 
             // ViewApplicationLogsForm
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
             ClientSize = new Size(724, 801);
             Controls.Add(tableLayoutMain);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             MaximizeBox = false;
             MaximumSize = new Size(740, 840);
             MinimizeBox = false;
@@ -839,6 +845,7 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
             StartPosition = FormStartPosition.CenterScreen;
             Text = "View Application Logs";
             tableLayoutMain.ResumeLayout(false);
+            tableLayoutMain.PerformLayout();
             panel1.ResumeLayout(false);
             panelEntryDisplay.ResumeLayout(false);
             panelEntryDisplay.PerformLayout();
@@ -851,6 +858,7 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
             tableLayoutPanel3.ResumeLayout(false);
             tableLayoutPanel3.PerformLayout();
             panelNavigation.ResumeLayout(false);
+            panelNavigation.PerformLayout();
             tableLayoutPanel2.ResumeLayout(false);
             tableLayoutPanel2.PerformLayout();
             panelFilters.ResumeLayout(false);
@@ -882,7 +890,6 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
         private System.Windows.Forms.Panel panelEntryDisplay;
         private System.Windows.Forms.Panel panelNavigation;
         private System.Windows.Forms.Button btnPrevious;
-        private System.Windows.Forms.Label lblEntryPosition;
         private System.Windows.Forms.Button btnNext;
         private System.Windows.Forms.Button btnToggleView;
         private System.Windows.Forms.Button btnGenerateErrorReport;
@@ -926,5 +933,6 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
         private TableLayoutPanel tableLayoutPanel2;
         private TableLayoutPanel tableLayoutPanel4;
         private Panel panel1;
+        private Label lblEntryPosition;
     }
 }

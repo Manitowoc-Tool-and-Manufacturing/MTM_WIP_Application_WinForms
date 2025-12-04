@@ -40,7 +40,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
             // 
             // Control_ProgressBarUserControl
             // 
-            AutoScaleDimensions = new SizeF(144F, 144F);
+            AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
             AutoSize = true;
             AutoSizeMode = AutoSizeMode.GrowAndShrink;

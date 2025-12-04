@@ -142,7 +142,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Edit_User_GroupBox_UserInfo.TabStop = false;
             Control_Edit_User_GroupBox_UserInfo.Text = "User Information";
             //
-            // tableLayoutPanel4
+            // Control_ReceivingAnalytics_TableLayoutPanel_ReceivingScopeContents
             //
             tableLayoutPanel4.AutoSize = true;
             tableLayoutPanel4.AutoSizeMode = AutoSizeMode.GrowAndShrink;
@@ -152,7 +152,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             tableLayoutPanel4.Controls.Add(Control_Edit_User_GroupBox_Creds, 0, 1);
             tableLayoutPanel4.Dock = DockStyle.Fill;
             tableLayoutPanel4.Location = new Point(3, 19);
-            tableLayoutPanel4.Name = "tableLayoutPanel4";
+            tableLayoutPanel4.Name = "Control_ReceivingAnalytics_TableLayoutPanel_ReceivingScopeContents";
             tableLayoutPanel4.RowCount = 2;
             tableLayoutPanel4.RowStyles.Add(new RowStyle());
             tableLayoutPanel4.RowStyles.Add(new RowStyle());
@@ -260,7 +260,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Edit_User_GroupBox_Creds.TabStop = false;
             Control_Edit_User_GroupBox_Creds.Text = "Login Information";
             //
-            // tableLayoutPanel3
+            // Control_ReceivingAnalytics_TableLayoutPanel_ReceivingScopeHeader
             //
             tableLayoutPanel3.AutoSize = true;
             tableLayoutPanel3.AutoSizeMode = AutoSizeMode.GrowAndShrink;
@@ -274,7 +274,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             tableLayoutPanel3.Controls.Add(Control_Edit_User_TextBox_Pin, 1, 1);
             tableLayoutPanel3.Dock = DockStyle.Fill;
             tableLayoutPanel3.Location = new Point(3, 19);
-            tableLayoutPanel3.Name = "tableLayoutPanel3";
+            tableLayoutPanel3.Name = "Control_ReceivingAnalytics_TableLayoutPanel_ReceivingScopeHeader";
             tableLayoutPanel3.RowCount = 3;
             tableLayoutPanel3.RowStyles.Add(new RowStyle());
             tableLayoutPanel3.RowStyles.Add(new RowStyle());

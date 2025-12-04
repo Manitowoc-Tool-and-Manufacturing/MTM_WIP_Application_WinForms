@@ -1,7 +1,7 @@
 using MTM_WIP_Application_Winforms.Core;
 using MTM_WIP_Application_Winforms.Core.Theming;
 using MTM_WIP_Application_Winforms.Core.Theming.Interfaces;
-using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -72,11 +72,11 @@ public class ThemedForm : Form
                         }
                     };
 
-                    
+
                 }
                 else
                 {
-                    
+
                 }
             }
             catch (Exception ex)
@@ -87,7 +87,7 @@ public class ThemedForm : Form
         }
         else
         {
-            
+
         }
     }
 
@@ -133,7 +133,7 @@ public class ThemedForm : Form
         {
             return; // Theming is disabled, ignore theme changes
         }
-        
+
         if (InvokeRequired)
         {
             Invoke(() => ApplyTheme(e.NewTheme));
@@ -153,11 +153,11 @@ public class ThemedForm : Form
         // Reset form to system defaults
         this.BackColor = SystemColors.Control;
         this.ForeColor = SystemColors.ControlText;
-        
+
         // Recursively reset all child controls
         ResetControlToSystemColors(this);
     }
-    
+
     /// <summary>
     /// Recursively resets a control and its children to system colors.
     /// </summary>
@@ -167,7 +167,7 @@ public class ThemedForm : Form
         {
             if (child.IsDisposed)
                 continue;
-                
+
             // Reset to appropriate system color based on control type
             if (child is TextBox or ComboBox or ListBox)
             {
@@ -189,7 +189,7 @@ public class ThemedForm : Form
                 child.BackColor = SystemColors.Control;
                 child.ForeColor = SystemColors.ControlText;
             }
-            
+
             // Recursively reset children
             if (child.HasChildren)
             {
@@ -221,13 +221,13 @@ public class ThemedForm : Form
             var formApplier = ThemeAppliers?.FirstOrDefault(a => a.CanApply(this));
             if (formApplier != null)
             {
-                
+
                 formApplier.Apply(this, theme);
             }
             else
             {
                 // Fallback if no applier found
-                
+
                 BackColor = theme.FormBackColor ?? theme.ControlBackColor ?? Color.White;
                 ForeColor = theme.FormForeColor ?? theme.ControlForeColor ?? Color.Black;
             }
@@ -239,9 +239,9 @@ public class ThemedForm : Form
         {
             // Resume layout
             ResumeLayout(performLayout: true);
-            
+
             stopwatch.Stop();
-            
+
             // Log performance warning if theme application took too long
             if (stopwatch.ElapsedMilliseconds > 100)
             {
@@ -271,7 +271,7 @@ public class ThemedForm : Form
 
             // Find matching applier
             var applier = ThemeAppliers?.FirstOrDefault(a => a.CanApply(control));
-            
+
             if (applier != null)
             {
                 try
@@ -302,7 +302,7 @@ public class ThemedForm : Form
     {
         base.OnLoad(e);
 
-        
+
         // Apply focus highlighting for better UX
         Core_Themes.ApplyFocusHighlighting(this);
 
@@ -324,7 +324,7 @@ public class ThemedForm : Form
         {
             // Apply theme to the newly added control
             ApplyThemeToControl(e.Control, ThemeProvider.CurrentTheme);
-            
+
             // Also subscribe to any child container controls for nested additions
             if (e.Control is Panel or GroupBox or TabControl or SplitContainer)
             {
@@ -350,7 +350,7 @@ public class ThemedForm : Form
 
         // Find matching applier
         var applier = ThemeAppliers?.FirstOrDefault(a => a.CanApply(control));
-        
+
         if (applier != null)
         {
             try
@@ -371,6 +371,19 @@ public class ThemedForm : Form
         }
     }
 
+    private void InitializeComponent()
+    {
+        System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ThemedForm));
+        SuspendLayout();
+        // 
+        // ThemedForm
+        // 
+        ClientSize = new Size(284, 261);
+        Name = "ThemedForm";
+        ResumeLayout(false);
+
+    }
+
     /// <summary>
     /// Cleans up resources and unsubscribes from theme changes.
     /// </summary>
@@ -382,7 +395,7 @@ public class ThemedForm : Form
             {
                 // T078: Unsubscribe from ControlAdded event
                 ControlAdded -= OnControlAdded;
-                
+
                 // Unsubscribe from events
                 if (_subscribed && ThemeProvider != null)
                 {

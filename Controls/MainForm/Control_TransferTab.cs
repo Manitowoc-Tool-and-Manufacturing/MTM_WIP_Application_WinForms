@@ -6,7 +6,7 @@ using MTM_WIP_Application_Winforms.Core;
 using MTM_WIP_Application_Winforms.Controls.Shared;
 using MTM_WIP_Application_Winforms.Data;
 using MTM_WIP_Application_Winforms.Helpers;
-using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
 using MTM_WIP_Application_Winforms.Forms.Shared;
@@ -1478,8 +1478,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         Control_TransferTab_Panel_Inputs.Enabled = true;
                     }
 
-                    inputsColumn.SizeType = SizeType.Absolute;
-                    inputsColumn.Width = _inputPanelStoredWidth;
+                    inputsColumn.SizeType = SizeType.AutoSize;
 
                     UpdateInputPanelArrow(false);
                 }

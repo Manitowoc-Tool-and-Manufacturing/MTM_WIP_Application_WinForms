@@ -10,7 +10,7 @@ using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services.Analytics;
 using MTM_WIP_Application_Winforms.Services;
-using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Services.Logging;
 
 namespace MTM_WIP_Application_Winforms.Forms.Analytics
 {

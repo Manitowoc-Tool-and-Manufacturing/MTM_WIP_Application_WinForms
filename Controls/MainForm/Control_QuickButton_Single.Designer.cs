@@ -103,7 +103,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             _lblHotkey.BackColor = Color.Transparent;
             _lblHotkey.Cursor = Cursors.Hand;
             _lblHotkey.Dock = DockStyle.Fill;
-            _lblHotkey.Font = new Font("Segoe UI", 7.5F, FontStyle.Bold);
+            _lblHotkey.Font = new Font("Segoe UI Emoji", 7.5F, FontStyle.Bold);
             _lblHotkey.ForeColor = Color.SteelBlue;
             _lblHotkey.Location = new Point(0, 0);
             _lblHotkey.Margin = new Padding(0);
@@ -124,7 +124,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             _lblPartId.BackColor = Color.Transparent;
             _lblPartId.Cursor = Cursors.Hand;
             _lblPartId.Dock = DockStyle.Fill;
-            _lblPartId.Font = new Font("Segoe UI", 9F, FontStyle.Bold);
+            _lblPartId.Font = new Font("Segoe UI Emoji", 9F, FontStyle.Bold);
             _lblPartId.Location = new Point(50, 0);
             _lblPartId.Margin = new Padding(0);
             _lblPartId.Name = "_lblPartId";
@@ -160,7 +160,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             _lblOperation.BackColor = Color.Transparent;
             _lblOperation.Cursor = Cursors.Hand;
             _lblOperation.Dock = DockStyle.Fill;
-            _lblOperation.Font = new Font("Segoe UI", 8F);
+            _lblOperation.Font = new Font("Segoe UI Emoji", 8F);
             _lblOperation.Location = new Point(0, 0);
             _lblOperation.Margin = new Padding(0);
             _lblOperation.Name = "_lblOperation";
@@ -179,7 +179,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             _lblQuantity.BackColor = Color.Transparent;
             _lblQuantity.Cursor = Cursors.Hand;
             _lblQuantity.Dock = DockStyle.Fill;
-            _lblQuantity.Font = new Font("Segoe UI", 8F);
+            _lblQuantity.Font = new Font("Segoe UI Emoji", 8F);
             _lblQuantity.Location = new Point(97, 0);
             _lblQuantity.Margin = new Padding(0);
             _lblQuantity.Name = "_lblQuantity";

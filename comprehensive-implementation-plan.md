@@ -122,33 +122,38 @@ This document consolidates tasks from `refactor-error-handling.md`, `refactor-su
 
 ### Category A: Database & Data Integrity
 **Q1: How should the `sys_visual` table handle users who are no longer active in Infor Visual?**
-
+*   A) Remove them from the JSON data entirely.
+*   B) Keep them but mark as "Inactive".
 *   C) Keep them as-is to preserve historical data for analytics.
 *   *Suggested Answer: C) Keep them. Analytics often look at historical data where those users were active. Removing them might break reports for past date ranges.*
 
 **Q2: For the "User Shift" calculation, what happens if a user's transaction history is empty or sparse (less than 50)?**
-
+*   A) Mark as "Unknown".
 *   B) Use whatever transactions are available, even if only 1.
-
+*   C) Default to 1st Shift.
 *   *Suggested Answer: B) Use available transactions. If 0 transactions, mark as "Unknown". This provides the best guess with available data.*
 
 ### Category B: UI/UX Behavior
 **Q3: In `Form_PODetails`, if a PO has 50 lines, is "Next/Back" navigation sufficient, or should there be a "Jump to Line" feature?**
-
-*   B) Add a dropdown to select Line Number. While still using the Next and Back Buttons
-
-*   *Suggested Answer: B) Add a dropdown or simple "Line X of Y" input. Clicking "Next" 49 times is poor UX for large orders. Hybrid with Next / Back Buttons.*
+*   A) Next/Back is fine.
+*   B) Add a dropdown to select Line Number.
+*   C) Keep the GridView as a secondary navigation tool.
+*   *Suggested Answer: B) Add a dropdown or simple "Line X of Y" input. Clicking "Next" 49 times is poor UX for large orders.*
 
 **Q4: For `Control_DieToolDiscovery` "Where Used", what defines "Used"?**
-
+*   A) Only open Work Orders.
+*   B) Open and Closed Work Orders (History).
 *   C) Bill of Materials (BOM) definition only.
 *   *Suggested Answer: C) BOM definition. "Where Used" typically implies "Where is this part designed to be used?" rather than "Where was it used yesterday?". However, if the goal is tracking, B might be better. Clarification needed on intent.*
 
 ### Category C: Technical Implementation
 **Q5: For `Control_MaterialHandlerAnalytics` scoring, do "Transfers" include bin-to-bin moves, or only warehouse-to-warehouse?**
 *   A) Any transaction classified as a "Transfer" in the database.
+*   B) Only specific transaction codes.
 *   *Suggested Answer: A) Any transaction classified as "Transfer". Keep logic simple and consistent with existing transaction types.*
 
 **Q6: Regarding `Control_ReceivingAnalytics` layout fixes, if the groupboxes extend to the bottom, how should they handle resizing?**
-*   C) Fill Dock style in TableLayoutPanel. Add additional row to the table layout inside the groupbox @ 100% to fill the space
+*   A) Fixed height.
+*   B) Anchor Top/Bottom.
+*   C) Fill Dock style in TableLayoutPanel.
 *   *Suggested Answer: C) Fill Dock style. This ensures they resize dynamically with the form/resolution.*

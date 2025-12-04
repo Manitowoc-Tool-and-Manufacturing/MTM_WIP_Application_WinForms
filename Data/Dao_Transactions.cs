@@ -1,7 +1,7 @@
 using System.Text;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Helpers;
-using MTM_WIP_Application_Winforms.Logging;
+using MTM_WIP_Application_Winforms.Services.Logging;
 using System.Data;
 using MySql.Data.MySqlClient;
 

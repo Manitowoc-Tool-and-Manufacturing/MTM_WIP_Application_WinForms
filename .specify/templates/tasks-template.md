@@ -249,3 +249,10 @@ With multiple developers:
 - Commit after each task or logical group
 - Stop at any checkpoint to validate story independently
 - Avoid: vague tasks, same file conflicts, cross-story dependencies that break independence
+
+---
+
+# Disposal Audits & Validation Coverage Checklist
+
+- [ ] **Resource Disposal** – Verify all new/modified forms, controls, and IDisposable resources implement proper disposal patterns and event unsubscriptions.
+- [ ] **Input Validation** – Confirm every user input path calls `Service_Validation` and routes failures through `Service_ErrorHandler`.
