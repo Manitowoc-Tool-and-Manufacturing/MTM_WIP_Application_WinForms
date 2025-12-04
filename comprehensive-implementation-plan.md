@@ -9,11 +9,15 @@ This document consolidates tasks from `refactor-error-handling.md`, `refactor-su
 
 - [ ] **Update Enums**: Add missing types to `Enum_SuggestionDataSource.cs` (ItemType, Building, Warehouse, Infor types).
 - [ ] **Database Schema**: Create new table `sys_visual` in `mtm_wip_application_winforms` database.
-    - [ ] Add column `json_shift_data` (JSON type).
-    - [ ] Add column `json_user_fullnames` (JSON type).
+    - [ ] Primary Key: `id` (INT, Auto-Increment).
+    - [ ] Add column `json_shift_data` (JSON type). Schema: `{"USERNAME": int_shift_number}` (e.g., `{"JKOLL": 1, "BSMITH": 2}`).
+    - [ ] Add column `json_user_fullnames` (JSON type). Schema: `{"USERNAME": "Full Name"}` (e.g., `{"JKOLL": "John Koll"}`).
 - [ ] **Backend Logic (User Shifts)**: Implement logic to calculate user shifts based on Infor Visual Transaction History (Last 50 transactions).
     - [ ] Rules: 1st (06:00-14:00), 2nd (14:00-22:00), 3rd (22:00-06:00), Weekend (Fri-Mon 06:00-18:00).
-- [ ] **Backend Logic (User Names)**: Implement logic to map Visual UserNames to Full Names using Visual database.
+- [ ] **Backend Logic (Shift Weighting)**: Implement "Fair Grading" logic.
+    - [ ] Calculate `ShiftVolumeFactor` = (Average Global Transactions / Average Shift Transactions).
+    - [ ] Apply factor to user scores to normalize performance across busy/quiet shifts.
+- [ ] **Backend Logic (User Names)**: Implement logic to map Visual UserNames to Full Names using Visual database (EMPLOYEE or USER_DEF tables).
 
 ### Phase 2: Technical Refactoring (High Stability Impact)
 *Refactoring existing controls to use new patterns. This reduces technical debt before adding new features.*
@@ -55,11 +59,21 @@ This document consolidates tasks from `refactor-error-handling.md`, `refactor-su
 - [ ] **Control_MaterialHandlerAnalytics.cs**:
     - [ ] Refactor to match Visual Inventory Audit User Analytics style.
     - [ ] Create new HTML template for graphs/scoring.
+        - [ ] **Include Grading Explanation**: Add section explaining "Fair Grading Policy" (Shift-weighted scoring).
+        - [ ] Graphs: 
+            - [ ] Bar chart (Points per User - Weighted).
+            - [ ] Pie chart (Transaction Type distribution: Issue, Receipt, Transfer, Adjust).
+            - [ ] Bar chart (Hot Parts: Top 10 moved parts).
+            - [ ] Bar chart (Location Heatmap: Top 10 locations visited).
+            - [ ] Bar chart (Shift Performance: Moves per shift).
     - [ ] Implement Scoring: 1pt (Add/Remove), 2pt (Transfer).
     - [ ] Remove tabs: Quality & Anomalies, User Detail, Glossary.
 - [ ] **Control_ReceivingAnalytics.cs**:
     - [ ] Ensure toggle buttons respect `Control_Theme` animation settings.
     - [ ] Fix Layout: Filters, PO State, Receiving Scope groupboxes should extend to bottom of Row 1.
+    - [ ] Add Analytics:
+        - [ ] Vendor Scorecard: Top 10 Vendors by Receipt Count (Source: `INVENTORY_TRANS` joined with `PURCHASE_ORDER`).
+        - [ ] Receipts by Hour: Heatmap of `TRANSACTION_DATE` time component (Source: `INVENTORY_TRANS`).
 
 ### Phase 5: Feature Updates - Search & Discovery
 *Updates to search tools and detailed views.*
@@ -67,11 +81,14 @@ This document consolidates tasks from `refactor-error-handling.md`, `refactor-su
 - [ ] **Control_AdvancedInventory.cs**: Add F4 buttons for Part, Operation, and Location fields.
 - [ ] **Control_DieToolDiscovery.cs (General)**: Update "Enter Part Number or Die Number" to accept both Part Numbers and FGTs.
 - [ ] **Control_DieToolDiscovery.cs (Coil/Flatstock)**:
-    - [ ] Implement logic to find Auto-issue Location ID from InforVisual CSVs.
+    - [ ] Implement logic to find Auto-issue Location ID from InforVisual CSVs (Target `PART_LOCATION` table, `AUTO_ISSUE_LOC` column).
     - [ ] Add "Where Used" button (Shows Work Orders, Parts, FGTs in DGV). Disable if MMC/MMF selected.
 - [ ] **Form_PODetails.cs**: Complete Refactor.
     - [ ] Remove DataGridView.
-    - [ ] Implement Layout: TextBoxes with Labels for columns.
+    - [ ] Implement Layout: 
+        - [ ] Top: Header Info (Vendor, PO Date, Status).
+        - [ ] Center: Line Details (Part ID, Qty, Unit Price, Due Date).
+        - [ ] Bottom: RichTextBox for Line Specs/Description.
     - [ ] Add Navigation: Next/Back buttons for PO Lines (Disable if single line).
     - [ ] Add RichTextBox: Display Line Specs from InforVisual CSVs.
 
