@@ -3,6 +3,7 @@ using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
+using System.Data;
 
 namespace MTM_WIP_Application_Winforms.Helpers
 {
@@ -707,6 +708,39 @@ namespace MTM_WIP_Application_Winforms.Helpers
             {
                 LoggingUtility.LogApplicationError(ex);
                 return Task.FromResult(new List<string>());
+            }
+        }
+
+        /// <summary>
+        /// Gets color codes from the database.
+        /// </summary>
+        /// <returns>List of color codes</returns>
+        public static async Task<List<string>> GetCachedColorsAsync()
+        {
+            try
+            {
+                var dao = new Data.Dao_ColorCode();
+                var result = await dao.GetAllAsync();
+                
+                if (result.IsSuccess && result.Data != null)
+                {
+                    var colors = new List<string>();
+                    foreach (DataRow row in result.Data.Rows)
+                    {
+                        if (row["ColorCode"] != DBNull.Value)
+                        {
+                            colors.Add(row["ColorCode"].ToString() ?? string.Empty);
+                        }
+                    }
+                    return colors;
+                }
+                
+                return new List<string>();
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+                return new List<string>();
             }
         }
 

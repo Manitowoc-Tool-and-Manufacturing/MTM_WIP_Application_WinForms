@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
 using MTM_WIP_Application_Winforms.Controls.Shared;
+using MTM_WIP_Application_Winforms.Models.Enums;
 
 namespace MTM_WIP_Application_Winforms.Controls.MainForm
 {
@@ -233,7 +234,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_TransferTab_TableLayout_Inputs.SetColumnSpan(Control_TransferTab_TextBox_Part, 2);
             Control_TransferTab_TextBox_Part.Dock = DockStyle.Fill;
             Control_TransferTab_TextBox_Part.LabelText = "Part Number";
-            Control_TransferTab_TextBox_Part.LabelVisible = "False";
+            Control_TransferTab_TextBox_Part.LabelVisibility = Enum_LabelVisibility.Hidden;
             Control_TransferTab_TextBox_Part.Location = new Point(3, 3);
             Control_TransferTab_TextBox_Part.MaxLength = 100;
             Control_TransferTab_TextBox_Part.MinimumSize = new Size(0, 23);
@@ -250,7 +251,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_TransferTab_TableLayout_Inputs.SetColumnSpan(Control_TransferTab_TextBox_Operation, 2);
             Control_TransferTab_TextBox_Operation.Dock = DockStyle.Fill;
             Control_TransferTab_TextBox_Operation.LabelText = "Operation";
-            Control_TransferTab_TextBox_Operation.LabelVisible = "False";
+            Control_TransferTab_TextBox_Operation.LabelVisibility = Enum_LabelVisibility.Hidden;
             Control_TransferTab_TextBox_Operation.Location = new Point(3, 32);
             Control_TransferTab_TextBox_Operation.MaxLength = 100;
             Control_TransferTab_TextBox_Operation.MinimumSize = new Size(0, 23);
@@ -268,7 +269,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_TransferTab_TextBox_ToLocation.Dock = DockStyle.Fill;
             Control_TransferTab_TextBox_ToLocation.Enabled = false;
             Control_TransferTab_TextBox_ToLocation.LabelText = "To Location";
-            Control_TransferTab_TextBox_ToLocation.LabelVisible = "False";
+            Control_TransferTab_TextBox_ToLocation.LabelVisibility = Enum_LabelVisibility.Hidden;
             Control_TransferTab_TextBox_ToLocation.Location = new Point(3, 61);
             Control_TransferTab_TextBox_ToLocation.MaxLength = 100;
             Control_TransferTab_TextBox_ToLocation.MinimumSize = new Size(0, 23);

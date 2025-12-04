@@ -4,7 +4,9 @@ using System.Runtime.InteropServices;
 using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Models;
+using MTM_WIP_Application_Winforms.Models.Enums;
 using MTM_WIP_Application_Winforms.Services;
+using MTM_WIP_Application_Winforms.Helpers;
 
 namespace MTM_WIP_Application_Winforms.Controls.Shared
 {
@@ -37,6 +39,28 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
         #endregion
 
         #region Properties
+
+        private Enum_SuggestionDataSource _suggestionDataSource = Enum_SuggestionDataSource.None;
+
+        /// <summary>
+        /// Gets or sets the data source type for suggestions.
+        /// Automatically configures the DataProvider based on the selected type.
+        /// </summary>
+        [Category("Suggestion Data")]
+        [Description("The type of dataset to use for suggestions")]
+        [DefaultValue(Enum_SuggestionDataSource.None)]
+        public Enum_SuggestionDataSource SuggestionDataSource
+        {
+            get => _suggestionDataSource;
+            set
+            {
+                _suggestionDataSource = value;
+                if (!DesignMode)
+                {
+                    ConfigureDataSource();
+                }
+            }
+        }
 
         /// <summary>
         /// Gets or sets the async data provider that returns suggestion strings.
@@ -140,6 +164,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
 
         /// <inheritdoc />
         [AllowNull]
+        [Category("Appearance")]
         public override Font Font
         {
             get => SuggestionTextBox_TextBox.Font;
@@ -147,6 +172,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
         }
 
         /// <inheritdoc />
+        [Category("Appearance")]
         public override Color BackColor
         {
             get => SuggestionTextBox_TextBox.BackColor;
@@ -154,6 +180,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
         }
 
         /// <inheritdoc />
+        [Category("Appearance")]
         public override Color ForeColor
         {
             get => SuggestionTextBox_TextBox.ForeColor;
@@ -258,6 +285,44 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
         #endregion
 
         #region Methods
+
+        private void ConfigureDataSource()
+        {
+            switch (_suggestionDataSource)
+            {
+                case Enum_SuggestionDataSource.MTM_PartNumber:
+                    Helper_SuggestionTextBox.ConfigureForPartNumbers(this, Helper_SuggestionTextBox.GetCachedPartNumbersAsync, enableF4: true);
+                    break;
+                case Enum_SuggestionDataSource.MTM_Operation:
+                    Helper_SuggestionTextBox.ConfigureForOperations(this, Helper_SuggestionTextBox.GetCachedOperationsAsync, enableF4: true);
+                    break;
+                case Enum_SuggestionDataSource.MTM_Location:
+                    Helper_SuggestionTextBox.ConfigureForLocations(this, Helper_SuggestionTextBox.GetCachedLocationsAsync, enableF4: true);
+                    break;
+                case Enum_SuggestionDataSource.MTM_Color:
+                    Helper_SuggestionTextBox.ConfigureForColorCodes(this, Helper_SuggestionTextBox.GetCachedColorsAsync, enableF4: true);
+                    break;
+                case Enum_SuggestionDataSource.MTM_User:
+                    Helper_SuggestionTextBox.ConfigureForUsers(this, Helper_SuggestionTextBox.GetCachedUsersAsync, enableF4: true);
+                    break;
+                // InforVisual types - Placeholder for now as logic is not implemented
+                case Enum_SuggestionDataSource.Infor_PartNumber:
+                case Enum_SuggestionDataSource.Infor_User:
+                case Enum_SuggestionDataSource.Infor_Location:
+                case Enum_SuggestionDataSource.Infor_Operation:
+                case Enum_SuggestionDataSource.Infor_PONumber:
+                case Enum_SuggestionDataSource.Infor_CONumber:
+                case Enum_SuggestionDataSource.Infor_WONumber:
+                case Enum_SuggestionDataSource.Infor_FGTNumber:
+                case Enum_SuggestionDataSource.Infor_MMCNumber:
+                case Enum_SuggestionDataSource.Infor_MMFNumber:
+                    // TODO: Implement InforVisual data providers
+                    break;
+                case Enum_SuggestionDataSource.None:
+                default:
+                    break;
+            }
+        }
 
             private void WireInnerTextBoxEvents()
             {

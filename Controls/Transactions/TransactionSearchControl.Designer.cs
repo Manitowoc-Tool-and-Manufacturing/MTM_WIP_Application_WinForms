@@ -1,6 +1,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using MTM_WIP_Application_Winforms.Controls.Shared;
+using MTM_WIP_Application_Winforms.Models.Enums;
 
 namespace MTM_WIP_Application_Winforms.Controls.Transactions
 {
@@ -523,7 +524,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionSearchControl_Suggestion_Operation.Dock = DockStyle.Fill;
             TransactionSearchControl_Suggestion_Operation.Font = new Font("Segoe UI Emoji", 9F);
             TransactionSearchControl_Suggestion_Operation.LabelText = "⚙️ Operation";
-            TransactionSearchControl_Suggestion_Operation.LabelVisible = "False";
+            TransactionSearchControl_Suggestion_Operation.LabelVisibility = Enum_LabelVisibility.Hidden;
             TransactionSearchControl_Suggestion_Operation.Location = new Point(5, 73);
             TransactionSearchControl_Suggestion_Operation.Margin = new Padding(4);
             TransactionSearchControl_Suggestion_Operation.MaxLength = 130;
@@ -542,7 +543,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionSearchControl_Suggestion_User.Dock = DockStyle.Fill;
             TransactionSearchControl_Suggestion_User.Font = new Font("Segoe UI Emoji", 9F);
             TransactionSearchControl_Suggestion_User.LabelText = "👤 User";
-            TransactionSearchControl_Suggestion_User.LabelVisible = "False";
+            TransactionSearchControl_Suggestion_User.LabelVisibility = Enum_LabelVisibility.Hidden;
             TransactionSearchControl_Suggestion_User.Location = new Point(5, 5);
             TransactionSearchControl_Suggestion_User.Margin = new Padding(4);
             TransactionSearchControl_Suggestion_User.MaxLength = 130;
@@ -561,7 +562,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionSearchControl_Suggestion_FromLocation.Dock = DockStyle.Fill;
             TransactionSearchControl_Suggestion_FromLocation.Font = new Font("Segoe UI Emoji", 9F);
             TransactionSearchControl_Suggestion_FromLocation.LabelText = "📍 From Location";
-            TransactionSearchControl_Suggestion_FromLocation.LabelVisible = "False";
+            TransactionSearchControl_Suggestion_FromLocation.LabelVisibility = Enum_LabelVisibility.Hidden;
             TransactionSearchControl_Suggestion_FromLocation.Location = new Point(334, 5);
             TransactionSearchControl_Suggestion_FromLocation.Margin = new Padding(4);
             TransactionSearchControl_Suggestion_FromLocation.MaxLength = 130;
@@ -581,7 +582,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionSearchControl_Suggestion_Notes.EnableSuggestions = false;
             TransactionSearchControl_Suggestion_Notes.Font = new Font("Segoe UI Emoji", 9F);
             TransactionSearchControl_Suggestion_Notes.LabelText = "📝 Notes Keyword";
-            TransactionSearchControl_Suggestion_Notes.LabelVisible = "False";
+            TransactionSearchControl_Suggestion_Notes.LabelVisibility = Enum_LabelVisibility.Hidden;
             TransactionSearchControl_Suggestion_Notes.Location = new Point(334, 73);
             TransactionSearchControl_Suggestion_Notes.Margin = new Padding(4);
             TransactionSearchControl_Suggestion_Notes.MaxLength = 130;
@@ -602,7 +603,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionSearchControl_Suggestion_PartNumber.Dock = DockStyle.Fill;
             TransactionSearchControl_Suggestion_PartNumber.Font = new Font("Segoe UI Emoji", 9F);
             TransactionSearchControl_Suggestion_PartNumber.LabelText = "🔍 Part Number";
-            TransactionSearchControl_Suggestion_PartNumber.LabelVisible = "False";
+            TransactionSearchControl_Suggestion_PartNumber.LabelVisibility = Enum_LabelVisibility.Hidden;
             TransactionSearchControl_Suggestion_PartNumber.Location = new Point(5, 39);
             TransactionSearchControl_Suggestion_PartNumber.Margin = new Padding(4);
             TransactionSearchControl_Suggestion_PartNumber.MaxLength = 130;
@@ -621,7 +622,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionSearchControl_Suggestion_ToLocation.Dock = DockStyle.Fill;
             TransactionSearchControl_Suggestion_ToLocation.Font = new Font("Segoe UI Emoji", 9F);
             TransactionSearchControl_Suggestion_ToLocation.LabelText = "📍 To Location";
-            TransactionSearchControl_Suggestion_ToLocation.LabelVisible = "False";
+            TransactionSearchControl_Suggestion_ToLocation.LabelVisibility = Enum_LabelVisibility.Hidden;
             TransactionSearchControl_Suggestion_ToLocation.Location = new Point(334, 39);
             TransactionSearchControl_Suggestion_ToLocation.Margin = new Padding(4);
             TransactionSearchControl_Suggestion_ToLocation.MaxLength = 130;

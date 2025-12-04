@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
+using MTM_WIP_Application_Winforms.Models.Enums;
 
 namespace MTM_WIP_Application_Winforms.Controls.MainForm
 {
@@ -365,7 +366,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             AdvancedInventory_Single_TextBox_Part.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             AdvancedInventory_Single_TextBox_Part.Dock = DockStyle.Fill;
             AdvancedInventory_Single_TextBox_Part.LabelText = "Part";
-            AdvancedInventory_Single_TextBox_Part.LabelVisible = "False";
+            AdvancedInventory_Single_TextBox_Part.LabelVisibility = Enum_LabelVisibility.Hidden;
             AdvancedInventory_Single_TextBox_Part.Location = new Point(3, 3);
             AdvancedInventory_Single_TextBox_Part.MaxLength = 75;
             AdvancedInventory_Single_TextBox_Part.MinimumSize = new Size(175, 0);
@@ -381,7 +382,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             AdvancedInventory_Single_TextBox_Op.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             AdvancedInventory_Single_TextBox_Op.Dock = DockStyle.Fill;
             AdvancedInventory_Single_TextBox_Op.LabelText = "Op";
-            AdvancedInventory_Single_TextBox_Op.LabelVisible = "False";
+            AdvancedInventory_Single_TextBox_Op.LabelVisibility = Enum_LabelVisibility.Hidden;
             AdvancedInventory_Single_TextBox_Op.Location = new Point(3, 32);
             AdvancedInventory_Single_TextBox_Op.MaxLength = 75;
             AdvancedInventory_Single_TextBox_Op.MinimumSize = new Size(175, 0);
@@ -398,7 +399,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             AdvancedInventory_Single_TextBox_Qty.Dock = DockStyle.Fill;
             AdvancedInventory_Single_TextBox_Qty.EnableSuggestions = false;
             AdvancedInventory_Single_TextBox_Qty.LabelText = "Quantity";
-            AdvancedInventory_Single_TextBox_Qty.LabelVisible = "False";
+            AdvancedInventory_Single_TextBox_Qty.LabelVisibility = Enum_LabelVisibility.Hidden;
             AdvancedInventory_Single_TextBox_Qty.Location = new Point(3, 61);
             AdvancedInventory_Single_TextBox_Qty.MaxLength = 75;
             AdvancedInventory_Single_TextBox_Qty.MinimumSize = new Size(175, 0);
@@ -416,7 +417,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             AdvancedInventory_Single_TextBox_Loc.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             AdvancedInventory_Single_TextBox_Loc.Dock = DockStyle.Fill;
             AdvancedInventory_Single_TextBox_Loc.LabelText = "Location";
-            AdvancedInventory_Single_TextBox_Loc.LabelVisible = "False";
+            AdvancedInventory_Single_TextBox_Loc.LabelVisibility = Enum_LabelVisibility.Hidden;
             AdvancedInventory_Single_TextBox_Loc.Location = new Point(3, 90);
             AdvancedInventory_Single_TextBox_Loc.MaxLength = 75;
             AdvancedInventory_Single_TextBox_Loc.MinimumSize = new Size(175, 0);
@@ -433,7 +434,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             AdvancedInventory_Single_TextBox_Count.Dock = DockStyle.Fill;
             AdvancedInventory_Single_TextBox_Count.EnableSuggestions = false;
             AdvancedInventory_Single_TextBox_Count.LabelText = "How Many";
-            AdvancedInventory_Single_TextBox_Count.LabelVisible = "False";
+            AdvancedInventory_Single_TextBox_Count.LabelVisibility = Enum_LabelVisibility.Hidden;
             AdvancedInventory_Single_TextBox_Count.Location = new Point(3, 119);
             AdvancedInventory_Single_TextBox_Count.MaxLength = 75;
             AdvancedInventory_Single_TextBox_Count.MinimumSize = new Size(175, 0);
@@ -711,7 +712,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             AdvancedInventory_MultiLoc_TextBox_Part.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             AdvancedInventory_MultiLoc_TextBox_Part.Dock = DockStyle.Fill;
             AdvancedInventory_MultiLoc_TextBox_Part.LabelText = "Part";
-            AdvancedInventory_MultiLoc_TextBox_Part.LabelVisible = "False";
+            AdvancedInventory_MultiLoc_TextBox_Part.LabelVisibility = Enum_LabelVisibility.Hidden;
             AdvancedInventory_MultiLoc_TextBox_Part.Location = new Point(3, 3);
             AdvancedInventory_MultiLoc_TextBox_Part.MaxLength = 75;
             AdvancedInventory_MultiLoc_TextBox_Part.MinimumSize = new Size(175, 0);
@@ -728,7 +729,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             AdvancedInventory_MultiLoc_TextBox_Op.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             AdvancedInventory_MultiLoc_TextBox_Op.Dock = DockStyle.Fill;
             AdvancedInventory_MultiLoc_TextBox_Op.LabelText = "Op";
-            AdvancedInventory_MultiLoc_TextBox_Op.LabelVisible = "False";
+            AdvancedInventory_MultiLoc_TextBox_Op.LabelVisibility = Enum_LabelVisibility.Hidden;
             AdvancedInventory_MultiLoc_TextBox_Op.Location = new Point(3, 32);
             AdvancedInventory_MultiLoc_TextBox_Op.MaxLength = 75;
             AdvancedInventory_MultiLoc_TextBox_Op.MinimumSize = new Size(175, 0);
@@ -746,7 +747,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             AdvancedInventory_MultiLoc_TextBox_Qty.Dock = DockStyle.Fill;
             AdvancedInventory_MultiLoc_TextBox_Qty.EnableSuggestions = false;
             AdvancedInventory_MultiLoc_TextBox_Qty.LabelText = "Quantity";
-            AdvancedInventory_MultiLoc_TextBox_Qty.LabelVisible = "False";
+            AdvancedInventory_MultiLoc_TextBox_Qty.LabelVisibility = Enum_LabelVisibility.Hidden;
             AdvancedInventory_MultiLoc_TextBox_Qty.Location = new Point(3, 61);
             AdvancedInventory_MultiLoc_TextBox_Qty.MaxLength = 75;
             AdvancedInventory_MultiLoc_TextBox_Qty.MinimumSize = new Size(175, 0);
@@ -764,7 +765,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             AdvancedInventory_MultiLoc_TextBox_Loc.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             AdvancedInventory_MultiLoc_TextBox_Loc.Dock = DockStyle.Fill;
             AdvancedInventory_MultiLoc_TextBox_Loc.LabelText = "Location";
-            AdvancedInventory_MultiLoc_TextBox_Loc.LabelVisible = "False";
+            AdvancedInventory_MultiLoc_TextBox_Loc.LabelVisibility = Enum_LabelVisibility.Hidden;
             AdvancedInventory_MultiLoc_TextBox_Loc.Location = new Point(3, 90);
             AdvancedInventory_MultiLoc_TextBox_Loc.MaxLength = 75;
             AdvancedInventory_MultiLoc_TextBox_Loc.MinimumSize = new Size(175, 0);

@@ -1,3 +1,5 @@
+using MTM_WIP_Application_Winforms.Models.Enums;
+
 namespace MTM_WIP_Application_Winforms.Controls.Visual
 {
     partial class Control_DieToolDiscovery
@@ -127,7 +129,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             txtSearch.Dock = DockStyle.Fill;
             txtSearch.EnableSuggestions = true;
             txtSearch.LabelText = "Search Term";
-            txtSearch.LabelVisible = "False";
+            txtSearch.LabelVisibility = Enum_LabelVisibility.Hidden;
             txtSearch.Location = new Point(3, 3);
             txtSearch.Margin = new Padding(3, 3, 3, 3);
             txtSearch.Name = "txtSearch";
@@ -207,7 +209,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             txtCoilSearch.AutoSize = true;
             txtCoilSearch.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             txtCoilSearch.Dock = DockStyle.Fill;
-            txtCoilSearch.LabelVisible = "False";
+            txtCoilSearch.LabelVisibility = Enum_LabelVisibility.Hidden;
             txtCoilSearch.Location = new Point(6, 6);
             txtCoilSearch.Margin = new Padding(6);
             txtCoilSearch.MaxLength = 130;
@@ -265,7 +267,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             txtThickness.Enabled = false;
             txtThickness.EnableSuggestions = false;
             txtThickness.LabelText = "Thickness";
-            txtThickness.LabelVisible = "True";
+            txtThickness.LabelVisibility = Enum_LabelVisibility.Visible;
             txtThickness.Location = new Point(6, 6);
             txtThickness.Margin = new Padding(6);
             txtThickness.MaxLength = 130;
@@ -284,7 +286,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             txtWidth.Enabled = false;
             txtWidth.EnableSuggestions = false;
             txtWidth.LabelText = "Width";
-            txtWidth.LabelVisible = "True";
+            txtWidth.LabelVisibility = Enum_LabelVisibility.Visible;
             txtWidth.Location = new Point(389, 6);
             txtWidth.Margin = new Padding(6);
             txtWidth.MaxLength = 130;
@@ -303,7 +305,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             txtLength.Enabled = false;
             txtLength.EnableSuggestions = false;
             txtLength.LabelText = "Length";
-            txtLength.LabelVisible = "True";
+            txtLength.LabelVisibility = Enum_LabelVisibility.Visible;
             txtLength.Location = new Point(6, 41);
             txtLength.Margin = new Padding(6);
             txtLength.MaxLength = 130;
@@ -322,7 +324,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             txtGauge.Enabled = false;
             txtGauge.EnableSuggestions = false;
             txtGauge.LabelText = "Ga.";
-            txtGauge.LabelVisible = "True";
+            txtGauge.LabelVisibility = Enum_LabelVisibility.Visible;
             txtGauge.Location = new Point(389, 41);
             txtGauge.Margin = new Padding(6);
             txtGauge.MaxLength = 130;
@@ -341,7 +343,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             txtWhereUsed.Enabled = false;
             txtWhereUsed.EnableSuggestions = false;
             txtWhereUsed.LabelText = "Where Used";
-            txtWhereUsed.LabelVisible = "True";
+            txtWhereUsed.LabelVisibility = Enum_LabelVisibility.Visible;
             txtWhereUsed.Location = new Point(6, 76);
             txtWhereUsed.Margin = new Padding(6);
             txtWhereUsed.MaxLength = 130;
@@ -360,7 +362,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             txtProgression.Enabled = false;
             txtProgression.EnableSuggestions = false;
             txtProgression.LabelText = "Progression";
-            txtProgression.LabelVisible = "True";
+            txtProgression.LabelVisibility = Enum_LabelVisibility.Visible;
             txtProgression.Location = new Point(389, 76);
             txtProgression.Margin = new Padding(6);
             txtProgression.MaxLength = 130;
@@ -379,7 +381,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             txtCustomer.Enabled = false;
             txtCustomer.EnableSuggestions = false;
             txtCustomer.LabelText = "Customer";
-            txtCustomer.LabelVisible = "True";
+            txtCustomer.LabelVisibility = Enum_LabelVisibility.Visible;
             txtCustomer.Location = new Point(6, 111);
             txtCustomer.Margin = new Padding(6);
             txtCustomer.MaxLength = 130;
@@ -398,7 +400,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             txtScrapLocation.Enabled = false;
             txtScrapLocation.EnableSuggestions = false;
             txtScrapLocation.LabelText = "Scrap Location";
-            txtScrapLocation.LabelVisible = "True";
+            txtScrapLocation.LabelVisibility = Enum_LabelVisibility.Visible;
             txtScrapLocation.Location = new Point(389, 111);
             txtScrapLocation.Margin = new Padding(6);
             txtScrapLocation.MaxLength = 130;
@@ -417,7 +419,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             txtGenericType.Enabled = false;
             txtGenericType.EnableSuggestions = false;
             txtGenericType.LabelText = "Generic Type";
-            txtGenericType.LabelVisible = "True";
+            txtGenericType.LabelVisibility = Enum_LabelVisibility.Visible;
             txtGenericType.Location = new Point(6, 146);
             txtGenericType.Margin = new Padding(6);
             txtGenericType.MaxLength = 130;
@@ -436,7 +438,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             txtDetailedType.Enabled = false;
             txtDetailedType.EnableSuggestions = false;
             txtDetailedType.LabelText = "Detailed Type";
-            txtDetailedType.LabelVisible = "True";
+            txtDetailedType.LabelVisibility = Enum_LabelVisibility.Visible;
             txtDetailedType.Location = new Point(389, 146);
             txtDetailedType.Margin = new Padding(6);
             txtDetailedType.MaxLength = 130;

@@ -1,4 +1,5 @@
 ﻿using MTM_WIP_Application_Winforms.Forms.Shared;
+using MTM_WIP_Application_Winforms.Models.Enums;
 
 namespace MTM_WIP_Application_Winforms.Controls.Visual
 {
@@ -445,7 +446,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PartNumber.AutoSize = true;
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PartNumber.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PartNumber.Dock = DockStyle.Fill;
-            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PartNumber.LabelVisible = "False";
+            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PartNumber.LabelVisibility = Enum_LabelVisibility.Hidden;
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PartNumber.Location = new Point(3, 3);
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PartNumber.MaximumSize = new Size(0, 23);
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PartNumber.MaxLength = 100;
@@ -461,7 +462,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Supplier.AutoSize = true;
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Supplier.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Supplier.Dock = DockStyle.Fill;
-            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Supplier.LabelVisible = "False";
+            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Supplier.LabelVisibility = Enum_LabelVisibility.Hidden;
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Supplier.Location = new Point(3, 60);
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Supplier.MaximumSize = new Size(0, 23);
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Supplier.MaxLength = 100;
@@ -477,7 +478,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Carrier.AutoSize = true;
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Carrier.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Carrier.Dock = DockStyle.Fill;
-            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Carrier.LabelVisible = "False";
+            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Carrier.LabelVisibility = Enum_LabelVisibility.Hidden;
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Carrier.Location = new Point(3, 88);
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Carrier.MaximumSize = new Size(0, 23);
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Carrier.MaxLength = 100;
@@ -493,7 +494,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PONumber.AutoSize = true;
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PONumber.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PONumber.Dock = DockStyle.Fill;
-            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PONumber.LabelVisible = "False";
+            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PONumber.LabelVisibility = Enum_LabelVisibility.Hidden;
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PONumber.Location = new Point(3, 32);
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PONumber.MaximumSize = new Size(0, 23);
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PONumber.MaxLength = 100;
@@ -509,7 +510,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_DateType.AutoSize = true;
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_DateType.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_DateType.Dock = DockStyle.Fill;
-            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_DateType.LabelVisible = "False";
+            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_DateType.LabelVisibility = Enum_LabelVisibility.Hidden;
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_DateType.Location = new Point(3, 116);
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_DateType.MaximumSize = new Size(0, 23);
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_DateType.MaxLength = 100;

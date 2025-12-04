@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
 using MTM_WIP_Application_Winforms.Controls.Shared;
+using MTM_WIP_Application_Winforms.Models.Enums;
 
 namespace MTM_WIP_Application_Winforms.Controls.MainForm
 {
@@ -212,7 +213,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_RemoveTab_TextBox_Part.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_RemoveTab_TextBox_Part.Dock = DockStyle.Fill;
             Control_RemoveTab_TextBox_Part.LabelText = "Part Number";
-            Control_RemoveTab_TextBox_Part.LabelVisible = "False";
+            Control_RemoveTab_TextBox_Part.LabelVisibility = Enum_LabelVisibility.Hidden;
             Control_RemoveTab_TextBox_Part.Location = new Point(3, 3);
             Control_RemoveTab_TextBox_Part.MaxLength = 150;
             Control_RemoveTab_TextBox_Part.MinimumSize = new Size(0, 23);
@@ -228,7 +229,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_RemoveTab_TextBox_Operation.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_RemoveTab_TextBox_Operation.Dock = DockStyle.Fill;
             Control_RemoveTab_TextBox_Operation.LabelText = "Operation";
-            Control_RemoveTab_TextBox_Operation.LabelVisible = "False";
+            Control_RemoveTab_TextBox_Operation.LabelVisibility = Enum_LabelVisibility.Hidden;
             Control_RemoveTab_TextBox_Operation.Location = new Point(382, 3);
             Control_RemoveTab_TextBox_Operation.MaxLength = 130;
             Control_RemoveTab_TextBox_Operation.MinimumSize = new Size(0, 23);

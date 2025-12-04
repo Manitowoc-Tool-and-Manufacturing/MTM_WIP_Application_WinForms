@@ -1,6 +1,7 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
 using MTM_WIP_Application_Winforms.Controls.Shared;
+using MTM_WIP_Application_Winforms.Models.Enums;
 
 namespace MTM_WIP_Application_Winforms.Controls.MainForm
 {
@@ -775,7 +776,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_AdvancedRemove_TableLayout_Inputs.SetColumnSpan(Control_AdvancedRemove_SuggestionBox_User, 2);
             Control_AdvancedRemove_SuggestionBox_User.Dock = DockStyle.Fill;
             Control_AdvancedRemove_SuggestionBox_User.LabelText = "User";
-            Control_AdvancedRemove_SuggestionBox_User.LabelVisible = "False";
+            Control_AdvancedRemove_SuggestionBox_User.LabelVisibility = Enum_LabelVisibility.Hidden;
             Control_AdvancedRemove_SuggestionBox_User.Location = new Point(3, 284);
             Control_AdvancedRemove_SuggestionBox_User.MaxLength = 130;
             Control_AdvancedRemove_SuggestionBox_User.MinimumSize = new Size(0, 23);

@@ -2,6 +2,7 @@ using System.ComponentModel;
 using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Models;
+using MTM_WIP_Application_Winforms.Models.Enums;
 using MTM_WIP_Application_Winforms.Services;
 
 namespace MTM_WIP_Application_Winforms.Controls.Shared
@@ -26,6 +27,28 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
 
         #region Properties
 
+        private Enum_SuggestionDataSource _suggestionDataSource = Enum_SuggestionDataSource.None;
+
+        /// <summary>
+        /// Gets or sets the data source type for suggestions.
+        /// Automatically configures the DataProvider based on the selected type.
+        /// </summary>
+        [Category("Suggestion Data")]
+        [Description("The type of dataset to use for suggestions")]
+        [DefaultValue(Enum_SuggestionDataSource.None)]
+        public Enum_SuggestionDataSource SuggestionDataSource
+        {
+            get => _suggestionDataSource;
+            set
+            {
+                _suggestionDataSource = value;
+                if (!DesignMode)
+                {
+                    ConfigureDataSource();
+                }
+            }
+        }
+
         /// <summary>
         /// Gets or sets the label text (automatically appends ": " suffix).
         /// </summary>
@@ -38,21 +61,20 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
             set => SuggestionTextBoxWithLabel_Label_Main.Text = string.IsNullOrWhiteSpace(value) ? string.Empty : $"{value}: ";
         }
 
-        public string LabelVisible
+        [Category("Appearance")]
+        [Description("Shows or hides the label")]
+        [DefaultValue(Enum_LabelVisibility.Visible)]
+        public Enum_LabelVisibility LabelVisibility
         {
-            get => SuggestionTextBoxWithLabel_Label_Main.Visible.ToString();
-            set
-            {
-                if (bool.TryParse(value, out bool isVisible))
-                {
-                    SuggestionTextBoxWithLabel_Label_Main.Visible = isVisible;
-                }
-            }
+            get => SuggestionTextBoxWithLabel_Label_Main.Visible ? Enum_LabelVisibility.Visible : Enum_LabelVisibility.Hidden;
+            set => SuggestionTextBoxWithLabel_Label_Main.Visible = value == Enum_LabelVisibility.Visible;
         }
 
         /// <summary>
-        /// Gets or sets the minimum number of characters the user can type or paste into the text box control.
+        /// Gets or sets the minimum width of the label.
         /// </summary>
+        [Category("Layout")]
+        [Description("Minimum width of the label")]
         public int MinLength
         {
             get => SuggestionTextBoxWithLabel_Label_Main.MinimumSize.Width;
@@ -60,8 +82,10 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
         }
 
         /// <summary>
-        /// Gets or sets the maximum number of characters the user can type or paste into the text box control.
+        /// Gets or sets the maximum width of the label.
         /// </summary>
+        [Category("Layout")]
+        [Description("Maximum width of the label")]
         public int MaxLength
         {
             get => SuggestionTextBoxWithLabel_Label_Main.MaximumSize.Width;
@@ -248,6 +272,44 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
         #endregion
 
         #region Methods
+
+        private void ConfigureDataSource()
+        {
+            switch (_suggestionDataSource)
+            {
+                case Enum_SuggestionDataSource.MTM_PartNumber:
+                    Helper_SuggestionTextBox.ConfigureForPartNumbers(this, Helper_SuggestionTextBox.GetCachedPartNumbersAsync);
+                    break;
+                case Enum_SuggestionDataSource.MTM_Operation:
+                    Helper_SuggestionTextBox.ConfigureForOperations(this, Helper_SuggestionTextBox.GetCachedOperationsAsync);
+                    break;
+                case Enum_SuggestionDataSource.MTM_Location:
+                    Helper_SuggestionTextBox.ConfigureForLocations(this, Helper_SuggestionTextBox.GetCachedLocationsAsync);
+                    break;
+                case Enum_SuggestionDataSource.MTM_Color:
+                    Helper_SuggestionTextBox.ConfigureForColorCodes(this, Helper_SuggestionTextBox.GetCachedColorsAsync);
+                    break;
+                case Enum_SuggestionDataSource.MTM_User:
+                    Helper_SuggestionTextBox.ConfigureForUsers(this, Helper_SuggestionTextBox.GetCachedUsersAsync);
+                    break;
+                // InforVisual types - Placeholder for now as logic is not implemented
+                case Enum_SuggestionDataSource.Infor_PartNumber:
+                case Enum_SuggestionDataSource.Infor_User:
+                case Enum_SuggestionDataSource.Infor_Location:
+                case Enum_SuggestionDataSource.Infor_Operation:
+                case Enum_SuggestionDataSource.Infor_PONumber:
+                case Enum_SuggestionDataSource.Infor_CONumber:
+                case Enum_SuggestionDataSource.Infor_WONumber:
+                case Enum_SuggestionDataSource.Infor_FGTNumber:
+                case Enum_SuggestionDataSource.Infor_MMCNumber:
+                case Enum_SuggestionDataSource.Infor_MMFNumber:
+                    // TODO: Implement InforVisual data providers
+                    break;
+                case Enum_SuggestionDataSource.None:
+                default:
+                    break;
+            }
+        }
 
         /// <summary>
         /// Manually triggers suggestion display for current text.

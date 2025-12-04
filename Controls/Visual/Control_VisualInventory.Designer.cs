@@ -1,3 +1,5 @@
+using MTM_WIP_Application_Winforms.Models.Enums;
+
 namespace MTM_WIP_Application_Winforms.Controls.Visual
 {
     partial class Control_VisualInventory
@@ -106,7 +108,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse.Dock = DockStyle.Fill;
             Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse.LabelText = "Warehouse";
-            Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse.LabelVisible = "False";
+            Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse.LabelVisibility = Enum_LabelVisibility.Hidden;
             Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse.Location = new Point(3, 61);
             Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse.MaxLength = 90;
             Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse.MinimumSize = new Size(0, 23);
@@ -125,7 +127,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber.Dock = DockStyle.Fill;
             Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber.LabelText = "Part Number";
-            Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber.LabelVisible = "False";
+            Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber.LabelVisibility = Enum_LabelVisibility.Hidden;
             Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber.Location = new Point(3, 3);
             Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber.MaxLength = 90;
             Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber.MinimumSize = new Size(0, 23);
@@ -143,7 +145,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_VisualInventory_SuggestionTextBoxWithLabel_Location.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_VisualInventory_SuggestionTextBoxWithLabel_Location.Dock = DockStyle.Fill;
             Control_VisualInventory_SuggestionTextBoxWithLabel_Location.LabelText = "Location";
-            Control_VisualInventory_SuggestionTextBoxWithLabel_Location.LabelVisible = "False";
+            Control_VisualInventory_SuggestionTextBoxWithLabel_Location.LabelVisibility = Enum_LabelVisibility.Hidden;
             Control_VisualInventory_SuggestionTextBoxWithLabel_Location.Location = new Point(3, 32);
             Control_VisualInventory_SuggestionTextBoxWithLabel_Location.MaxLength = 90;
             Control_VisualInventory_SuggestionTextBoxWithLabel_Location.MinimumSize = new Size(0, 23);

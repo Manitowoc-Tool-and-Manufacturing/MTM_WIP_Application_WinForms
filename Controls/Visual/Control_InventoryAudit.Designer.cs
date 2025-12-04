@@ -1,4 +1,6 @@
-﻿namespace MTM_WIP_Application_Winforms.Controls.Visual
+﻿using MTM_WIP_Application_Winforms.Models.Enums;
+
+namespace MTM_WIP_Application_Winforms.Controls.Visual
 {
     partial class Control_InventoryAudit
     {
@@ -138,7 +140,7 @@
             _txtSearchBy.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             _txtSearchBy.Dock = DockStyle.Fill;
             _txtSearchBy.LabelText = "Search By";
-            _txtSearchBy.LabelVisible = "False";
+            _txtSearchBy.LabelVisibility = Enum_LabelVisibility.Hidden;
             _txtSearchBy.Location = new Point(13, 13);
             _txtSearchBy.MaxLength = 130;
             _txtSearchBy.MinimumSize = new Size(0, 23);
@@ -282,7 +284,7 @@
             _txtLifecyclePart.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             _txtLifecyclePart.Dock = DockStyle.Fill;
             _txtLifecyclePart.LabelText = "Enter Part ID";
-            _txtLifecyclePart.LabelVisible = "False";
+            _txtLifecyclePart.LabelVisibility = Enum_LabelVisibility.Hidden;
             _txtLifecyclePart.Location = new Point(13, 42);
             _txtLifecyclePart.MaxLength = 130;
             _txtLifecyclePart.MinimumSize = new Size(0, 23);

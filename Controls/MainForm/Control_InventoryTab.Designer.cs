@@ -3,6 +3,7 @@ using System.Windows.Forms;
 
 using MTM_WIP_Application_Winforms.Controls.Shared;
 using MTM_WIP_Application_Winforms.Forms.Shared;
+using MTM_WIP_Application_Winforms.Models.Enums;
 
 namespace MTM_WIP_Application_Winforms.Controls.MainForm
 {
@@ -193,7 +194,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_InventoryTab_SuggestionBox_Location.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_InventoryTab_SuggestionBox_Location.Dock = DockStyle.Fill;
             Control_InventoryTab_SuggestionBox_Location.LabelText = "Location";
-            Control_InventoryTab_SuggestionBox_Location.LabelVisible = "False";
+            Control_InventoryTab_SuggestionBox_Location.LabelVisibility = Enum_LabelVisibility.Hidden;
             Control_InventoryTab_SuggestionBox_Location.Location = new Point(3, 90);
             Control_InventoryTab_SuggestionBox_Location.MaxLength = 130;
             Control_InventoryTab_SuggestionBox_Location.MinimumSize = new Size(0, 23);
@@ -210,7 +211,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_InventoryTab_SuggestionBox_Quantity.Dock = DockStyle.Fill;
             Control_InventoryTab_SuggestionBox_Quantity.EnableSuggestions = false;
             Control_InventoryTab_SuggestionBox_Quantity.LabelText = "Quantity";
-            Control_InventoryTab_SuggestionBox_Quantity.LabelVisible = "False";
+            Control_InventoryTab_SuggestionBox_Quantity.LabelVisibility = Enum_LabelVisibility.Hidden;
             Control_InventoryTab_SuggestionBox_Quantity.Location = new Point(3, 61);
             Control_InventoryTab_SuggestionBox_Quantity.MaxLength = 130;
             Control_InventoryTab_SuggestionBox_Quantity.MinimumSize = new Size(0, 23);
@@ -228,7 +229,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_InventoryTab_SuggestionBox_Operation.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_InventoryTab_SuggestionBox_Operation.Dock = DockStyle.Fill;
             Control_InventoryTab_SuggestionBox_Operation.LabelText = "Operation";
-            Control_InventoryTab_SuggestionBox_Operation.LabelVisible = "False";
+            Control_InventoryTab_SuggestionBox_Operation.LabelVisibility = Enum_LabelVisibility.Hidden;
             Control_InventoryTab_SuggestionBox_Operation.Location = new Point(3, 32);
             Control_InventoryTab_SuggestionBox_Operation.MaxLength = 130;
             Control_InventoryTab_SuggestionBox_Operation.MinimumSize = new Size(0, 23);
@@ -244,7 +245,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_InventoryTab_SuggestionBox_Part.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_InventoryTab_SuggestionBox_Part.Dock = DockStyle.Fill;
             Control_InventoryTab_SuggestionBox_Part.LabelText = "Part Number";
-            Control_InventoryTab_SuggestionBox_Part.LabelVisible = "False";
+            Control_InventoryTab_SuggestionBox_Part.LabelVisibility = Enum_LabelVisibility.Hidden;
             Control_InventoryTab_SuggestionBox_Part.Location = new Point(3, 3);
             Control_InventoryTab_SuggestionBox_Part.MaxLength = 130;
             Control_InventoryTab_SuggestionBox_Part.MinimumSize = new Size(0, 23);
@@ -260,7 +261,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_InventoryTab_SuggestionBox_ColorCode.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_InventoryTab_SuggestionBox_ColorCode.Dock = DockStyle.Fill;
             Control_InventoryTab_SuggestionBox_ColorCode.LabelText = "Color Code";
-            Control_InventoryTab_SuggestionBox_ColorCode.LabelVisible = "False";
+            Control_InventoryTab_SuggestionBox_ColorCode.LabelVisibility = Enum_LabelVisibility.Hidden;
             Control_InventoryTab_SuggestionBox_ColorCode.Location = new Point(3, 119);
             Control_InventoryTab_SuggestionBox_ColorCode.MaxLength = 130;
             Control_InventoryTab_SuggestionBox_ColorCode.MinimumSize = new Size(0, 23);
@@ -278,7 +279,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_InventoryTab_SuggestionBox_WorkOrder.Dock = DockStyle.Fill;
             Control_InventoryTab_SuggestionBox_WorkOrder.EnableSuggestions = false;
             Control_InventoryTab_SuggestionBox_WorkOrder.LabelText = "Work Order";
-            Control_InventoryTab_SuggestionBox_WorkOrder.LabelVisible = "False";
+            Control_InventoryTab_SuggestionBox_WorkOrder.LabelVisibility = Enum_LabelVisibility.Hidden;
             Control_InventoryTab_SuggestionBox_WorkOrder.Location = new Point(3, 148);
             Control_InventoryTab_SuggestionBox_WorkOrder.MaxLength = 130;
             Control_InventoryTab_SuggestionBox_WorkOrder.MinimumSize = new Size(0, 23);
