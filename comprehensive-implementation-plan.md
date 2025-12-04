@@ -12,12 +12,16 @@ This document consolidates tasks from `refactor-error-handling.md`, `refactor-su
     - [ ] Primary Key: `id` (INT, Auto-Increment).
     - [ ] Add column `json_shift_data` (JSON type). Schema: `{"USERNAME": int_shift_number}` (e.g., `{"JKOLL": 1, "BSMITH": 2}`).
     - [ ] Add column `json_user_fullnames` (JSON type). Schema: `{"USERNAME": "Full Name"}` (e.g., `{"JKOLL": "John Koll"}`).
-- [ ] **Backend Logic (User Shifts)**: Implement logic to calculate user shifts based on Infor Visual Transaction History (Last 50 transactions).
+- [ ] **Backend Logic (User Shifts)**: Implement logic to calculate user shifts.
+    - [ ] Source: Infor Visual Transaction History (CSVs/DB).
+    - [ ] Logic: Identify active users from last month. For each, analyze creation time of last 50 transactions.
     - [ ] Rules: 1st (06:00-14:00), 2nd (14:00-22:00), 3rd (22:00-06:00), Weekend (Fri-Mon 06:00-18:00).
+    - [ ] Fallback: "Unknown" if no time found.
 - [ ] **Backend Logic (Shift Weighting)**: Implement "Fair Grading" logic.
     - [ ] Calculate `ShiftVolumeFactor` = (Average Global Transactions / Average Shift Transactions).
     - [ ] Apply factor to user scores to normalize performance across busy/quiet shifts.
-- [ ] **Backend Logic (User Names)**: Implement logic to map Visual UserNames to Full Names using Visual database (EMPLOYEE or USER_DEF tables).
+- [ ] **Backend Logic (User Names)**: Implement logic to map Visual UserNames to Full Names.
+    - [ ] Logic: Match `Visual UserName` in `mtm_wip_application_winforms` vs list of users from Visual database.
 
 ### Phase 2: Technical Refactoring (High Stability Impact)
 *Refactoring existing controls to use new patterns. This reduces technical debt before adding new features.*
@@ -42,7 +46,7 @@ This document consolidates tasks from `refactor-error-handling.md`, `refactor-su
 ### Phase 3: Administrative & Maintenance Features
 *Updates to the Development/Maintenance tools to support the new database features.*
 
-- [ ] **MainForm (Dev Menu)**: Add "InforVisual Related" Groupbox to Database Maintenance view.
+- [ ] **MainForm (Dev Menu)**: Add "InforVisual Related" Groupbox to Database Maintenance view (under Cleanup Groupbox).
 - [ ] **Shift Update Button**: Add button to trigger "Update User Shifts" logic (populates `sys_visual.json_shift_data`).
 - [ ] **Name Update Button**: Add button to trigger "Update User Full Names" logic (populates `sys_visual.json_user_fullnames`).
 - [ ] **MainForm (Menu Structure)**: Move "MaterialHandlerAnalytics" from Development to View menu.
