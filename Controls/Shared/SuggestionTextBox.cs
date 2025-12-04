@@ -119,6 +119,24 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
         public bool SuppressExactMatch { get; set; } = true;
 
         /// <summary>
+        /// Gets or sets the action to take when no matches are found.
+        /// Default: ShowWarningAndClear.
+        /// </summary>
+        [Category("Behavior")]
+        [Description("Action to take when no suggestions match")]
+        [DefaultValue(Enum_SuggestionNoMatchAction.ShowWarningAndClear)]
+        public Enum_SuggestionNoMatchAction NoMatchAction { get; set; } = Enum_SuggestionNoMatchAction.ShowWarningAndClear;
+
+        /// <summary>
+        /// Gets or sets the action to take when a suggestion is selected.
+        /// Default: MoveFocusToNextControl.
+        /// </summary>
+        [Category("Behavior")]
+        [Description("Action to take when a suggestion is selected")]
+        [DefaultValue(Enum_SuggestionSelectionAction.MoveFocusToNextControl)]
+        public Enum_SuggestionSelectionAction SelectionAction { get; set; } = Enum_SuggestionSelectionAction.MoveFocusToNextControl;
+
+        /// <summary>
         /// Gets or sets whether to clear field when no matches found.
         /// Follows MTM validation pattern: invalid input is cleared.
         /// Default: true.
@@ -126,7 +144,13 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
         [Category("Behavior")]
         [Description("Clear field when no suggestions match (MTM pattern)")]
         [DefaultValue(true)]
-        public bool ClearOnNoMatch { get; set; } = true;
+        [Browsable(false)]
+        [Obsolete("Use NoMatchAction instead")]
+        public bool ClearOnNoMatch
+        {
+            get => NoMatchAction == Enum_SuggestionNoMatchAction.ShowWarningAndClear || NoMatchAction == Enum_SuggestionNoMatchAction.ClearField;
+            set => NoMatchAction = value ? Enum_SuggestionNoMatchAction.ShowWarningAndClear : Enum_SuggestionNoMatchAction.None;
+        }
 
         /// <summary>
         /// Gets or sets the minimum input length before triggering suggestions.
@@ -415,7 +439,7 @@ private void UpdateCueBanner()
             this.ShowLoadingIndicator = config.ShowLoadingIndicator;
             this.LoadingThresholdMs = config.LoadingThresholdMs;
             this.SuppressExactMatch = config.SuppressExactMatch;
-            this.ClearOnNoMatch = config.ClearOnNoMatch;
+            this.NoMatchAction = config.ClearOnNoMatch ? Enum_SuggestionNoMatchAction.ShowWarningAndClear : Enum_SuggestionNoMatchAction.None;
             this.MinimumInputLength = config.MinimumInputLength;
         }
 
@@ -662,11 +686,12 @@ private void UpdateCueBanner()
                         FieldName = this.Name
                     });
 
-
-
-                    // Move focus to next control
-                    var nextControlFocused = this.FindForm()?.SelectNextControl(this, forward: true, tabStopOnly: true, nested: true, wrap: false);
-
+                    // Handle Selection Action
+                    if (SelectionAction == Enum_SuggestionSelectionAction.MoveFocusToNextControl)
+                    {
+                        // Move focus to next control
+                        var nextControlFocused = this.FindForm()?.SelectNextControl(this, forward: true, tabStopOnly: true, nested: true, wrap: false);
+                    }
                 }
                 else
                 {
@@ -707,12 +732,14 @@ private void UpdateCueBanner()
                 FieldName = this.Name
             });
 
-
-
-            if (ClearOnNoMatch)
+            if (NoMatchAction == Enum_SuggestionNoMatchAction.ShowWarningAndClear)
             {
                 this.Text = string.Empty;
                 Service_ErrorHandler.ShowWarning($"No matching values found for '{_originalInput}'");
+            }
+            else if (NoMatchAction == Enum_SuggestionNoMatchAction.ClearField)
+            {
+                this.Text = string.Empty;
             }
         }
 

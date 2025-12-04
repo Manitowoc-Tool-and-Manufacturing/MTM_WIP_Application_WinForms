@@ -71,6 +71,32 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
         }
 
         /// <summary>
+        /// Gets or sets the action to take when a suggestion is selected.
+        /// Default: MoveFocusToNextControl.
+        /// </summary>
+        [Category("Behavior")]
+        [Description("Action to take when a suggestion is selected")]
+        [DefaultValue(Enum_SuggestionSelectionAction.MoveFocusToNextControl)]
+        public Enum_SuggestionSelectionAction SelectionAction
+        {
+            get => SuggestionTextBoxWithLabel_TextBox_Main.SelectionAction;
+            set => SuggestionTextBoxWithLabel_TextBox_Main.SelectionAction = value;
+        }
+
+        /// <summary>
+        /// Gets or sets the action to take when no matches are found.
+        /// Default: ShowWarningAndClear.
+        /// </summary>
+        [Category("Behavior")]
+        [Description("Action to take when no suggestions match")]
+        [DefaultValue(Enum_SuggestionNoMatchAction.ShowWarningAndClear)]
+        public Enum_SuggestionNoMatchAction NoMatchAction
+        {
+            get => SuggestionTextBoxWithLabel_TextBox_Main.NoMatchAction;
+            set => SuggestionTextBoxWithLabel_TextBox_Main.NoMatchAction = value;
+        }
+
+        /// <summary>
         /// Gets or sets the minimum width of the label.
         /// </summary>
         [Category("Layout")]

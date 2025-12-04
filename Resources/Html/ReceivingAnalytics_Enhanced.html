@@ -538,9 +538,7 @@
             let filteredData = dataSource.filter(item => {
                 // Determine effective type
                 let effectiveType = item.Type;
-                if (item.Type === 'Part' && (!item.PartNumber || item.PartNumber.trim() === '')) {
-                    effectiveType = 'Uninventoried';
-                }
+                // Uninventoried logic moved to C# backend
 
                 if (!activeTypes.includes(effectiveType)) return false;
                 
@@ -564,9 +562,7 @@
 
             filteredData.forEach(item => {
                 let effectiveType = item.Type;
-                if (item.Type === 'Part' && (!item.PartNumber || item.PartNumber.trim() === '')) {
-                    effectiveType = 'Uninventoried';
-                }
+                // Uninventoried logic moved to C# backend
 
                 const itemDate = new Date(item.Date);
                 const dateKey = getDateKey(itemDate, currentPeriod);
@@ -618,9 +614,7 @@
                 
                 // Determine display type
                 let displayType = item.Type;
-                if (item.Type === 'Part' && (!item.PartNumber || item.PartNumber.trim() === '')) {
-                    displayType = 'Uninventoried';
-                }
+                // Uninventoried logic moved to C# backend
 
                 tr.innerHTML = `
                     <td>${item.Date.split('T')[0]}</td>

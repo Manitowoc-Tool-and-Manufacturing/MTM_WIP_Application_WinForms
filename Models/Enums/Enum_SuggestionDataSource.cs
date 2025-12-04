@@ -13,6 +13,9 @@ namespace MTM_WIP_Application_Winforms.Models.Enums
         MTM_Location,
         MTM_Color,
         MTM_User,
+        MTM_ItemType,
+        MTM_Building,
+        MTM_Warehouse,
         
         // Infor Visual Related
         Infor_PartNumber,
@@ -24,6 +27,9 @@ namespace MTM_WIP_Application_Winforms.Models.Enums
         Infor_WONumber,
         Infor_FGTNumber,
         Infor_MMCNumber,
-        Infor_MMFNumber
+        Infor_MMFNumber,
+        Infor_WorkOrder,
+        Infor_CustomerOrder,
+        Infor_PurchaseOrder
     }
 }

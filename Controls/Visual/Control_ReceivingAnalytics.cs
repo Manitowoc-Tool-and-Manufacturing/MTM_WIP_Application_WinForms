@@ -707,7 +707,7 @@ void ToggleSearchPanel(object? sender, EventArgs e)
                         History = result.Data.History.Select(h => new
                         {
                             Date = h.Date.ToString("yyyy-MM-dd"),
-                            Type = DetermineReceivingType(h.Type),
+                            Type = DetermineReceivingType(h.Type, h.PartNumber),
                             Count = h.Count,
                             PartNumber = h.PartNumber,
                             ReceivedBy = h.ReceivedBy
@@ -715,7 +715,7 @@ void ToggleSearchPanel(object? sender, EventArgs e)
                         Forecast = result.Data.Forecast.Select(f => new
                         {
                             Date = f.Date.ToString("yyyy-MM-dd"),
-                            Type = DetermineReceivingType(f.Type),
+                            Type = DetermineReceivingType(f.Type, f.PartNumber),
                             Count = f.Count,
                             PartNumber = f.PartNumber,
                             ReceivedBy = f.ReceivedBy
@@ -758,10 +758,14 @@ void ToggleSearchPanel(object? sender, EventArgs e)
             }
         }
 
-        private string DetermineReceivingType(string originalType)
+        private string DetermineReceivingType(string originalType, string partNumber)
         {
             // Map the type from Visual Analytics to chart categories
             // This handles the categorization from GetReceivingAnalyticsAsync
+            
+            // Check for Uninventoried (missing part number) first
+            if (string.IsNullOrWhiteSpace(partNumber)) return "Uninventoried";
+
             if (originalType == null) return "Part";
             
             var type = originalType.ToUpperInvariant();

@@ -2,6 +2,7 @@ using MTM_WIP_Application_Winforms.Controls.Shared;
 using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Models;
+using MTM_WIP_Application_Winforms.Models.Enums;
 using MTM_WIP_Application_Winforms.Services;
 using System.Data;
 
@@ -87,8 +88,12 @@ namespace MTM_WIP_Application_Winforms.Helpers
                         FieldName = suggestionTextBox.Name
                     });
 
-                    // Move to next control
-                    parentForm.SelectNextControl(suggestionTextBox, forward: true, tabStopOnly: true, nested: true, wrap: false);
+                    // Handle Selection Action
+                    if (suggestionTextBox.SelectionAction == Enum_SuggestionSelectionAction.MoveFocusToNextControl)
+                    {
+                        // Move to next control
+                        parentForm.SelectNextControl(suggestionTextBox, forward: true, tabStopOnly: true, nested: true, wrap: false);
+                    }
                 }
                 else
                 {
