@@ -101,6 +101,9 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             // 
             // tableLayoutPanelMain
             // 
+            tableLayoutPanelMain.AutoSize = true;
+            tableLayoutPanelMain.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            tableLayoutPanelMain.MinimumSize = new Size(1024, 768);
             tableLayoutPanelMain.ColumnCount = 2;
             tableLayoutPanelMain.ColumnStyles.Add(new ColumnStyle());
             tableLayoutPanelMain.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
