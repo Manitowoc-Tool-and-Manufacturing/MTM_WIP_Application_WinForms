@@ -1525,7 +1525,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 Control_InventoryTab_Button_Reset.Click += (s, e) => Control_InventoryTab_Button_Reset_Click();
 
                 // NOTE: Part and Operation now use SuggestionTextBox - wire up SuggestionSelected events instead
-                Control_InventoryTab_SuggestionBox_Part.TextBox.SuggestionSelected += (s, e) =>
+                Control_InventoryTab_SuggestionBox_Part.TextBox.SuggestionSelected += async (s, e) =>
                 {
                     LoggingUtility.Log($"[Control_InventoryTab] Part SuggestionSelected: '{e.SelectedValue}'");
                     Model_Application_Variables.PartId = e.SelectedValue;
@@ -1534,6 +1534,15 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
                     // Show/hide color code and work order fields based on part requirements
                     UpdateColorCodeFieldsVisibility();
+
+                    // Check for Dunnage
+                    await CheckPartTypeAndAdjustQuantityAsync(e.SelectedValue);
+                };
+
+                // Check for Dunnage on Leave (in case user typed it)
+                Control_InventoryTab_SuggestionBox_Part.TextBox.Leave += async (s, e) =>
+                {
+                    await CheckPartTypeAndAdjustQuantityAsync(Control_InventoryTab_SuggestionBox_Part.Text ?? string.Empty);
                 };
 
                 // Clear PartId when user manually types (not selecting from overlay)
@@ -1833,6 +1842,98 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         #endregion
 
         #region Helpers
+
+        /// <summary>
+        /// Checks if the part is "Dunnage" and adjusts the quantity field accordingly.
+        /// </summary>
+        /// <param name="partNumber">The part number to check.</param>
+        private async Task CheckPartTypeAndAdjustQuantityAsync(string partNumber)
+        {
+            if (string.IsNullOrWhiteSpace(partNumber)) return;
+
+            try
+            {
+                var result = await Dao_Part.GetPartByNumberAsync(partNumber);
+                if (result.IsSuccess && result.Data != null)
+                {
+                    string itemType = result.Data["ItemType"]?.ToString() ?? string.Empty;
+                    if (string.Equals(itemType, "Dunnage", StringComparison.OrdinalIgnoreCase))
+                    {
+                        // Set quantity to 1 and disable input
+                        // Use Invoke if needed, but we are likely on UI thread
+                        if (Control_InventoryTab_SuggestionBox_Quantity.InvokeRequired)
+                        {
+                            Control_InventoryTab_SuggestionBox_Quantity.Invoke(new Action(() =>
+                            {
+                                Control_InventoryTab_SuggestionBox_Quantity.Text = "1";
+                                Control_InventoryTab_SuggestionBox_Quantity.Enabled = false;
+                            }));
+                        }
+                        else
+                        {
+                            Control_InventoryTab_SuggestionBox_Quantity.Text = "1";
+                            Control_InventoryTab_SuggestionBox_Quantity.Enabled = false;
+                        }
+                    }
+                    else
+                    {
+                        // Enable input if not Dunnage
+                        // Only re-enable if it wasn't disabled by ReadOnly privilege
+                        if (!Model_Application_Variables.UserTypeReadOnly)
+                        {
+                            if (Control_InventoryTab_SuggestionBox_Quantity.InvokeRequired)
+                            {
+                                Control_InventoryTab_SuggestionBox_Quantity.Invoke(new Action(() =>
+                                {
+                                    Control_InventoryTab_SuggestionBox_Quantity.Enabled = true;
+                                }));
+                            }
+                            else
+                            {
+                                Control_InventoryTab_SuggestionBox_Quantity.Enabled = true;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    // Part not found or error - default to enabled (unless ReadOnly)
+                    if (!Model_Application_Variables.UserTypeReadOnly)
+                    {
+                        if (Control_InventoryTab_SuggestionBox_Quantity.InvokeRequired)
+                        {
+                            Control_InventoryTab_SuggestionBox_Quantity.Invoke(new Action(() =>
+                            {
+                                Control_InventoryTab_SuggestionBox_Quantity.Enabled = true;
+                            }));
+                        }
+                        else
+                        {
+                            Control_InventoryTab_SuggestionBox_Quantity.Enabled = true;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+                // Default to enabled on error
+                if (!Model_Application_Variables.UserTypeReadOnly)
+                {
+                    if (Control_InventoryTab_SuggestionBox_Quantity.InvokeRequired)
+                    {
+                        Control_InventoryTab_SuggestionBox_Quantity.Invoke(new Action(() =>
+                        {
+                            Control_InventoryTab_SuggestionBox_Quantity.Enabled = true;
+                        }));
+                    }
+                    else
+                    {
+                        Control_InventoryTab_SuggestionBox_Quantity.Enabled = true;
+                    }
+                }
+            }
+        }
 
         private void InitializeQuickButtonsPanelAnimator()
         {

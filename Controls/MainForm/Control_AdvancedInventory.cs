@@ -375,6 +375,13 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 AttachValidationOnLeave(AdvancedInventory_MultiLoc_TextBox_Part, Helper_SuggestionTextBox.GetCachedPartNumbersAsync, "Part");
                 AttachValidationOnLeave(AdvancedInventory_MultiLoc_TextBox_Op, Helper_SuggestionTextBox.GetCachedOperationsAsync, "Operation");
                 AttachValidationOnLeave(AdvancedInventory_MultiLoc_TextBox_Loc, Helper_SuggestionTextBox.GetCachedLocationsAsync, "Location");
+
+                // Check for Dunnage on Leave
+                AdvancedInventory_Single_TextBox_Part.TextBox.Leave += async (s, e) => 
+                    await CheckPartTypeAndAdjustQuantityAsync(AdvancedInventory_Single_TextBox_Part.Text ?? string.Empty, AdvancedInventory_Single_TextBox_Qty);
+                
+                AdvancedInventory_MultiLoc_TextBox_Part.TextBox.Leave += async (s, e) => 
+                    await CheckPartTypeAndAdjustQuantityAsync(AdvancedInventory_MultiLoc_TextBox_Part.Text ?? string.Empty, AdvancedInventory_MultiLoc_TextBox_Qty);
             }
             catch (Exception ex)
             {
@@ -393,7 +400,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         /// Checks if part requires color code and redirects to Inventory Tab if needed.
         /// Updates save button state.
         /// </summary>
-        private void AdvancedInventory_Single_TextBox_Part_SuggestionSelected(object? sender, EventArgs_SuggestionSelectedEventArgs e)
+        private async void AdvancedInventory_Single_TextBox_Part_SuggestionSelected(object? sender, EventArgs_SuggestionSelectedEventArgs e)
         {
             string selectedPart = e.SelectedValue;
 
@@ -405,7 +412,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             {
                 HandleColorFlaggedPart(selectedPart, "Single Entry Part");
             }
-            
+
+            await CheckPartTypeAndAdjustQuantityAsync(selectedPart, AdvancedInventory_Single_TextBox_Qty);
         }
 
         /// <summary>
@@ -491,12 +499,14 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         /// Checks if part requires color code and redirects to Inventory Tab if needed.
         /// Updates save button state and locks Part/Op fields after first location is added.
         /// </summary>
-        private void AdvancedInventory_MultiLoc_TextBox_Part_SuggestionSelected(object? sender, EventArgs_SuggestionSelectedEventArgs e)
+        private async void AdvancedInventory_MultiLoc_TextBox_Part_SuggestionSelected(object? sender, EventArgs_SuggestionSelectedEventArgs e)
         {
             string selectedPart = e.SelectedValue;
 
             HandleColorFlaggedPart(selectedPart, "Multi-Location Part");
             UpdateMultiSaveButtonState();
+
+            await CheckPartTypeAndAdjustQuantityAsync(selectedPart, AdvancedInventory_MultiLoc_TextBox_Qty);
         }
 
         /// <summary>
@@ -2597,6 +2607,88 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         #endregion
 
         #region Helpers
+
+        /// <summary>
+        /// Checks if the part is "Dunnage" and adjusts the quantity field accordingly.
+        /// </summary>
+        /// <param name="partNumber">The part number to check.</param>
+        /// <param name="qtyControl">The quantity control to adjust.</param>
+        private async Task CheckPartTypeAndAdjustQuantityAsync(string partNumber, SuggestionTextBoxWithLabel qtyControl)
+        {
+            if (string.IsNullOrWhiteSpace(partNumber)) return;
+
+            try
+            {
+                var result = await Dao_Part.GetPartByNumberAsync(partNumber);
+                if (result.IsSuccess && result.Data != null)
+                {
+                    string itemType = result.Data["ItemType"]?.ToString() ?? string.Empty;
+                    if (string.Equals(itemType, "Dunnage", StringComparison.OrdinalIgnoreCase))
+                    {
+                        // Set quantity to 1 and disable input
+                        if (qtyControl.InvokeRequired)
+                        {
+                            qtyControl.Invoke(new Action(() =>
+                            {
+                                qtyControl.Text = "1";
+                                qtyControl.Enabled = false;
+                            }));
+                        }
+                        else
+                        {
+                            qtyControl.Text = "1";
+                            qtyControl.Enabled = false;
+                        }
+                    }
+                    else
+                    {
+                        // Enable input if not Dunnage
+                        if (qtyControl.InvokeRequired)
+                        {
+                            qtyControl.Invoke(new Action(() =>
+                            {
+                                qtyControl.Enabled = true;
+                            }));
+                        }
+                        else
+                        {
+                            qtyControl.Enabled = true;
+                        }
+                    }
+                }
+                else
+                {
+                    // Part not found or error - default to enabled
+                    if (qtyControl.InvokeRequired)
+                    {
+                        qtyControl.Invoke(new Action(() =>
+                        {
+                            qtyControl.Enabled = true;
+                        }));
+                    }
+                    else
+                    {
+                        qtyControl.Enabled = true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+                // Default to enabled on error
+                if (qtyControl.InvokeRequired)
+                {
+                    qtyControl.Invoke(new Action(() =>
+                    {
+                        qtyControl.Enabled = true;
+                    }));
+                }
+                else
+                {
+                    qtyControl.Enabled = true;
+                }
+            }
+        }
 
         private void ConfigureSingleListViewPreview()
         {

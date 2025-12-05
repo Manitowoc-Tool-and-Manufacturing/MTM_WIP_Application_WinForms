@@ -1127,8 +1127,23 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 // Update control states efficiently
                 Control_TransferTab_Button_Search.Enabled = hasPart;
                 // ToLocation TextBox stays enabled (respects user privileges from ApplyPrivileges)
+                // Check for Dunnage
+                bool isDunnage = false;
+                if (hasSelection && Control_TransferTab_DataGridView_Main.SelectedRows.Count == 1)
+                {
+                    var row = Control_TransferTab_DataGridView_Main.SelectedRows[0];
+                    if (row.DataBoundItem is DataRowView drv)
+                    {
+                        string itemType = drv.Row.Table.Columns.Contains("ItemType") ? drv["ItemType"]?.ToString() ?? "" : "";
+                        if (string.Equals(itemType, "Dunnage", StringComparison.OrdinalIgnoreCase))
+                        {
+                            isDunnage = true;
+                        }
+                    }
+                }
+
                 Control_TransferTab_NumericUpDown_Quantity.Enabled = hasData &&
-                    Control_TransferTab_DataGridView_Main.SelectedRows.Count <= 1;
+                    Control_TransferTab_DataGridView_Main.SelectedRows.Count <= 1 && !isDunnage;
 
                 // Check if destination location is same as source location (only if we have selection and destination)
                 bool toLocationIsSameAsRow = false;
@@ -1204,7 +1219,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             }
         }
 
-        private void Control_TransferTab_DataGridView_Main_SelectionChanged(object? sender, EventArgs? e)
+        private async void Control_TransferTab_DataGridView_Main_SelectionChanged(object? sender, EventArgs? e)
         {
             try
             {
@@ -1218,7 +1233,34 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     {
                         Control_TransferTab_NumericUpDown_Quantity.Maximum = qty;
                         Control_TransferTab_NumericUpDown_Quantity.Value = qty;
-                        Control_TransferTab_NumericUpDown_Quantity.Enabled = true;
+                        
+                        string itemType = "";
+                        if (drv.Row.Table.Columns.Contains("ItemType"))
+                        {
+                            itemType = drv["ItemType"]?.ToString() ?? "";
+                        }
+                        else
+                        {
+                            string partId = drv["PartID"]?.ToString() ?? "";
+                            if (!string.IsNullOrEmpty(partId))
+                            {
+                                var partResult = await Dao_Part.GetPartByNumberAsync(partId);
+                                if (partResult.IsSuccess && partResult.Data != null)
+                                {
+                                    itemType = partResult.Data["ItemType"]?.ToString() ?? "";
+                                }
+                            }
+                        }
+
+                        if (string.Equals(itemType, "Dunnage", StringComparison.OrdinalIgnoreCase))
+                        {
+                            Control_TransferTab_NumericUpDown_Quantity.Value = 1;
+                            Control_TransferTab_NumericUpDown_Quantity.Enabled = false;
+                        }
+                        else
+                        {
+                            Control_TransferTab_NumericUpDown_Quantity.Enabled = true;
+                        }
                     }
                     else
                     {
