@@ -620,6 +620,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 Control_TransferTab_TextBox_Part.Text = string.Empty;
                 Debug.WriteLine("[DEBUG] Resetting Operation TextBox");
                 Control_TransferTab_TextBox_Operation.Text = string.Empty;
+                Control_TransferTab_TextBox_Operation.Enabled = true;
                 Debug.WriteLine("[DEBUG] Resetting ToLocation TextBox");
                 Control_TransferTab_TextBox_ToLocation.Text = string.Empty;
 
@@ -683,6 +684,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 Debug.WriteLine("[DEBUG] Resetting UI fields");
                 Control_TransferTab_TextBox_Part.Text = string.Empty;
                 Control_TransferTab_TextBox_Operation.Text = string.Empty;
+                Control_TransferTab_TextBox_Operation.Enabled = true;
                 Control_TransferTab_TextBox_ToLocation.Text = string.Empty;
 
                 Control_TransferTab_DataGridView_Main.DataSource = null;

@@ -969,6 +969,11 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 Control_InventoryTab_SuggestionBox_Quantity.Text = string.Empty;
                 Control_InventoryTab_SuggestionBox_ColorCode.Text = string.Empty;
                 Control_InventoryTab_SuggestionBox_WorkOrder.Text = string.Empty;
+                
+                // Re-enable controls that might have been disabled by Dunnage check
+                Control_InventoryTab_SuggestionBox_Quantity.Enabled = true;
+                Control_InventoryTab_SuggestionBox_Operation.Enabled = true;
+
                 MainFormControlHelper.ResetRichTextBox(Control_InventoryTab_RichTextBox_Notes,
                     Model_Application_Variables.UserUiColors.RichTextBoxForeColor ?? Color.Black, "");
 
@@ -1046,6 +1051,11 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 Control_InventoryTab_SuggestionBox_Quantity.Text = string.Empty;
                 Control_InventoryTab_SuggestionBox_ColorCode.Text = string.Empty;
                 Control_InventoryTab_SuggestionBox_WorkOrder.Text = string.Empty;
+
+                // Re-enable controls that might have been disabled by Dunnage check
+                Control_InventoryTab_SuggestionBox_Quantity.Enabled = true;
+                Control_InventoryTab_SuggestionBox_Operation.Enabled = true;
+
                 MainFormControlHelper.ResetRichTextBox(Control_InventoryTab_RichTextBox_Notes,
                     Model_Application_Variables.UserUiColors.TextBoxForeColor ?? Color.Black, "");
                 Control_InventoryTab_Button_Save.Enabled = false;

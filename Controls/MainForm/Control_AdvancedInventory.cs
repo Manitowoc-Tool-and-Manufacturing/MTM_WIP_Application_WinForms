@@ -1225,6 +1225,11 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 MainFormControlHelper.ResetTextBox(AdvancedInventory_Single_TextBox_Count.TextBox.InnerTextBox,
                     Model_Application_Variables.UserUiColors.TextBoxErrorForeColor ?? Color.Red,
                     "Enter Enter How Many Times");
+                
+                // Re-enable controls that might have been disabled by Dunnage check
+                AdvancedInventory_Single_TextBox_Qty.TextBox.Enabled = true;
+                AdvancedInventory_Single_TextBox_Op.TextBox.Enabled = true;
+
                 AdvancedInventory_Single_RichTextBox_Notes.Text = string.Empty;
                 AdvancedInventory_Single_ListView_Preview.Items.Clear();
 
@@ -1292,6 +1297,11 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 MainFormControlHelper.ResetTextBox(AdvancedInventory_Single_TextBox_Count.TextBox.InnerTextBox,
                     Model_Application_Variables.UserUiColors.ErrorColor ?? Color.Red,
                     "Enter Enter How Many Times");
+                
+                // Re-enable controls that might have been disabled by Dunnage check
+                AdvancedInventory_Single_TextBox_Qty.TextBox.Enabled = true;
+                AdvancedInventory_Single_TextBox_Op.TextBox.Enabled = true;
+
                 AdvancedInventory_Single_RichTextBox_Notes.Text = string.Empty;
                 AdvancedInventory_Single_ListView_Preview.Items.Clear();
 
@@ -1703,6 +1713,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 AdvancedInventory_MultiLoc_ListView_Preview.Items.Clear();
                 AdvancedInventory_MultiLoc_TextBox_Part.Enabled = true;
                 AdvancedInventory_MultiLoc_TextBox_Op.Enabled = true;
+                AdvancedInventory_MultiLoc_TextBox_Qty.TextBox.Enabled = true;
 
                 UpdateMultiSaveButtonState();
 
@@ -1770,6 +1781,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 AdvancedInventory_MultiLoc_ListView_Preview.Items.Clear();
                 AdvancedInventory_MultiLoc_TextBox_Part.Enabled = true;
                 AdvancedInventory_MultiLoc_TextBox_Op.Enabled = true;
+                AdvancedInventory_MultiLoc_TextBox_Qty.TextBox.Enabled = true;
 
                 UpdateMultiSaveButtonState();
 
