@@ -192,26 +192,6 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
         /// <param name="userIds">List of user IDs to include.</param>
         /// <returns>DataTable with analytics columns.</returns>
         Task<Model_Dao_Result<DataTable>> GetUserAnalyticsDataAsync(DateTime start, DateTime end, List<string> userIds);
-
-        /// <summary>
-        /// Retrieves transaction history for shift calculation (last 30 days).
-        /// </summary>
-        /// <returns>DataTable with USER_ID and TRANSACTION_DATE.</returns>
-        Task<Model_Dao_Result<DataTable>> GetUserShiftDataAsync();
-
-        /// <summary>
-        /// Retrieves full names for all employees.
-        /// </summary>
-        /// <returns>DataTable with USER_ID, FIRST_NAME, LAST_NAME.</returns>
-        Task<Model_Dao_Result<DataTable>> GetUserFullNamesAsync();
-
-        /// <summary>
-        /// Retrieves material handler statistics for scoring.
-        /// </summary>
-        /// <param name="startDate">Start date.</param>
-        /// <param name="endDate">End date.</param>
-        /// <returns>DataTable with User, TransactionType, TransactionCount.</returns>
-        Task<Model_Dao_Result<DataTable>> GetMaterialHandlerStatsAsync(DateTime startDate, DateTime endDate);
     }
     #endregion
 
