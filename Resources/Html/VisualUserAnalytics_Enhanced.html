@@ -312,6 +312,26 @@
         }
 
         function processData(rawData) {
+            // Check if data is already aggregated (Model_Visual_MaterialHandlerScore)
+            if (rawData.length > 0 && rawData[0].TransactionCounts) {
+                aggregatedData = rawData.map(item => {
+                    const counts = item.TransactionCounts || {};
+                    return {
+                        User: item.UserName || item.FullName,
+                        WorkOrders: counts['Work Order'] || 0,
+                        LocToLoc: counts['Location Transfer'] || counts['Transfer'] || counts['T'] || 0,
+                        Coils: counts['Coil'] || 0,
+                        Flatstock: counts['Flatstock'] || 0,
+                        AdjIn: counts['Adjusted In'] || counts['Receive'] || 0,
+                        AdjOut: counts['Adjusted Out'] || counts['Pick'] || 0,
+                        TotalCount: item.TotalTransactions,
+                        TotalScore: item.TotalScore
+                    };
+                });
+                analyticsData = []; // No raw data available
+                return;
+            }
+
             // Aggregate raw transaction list into user summaries
             const userMap = {};
 

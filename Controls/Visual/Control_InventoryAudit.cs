@@ -737,7 +737,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                         // Open the viewer form with the Enhanced HTML template
                         var viewer = new MTM_WIP_Application_Winforms.Forms.Visual.Form_AnalyticsViewer(
                             filteredData, 
-                            "WIPUserAnalytics_Enhanced.html");
+                            "VisualUserAnalytics_Enhanced.html");
                         viewer.Show();
                     }
                 }
