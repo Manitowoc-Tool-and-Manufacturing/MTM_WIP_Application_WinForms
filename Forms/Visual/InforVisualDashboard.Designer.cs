@@ -6,7 +6,9 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(InforVisualDashboard));
             panelContent = new Panel();
+            tableLayoutPanel1 = new TableLayoutPanel();
             labelLoading = new Label();
+            labelReadOnly = new Label();
             controlEmptyState = new MTM_WIP_Application_Winforms.Controls.Shared.Control_EmptyState();
             tableLayoutPanelMain = new TableLayoutPanel();
             panelNavigation = new Panel();
@@ -18,13 +20,11 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             btnDieToolDiscovery = new Button();
             btnMaterialHandlerGeneral = new Button();
             btnMaterialHandlerTeam = new Button();
-            labelReadOnly = new Label();
-            tableLayoutPanel1 = new TableLayoutPanel();
             panelContent.SuspendLayout();
+            tableLayoutPanel1.SuspendLayout();
             tableLayoutPanelMain.SuspendLayout();
             panelNavigation.SuspendLayout();
             tableLayoutPanelNavigation.SuspendLayout();
-            tableLayoutPanel1.SuspendLayout();
             SuspendLayout();
             // 
             // panelContent
@@ -34,21 +34,52 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             panelContent.Dock = DockStyle.Fill;
             panelContent.Location = new Point(160, 3);
             panelContent.Name = "panelContent";
-            panelContent.Size = new Size(586, 521);
+            panelContent.Size = new Size(861, 762);
             panelContent.TabIndex = 0;
+            // 
+            // tableLayoutPanel1
+            // 
+            tableLayoutPanel1.AutoSize = true;
+            tableLayoutPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            tableLayoutPanel1.ColumnCount = 1;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel1.Controls.Add(labelLoading, 0, 1);
+            tableLayoutPanel1.Controls.Add(labelReadOnly, 0, 0);
+            tableLayoutPanel1.Dock = DockStyle.Fill;
+            tableLayoutPanel1.Location = new Point(0, 0);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 2;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 80F));
+            tableLayoutPanel1.Size = new Size(861, 762);
+            tableLayoutPanel1.TabIndex = 4;
             // 
             // labelLoading
             // 
             labelLoading.Dock = DockStyle.Fill;
             labelLoading.Font = new Font("Segoe UI Emoji", 14F);
-            labelLoading.Location = new Point(3, 107);
+            labelLoading.Location = new Point(3, 155);
             labelLoading.Margin = new Padding(3);
             labelLoading.Name = "labelLoading";
-            labelLoading.Size = new Size(580, 411);
+            labelLoading.Size = new Size(855, 604);
             labelLoading.TabIndex = 2;
             labelLoading.Text = "Loading...";
             labelLoading.TextAlign = ContentAlignment.MiddleCenter;
             labelLoading.Visible = false;
+            // 
+            // labelReadOnly
+            // 
+            labelReadOnly.Dock = DockStyle.Fill;
+            labelReadOnly.Font = new Font("Segoe UI Emoji", 14F);
+            labelReadOnly.ForeColor = Color.Indigo;
+            labelReadOnly.Location = new Point(3, 3);
+            labelReadOnly.Margin = new Padding(3);
+            labelReadOnly.Name = "labelReadOnly";
+            labelReadOnly.Size = new Size(855, 146);
+            labelReadOnly.TabIndex = 3;
+            labelReadOnly.Text = "The Infor Visual Dashboard is a READ ONLY Tool.\r\nThis will and can not change.";
+            labelReadOnly.TextAlign = ContentAlignment.MiddleCenter;
+            labelReadOnly.Visible = false;
             // 
             // controlEmptyState
             // 
@@ -61,7 +92,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             controlEmptyState.Margin = new Padding(6);
             controlEmptyState.Message = "Select a category to view data.";
             controlEmptyState.Name = "controlEmptyState";
-            controlEmptyState.Size = new Size(586, 521);
+            controlEmptyState.Size = new Size(861, 762);
             controlEmptyState.TabIndex = 1;
             // 
             // tableLayoutPanelMain
@@ -76,7 +107,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             tableLayoutPanelMain.Name = "tableLayoutPanelMain";
             tableLayoutPanelMain.RowCount = 1;
             tableLayoutPanelMain.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanelMain.Size = new Size(749, 527);
+            tableLayoutPanelMain.Size = new Size(1024, 768);
             tableLayoutPanelMain.TabIndex = 5;
             // 
             // panelNavigation
@@ -86,7 +117,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             panelNavigation.Dock = DockStyle.Fill;
             panelNavigation.Location = new Point(3, 3);
             panelNavigation.Name = "panelNavigation";
-            panelNavigation.Size = new Size(151, 521);
+            panelNavigation.Size = new Size(151, 762);
             panelNavigation.TabIndex = 3;
             // 
             // tableLayoutPanelNavigation
@@ -114,7 +145,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             tableLayoutPanelNavigation.RowStyles.Add(new RowStyle());
             tableLayoutPanelNavigation.RowStyles.Add(new RowStyle());
             tableLayoutPanelNavigation.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanelNavigation.Size = new Size(149, 519);
+            tableLayoutPanelNavigation.Size = new Size(149, 760);
             tableLayoutPanelNavigation.TabIndex = 0;
             // 
             // btnInventory
@@ -218,57 +249,27 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             btnMaterialHandlerTeam.UseVisualStyleBackColor = false;
             btnMaterialHandlerTeam.Visible = false;
             // 
-            // labelReadOnly
-            // 
-            labelReadOnly.Dock = DockStyle.Fill;
-            labelReadOnly.Font = new Font("Segoe UI Emoji", 14F);
-            labelReadOnly.ForeColor = Color.Indigo;
-            labelReadOnly.Location = new Point(3, 3);
-            labelReadOnly.Margin = new Padding(3);
-            labelReadOnly.Name = "labelReadOnly";
-            labelReadOnly.Size = new Size(580, 98);
-            labelReadOnly.TabIndex = 3;
-            labelReadOnly.Text = "The Infor Visual Dashboard is a READ ONLY Tool.\r\nThis will and can not change.";
-            labelReadOnly.TextAlign = ContentAlignment.MiddleCenter;
-            labelReadOnly.Visible = false;
-            // 
-            // tableLayoutPanel1
-            // 
-            tableLayoutPanel1.AutoSize = true;
-            tableLayoutPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            tableLayoutPanel1.ColumnCount = 1;
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.Controls.Add(labelLoading, 0, 1);
-            tableLayoutPanel1.Controls.Add(labelReadOnly, 0, 0);
-            tableLayoutPanel1.Dock = DockStyle.Fill;
-            tableLayoutPanel1.Location = new Point(0, 0);
-            tableLayoutPanel1.Name = "tableLayoutPanel1";
-            tableLayoutPanel1.RowCount = 2;
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 80F));
-            tableLayoutPanel1.Size = new Size(586, 521);
-            tableLayoutPanel1.TabIndex = 4;
-            // 
             // InforVisualDashboard
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
+            AutoSize = true;
+            AutoSizeMode = AutoSizeMode.GrowAndShrink;
             ClientSize = new Size(1024, 768);
             Controls.Add(tableLayoutPanelMain);
             Icon = (Icon)resources.GetObject("$this.Icon");
+            MinimumSize = new Size(1024, 768);
             Name = "InforVisualDashboard";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Infor Visual Dashboard";
             panelContent.ResumeLayout(false);
             panelContent.PerformLayout();
+            tableLayoutPanel1.ResumeLayout(false);
             tableLayoutPanelMain.ResumeLayout(false);
-            tableLayoutPanelMain.PerformLayout();
             panelNavigation.ResumeLayout(false);
             panelNavigation.PerformLayout();
             tableLayoutPanelNavigation.ResumeLayout(false);
-            tableLayoutPanel1.ResumeLayout(false);
             ResumeLayout(false);
-            PerformLayout();
         }
         private System.Windows.Forms.Panel panelContent;
         private Controls.Shared.Control_EmptyState controlEmptyState;
