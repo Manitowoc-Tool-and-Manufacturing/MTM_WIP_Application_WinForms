@@ -2098,10 +2098,30 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 SELECT 
                     USER_ID as [User],
                     TYPE as [TransactionType],
+                    CASE 
+                        WHEN PART_ID LIKE 'MMC%' THEN 'Coil'
+                        WHEN PART_ID LIKE 'MMF%' THEN 'Flatstock'
+                        ELSE 'Standard'
+                    END as [PartCategory],
+                    CASE 
+                        WHEN WORKORDER_BASE_ID IS NOT NULL AND WORKORDER_BASE_ID <> '' THEN 'Y'
+                        ELSE 'N'
+                    END as [HasWorkOrder],
                     COUNT(*) as [TransactionCount]
                 FROM INVENTORY_TRANS
                 WHERE TRANSACTION_DATE >= @StartDate AND TRANSACTION_DATE <= @EndDate
-                GROUP BY USER_ID, TYPE";
+                GROUP BY 
+                    USER_ID, 
+                    TYPE,
+                    CASE 
+                        WHEN PART_ID LIKE 'MMC%' THEN 'Coil'
+                        WHEN PART_ID LIKE 'MMF%' THEN 'Flatstock'
+                        ELSE 'Standard'
+                    END,
+                    CASE 
+                        WHEN WORKORDER_BASE_ID IS NOT NULL AND WORKORDER_BASE_ID <> '' THEN 'Y'
+                        ELSE 'N'
+                    END";
 
             try
             {
