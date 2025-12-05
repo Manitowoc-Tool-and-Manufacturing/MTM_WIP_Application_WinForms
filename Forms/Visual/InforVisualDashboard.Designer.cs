@@ -29,6 +29,10 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             // 
             // panelContent
             // 
+            panelContent.BorderStyle = BorderStyle.FixedSingle;
+            panelContent.AutoSize = true;
+            panelContent.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            panelContent.MinimumSize = new Size(800, 600);
             panelContent.Controls.Add(tableLayoutPanel1);
             panelContent.Controls.Add(controlEmptyState);
             panelContent.Dock = DockStyle.Fill;
