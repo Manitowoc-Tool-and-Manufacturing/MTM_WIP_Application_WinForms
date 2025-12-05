@@ -212,6 +212,11 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
                 {
                     Service_ErrorHandler.ShowUserError($"Connection to Visual ERP failed: {result.ErrorMessage}");
                 }
+                else
+                {
+                    // Load default category
+                    await LoadCategoryDataAsync(Enum_VisualDashboardCategory.Inventory);
+                }
             }
             catch (Exception ex)
             {
@@ -344,6 +349,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
 
             _controlDieToolDiscovery = new Control_DieToolDiscovery { Dock = DockStyle.Fill };
             panelContent.Controls.Add(_controlDieToolDiscovery);
+            _controlDieToolDiscovery.BringToFront();
         }
 
         private void EnsureReceivingAnalyticsControl()
@@ -355,6 +361,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
 
             _controlReceivingAnalytics = new Control_ReceivingAnalytics { Dock = DockStyle.Fill };
             panelContent.Controls.Add(_controlReceivingAnalytics);
+            _controlReceivingAnalytics.BringToFront();
         }
 
         private void EnsureVisualInventoryControl()
@@ -366,6 +373,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
 
             _controlVisualInventory = new Control_VisualInventory { Dock = DockStyle.Fill };
             panelContent.Controls.Add(_controlVisualInventory);
+            _controlVisualInventory.BringToFront();
         }
 
         private void EnsureInventoryAuditControl()
@@ -377,6 +385,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
 
             _controlInventoryAudit = new Control_InventoryAudit { Dock = DockStyle.Fill };
             panelContent.Controls.Add(_controlInventoryAudit);
+            _controlInventoryAudit.BringToFront();
         }
 
         private string GetCategoryTitle(Enum_VisualDashboardCategory category)

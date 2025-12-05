@@ -29,8 +29,6 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             // 
             // panelContent
             // 
-            panelContent.AutoSize = true;
-            panelContent.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             panelContent.Controls.Add(tableLayoutPanel1);
             panelContent.Controls.Add(controlEmptyState);
             panelContent.Dock = DockStyle.Fill;
@@ -68,8 +66,6 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             // 
             // tableLayoutPanelMain
             // 
-            tableLayoutPanelMain.AutoSize = true;
-            tableLayoutPanelMain.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             tableLayoutPanelMain.ColumnCount = 2;
             tableLayoutPanelMain.ColumnStyles.Add(new ColumnStyle());
             tableLayoutPanelMain.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
@@ -85,8 +81,6 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             // 
             // panelNavigation
             // 
-            panelNavigation.AutoSize = true;
-            panelNavigation.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             panelNavigation.BorderStyle = BorderStyle.FixedSingle;
             panelNavigation.Controls.Add(tableLayoutPanelNavigation);
             panelNavigation.Dock = DockStyle.Fill;
@@ -259,8 +253,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
-            AutoSize = true;
-            ClientSize = new Size(749, 527);
+            ClientSize = new Size(1024, 768);
             Controls.Add(tableLayoutPanelMain);
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "InforVisualDashboard";
