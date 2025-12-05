@@ -158,10 +158,10 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
 
                 if (result.IsSuccess)
                 {
-                    _currentData = result.Data;
-                    string jsonData = JsonConvert.SerializeObject(result.Data);
+                    _currentData = result.Data ?? new List<Model_Visual_MaterialHandlerScore>();
+                    string jsonData = JsonConvert.SerializeObject(_currentData);
                     await webView.ExecuteScriptAsync($"renderData({jsonData});");
-                    lblStatus.Text = $"Loaded {result.Data.Count} records.";
+                    lblStatus.Text = $"Loaded {_currentData.Count} records.";
                 }
                 else
                 {

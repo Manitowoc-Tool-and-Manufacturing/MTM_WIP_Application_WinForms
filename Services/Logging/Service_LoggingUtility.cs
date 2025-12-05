@@ -473,12 +473,16 @@ internal static class LoggingUtility
 /// OnProcessExit method represents the event data associated with the</param>
     private static void OnProcessExit(object? sender, EventArgs e)
     {
-        var shutdownMsg = $"{DateTime.Now:yyyy-MM-dd HH:mm:ss} - Application exiting.";
+        var timestamp = DateTime.Now;
+        var shutdownMsg = "Application exiting.";
+        
+        var csvEntry = FormatCsvEntry(timestamp, "INFO", "Application", shutdownMsg, null);
+        
         lock (LogLock)
         {
-            FlushLogEntryToDisk(_normalLogFile, shutdownMsg);
-            FlushLogEntryToDisk(_dbErrorLogFile, shutdownMsg);
-            FlushLogEntryToDisk(_appErrorLogFile, shutdownMsg);
+            FlushLogEntryToDisk(_normalLogFile, csvEntry);
+            FlushLogEntryToDisk(_dbErrorLogFile, csvEntry);
+            FlushLogEntryToDisk(_appErrorLogFile, csvEntry);
         }
     }
 

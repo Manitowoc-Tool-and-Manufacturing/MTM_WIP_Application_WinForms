@@ -297,7 +297,7 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                     P.USER_8, 
                     P.USER_9, 
                     P.USER_10,
-                    PS.AUTO_ISSUE_LOC_ID
+                    PS.BACKFLUSH_LOC_ID
                 FROM PART P
                 LEFT JOIN PART_SITE PS ON P.ID = PS.PART_ID
                 WHERE P.ID = @PartNumber";
@@ -329,7 +329,7 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                                     ScrapLocation = reader["USER_8"]?.ToString() ?? string.Empty,
                                     GenericType = reader["USER_9"]?.ToString() ?? string.Empty,
                                     DetailedType = reader["USER_10"]?.ToString() ?? string.Empty,
-                                    AutoIssueLocation = reader["AUTO_ISSUE_LOC_ID"]?.ToString() ?? string.Empty
+                                    AutoIssueLocation = reader["BACKFLUSH_LOC_ID"]?.ToString() ?? string.Empty
                                 };
 
                                 return Model_Dao_Result<Model_Visual_CoilFlatstock>.Success(model);

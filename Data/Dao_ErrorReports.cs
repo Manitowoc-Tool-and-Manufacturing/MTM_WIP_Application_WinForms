@@ -65,27 +65,23 @@ internal static class Dao_ErrorReports
                 ["p_CallStack"] = report.CallStack ?? (object)DBNull.Value
             };
 
-            // Execute stored procedure
-            var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
+            // Execute stored procedure with custom output parameter for ReportID
+            var outputParams = new List<string> { "ReportID" };
+            
+            var result = await Helper_Database_StoredProcedure.ExecuteWithCustomOutputAsync(
                 connectionString,
                 "sp_error_reports_Insert",
                 parameters,
-                progressHelper: null,
-                connection: connection,
-                transaction: transaction);
+                outputParams,
+                progressHelper: null);
 
             if (result.IsSuccess)
             {
-                // The stored procedure sets OUTPUT parameters @p_Status, @p_ErrorMsg, @p_ReportID
-                // but we need to extract ReportID from a SELECT statement or use LAST_INSERT_ID()
-                // For now, since the stored procedure returns the ReportID via OUT parameter,
-                // we'll query the last insert ID from the result set or StatusMessage
-
-                // Check if we have a DataTable with results (some SPs return SELECT results)
+                // Extract ReportID from output parameters
                 int reportID = 0;
-                if (result.Data != null && result.Data.Rows.Count > 0 && result.Data.Columns.Contains("ReportID"))
+                if (result.Data != null && result.Data.ContainsKey("ReportID"))
                 {
-                    reportID = Convert.ToInt32(result.Data.Rows[0]["ReportID"]);
+                    reportID = Convert.ToInt32(result.Data["ReportID"]);
                 }
 
                 if (reportID > 0)
@@ -114,10 +110,6 @@ internal static class Dao_ErrorReports
                 if (result.Exception != null)
                 {
                     LoggingUtility.LogApplicationError(result.Exception);
-                }
-                else
-                {
-
                 }
 
                 return Model_Dao_Result<int>.Failure(

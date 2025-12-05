@@ -48,21 +48,24 @@ namespace MTM_WIP_Application_Winforms.Services.Analytics
                 var userTransactions = new Dictionary<string, List<DateTime>>();
 
                 // Group transactions by user
-                foreach (DataRow row in result.Data.Rows)
+                if (result.Data != null)
                 {
-                    string userId = row["USER_ID"]?.ToString()?.Trim().ToUpperInvariant() ?? string.Empty;
-                    if (string.IsNullOrEmpty(userId)) continue;
-
-                    if (!userTransactions.ContainsKey(userId))
+                    foreach (DataRow row in result.Data.Rows)
                     {
-                        userTransactions[userId] = new List<DateTime>();
-                    }
+                        string userId = row["USER_ID"]?.ToString()?.Trim().ToUpperInvariant() ?? string.Empty;
+                        if (string.IsNullOrEmpty(userId)) continue;
 
-                    // Only keep last 50
-                    if (userTransactions[userId].Count < 50)
-                    {
-                        DateTime transDate = Convert.ToDateTime(row["TRANSACTION_DATE"]);
-                        userTransactions[userId].Add(transDate);
+                        if (!userTransactions.ContainsKey(userId))
+                        {
+                            userTransactions[userId] = new List<DateTime>();
+                        }
+
+                        // Only keep last 50
+                        if (userTransactions[userId].Count < 50)
+                        {
+                            DateTime transDate = Convert.ToDateTime(row["TRANSACTION_DATE"]);
+                            userTransactions[userId].Add(transDate);
+                        }
                     }
                 }
 
@@ -165,18 +168,21 @@ namespace MTM_WIP_Application_Winforms.Services.Analytics
 
                 var userNames = new Dictionary<string, string>();
 
-                foreach (DataRow row in result.Data.Rows)
+                if (result.Data != null)
                 {
-                    string userId = row["USER_ID"]?.ToString()?.Trim().ToUpperInvariant() ?? string.Empty;
-                    if (string.IsNullOrEmpty(userId)) continue;
-
-                    string firstName = row["FIRST_NAME"]?.ToString()?.Trim() ?? "";
-                    string lastName = row["LAST_NAME"]?.ToString()?.Trim() ?? "";
-                    string fullName = $"{firstName} {lastName}".Trim();
-
-                    if (!string.IsNullOrEmpty(fullName))
+                    foreach (DataRow row in result.Data.Rows)
                     {
-                        userNames[userId] = fullName;
+                        string userId = row["USER_ID"]?.ToString()?.Trim().ToUpperInvariant() ?? string.Empty;
+                        if (string.IsNullOrEmpty(userId)) continue;
+
+                        string firstName = row["FIRST_NAME"]?.ToString()?.Trim() ?? "";
+                        string lastName = row["LAST_NAME"]?.ToString()?.Trim() ?? "";
+                        string fullName = $"{firstName} {lastName}".Trim();
+
+                        if (!string.IsNullOrEmpty(fullName))
+                        {
+                            userNames[userId] = fullName;
+                        }
                     }
                 }
 
@@ -225,7 +231,7 @@ namespace MTM_WIP_Application_Winforms.Services.Analytics
                 Dictionary<string, int> userShifts = new Dictionary<string, int>();
                 Dictionary<string, string> userNames = new Dictionary<string, string>();
 
-                if (metaResult.IsSuccess)
+                if (metaResult.IsSuccess && metaResult.Data != null)
                 {
                     try
                     {
@@ -242,45 +248,48 @@ namespace MTM_WIP_Application_Winforms.Services.Analytics
                 var userScores = new Dictionary<string, Model_Visual_MaterialHandlerScore>();
                 var shiftTotalScores = new Dictionary<int, double> { { 1, 0 }, { 2, 0 }, { 3, 0 }, { 4, 0 }, { 0, 0 } };
 
-                foreach (DataRow row in statsResult.Data.Rows)
+                if (statsResult.Data != null)
                 {
-                    string user = row["User"]?.ToString()?.Trim().ToUpperInvariant() ?? "UNKNOWN";
-                    string type = row["TransactionType"]?.ToString() ?? "";
-                    int count = Convert.ToInt32(row["TransactionCount"]);
-
-                    if (!userScores.ContainsKey(user))
+                    foreach (DataRow row in statsResult.Data.Rows)
                     {
-                        int shift = userShifts.ContainsKey(user) ? userShifts[user] : 0;
-                        string fullName = userNames.ContainsKey(user) ? userNames[user] : user;
+                        string user = row["User"]?.ToString()?.Trim().ToUpperInvariant() ?? "UNKNOWN";
+                        string type = row["TransactionType"]?.ToString() ?? "";
+                        int count = Convert.ToInt32(row["TransactionCount"]);
 
-                        userScores[user] = new Model_Visual_MaterialHandlerScore
+                        if (!userScores.ContainsKey(user))
                         {
-                            UserName = user,
-                            FullName = fullName,
-                            Shift = shift
-                        };
+                            int shift = userShifts.ContainsKey(user) ? userShifts[user] : 0;
+                            string fullName = userNames.ContainsKey(user) ? userNames[user] : user;
+
+                            userScores[user] = new Model_Visual_MaterialHandlerScore
+                            {
+                                UserName = user,
+                                FullName = fullName,
+                                Shift = shift
+                            };
+                        }
+
+                        var scoreModel = userScores[user];
+                        if (!scoreModel.TransactionCounts.ContainsKey(type))
+                            scoreModel.TransactionCounts[type] = 0;
+                        
+                        scoreModel.TransactionCounts[type] += count;
+                        scoreModel.TotalTransactions += count;
+
+                        // Scoring Logic
+                        // Receive/Pick = 2 points, Others = 1 point
+                        double points = (type.Equals("Receive", StringComparison.OrdinalIgnoreCase) || 
+                                         type.Equals("Pick", StringComparison.OrdinalIgnoreCase)) ? 2.0 : 1.0;
+                        
+                        double totalPoints = points * count;
+                        scoreModel.TotalScore += totalPoints;
+                        
+                        // Add to shift total
+                        if (shiftTotalScores.ContainsKey(scoreModel.Shift))
+                            shiftTotalScores[scoreModel.Shift] += totalPoints;
+                        else
+                            shiftTotalScores[0] += totalPoints;
                     }
-
-                    var scoreModel = userScores[user];
-                    if (!scoreModel.TransactionCounts.ContainsKey(type))
-                        scoreModel.TransactionCounts[type] = 0;
-                    
-                    scoreModel.TransactionCounts[type] += count;
-                    scoreModel.TotalTransactions += count;
-
-                    // Scoring Logic
-                    // Receive/Pick = 2 points, Others = 1 point
-                    double points = (type.Equals("Receive", StringComparison.OrdinalIgnoreCase) || 
-                                     type.Equals("Pick", StringComparison.OrdinalIgnoreCase)) ? 2.0 : 1.0;
-                    
-                    double totalPoints = points * count;
-                    scoreModel.TotalScore += totalPoints;
-                    
-                    // Add to shift total
-                    if (shiftTotalScores.ContainsKey(scoreModel.Shift))
-                        shiftTotalScores[scoreModel.Shift] += totalPoints;
-                    else
-                        shiftTotalScores[0] += totalPoints;
                 }
 
                 // 4. Calculate Shift Volume Factors

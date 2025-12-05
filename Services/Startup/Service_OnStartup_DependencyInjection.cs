@@ -35,6 +35,10 @@ namespace MTM_WIP_Application_Winforms.Services.Startup
                 // Register Visual Database Service
                 services.AddTransient<MTM_WIP_Application_Winforms.Services.Visual.IService_VisualDatabase, MTM_WIP_Application_Winforms.Services.Visual.Service_VisualDatabase>();
 
+                // Register Analytics Services
+                services.AddTransient<MTM_WIP_Application_Winforms.Data.IDao_VisualAnalytics, MTM_WIP_Application_Winforms.Data.Dao_VisualAnalytics>();
+                services.AddTransient<MTM_WIP_Application_Winforms.Services.Analytics.IService_UserShiftLogic, MTM_WIP_Application_Winforms.Services.Analytics.Service_UserShiftLogic>();
+
                 // Build the service provider
                 ServiceProvider serviceProvider = services.BuildServiceProvider();
 

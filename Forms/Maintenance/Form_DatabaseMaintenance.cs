@@ -380,14 +380,14 @@ namespace MTM_WIP_Application_Winforms.Forms.Maintenance
                     return;
                 }
 
-                Log($"Calculated shifts for {shiftsResult.Data.Count} users.");
+                Log($"Calculated shifts for {(shiftsResult.Data != null ? shiftsResult.Data.Count : 0)} users.");
 
                 // Read existing data first to preserve names
                 var dao = Program.ServiceProvider.GetRequiredService<Data.IDao_VisualAnalytics>();
                 var existingDataResult = await dao.GetSysVisualDataAsync();
                 
                 Dictionary<string, string> names = new Dictionary<string, string>();
-                if (existingDataResult.IsSuccess && !string.IsNullOrEmpty(existingDataResult.Data.JsonUserFullNames))
+                if (existingDataResult.IsSuccess && existingDataResult.Data != null && !string.IsNullOrEmpty(existingDataResult.Data.JsonUserFullNames))
                 {
                     try 
                     {
@@ -397,7 +397,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Maintenance
                     catch { /* ignore json error */ }
                 }
 
-                var saveResult = await service.SaveVisualMetadataAsync(shiftsResult.Data, names);
+                var saveResult = await service.SaveVisualMetadataAsync(shiftsResult.Data ?? new Dictionary<string, int>(), names);
 
                 if (saveResult.IsSuccess)
                 {
@@ -427,6 +427,12 @@ namespace MTM_WIP_Application_Winforms.Forms.Maintenance
                 Log("Fetching User Names from Visual...");
                 btnUpdateUserNames.Enabled = false;
 
+                if (Program.ServiceProvider == null)
+                {
+                    Log("Error: Service Provider not initialized.");
+                    return;
+                }
+
                 var service = Program.ServiceProvider.GetRequiredService<IService_UserShiftLogic>();
                 var namesResult = await service.FetchUserFullNamesAsync();
 
@@ -436,14 +442,15 @@ namespace MTM_WIP_Application_Winforms.Forms.Maintenance
                     return;
                 }
 
-                Log($"Fetched {namesResult.Data.Count} user names.");
+                var fetchedCount = namesResult.Data?.Count ?? 0;
+                Log($"Fetched {fetchedCount} user names.");
 
                 // Read existing shifts to preserve them
                 var dao = Program.ServiceProvider.GetRequiredService<Data.IDao_VisualAnalytics>();
                 var existingDataResult = await dao.GetSysVisualDataAsync();
                 
                 Dictionary<string, int> shifts = new Dictionary<string, int>();
-                if (existingDataResult.IsSuccess && !string.IsNullOrEmpty(existingDataResult.Data.JsonShiftData))
+                if (existingDataResult.IsSuccess && existingDataResult.Data != null && !string.IsNullOrEmpty(existingDataResult.Data.JsonShiftData))
                 {
                     try 
                     {
@@ -453,7 +460,8 @@ namespace MTM_WIP_Application_Winforms.Forms.Maintenance
                     catch { /* ignore json error */ }
                 }
 
-                var saveResult = await service.SaveVisualMetadataAsync(shifts, namesResult.Data);
+                var namesDict = namesResult.Data ?? new Dictionary<string, string>();
+                var saveResult = await service.SaveVisualMetadataAsync(shifts, namesDict);
 
                 if (saveResult.IsSuccess)
                 {

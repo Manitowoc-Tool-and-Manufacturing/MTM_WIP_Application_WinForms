@@ -109,6 +109,9 @@
         <Content Include="Resources\Html\ReceivingAnalytics_Enhanced.html">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
+        <Content Include="Resources\Html\MaterialHandlerAnalytics_Enhanced.html">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
         <Content Include="Resources\Html\UserAnalytics.html">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>

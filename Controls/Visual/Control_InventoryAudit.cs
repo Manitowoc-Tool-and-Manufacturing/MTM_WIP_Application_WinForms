@@ -554,7 +554,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                 if (_daoVisualAnalytics != null)
                 {
                     var metaResult = await _daoVisualAnalytics.GetSysVisualDataAsync();
-                    if (metaResult.IsSuccess)
+                    if (metaResult.IsSuccess && metaResult.Data != null)
                     {
                         try
                         {
