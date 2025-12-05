@@ -4,6 +4,7 @@ using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
 using MTM_WIP_Application_Winforms.Services.Visual;
+using MTM_WIP_Application_Winforms.Services.Analytics;
 using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Data;
 using MTM_WIP_Application_Winforms.Models.Analytics;
@@ -21,6 +22,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         #region Fields
         private readonly IService_VisualDatabase? _visualService;
         private readonly IDao_VisualAnalytics? _daoVisualAnalytics;
+        private readonly IService_UserShiftLogic? _userShiftLogicService;
         private DataTable? _cachedDataTable;
         private string _lastSearchSelection = string.Empty;
         private Dictionary<string, int> _userShifts = new Dictionary<string, int>();
@@ -33,6 +35,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             InitializeComponent();
             _visualService = Program.ServiceProvider?.GetService<IService_VisualDatabase>();
             _daoVisualAnalytics = Program.ServiceProvider?.GetService<IDao_VisualAnalytics>();
+            _userShiftLogicService = Program.ServiceProvider?.GetService<IService_UserShiftLogic>();
             
             // Initialize Search By options
             _txtSearchBy.TextBox.DataProvider = () => Task.FromResult(new List<string> 
@@ -690,14 +693,14 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
 
         private async Task GenerateAnalyticsReportAsync()
         {
-            if (_visualService == null) return;
+            if (_visualService == null || _userShiftLogicService == null) return;
 
             try
             {
                 _btnGenerateReport.Enabled = false;
                 _btnGenerateReport.Text = "Generating...";
 
-                var selectedUsers = new List<string>();
+                var selectedUsers = new HashSet<string>();
                 foreach (var item in _clbUsers.CheckedItems)
                 {
                     if (item is UserDisplayItem userItem)
@@ -713,20 +716,28 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                 var start = _dtpAnalyticsStart.Value;
                 var end = _dtpAnalyticsEnd.Value;
 
-                var result = await _visualService.GetUserAnalyticsDataAsync(start, end, selectedUsers);
+                // Use the new scoring logic service
+                var result = await _userShiftLogicService.CalculateMaterialHandlerScoresAsync(start, end);
 
                 if (result.IsSuccess && result.Data != null)
                 {
                     SetWorkflowStep(4, true); // Step 5 complete
                     
-                    if (result.Data.Rows.Count == 0)
+                    // Filter by selected users
+                    var filteredData = result.Data
+                        .Where(x => selectedUsers.Contains(x.UserName))
+                        .ToList();
+
+                    if (filteredData.Count == 0)
                     {
                         Service_ErrorHandler.ShowInformation("No data found for the selected users and date range.");
                     }
                     else
                     {
-                        // Open the viewer form
-                        var viewer = new MTM_WIP_Application_Winforms.Forms.Visual.Form_AnalyticsViewer(result.Data);
+                        // Open the viewer form with the Enhanced HTML template
+                        var viewer = new MTM_WIP_Application_Winforms.Forms.Visual.Form_AnalyticsViewer(
+                            filteredData, 
+                            "WIPUserAnalytics_Enhanced.html");
                         viewer.Show();
                     }
                 }

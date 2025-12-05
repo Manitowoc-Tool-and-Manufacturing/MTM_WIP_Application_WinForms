@@ -122,7 +122,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             try
             {
                 await webView.EnsureCoreWebView2Async();
-                string htmlPath = Path.Combine(Application.StartupPath, "Resources", "Html", "MaterialHandlerAnalytics_Enhanced.html");
+                string htmlPath = Path.Combine(Application.StartupPath, "Resources", "Html", "WIPUserAnalytics_Enhanced.html");
                 if (File.Exists(htmlPath))
                 {
                     string html = await File.ReadAllTextAsync(htmlPath);

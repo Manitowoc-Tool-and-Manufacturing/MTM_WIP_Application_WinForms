@@ -109,10 +109,10 @@
         <Content Include="Resources\Html\ReceivingAnalytics_Enhanced.html">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
-        <Content Include="Resources\Html\MaterialHandlerAnalytics_Enhanced.html">
+        <Content Include="Resources\Html\VisualUserAnalytics_Enhanced.html">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
-        <Content Include="Resources\Html\UserAnalytics.html">
+        <Content Include="Resources\Html\WIPUserAnalytics_Enhanced.html">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
         <Content Include="Resources\MTM.png">

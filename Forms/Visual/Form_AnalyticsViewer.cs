@@ -17,12 +17,14 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
     /// </summary>
     public partial class Form_AnalyticsViewer : ThemedForm
     {
-        private readonly DataTable _analyticsData;
+        private readonly object _analyticsData;
+        private readonly string _htmlTemplateName;
 
-        public Form_AnalyticsViewer(DataTable data)
+        public Form_AnalyticsViewer(object data, string htmlTemplateName = "VisualUserAnalytics_Enhanced.html")
         {
             InitializeComponent();
             _analyticsData = data;
+            _htmlTemplateName = htmlTemplateName;
             InitializeWebView();
         }
 
@@ -32,7 +34,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             {
                 await webView.EnsureCoreWebView2Async();
                 
-                string htmlPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "Html", "UserAnalytics.html");
+                string htmlPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "Html", _htmlTemplateName);
                 
                 if (File.Exists(htmlPath))
                 {
@@ -55,30 +57,44 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
         {
             try
             {
-                // Convert DataTable to list of objects for JSON serialization
-                var dataList = new List<object>();
-                foreach (DataRow row in _analyticsData.Rows)
-                {
-                    dataList.Add(new
-                    {
-                        User = row["User"],
-                        Type = row["Type"],
-                        Part = row["Part"],
-                        Qty = row["Qty"],
-                        Date = row["Date"],
-                        FromLoc = row["FromLoc"] == DBNull.Value ? null : row["FromLoc"],
-                        ToLoc = row["ToLoc"] == DBNull.Value ? null : row["ToLoc"],
-                        WorkOrder = row["WorkOrder"] == DBNull.Value ? null : row["WorkOrder"]
-                    });
-                }
+                string json;
 
-                string json = JsonConvert.SerializeObject(dataList);
+                if (_analyticsData is DataTable dt && _htmlTemplateName == "VisualUserAnalytics_Enhanced.html")
+                {
+                    // Convert DataTable to list of objects for JSON serialization (Legacy support)
+                    var dataList = new List<object>();
+                    foreach (DataRow row in dt.Rows)
+                    {
+                        dataList.Add(new
+                        {
+                            User = row["User"],
+                            Type = row["Type"],
+                            Part = row["Part"],
+                            Qty = row["Qty"],
+                            Date = row["Date"],
+                            FromLoc = row["FromLoc"] == DBNull.Value ? null : row["FromLoc"],
+                            ToLoc = row["ToLoc"] == DBNull.Value ? null : row["ToLoc"],
+                            WorkOrder = row["WorkOrder"] == DBNull.Value ? null : row["WorkOrder"]
+                        });
+                    }
+                    json = JsonConvert.SerializeObject(dataList);
+                }
+                else
+                {
+                    // Generic serialization for new models
+                    json = JsonConvert.SerializeObject(_analyticsData);
+                }
                 
-                // Inject data into the WebView
-                await webView.CoreWebView2.ExecuteScriptAsync($"window.injectedData = {json};");
-                
-                // Trigger chart initialization
-                await webView.CoreWebView2.ExecuteScriptAsync("if(window.initChart) window.initChart();");
+                if (_htmlTemplateName == "WIPUserAnalytics_Enhanced.html")
+                {
+                     await webView.CoreWebView2.ExecuteScriptAsync($"renderData({json});");
+                }
+                else
+                {
+                    await webView.CoreWebView2.ExecuteScriptAsync($"window.injectedData = {json};");
+                    // Trigger chart initialization
+                    await webView.CoreWebView2.ExecuteScriptAsync("if(window.initChart) window.initChart();");
+                }
             }
             catch (Exception ex)
             {
