@@ -1,6 +1,7 @@
 using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Models;
+using MTM_WIP_Application_Winforms.Services;
 
 namespace MTM_WIP_Application_Winforms.Forms.Shared;
 
@@ -121,11 +122,9 @@ public partial class Form_QuickButtonEdit : ThemedForm
         {
             LoggingUtility.LogApplicationError(ex);
             Form_QuickButtonEdit_Label_Status.Text = $"Error loading data: {ex.Message}";
-            MessageBox.Show(
+            Service_ErrorHandler.ShowUserError(
                 $"Failed to load parts and operations:\n{ex.Message}",
-                "Load Error",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Error
+                "Load Error"
             );
         }
     }
@@ -284,24 +283,22 @@ public partial class Form_QuickButtonEdit : ThemedForm
         // Validate Part ID selection
         if (Form_QuickButtonEdit_ComboBox_PartId.SelectedIndex <= 0)
         {
-            MessageBox.Show(
+            Service_ErrorHandler.HandleValidationError(
                 "Please select a valid Part ID from the list or enter a valid part number.",
-                "Invalid Part ID",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Warning
-            );
+                field: "Part ID",
+                callerName: nameof(Form_QuickButtonEdit_Button_OK_Click),
+                controlName: this.Name);
             Form_QuickButtonEdit_ComboBox_PartId.Focus();
             return;
         }
 
         if (Form_QuickButtonEdit_ComboBox_Operation.SelectedIndex <= 0)
         {
-            MessageBox.Show(
+            Service_ErrorHandler.HandleValidationError(
                 "Please select a valid Operation from the list.",
-                "Invalid Operation",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Warning
-            );
+                field: "Operation",
+                callerName: nameof(Form_QuickButtonEdit_Button_OK_Click),
+                controlName: this.Name);
             Form_QuickButtonEdit_ComboBox_Operation.Focus();
             return;
         }
@@ -309,12 +306,11 @@ public partial class Form_QuickButtonEdit : ThemedForm
         // Additional validation - check if something is selected or typed
         if (Form_QuickButtonEdit_ComboBox_PartId.SelectedIndex < 0 && string.IsNullOrWhiteSpace(Form_QuickButtonEdit_ComboBox_PartId.Text))
         {
-            MessageBox.Show(
+            Service_ErrorHandler.HandleValidationError(
                 "Please select or enter a Part ID.",
-                "Validation Error",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Warning
-            );
+                field: "Part ID",
+                callerName: nameof(Form_QuickButtonEdit_Button_OK_Click),
+                controlName: this.Name);
             Form_QuickButtonEdit_ComboBox_PartId.Focus();
             return;
         }
@@ -322,12 +318,11 @@ public partial class Form_QuickButtonEdit : ThemedForm
         // Validate Operation selection
         if (Form_QuickButtonEdit_ComboBox_Operation.SelectedIndex < 0)
         {
-            MessageBox.Show(
+            Service_ErrorHandler.HandleValidationError(
                 "Please select an Operation from the list.",
-                "Validation Error",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Warning
-            );
+                field: "Operation",
+                callerName: nameof(Form_QuickButtonEdit_Button_OK_Click),
+                controlName: this.Name);
             Form_QuickButtonEdit_ComboBox_Operation.Focus();
             return;
         }
@@ -369,12 +364,11 @@ public partial class Form_QuickButtonEdit : ThemedForm
         // Final validation
         if (string.IsNullOrEmpty(PartId) || string.IsNullOrEmpty(Operation))
         {
-            MessageBox.Show(
+            Service_ErrorHandler.HandleValidationError(
                 "Part ID and Operation are required.",
-                "Validation Error",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Warning
-            );
+                field: "Required Fields",
+                callerName: nameof(Form_QuickButtonEdit_Button_OK_Click),
+                controlName: this.Name);
             return;
         }
 

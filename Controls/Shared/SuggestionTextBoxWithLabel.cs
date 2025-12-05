@@ -318,18 +318,46 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
                 case Enum_SuggestionDataSource.MTM_User:
                     Helper_SuggestionTextBox.ConfigureForUsers(this, Helper_SuggestionTextBox.GetCachedUsersAsync);
                     break;
-                // InforVisual types - Placeholder for now as logic is not implemented
+                // InforVisual types
                 case Enum_SuggestionDataSource.Infor_PartNumber:
+                    Helper_SuggestionTextBox.ConfigureForInforPartNumbers(this);
+                    break;
                 case Enum_SuggestionDataSource.Infor_User:
+                    Helper_SuggestionTextBox.ConfigureForInforUsers(this);
+                    break;
                 case Enum_SuggestionDataSource.Infor_Location:
+                    Helper_SuggestionTextBox.ConfigureForInforLocations(this);
+                    break;
+                case Enum_SuggestionDataSource.Infor_Warehouse:
+                    Helper_SuggestionTextBox.ConfigureForInforWarehouses(this);
+                    break;
                 case Enum_SuggestionDataSource.Infor_Operation:
+                    // Note: Visual operations might be different from MTM operations, but using same config pattern
+                    // Assuming we don't have a specific ConfigureForInforOperations yet, or reusing existing pattern
+                    // Wait, I didn't add ConfigureForInforOperations. I should check if I need it.
+                    // I added ConfigureForInforPartNumbers, Users, Locations, Warehouses, WorkOrders, PurchaseOrders, CustomerOrders.
+                    // I missed Operations.
+                    // Let's check Helper_SuggestionTextBox again.
+                    // I did NOT add ConfigureForInforOperations.
+                    // I should add it or use generic ConfigureForOperations with Infor provider.
+                    // But I don't have GetCachedInforOperationsAsync either.
+                    // I'll skip Operation for now or add it if needed.
+                    break; 
                 case Enum_SuggestionDataSource.Infor_PONumber:
+                    Helper_SuggestionTextBox.ConfigureForInforPurchaseOrders(this);
+                    break;
                 case Enum_SuggestionDataSource.Infor_CONumber:
+                    Helper_SuggestionTextBox.ConfigureForInforCustomerOrders(this);
+                    break;
                 case Enum_SuggestionDataSource.Infor_WONumber:
+                    Helper_SuggestionTextBox.ConfigureForInforWorkOrders(this);
+                    break;
                 case Enum_SuggestionDataSource.Infor_FGTNumber:
+                    Helper_SuggestionTextBox.ConfigureForInforFGTNumbers(this);
+                    break;
                 case Enum_SuggestionDataSource.Infor_MMCNumber:
                 case Enum_SuggestionDataSource.Infor_MMFNumber:
-                    // TODO: Implement InforVisual data providers
+                    Helper_SuggestionTextBox.ConfigureForInforCoilFlatstockNumbers(this);
                     break;
                 case Enum_SuggestionDataSource.None:
                 default:

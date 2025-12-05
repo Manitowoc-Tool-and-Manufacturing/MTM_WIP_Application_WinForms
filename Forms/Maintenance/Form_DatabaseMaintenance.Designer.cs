@@ -64,6 +64,10 @@ namespace MTM_WIP_Application_Winforms.Forms.Maintenance
             btnOptimize = new Button();
             txtLog = new RichTextBox();
             progressBar = new ProgressBar();
+            grpVisual = new GroupBox();
+            tableLayoutPanelVisual = new TableLayoutPanel();
+            btnUpdateUserShifts = new Button();
+            btnUpdateUserNames = new Button();
             Form_DatabaseMaintenance_TableLayout_Main.SuspendLayout();
             Form_DatabaseMaintenance_TabControl_Main.SuspendLayout();
             tabMigration.SuspendLayout();
@@ -290,11 +294,14 @@ namespace MTM_WIP_Application_Winforms.Forms.Maintenance
             Form_DatabaseMaintenance_TableLayout_Maintenance.Controls.Add(grpBackup, 0, 0);
             Form_DatabaseMaintenance_TableLayout_Maintenance.Controls.Add(grpCleanup, 1, 0);
             Form_DatabaseMaintenance_TableLayout_Maintenance.Controls.Add(grpHealth, 2, 0);
+            Form_DatabaseMaintenance_TableLayout_Maintenance.Controls.Add(grpVisual, 0, 1);
+            Form_DatabaseMaintenance_TableLayout_Maintenance.SetColumnSpan(grpVisual, 3);
             Form_DatabaseMaintenance_TableLayout_Maintenance.Dock = DockStyle.Fill;
             Form_DatabaseMaintenance_TableLayout_Maintenance.Location = new Point(3, 3);
             Form_DatabaseMaintenance_TableLayout_Maintenance.Name = "Form_DatabaseMaintenance_TableLayout_Maintenance";
-            Form_DatabaseMaintenance_TableLayout_Maintenance.RowCount = 1;
-            Form_DatabaseMaintenance_TableLayout_Maintenance.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            Form_DatabaseMaintenance_TableLayout_Maintenance.RowCount = 2;
+            Form_DatabaseMaintenance_TableLayout_Maintenance.RowStyles.Add(new RowStyle(SizeType.Percent, 70F));
+            Form_DatabaseMaintenance_TableLayout_Maintenance.RowStyles.Add(new RowStyle(SizeType.Percent, 30F));
             Form_DatabaseMaintenance_TableLayout_Maintenance.Size = new Size(983, 305);
             Form_DatabaseMaintenance_TableLayout_Maintenance.TabIndex = 0;
             // 
@@ -447,6 +454,56 @@ namespace MTM_WIP_Application_Winforms.Forms.Maintenance
             grpHealth.TabIndex = 2;
             grpHealth.TabStop = false;
             grpHealth.Text = "Health && Diagnostics";
+            // 
+            // grpVisual
+            // 
+            grpVisual.Controls.Add(tableLayoutPanelVisual);
+            grpVisual.Dock = DockStyle.Fill;
+            grpVisual.Location = new Point(3, 216);
+            grpVisual.Name = "grpVisual";
+            grpVisual.Size = new Size(977, 86);
+            grpVisual.TabIndex = 3;
+            grpVisual.TabStop = false;
+            grpVisual.Text = "Infor Visual Integration";
+            // 
+            // tableLayoutPanelVisual
+            // 
+            tableLayoutPanelVisual.ColumnCount = 2;
+            tableLayoutPanelVisual.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanelVisual.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanelVisual.Controls.Add(btnUpdateUserShifts, 0, 0);
+            tableLayoutPanelVisual.Controls.Add(btnUpdateUserNames, 1, 0);
+            tableLayoutPanelVisual.Dock = DockStyle.Fill;
+            tableLayoutPanelVisual.Location = new Point(3, 19);
+            tableLayoutPanelVisual.Name = "tableLayoutPanelVisual";
+            tableLayoutPanelVisual.RowCount = 1;
+            tableLayoutPanelVisual.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanelVisual.Size = new Size(971, 64);
+            tableLayoutPanelVisual.TabIndex = 0;
+            // 
+            // btnUpdateUserShifts
+            // 
+            btnUpdateUserShifts.Dock = DockStyle.Fill;
+            btnUpdateUserShifts.Location = new Point(20, 10);
+            btnUpdateUserShifts.Margin = new Padding(20, 10, 20, 10);
+            btnUpdateUserShifts.Name = "btnUpdateUserShifts";
+            btnUpdateUserShifts.Size = new Size(445, 44);
+            btnUpdateUserShifts.TabIndex = 0;
+            btnUpdateUserShifts.Text = "Update User Shifts (Last 50 Trans)";
+            btnUpdateUserShifts.UseVisualStyleBackColor = true;
+            btnUpdateUserShifts.Click += btnUpdateUserShifts_Click;
+            // 
+            // btnUpdateUserNames
+            // 
+            btnUpdateUserNames.Dock = DockStyle.Fill;
+            btnUpdateUserNames.Location = new Point(505, 10);
+            btnUpdateUserNames.Margin = new Padding(20, 10, 20, 10);
+            btnUpdateUserNames.Name = "btnUpdateUserNames";
+            btnUpdateUserNames.Size = new Size(446, 44);
+            btnUpdateUserNames.TabIndex = 1;
+            btnUpdateUserNames.Text = "Update User Names (From Visual)";
+            btnUpdateUserNames.UseVisualStyleBackColor = true;
+            btnUpdateUserNames.Click += btnUpdateUserNames_Click;
             // 
             // tableLayoutPanel1
             // 
@@ -650,5 +707,9 @@ namespace MTM_WIP_Application_Winforms.Forms.Maintenance
         private TableLayoutPanel Form_DatabaseMaintenance_TableLayoutPanel_Cleanup;
         private TableLayoutPanel tableLayoutPanel1;
         private TableLayoutPanel tableLayoutPanel2;
+        private GroupBox grpVisual;
+        private TableLayoutPanel tableLayoutPanelVisual;
+        private Button btnUpdateUserShifts;
+        private Button btnUpdateUserNames;
     }
 }

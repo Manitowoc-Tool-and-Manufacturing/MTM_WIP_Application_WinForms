@@ -243,6 +243,8 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                 MainForm_OnStartup_WireUpDpiChangeEvents();
                 Debug.WriteLine("[DEBUG] [MainForm.ctor] DPI change events wired up.");
 
+                InitializeViewMenuItems();
+
                 Service_DebugTracer.TraceUIAction("STARTUP_COMPONENTS", nameof(MainForm),
                     new Dictionary<string, object>
                     {
@@ -598,7 +600,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                 int newPercent = (int)Math.Round(e.DeviceDpiNew / 96.0 * 100);
 
                 // Prompt user for restart or auto-resize
-                var result = MessageBox.Show(
+                var result = Service_ErrorHandler.ShowConfirmation(
                     $"Display scaling has changed from {oldPercent}% to {newPercent}%.\n\n" +
                     "For the best appearance, it is recommended to restart the application.\n\n" +
                     "Click 'Yes' to restart now (recommended)\n" +
@@ -606,8 +608,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                     "Click 'Cancel' to continue without changes",
                     "Display Scaling Changed",
                     MessageBoxButtons.YesNoCancel,
-                    MessageBoxIcon.Question,
-                    MessageBoxDefaultButton.Button1);
+                    MessageBoxIcon.Question);
 
                 if (result == DialogResult.Yes)
                 {
@@ -1480,7 +1481,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
         {
             try
             {
-                MessageBox.Show("Be aware that not all data in these files are accurate as I have not gotten to updating them yet.", "Help", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                Service_ErrorHandler.ShowInformation("Be aware that not all data in these files are accurate as I have not gotten to updating them yet.", "Help");
             }
             catch (Exception ex)
             {
@@ -1613,7 +1614,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             }
         }
 
-        private void MainForm_MenuStrip_Development_Analytics_Click(object? sender, EventArgs e)
+        private void MainForm_MenuStrip_View_Analytics_Click(object? sender, EventArgs e)
         {
             try
             {
@@ -1644,19 +1645,30 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                 dbMenu.Click += MainForm_MenuStrip_Development_DatabaseMaintenance_Click;
                 developmentToolStripMenuItem.DropDownItems.Add(dbMenu);
             }
+        }
 
-            // Material Handler Analytics
+        private void InitializeViewMenuItems()
+        {
+            if (MainForm_MenuStrip_View == null) return;
+
             bool hasAnalyticsMenu = false;
-            foreach (ToolStripItem item in developmentToolStripMenuItem.DropDownItems)
+            foreach (ToolStripItem item in MainForm_MenuStrip_View.DropDownItems)
             {
                 if (item.Text == "Material Handler Analytics") hasAnalyticsMenu = true;
             }
 
             if (!hasAnalyticsMenu)
             {
+                // Add separator if needed
+                if (MainForm_MenuStrip_View.DropDownItems.Count > 0 && 
+                    !(MainForm_MenuStrip_View.DropDownItems[MainForm_MenuStrip_View.DropDownItems.Count - 1] is ToolStripSeparator))
+                {
+                     MainForm_MenuStrip_View.DropDownItems.Add(new ToolStripSeparator());
+                }
+
                 var analyticsMenu = new ToolStripMenuItem("Material Handler Analytics");
-                analyticsMenu.Click += MainForm_MenuStrip_Development_Analytics_Click;
-                developmentToolStripMenuItem.DropDownItems.Add(analyticsMenu);
+                analyticsMenu.Click += MainForm_MenuStrip_View_Analytics_Click;
+                MainForm_MenuStrip_View.DropDownItems.Add(analyticsMenu);
             }
         }
     }

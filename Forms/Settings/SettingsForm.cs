@@ -449,7 +449,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
             {
                 if (HasChanges)
                 {
-                    DialogResult result = MessageBox.Show(
+                    DialogResult result = Service_ErrorHandler.ShowConfirmation(
                         @"You have changes that require a restart. Exit and reset the application?",
                         @"Unsaved Changes",
                         MessageBoxButtons.YesNo,

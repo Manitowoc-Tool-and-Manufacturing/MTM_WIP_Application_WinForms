@@ -5,6 +5,7 @@ using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
+using MTM_WIP_Application_Winforms.Models.Enums;
 
 namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 {
@@ -142,13 +143,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 Control_PartIDManagement_Suggestion_AddPartNumber.TextBox.BackColor = System.Drawing.SystemColors.Window;
             }
 
-            Helper_SuggestionTextBox.ConfigureForItemTypes(
-                Control_PartIDManagement_Suggestion_AddItemType,
-                Helper_SuggestionTextBox.GetCachedItemTypesAsync);
+            Control_PartIDManagement_Suggestion_AddItemType.SuggestionDataSource = Enum_SuggestionDataSource.MTM_ItemType;
 
-            Helper_SuggestionTextBox.ConfigureForPartNumbers(
-                Control_PartIDManagement_Suggestion_EditSelectPart,
-                Helper_SuggestionTextBox.GetCachedPartNumbersAsync);
+            Control_PartIDManagement_Suggestion_EditSelectPart.SuggestionDataSource = Enum_SuggestionDataSource.MTM_PartNumber;
 
             if (Control_PartIDManagement_Suggestion_EditNewPartNumber != null)
             {
@@ -160,13 +157,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 Control_PartIDManagement_Suggestion_EditNewPartNumber.TextBox.BackColor = System.Drawing.SystemColors.Window;
             }
 
-            Helper_SuggestionTextBox.ConfigureForItemTypes(
-                Control_PartIDManagement_Suggestion_EditItemType,
-                Helper_SuggestionTextBox.GetCachedItemTypesAsync);
+            Control_PartIDManagement_Suggestion_EditItemType.SuggestionDataSource = Enum_SuggestionDataSource.MTM_ItemType;
 
-            Helper_SuggestionTextBox.ConfigureForPartNumbers(
-                Control_PartIDManagement_Suggestion_RemoveSelectPart,
-                Helper_SuggestionTextBox.GetCachedPartNumbersAsync);
+            Control_PartIDManagement_Suggestion_RemoveSelectPart.SuggestionDataSource = Enum_SuggestionDataSource.MTM_PartNumber;
         }
 
         private void WireUpEventHandlers()

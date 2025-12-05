@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Material Handler Analytics</title>
+    <style>
+        :root {
+            --bg-color: #1e1e1e;
+            --card-bg: #252526;
+            --text-color: #d4d4d4;
+            --accent-color: #007acc;
+            --border-color: #3e3e42;
+            --success-color: #4ec9b0;
+            --warning-color: #ce9178;
+            --danger-color: #f44747;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .card-title {
+            font-size: 0.9em;
+            color: #888;
+            margin-bottom: 5px;
+        }
+
+        .card-value {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: var(--accent-color);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background-color: #2d2d30;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background-color: #2a2d2e;
+        }
+
+        .grade-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        .grade-A { background-color: rgba(78, 201, 176, 0.2); color: #4ec9b0; }
+        .grade-B { background-color: rgba(0, 122, 204, 0.2); color: #569cd6; }
+        .grade-C { background-color: rgba(220, 220, 170, 0.2); color: #dcdcaa; }
+        .grade-D { background-color: rgba(206, 145, 120, 0.2); color: #ce9178; }
+        .grade-F { background-color: rgba(244, 71, 71, 0.2); color: #f44747; }
+
+        .shift-badge {
+            background-color: #333;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.85em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Material Handler Performance</h1>
+            <div id="date-range"></div>
+        </div>
+
+        <div class="summary-cards">
+            <div class="card">
+                <div class="card-title">Total Transactions</div>
+                <div class="card-value" id="total-tx">0</div>
+            </div>
+            <div class="card">
+                <div class="card-title">Active Users</div>
+                <div class="card-value" id="active-users">0</div>
+            </div>
+            <div class="card">
+                <div class="card-title">Top Performer</div>
+                <div class="card-value" id="top-performer" style="font-size: 1.2em;">-</div>
+            </div>
+            <div class="card">
+                <div class="card-title">Avg Score</div>
+                <div class="card-value" id="avg-score">0</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <table id="performance-table">
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>User</th>
+                        <th>Shift</th>
+                        <th>Transactions</th>
+                        <th>Raw Score</th>
+                        <th>Shift Factor</th>
+                        <th>Adj. Score</th>
+                        <th>Grade</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Rows will be populated by JS -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        function renderData(data) {
+            const tableBody = document.querySelector('#performance-table tbody');
+            tableBody.innerHTML = '';
+
+            let totalTx = 0;
+            let totalScore = 0;
+            let topUser = '-';
+            let maxScore = -1;
+
+            data.forEach((item, index) => {
+                totalTx += item.TotalTransactions;
+                totalScore += item.TotalScore;
+
+                if (item.TotalScore > maxScore) {
+                    maxScore = item.TotalScore;
+                    topUser = item.FullName || item.UserName;
+                }
+
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>
+                        <div style="font-weight: bold;">${item.FullName || item.UserName}</div>
+                        <div style="font-size: 0.8em; color: #888;">${item.UserName}</div>
+                    </td>
+                    <td><span class="shift-badge">Shift ${item.Shift || '?'}</span></td>
+                    <td>${item.TotalTransactions}</td>
+                    <td>${(item.TotalScore / item.ShiftVolumeFactor).toFixed(1)}</td>
+                    <td>${item.ShiftVolumeFactor.toFixed(2)}x</td>
+                    <td style="font-weight: bold;">${item.TotalScore.toFixed(1)}</td>
+                    <td><span class="grade-badge grade-${item.Grade}">${item.Grade}</span></td>
+                `;
+                tableBody.appendChild(row);
+            });
+
+            document.getElementById('total-tx').textContent = totalTx.toLocaleString();
+            document.getElementById('active-users').textContent = data.length;
+            document.getElementById('top-performer').textContent = topUser;
+            document.getElementById('avg-score').textContent = data.length > 0 ? (totalScore / data.length).toFixed(1) : '0';
+        }
+    </script>
+</body>
+</html>

@@ -4,6 +4,8 @@ using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Models.Enums;
 using MTM_WIP_Application_Winforms.Services;
+using MTM_WIP_Application_Winforms.Services.Visual;
+using Microsoft.Extensions.DependencyInjection;
 using System.Data;
 
 namespace MTM_WIP_Application_Winforms.Helpers
@@ -158,7 +160,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
             suggestionTextBox.DataProvider = dataProvider;
             suggestionTextBox.MaxResults = 100;
             suggestionTextBox.EnableWildcards = true;
-            suggestionTextBox.ClearOnNoMatch = true;
+            suggestionTextBox.NoMatchAction = Enum_SuggestionNoMatchAction.ShowWarningAndClear;
             suggestionTextBox.SuppressExactMatch = true;
 
             if (enableF4)
@@ -181,7 +183,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
             suggestionTextBox.DataProvider = dataProvider;
             suggestionTextBox.MaxResults = 50;
             suggestionTextBox.EnableWildcards = true;
-            suggestionTextBox.ClearOnNoMatch = true;
+            suggestionTextBox.NoMatchAction = Enum_SuggestionNoMatchAction.ShowWarningAndClear;
             suggestionTextBox.SuppressExactMatch = true;
 
             if (enableF4)
@@ -204,7 +206,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
             suggestionTextBox.DataProvider = dataProvider;
             suggestionTextBox.MaxResults = 100;
             suggestionTextBox.EnableWildcards = true;
-            suggestionTextBox.ClearOnNoMatch = true;
+            suggestionTextBox.NoMatchAction = Enum_SuggestionNoMatchAction.ShowWarningAndClear;
             suggestionTextBox.SuppressExactMatch = true;
 
             if (enableF4)
@@ -227,7 +229,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
             suggestionTextBox.DataProvider = dataProvider;
             suggestionTextBox.MaxResults = 50;
             suggestionTextBox.EnableWildcards = false; // Item types are short, no wildcards needed
-            suggestionTextBox.ClearOnNoMatch = true;
+            suggestionTextBox.NoMatchAction = Enum_SuggestionNoMatchAction.ShowWarningAndClear;
             suggestionTextBox.SuppressExactMatch = true;
 
             if (enableF4)
@@ -250,7 +252,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
             suggestionTextBox.DataProvider = dataProvider;
             suggestionTextBox.MaxResults = 20;
             suggestionTextBox.EnableWildcards = false; // Color codes are simple, no wildcards
-            suggestionTextBox.ClearOnNoMatch = false; // Allow custom color codes (e.g., "OTHER")
+            suggestionTextBox.NoMatchAction = Enum_SuggestionNoMatchAction.None; // Allow custom color codes (e.g., "OTHER")
             suggestionTextBox.SuppressExactMatch = true;
 
             if (enableF4)
@@ -312,7 +314,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
             suggestionTextBox.DataProvider = dataProvider;
             suggestionTextBox.MaxResults = 50;
             suggestionTextBox.EnableWildcards = true;
-            suggestionTextBox.ClearOnNoMatch = true;
+            suggestionTextBox.NoMatchAction = Enum_SuggestionNoMatchAction.ShowWarningAndClear;
             suggestionTextBox.SuppressExactMatch = true;
 
             if (enableF4)
@@ -371,7 +373,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
             suggestionTextBox.DataProvider = dataProvider;
             suggestionTextBox.MaxResults = 50;
             suggestionTextBox.EnableWildcards = false; // User names are short, no wildcards needed
-            suggestionTextBox.ClearOnNoMatch = true;
+            suggestionTextBox.NoMatchAction = Enum_SuggestionNoMatchAction.ShowWarningAndClear;
             suggestionTextBox.SuppressExactMatch = true;
 
             if (enableF4)
@@ -407,7 +409,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
             suggestionTextBox.DataProvider = dataProvider;
             suggestionTextBox.MaxResults = 50;
             suggestionTextBox.EnableWildcards = true;
-            suggestionTextBox.ClearOnNoMatch = true;
+            suggestionTextBox.NoMatchAction = Enum_SuggestionNoMatchAction.ShowWarningAndClear;
             suggestionTextBox.SuppressExactMatch = true;
 
             if (enableF4)
@@ -437,7 +439,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
             suggestionTextBox.DataProvider = dataProvider;
             suggestionTextBox.MaxResults = 50;
             suggestionTextBox.EnableWildcards = true;
-            suggestionTextBox.ClearOnNoMatch = true;
+            suggestionTextBox.NoMatchAction = Enum_SuggestionNoMatchAction.ShowWarningAndClear;
             suggestionTextBox.SuppressExactMatch = true;
 
             if (enableF4)
@@ -467,7 +469,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
             suggestionTextBox.DataProvider = dataProvider;
             suggestionTextBox.MaxResults = 50;
             suggestionTextBox.EnableWildcards = true;
-            suggestionTextBox.ClearOnNoMatch = true;
+            suggestionTextBox.NoMatchAction = Enum_SuggestionNoMatchAction.ShowWarningAndClear;
             suggestionTextBox.SuppressExactMatch = true;
 
             if (enableF4)
@@ -507,9 +509,103 @@ namespace MTM_WIP_Application_Winforms.Helpers
             suggestionTextBox.DataProvider = GetCachedBuildingsAsync;
             suggestionTextBox.MaxResults = 20;
             suggestionTextBox.EnableWildcards = false;
-            suggestionTextBox.ClearOnNoMatch = true;
+            suggestionTextBox.NoMatchAction = Enum_SuggestionNoMatchAction.ShowWarningAndClear;
             suggestionTextBox.SuppressExactMatch = true;
         }
+
+        #region Infor Visual Configuration Helpers
+
+        public static void ConfigureForInforPartNumbers(SuggestionTextBox suggestionTextBox, bool enableF4 = true)
+        {
+            ConfigureForPartNumbers(suggestionTextBox, GetCachedInforPartNumbersAsync, enableF4);
+        }
+
+        public static void ConfigureForInforPartNumbers(SuggestionTextBoxWithLabel control)
+        {
+            ConfigureForPartNumbers(control.TextBox, GetCachedInforPartNumbersAsync, enableF4: false);
+        }
+
+        public static void ConfigureForInforUsers(SuggestionTextBox suggestionTextBox, bool enableF4 = true)
+        {
+            ConfigureForUsers(suggestionTextBox, GetCachedInforUsersAsync, enableF4);
+        }
+
+        public static void ConfigureForInforUsers(SuggestionTextBoxWithLabel control)
+        {
+            ConfigureForUsers(control.TextBox, GetCachedInforUsersAsync, enableF4: false);
+        }
+
+        public static void ConfigureForInforLocations(SuggestionTextBox suggestionTextBox, bool enableF4 = true)
+        {
+            ConfigureForLocations(suggestionTextBox, GetCachedInforLocationsAsync, enableF4);
+        }
+
+        public static void ConfigureForInforLocations(SuggestionTextBoxWithLabel control)
+        {
+            ConfigureForLocations(control.TextBox, GetCachedInforLocationsAsync, enableF4: false);
+        }
+
+        public static void ConfigureForInforWarehouses(SuggestionTextBox suggestionTextBox, bool enableF4 = true)
+        {
+            ConfigureForWarehouses(suggestionTextBox, GetCachedInforWarehousesAsync, enableF4);
+        }
+
+        public static void ConfigureForInforWarehouses(SuggestionTextBoxWithLabel control)
+        {
+            ConfigureForWarehouses(control.TextBox, GetCachedInforWarehousesAsync, enableF4: false);
+        }
+
+        public static void ConfigureForInforWorkOrders(SuggestionTextBox suggestionTextBox, bool enableF4 = true)
+        {
+            ConfigureForWorkOrders(suggestionTextBox, GetCachedInforWorkOrdersAsync, enableF4);
+        }
+
+        public static void ConfigureForInforWorkOrders(SuggestionTextBoxWithLabel control)
+        {
+            ConfigureForWorkOrders(control.TextBox, GetCachedInforWorkOrdersAsync, enableF4: false);
+        }
+
+        public static void ConfigureForInforPurchaseOrders(SuggestionTextBox suggestionTextBox, bool enableF4 = true)
+        {
+            ConfigureForPurchaseOrders(suggestionTextBox, GetCachedInforPurchaseOrdersAsync, enableF4);
+        }
+
+        public static void ConfigureForInforPurchaseOrders(SuggestionTextBoxWithLabel control)
+        {
+            ConfigureForPurchaseOrders(control.TextBox, GetCachedInforPurchaseOrdersAsync, enableF4: false);
+        }
+
+        public static void ConfigureForInforCustomerOrders(SuggestionTextBox suggestionTextBox, bool enableF4 = true)
+        {
+            ConfigureForCustomerOrders(suggestionTextBox, GetCachedInforCustomerOrdersAsync, enableF4);
+        }
+
+        public static void ConfigureForInforCustomerOrders(SuggestionTextBoxWithLabel control)
+        {
+            ConfigureForCustomerOrders(control.TextBox, GetCachedInforCustomerOrdersAsync, enableF4: false);
+        }
+
+        public static void ConfigureForInforFGTNumbers(SuggestionTextBox suggestionTextBox, bool enableF4 = true)
+        {
+            ConfigureForPartNumbers(suggestionTextBox, GetCachedInforFGTNumbersAsync, enableF4);
+        }
+
+        public static void ConfigureForInforFGTNumbers(SuggestionTextBoxWithLabel control)
+        {
+            ConfigureForPartNumbers(control.TextBox, GetCachedInforFGTNumbersAsync, enableF4: false);
+        }
+
+        public static void ConfigureForInforCoilFlatstockNumbers(SuggestionTextBox suggestionTextBox, bool enableF4 = true)
+        {
+            ConfigureForPartNumbers(suggestionTextBox, GetCachedInforCoilFlatstockNumbersAsync, enableF4);
+        }
+
+        public static void ConfigureForInforCoilFlatstockNumbers(SuggestionTextBoxWithLabel control)
+        {
+            ConfigureForPartNumbers(control.TextBox, GetCachedInforCoilFlatstockNumbersAsync, enableF4: false);
+        }
+
+        #endregion
 
         #endregion
 
@@ -615,6 +711,11 @@ namespace MTM_WIP_Application_Winforms.Helpers
         #endregion
 
         #region Cached Data Providers
+
+        private static IService_VisualDatabase? GetVisualService()
+        {
+            return Program.ServiceProvider?.GetService<IService_VisualDatabase>();
+        }
 
         /// <summary>
         /// Gets part numbers from the pre-loaded Helper_UI_ComboBoxes cache.
@@ -747,6 +848,82 @@ namespace MTM_WIP_Application_Winforms.Helpers
                 LoggingUtility.LogApplicationError(ex);
                 return new List<string>();
             }
+        }
+
+        #endregion
+
+        #region Infor Visual Data Providers
+
+        public static async Task<List<string>> GetCachedInforPartNumbersAsync()
+        {
+            var service = GetVisualService();
+            if (service == null) return new List<string>();
+            var result = await service.GetPartIdsAsync();
+            return result.IsSuccess ? result.Data ?? new List<string>() : new List<string>();
+        }
+
+        public static async Task<List<string>> GetCachedInforUsersAsync()
+        {
+            var service = GetVisualService();
+            if (service == null) return new List<string>();
+            var result = await service.GetUserIdsAsync();
+            return result.IsSuccess ? result.Data ?? new List<string>() : new List<string>();
+        }
+
+        public static async Task<List<string>> GetCachedInforLocationsAsync()
+        {
+            var service = GetVisualService();
+            if (service == null) return new List<string>();
+            var result = await service.GetLocationIdsAsync();
+            return result.IsSuccess ? result.Data ?? new List<string>() : new List<string>();
+        }
+
+        public static async Task<List<string>> GetCachedInforWarehousesAsync()
+        {
+            var service = GetVisualService();
+            if (service == null) return new List<string>();
+            var result = await service.GetWarehouseIdsAsync();
+            return result.IsSuccess ? result.Data ?? new List<string>() : new List<string>();
+        }
+
+        public static async Task<List<string>> GetCachedInforWorkOrdersAsync()
+        {
+            var service = GetVisualService();
+            if (service == null) return new List<string>();
+            var result = await service.GetWorkOrdersAsync();
+            return result.IsSuccess ? result.Data ?? new List<string>() : new List<string>();
+        }
+
+        public static async Task<List<string>> GetCachedInforPurchaseOrdersAsync()
+        {
+            var service = GetVisualService();
+            if (service == null) return new List<string>();
+            var result = await service.GetPurchaseOrdersAsync();
+            return result.IsSuccess ? result.Data ?? new List<string>() : new List<string>();
+        }
+
+        public static async Task<List<string>> GetCachedInforCustomerOrdersAsync()
+        {
+            var service = GetVisualService();
+            if (service == null) return new List<string>();
+            var result = await service.GetCustomerOrdersAsync();
+            return result.IsSuccess ? result.Data ?? new List<string>() : new List<string>();
+        }
+
+        public static async Task<List<string>> GetCachedInforFGTNumbersAsync()
+        {
+            var service = GetVisualService();
+            if (service == null) return new List<string>();
+            var result = await service.GetDieIdsAsync();
+            return result.IsSuccess ? result.Data ?? new List<string>() : new List<string>();
+        }
+
+        public static async Task<List<string>> GetCachedInforCoilFlatstockNumbersAsync()
+        {
+            var service = GetVisualService();
+            if (service == null) return new List<string>();
+            var result = await service.GetCoilFlatstockPartIdsAsync();
+            return result.IsSuccess ? result.Data ?? new List<string>() : new List<string>();
         }
 
         #endregion

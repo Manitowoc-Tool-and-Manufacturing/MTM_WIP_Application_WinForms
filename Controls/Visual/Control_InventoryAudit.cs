@@ -6,6 +6,9 @@ using MTM_WIP_Application_Winforms.Services;
 using MTM_WIP_Application_Winforms.Services.Visual;
 using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Data;
+using MTM_WIP_Application_Winforms.Models.Analytics;
+using MTM_WIP_Application_Winforms.Models.Enums;
+using Newtonsoft.Json;
 
 namespace MTM_WIP_Application_Winforms.Controls.Visual
 {
@@ -17,8 +20,11 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
     {
         #region Fields
         private readonly IService_VisualDatabase? _visualService;
+        private readonly IDao_VisualAnalytics? _daoVisualAnalytics;
         private DataTable? _cachedDataTable;
         private string _lastSearchSelection = string.Empty;
+        private Dictionary<string, int> _userShifts = new Dictionary<string, int>();
+        private Dictionary<string, string> _userNames = new Dictionary<string, string>();
         #endregion
 
         #region Constructors
@@ -26,6 +32,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         {
             InitializeComponent();
             _visualService = Program.ServiceProvider?.GetService<IService_VisualDatabase>();
+            _daoVisualAnalytics = Program.ServiceProvider?.GetService<IDao_VisualAnalytics>();
             
             // Initialize Search By options
             _txtSearchBy.TextBox.DataProvider = () => Task.FromResult(new List<string> 
@@ -56,17 +63,18 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         private void ConfigureSuggestions()
         {
             // Initial configuration for Part Number (default)
-            Helper_SuggestionTextBox.ConfigureForPartNumbers(_txtLifecyclePart, GetPartIdsAsync);
+            _txtLifecyclePart.SuggestionDataSource = Enum_SuggestionDataSource.Infor_PartNumber;
         }
 
         private void InitializeDefaultValues()
         {
-            _dtpLifecycleStart.Value = DateTime.Today.AddDays(-30);
-            _dtpLifecycleEnd.Value = DateTime.Today;
+            // Lifecycle Defaults
+            _rbLifecycleMonth.Checked = true;
+            SetDateRange(_dtpLifecycleStart, _dtpLifecycleEnd, "Month");
             
             // Analytics Defaults
-            _dtpAnalyticsStart.Value = DateTime.Today;
-            _dtpAnalyticsEnd.Value = DateTime.Today.AddDays(1).AddSeconds(-1); // End of today
+            _rbAnalyticsMonth.Checked = true;
+            SetDateRange(_dtpAnalyticsStart, _dtpAnalyticsEnd, "Month");
             
             UpdateAnalyticsWorkflow();
         }
@@ -79,6 +87,18 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             // Search By Selection Change
             _txtSearchBy.SuggestionSelected += (s, e) => OnSearchBySelected();
             _txtSearchBy.TextBox.Leave += (s, e) => OnSearchBySelected(); // Ensure update on leave if typed
+
+            // Lifecycle Date Range Events
+            _rbLifecycleToday.CheckedChanged += (s, e) => OnLifecycleDateRangeChanged();
+            _rbLifecycleWeek.CheckedChanged += (s, e) => OnLifecycleDateRangeChanged();
+            _rbLifecycleMonth.CheckedChanged += (s, e) => OnLifecycleDateRangeChanged();
+            _rbLifecycleCustom.CheckedChanged += (s, e) => OnLifecycleDateRangeChanged();
+
+            // Analytics Date Range Events
+            _rbAnalyticsToday.CheckedChanged += (s, e) => OnAnalyticsDateRangeChanged();
+            _rbAnalyticsWeek.CheckedChanged += (s, e) => OnAnalyticsDateRangeChanged();
+            _rbAnalyticsMonth.CheckedChanged += (s, e) => OnAnalyticsDateRangeChanged();
+            _rbAnalyticsCustom.CheckedChanged += (s, e) => OnAnalyticsDateRangeChanged();
 
             // User Analytics Events
             _btnLoadUsers.Click += async (s, e) => await LoadUsersForAnalyticsAsync();
@@ -124,30 +144,74 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                 case "User":
                     _txtLifecyclePart.LabelText = "Enter User ID";
                     _txtLifecyclePart.PlaceholderText = "Enter User Name";
-                    Helper_SuggestionTextBox.ConfigureForUsers(_txtLifecyclePart, GetUsersAsync);
+                    _txtLifecyclePart.SuggestionDataSource = Enum_SuggestionDataSource.Infor_User;
                     break;
                 case "Work Order":
                     _txtLifecyclePart.LabelText = "Enter Work Order";
                     _txtLifecyclePart.PlaceholderText = "Enter Work Order Number";
-                    Helper_SuggestionTextBox.ConfigureForWorkOrders(_txtLifecyclePart, GetWorkOrdersAsync);
+                    _txtLifecyclePart.SuggestionDataSource = Enum_SuggestionDataSource.Infor_WONumber;
                     break;
                 case "Customer Order":
                     _txtLifecyclePart.LabelText = "Enter Customer Order";
                     _txtLifecyclePart.PlaceholderText = "Enter Customer Order Number";
-                    Helper_SuggestionTextBox.ConfigureForCustomerOrders(_txtLifecyclePart, GetCustomerOrdersAsync);
+                    _txtLifecyclePart.SuggestionDataSource = Enum_SuggestionDataSource.Infor_CONumber;
                     break;
                 case "Purchase Order":
                     _txtLifecyclePart.LabelText = "Enter Purchase Order";
                     _txtLifecyclePart.PlaceholderText = "Enter Purchase Order Number";
-                    Helper_SuggestionTextBox.ConfigureForPurchaseOrders(_txtLifecyclePart, GetPurchaseOrdersAsync);
+                    _txtLifecyclePart.SuggestionDataSource = Enum_SuggestionDataSource.Infor_PONumber;
                     break;
                 case "Part Number":
                 default:
                     _txtLifecyclePart.LabelText = "Enter Part ID";
                     _txtLifecyclePart.PlaceholderText = "Enter Part Number";
-                    Helper_SuggestionTextBox.ConfigureForPartNumbers(_txtLifecyclePart, GetPartIdsAsync);
+                    _txtLifecyclePart.SuggestionDataSource = Enum_SuggestionDataSource.Infor_PartNumber;
                     break;
             }
+        }
+
+        private void OnLifecycleDateRangeChanged()
+        {
+            if (_rbLifecycleToday.Checked) SetDateRange(_dtpLifecycleStart, _dtpLifecycleEnd, "Today");
+            else if (_rbLifecycleWeek.Checked) SetDateRange(_dtpLifecycleStart, _dtpLifecycleEnd, "Week");
+            else if (_rbLifecycleMonth.Checked) SetDateRange(_dtpLifecycleStart, _dtpLifecycleEnd, "Month");
+            else if (_rbLifecycleCustom.Checked) SetDateRange(_dtpLifecycleStart, _dtpLifecycleEnd, "Custom");
+        }
+
+        private void OnAnalyticsDateRangeChanged()
+        {
+            if (_rbAnalyticsToday.Checked) SetDateRange(_dtpAnalyticsStart, _dtpAnalyticsEnd, "Today");
+            else if (_rbAnalyticsWeek.Checked) SetDateRange(_dtpAnalyticsStart, _dtpAnalyticsEnd, "Week");
+            else if (_rbAnalyticsMonth.Checked) SetDateRange(_dtpAnalyticsStart, _dtpAnalyticsEnd, "Month");
+            else if (_rbAnalyticsCustom.Checked) SetDateRange(_dtpAnalyticsStart, _dtpAnalyticsEnd, "Custom");
+        }
+
+        private void SetDateRange(DateTimePicker dtpStart, DateTimePicker dtpEnd, string rangeType)
+        {
+            bool isCustom = rangeType == "Custom";
+            dtpStart.Enabled = isCustom;
+            dtpEnd.Enabled = isCustom;
+
+            if (isCustom) return;
+
+            DateTime end = DateTime.Today.AddDays(1).AddSeconds(-1);
+            DateTime start = DateTime.Today;
+
+            switch (rangeType)
+            {
+                case "Today":
+                    start = DateTime.Today;
+                    break;
+                case "Week":
+                    start = DateTime.Today.AddDays(-7);
+                    break;
+                case "Month":
+                    start = DateTime.Today.AddDays(-30);
+                    break;
+            }
+
+            dtpStart.Value = start;
+            dtpEnd.Value = end;
         }
 
         private void UpdateAnalyticsWorkflow()
@@ -176,41 +240,6 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             {
                 _ProcessUserAnalytics.SetItemChecked(index, isChecked);
             }
-        }
-
-        private async Task<List<string>> GetPartIdsAsync()
-        {
-            if (_visualService == null) return new List<string>();
-            var result = await _visualService.GetPartIdsAsync();
-            return result.IsSuccess ? (result.Data ?? new List<string>()) : new List<string>();
-        }
-
-        private async Task<List<string>> GetUsersAsync()
-        {
-            if (_visualService == null) return new List<string>();
-            var result = await _visualService.GetUserIdsAsync();
-            return result.IsSuccess ? (result.Data ?? new List<string>()) : new List<string>();
-        }
-
-        private async Task<List<string>> GetWorkOrdersAsync()
-        {
-            if (_visualService == null) return new List<string>();
-            var result = await _visualService.GetWorkOrdersAsync();
-            return result.IsSuccess ? (result.Data ?? new List<string>()) : new List<string>();
-        }
-
-        private async Task<List<string>> GetPurchaseOrdersAsync()
-        {
-            if (_visualService == null) return new List<string>();
-            var result = await _visualService.GetPurchaseOrdersAsync();
-            return result.IsSuccess ? (result.Data ?? new List<string>()) : new List<string>();
-        }
-
-        private async Task<List<string>> GetCustomerOrdersAsync()
-        {
-            if (_visualService == null) return new List<string>();
-            var result = await _visualService.GetCustomerOrdersAsync();
-            return result.IsSuccess ? (result.Data ?? new List<string>()) : new List<string>();
         }
 
         private async void DataGridView_CellDoubleClick(object? sender, DataGridViewCellEventArgs e)
@@ -513,21 +542,59 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                 var start = _dtpAnalyticsStart.Value;
                 var end = _dtpAnalyticsEnd.Value;
 
+                // 1. Get Active Users from Visual
                 var result = await _visualService.GetDistinctUsersForAnalyticsAsync(start, end);
-
-                if (result.IsSuccess && result.Data != null)
-                {
-                    foreach (var user in result.Data)
-                    {
-                        _clbUsers.Items.Add(user);
-                    }
-                    UpdateUserSelectionState();
-                    UpdateAnalyticsWorkflow();
-                }
-                else
+                if (!result.IsSuccess)
                 {
                     Service_ErrorHandler.ShowError(result.ErrorMessage);
+                    return;
                 }
+
+                // 2. Get Shift/Name Metadata from sys_visual
+                if (_daoVisualAnalytics != null)
+                {
+                    var metaResult = await _daoVisualAnalytics.GetSysVisualDataAsync();
+                    if (metaResult.IsSuccess)
+                    {
+                        try
+                        {
+                            if (!string.IsNullOrEmpty(metaResult.Data.JsonShiftData))
+                                _userShifts = JsonConvert.DeserializeObject<Dictionary<string, int>>(metaResult.Data.JsonShiftData) ?? new Dictionary<string, int>();
+                            
+                            if (!string.IsNullOrEmpty(metaResult.Data.JsonUserFullNames))
+                                _userNames = JsonConvert.DeserializeObject<Dictionary<string, string>>(metaResult.Data.JsonUserFullNames) ?? new Dictionary<string, string>();
+                        }
+                        catch { /* Ignore JSON errors */ }
+                    }
+                }
+
+                // 3. Filter and Populate
+                var activeUsers = result.Data ?? new List<string>();
+                var selectedShifts = new HashSet<int>();
+                if (_cbShift1.Checked) selectedShifts.Add(1);
+                if (_cbShift2.Checked) selectedShifts.Add(2);
+                if (_cbShift3.Checked) selectedShifts.Add(3);
+                
+                foreach (var userId in activeUsers)
+                {
+                    int shift = _userShifts.ContainsKey(userId) ? _userShifts[userId] : 0;
+                    
+                    // Filter by shift
+                    // If shift is 0 (unknown), include it if Shift 1 is checked (fallback)
+                    if (shift != 0 && !selectedShifts.Contains(shift)) continue;
+                    if (shift == 0 && !_cbShift1.Checked) continue;
+
+                    string displayName = userId;
+                    if (_userNames.ContainsKey(userId))
+                    {
+                        displayName = $"{_userNames[userId]} ({userId})";
+                    }
+
+                    _clbUsers.Items.Add(new UserDisplayItem { UserId = userId, DisplayName = displayName });
+                }
+
+                UpdateUserSelectionState();
+                UpdateAnalyticsWorkflow();
             }
             catch (Exception ex)
             {
@@ -583,7 +650,14 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                 var selectedUsers = new List<string>();
                 foreach (var item in _clbUsers.CheckedItems)
                 {
-                    selectedUsers.Add(item.ToString() ?? "");
+                    if (item is UserDisplayItem userItem)
+                    {
+                        selectedUsers.Add(userItem.UserId);
+                    }
+                    else
+                    {
+                        selectedUsers.Add(item?.ToString() ?? "");
+                    }
                 }
 
                 var start = _dtpAnalyticsStart.Value;
@@ -622,5 +696,12 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             }
         }
         #endregion
+    }
+
+    public class UserDisplayItem
+    {
+        public string UserId { get; set; } = string.Empty;
+        public string DisplayName { get; set; } = string.Empty;
+        public override string ToString() => DisplayName;
     }
 }

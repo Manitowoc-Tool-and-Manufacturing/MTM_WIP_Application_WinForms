@@ -14,5 +14,6 @@ namespace MTM_WIP_Application_Winforms.Models
         public string ScrapLocation { get; set; } = string.Empty; // User 8
         public string GenericType { get; set; } = string.Empty; // User 9
         public string DetailedType { get; set; } = string.Empty; // User 10
+        public string AutoIssueLocation { get; set; } = string.Empty; // From PART_SITE
     }
 }

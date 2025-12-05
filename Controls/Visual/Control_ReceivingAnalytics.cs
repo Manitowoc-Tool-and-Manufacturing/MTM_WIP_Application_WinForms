@@ -7,6 +7,7 @@ using MTM_WIP_Application_Winforms.Services;
 using MTM_WIP_Application_Winforms.Services.Visual;
 using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Helpers;
+using MTM_WIP_Application_Winforms.Models.Enums;
 
 namespace MTM_WIP_Application_Winforms.Controls.Visual
 {
@@ -214,13 +215,11 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
 
             // PO Number
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PONumber.LabelText = "PO #";
-            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PONumber.EnableSuggestions = true;
+            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PONumber.SuggestionDataSource = Enum_SuggestionDataSource.Infor_PONumber;
 
             // Part Number
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PartNumber.LabelText = "Part #";
-            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PartNumber.EnableSuggestions = true;
-            // Use helper if available, otherwise default behavior
-            Helper_SuggestionTextBox.ConfigureForPartNumbers(Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PartNumber, Helper_SuggestionTextBox.GetCachedPartNumbersAsync);
+            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PartNumber.SuggestionDataSource = Enum_SuggestionDataSource.Infor_PartNumber;
 
             // Carrier
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Carrier.LabelText = "Carrier";
@@ -329,22 +328,6 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                     .OrderBy(s => s)
                     .ToList();
 
-                var poNumbers = dt.AsEnumerable()
-                    .Select(r => r["PO Number"]?.ToString())
-                    .Where(s => !string.IsNullOrEmpty(s))
-                    .Select(s => s!)
-                    .Distinct()
-                    .OrderBy(s => s)
-                    .ToList();
-
-                var partNumbers = dt.AsEnumerable()
-                    .Select(r => r["Part Number"]?.ToString())
-                    .Where(s => !string.IsNullOrEmpty(s))
-                    .Select(s => s!)
-                    .Distinct()
-                    .OrderBy(s => s)
-                    .ToList();
-
                 var carriers = dt.AsEnumerable()
                     .Select(r => r["Ship Via"]?.ToString())
                     .Where(s => !string.IsNullOrEmpty(s))
@@ -354,8 +337,6 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                     .ToList();
 
                 Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Supplier.TextBox.DataProvider = async () => await Task.FromResult(vendors);
-                Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PONumber.TextBox.DataProvider = async () => await Task.FromResult(poNumbers);
-                Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PartNumber.TextBox.DataProvider = async () => await Task.FromResult(partNumbers);
                 Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Carrier.TextBox.DataProvider = async () => await Task.FromResult(carriers);
             }
             catch (Exception ex)

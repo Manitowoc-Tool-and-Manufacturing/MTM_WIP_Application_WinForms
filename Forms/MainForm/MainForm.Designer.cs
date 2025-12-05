@@ -224,6 +224,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             helpToolStripMenuItem.Size = new Size(44, 24);
             helpToolStripMenuItem.Text = "Help";
+            helpToolStripMenuItem.Visible = false;
             // 
             // gettingStartedToolStripMenuItem
             // 

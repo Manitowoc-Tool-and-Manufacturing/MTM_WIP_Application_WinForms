@@ -329,18 +329,37 @@ namespace MTM_WIP_Application_Winforms.Controls.Shared
                 case Enum_SuggestionDataSource.MTM_User:
                     Helper_SuggestionTextBox.ConfigureForUsers(this, Helper_SuggestionTextBox.GetCachedUsersAsync, enableF4: true);
                     break;
-                // InforVisual types - Placeholder for now as logic is not implemented
+                // InforVisual types
                 case Enum_SuggestionDataSource.Infor_PartNumber:
+                    Helper_SuggestionTextBox.ConfigureForInforPartNumbers(this, enableF4: true);
+                    break;
                 case Enum_SuggestionDataSource.Infor_User:
+                    Helper_SuggestionTextBox.ConfigureForInforUsers(this, enableF4: true);
+                    break;
                 case Enum_SuggestionDataSource.Infor_Location:
+                    Helper_SuggestionTextBox.ConfigureForInforLocations(this, enableF4: true);
+                    break;
+                case Enum_SuggestionDataSource.Infor_Warehouse:
+                    Helper_SuggestionTextBox.ConfigureForInforWarehouses(this, enableF4: true);
+                    break;
                 case Enum_SuggestionDataSource.Infor_Operation:
+                    // Not implemented yet
+                    break;
                 case Enum_SuggestionDataSource.Infor_PONumber:
+                    Helper_SuggestionTextBox.ConfigureForInforPurchaseOrders(this, enableF4: true);
+                    break;
                 case Enum_SuggestionDataSource.Infor_CONumber:
+                    Helper_SuggestionTextBox.ConfigureForInforCustomerOrders(this, enableF4: true);
+                    break;
                 case Enum_SuggestionDataSource.Infor_WONumber:
+                    Helper_SuggestionTextBox.ConfigureForInforWorkOrders(this, enableF4: true);
+                    break;
                 case Enum_SuggestionDataSource.Infor_FGTNumber:
+                    Helper_SuggestionTextBox.ConfigureForInforFGTNumbers(this, enableF4: true);
+                    break;
                 case Enum_SuggestionDataSource.Infor_MMCNumber:
                 case Enum_SuggestionDataSource.Infor_MMFNumber:
-                    // TODO: Implement InforVisual data providers
+                    Helper_SuggestionTextBox.ConfigureForInforCoilFlatstockNumbers(this, enableF4: true);
                     break;
                 case Enum_SuggestionDataSource.None:
                 default:
@@ -439,7 +458,7 @@ private void UpdateCueBanner()
             this.ShowLoadingIndicator = config.ShowLoadingIndicator;
             this.LoadingThresholdMs = config.LoadingThresholdMs;
             this.SuppressExactMatch = config.SuppressExactMatch;
-            this.NoMatchAction = config.ClearOnNoMatch ? Enum_SuggestionNoMatchAction.ShowWarningAndClear : Enum_SuggestionNoMatchAction.None;
+            this.NoMatchAction = config.NoMatchAction;
             this.MinimumInputLength = config.MinimumInputLength;
         }
 

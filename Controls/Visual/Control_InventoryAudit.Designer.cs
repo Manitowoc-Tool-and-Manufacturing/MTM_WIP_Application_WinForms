@@ -59,6 +59,24 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             groupBox1 = new GroupBox();
             _ProcessUserAnalytics = new CheckedListBox();
             _clbUsers = new CheckedListBox();
+
+            _flpLifecycleDateRanges = new FlowLayoutPanel();
+            _rbLifecycleToday = new RadioButton();
+            _rbLifecycleWeek = new RadioButton();
+            _rbLifecycleMonth = new RadioButton();
+            _rbLifecycleCustom = new RadioButton();
+
+            _flpAnalyticsDateRanges = new FlowLayoutPanel();
+            _rbAnalyticsToday = new RadioButton();
+            _rbAnalyticsWeek = new RadioButton();
+            _rbAnalyticsMonth = new RadioButton();
+            _rbAnalyticsCustom = new RadioButton();
+
+            _flpAnalyticsShifts = new FlowLayoutPanel();
+            _cbShift1 = new CheckBox();
+            _cbShift2 = new CheckBox();
+            _cbShift3 = new CheckBox();
+
             mainLayout.SuspendLayout();
             _tabControl.SuspendLayout();
             _tabLifecycle.SuspendLayout();
@@ -117,15 +135,17 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             pnlLifecycle.ColumnCount = 1;
             pnlLifecycle.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             pnlLifecycle.Controls.Add(_txtSearchBy, 0, 0);
-            pnlLifecycle.Controls.Add(_dataGridView, 0, 4);
-            pnlLifecycle.Controls.Add(tableLayoutPanel1, 0, 2);
-            pnlLifecycle.Controls.Add(tableLayoutPanel3, 0, 3);
             pnlLifecycle.Controls.Add(_txtLifecyclePart, 0, 1);
+            pnlLifecycle.Controls.Add(_flpLifecycleDateRanges, 0, 2);
+            pnlLifecycle.Controls.Add(tableLayoutPanel1, 0, 3);
+            pnlLifecycle.Controls.Add(tableLayoutPanel3, 0, 4);
+            pnlLifecycle.Controls.Add(_dataGridView, 0, 5);
             pnlLifecycle.Dock = DockStyle.Fill;
             pnlLifecycle.Location = new Point(3, 3);
             pnlLifecycle.Name = "pnlLifecycle";
             pnlLifecycle.Padding = new Padding(10);
-            pnlLifecycle.RowCount = 5;
+            pnlLifecycle.RowCount = 6;
+            pnlLifecycle.RowStyles.Add(new RowStyle());
             pnlLifecycle.RowStyles.Add(new RowStyle());
             pnlLifecycle.RowStyles.Add(new RowStyle());
             pnlLifecycle.RowStyles.Add(new RowStyle());
@@ -133,6 +153,61 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             pnlLifecycle.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             pnlLifecycle.Size = new Size(780, 466);
             pnlLifecycle.TabIndex = 0;
+            // 
+            // _flpLifecycleDateRanges
+            // 
+            _flpLifecycleDateRanges.AutoSize = true;
+            _flpLifecycleDateRanges.Controls.Add(_rbLifecycleToday);
+            _flpLifecycleDateRanges.Controls.Add(_rbLifecycleWeek);
+            _flpLifecycleDateRanges.Controls.Add(_rbLifecycleMonth);
+            _flpLifecycleDateRanges.Controls.Add(_rbLifecycleCustom);
+            _flpLifecycleDateRanges.Dock = DockStyle.Fill;
+            _flpLifecycleDateRanges.Location = new Point(13, 71);
+            _flpLifecycleDateRanges.Name = "_flpLifecycleDateRanges";
+            _flpLifecycleDateRanges.Size = new Size(754, 29);
+            _flpLifecycleDateRanges.TabIndex = 3;
+            // 
+            // _rbLifecycleToday
+            // 
+            _rbLifecycleToday.AutoSize = true;
+            _rbLifecycleToday.Location = new Point(3, 3);
+            _rbLifecycleToday.Name = "_rbLifecycleToday";
+            _rbLifecycleToday.Size = new Size(56, 19);
+            _rbLifecycleToday.TabIndex = 0;
+            _rbLifecycleToday.Text = "Today";
+            _rbLifecycleToday.UseVisualStyleBackColor = true;
+            // 
+            // _rbLifecycleWeek
+            // 
+            _rbLifecycleWeek.AutoSize = true;
+            _rbLifecycleWeek.Location = new Point(65, 3);
+            _rbLifecycleWeek.Name = "_rbLifecycleWeek";
+            _rbLifecycleWeek.Size = new Size(80, 19);
+            _rbLifecycleWeek.TabIndex = 1;
+            _rbLifecycleWeek.Text = "Last 7 Days";
+            _rbLifecycleWeek.UseVisualStyleBackColor = true;
+            // 
+            // _rbLifecycleMonth
+            // 
+            _rbLifecycleMonth.AutoSize = true;
+            _rbLifecycleMonth.Checked = true;
+            _rbLifecycleMonth.Location = new Point(151, 3);
+            _rbLifecycleMonth.Name = "_rbLifecycleMonth";
+            _rbLifecycleMonth.Size = new Size(86, 19);
+            _rbLifecycleMonth.TabIndex = 2;
+            _rbLifecycleMonth.TabStop = true;
+            _rbLifecycleMonth.Text = "Last 30 Days";
+            _rbLifecycleMonth.UseVisualStyleBackColor = true;
+            // 
+            // _rbLifecycleCustom
+            // 
+            _rbLifecycleCustom.AutoSize = true;
+            _rbLifecycleCustom.Location = new Point(243, 3);
+            _rbLifecycleCustom.Name = "_rbLifecycleCustom";
+            _rbLifecycleCustom.Size = new Size(67, 19);
+            _rbLifecycleCustom.TabIndex = 3;
+            _rbLifecycleCustom.Text = "Custom";
+            _rbLifecycleCustom.UseVisualStyleBackColor = true;
             // 
             // _txtSearchBy
             // 
@@ -334,20 +409,31 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle());
             tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 45F));
             tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 55F));
-            tableLayoutPanel4.Controls.Add(lblAnalyticsStart, 0, 0);
-            tableLayoutPanel4.Controls.Add(_dtpAnalyticsStart, 1, 0);
-            tableLayoutPanel4.Controls.Add(lblAnalyticsEnd, 0, 1);
-            tableLayoutPanel4.Controls.Add(_dtpAnalyticsEnd, 1, 1);
-            tableLayoutPanel4.Controls.Add(_btnLoadUsers, 0, 2);
-            tableLayoutPanel4.Controls.Add(_lblUserCount, 0, 5);
-            tableLayoutPanel4.Controls.Add(_btnGenerateReport, 0, 4);
-            tableLayoutPanel4.Controls.Add(_btnSelectAllUsers, 0, 3);
+            tableLayoutPanel4.Controls.Add(_flpAnalyticsDateRanges, 0, 0);
+            tableLayoutPanel4.SetColumnSpan(_flpAnalyticsDateRanges, 2);
+            tableLayoutPanel4.Controls.Add(lblAnalyticsStart, 0, 1);
+            tableLayoutPanel4.Controls.Add(_dtpAnalyticsStart, 1, 1);
+            tableLayoutPanel4.Controls.Add(lblAnalyticsEnd, 0, 2);
+            tableLayoutPanel4.Controls.Add(_dtpAnalyticsEnd, 1, 2);
+            tableLayoutPanel4.Controls.Add(_flpAnalyticsShifts, 0, 3);
+            tableLayoutPanel4.SetColumnSpan(_flpAnalyticsShifts, 2);
+            tableLayoutPanel4.Controls.Add(_btnLoadUsers, 0, 4);
+            tableLayoutPanel4.SetColumnSpan(_btnLoadUsers, 2);
+            tableLayoutPanel4.Controls.Add(_btnSelectAllUsers, 0, 5);
+            tableLayoutPanel4.SetColumnSpan(_btnSelectAllUsers, 2);
+            tableLayoutPanel4.Controls.Add(_btnGenerateReport, 0, 6);
+            tableLayoutPanel4.SetColumnSpan(_btnGenerateReport, 2);
+            tableLayoutPanel4.Controls.Add(_lblUserCount, 0, 7);
+            tableLayoutPanel4.SetColumnSpan(_lblUserCount, 2);
             tableLayoutPanel4.Controls.Add(groupBox1, 2, 0);
+            tableLayoutPanel4.SetRowSpan(groupBox1, 8);
             tableLayoutPanel4.Dock = DockStyle.Fill;
             tableLayoutPanel4.Location = new Point(13, 13);
             tableLayoutPanel4.Margin = new Padding(3, 3, 10, 3);
             tableLayoutPanel4.Name = "tableLayoutPanel4";
-            tableLayoutPanel4.RowCount = 5;
+            tableLayoutPanel4.RowCount = 8;
+            tableLayoutPanel4.RowStyles.Add(new RowStyle());
+            tableLayoutPanel4.RowStyles.Add(new RowStyle());
             tableLayoutPanel4.RowStyles.Add(new RowStyle());
             tableLayoutPanel4.RowStyles.Add(new RowStyle());
             tableLayoutPanel4.RowStyles.Add(new RowStyle());
@@ -356,6 +442,109 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tableLayoutPanel4.Size = new Size(747, 193);
             tableLayoutPanel4.TabIndex = 4;
+            // 
+            // _flpAnalyticsDateRanges
+            // 
+            _flpAnalyticsDateRanges.AutoSize = true;
+            _flpAnalyticsDateRanges.Controls.Add(_rbAnalyticsToday);
+            _flpAnalyticsDateRanges.Controls.Add(_rbAnalyticsWeek);
+            _flpAnalyticsDateRanges.Controls.Add(_rbAnalyticsMonth);
+            _flpAnalyticsDateRanges.Controls.Add(_rbAnalyticsCustom);
+            _flpAnalyticsDateRanges.Dock = DockStyle.Fill;
+            _flpAnalyticsDateRanges.Location = new Point(3, 3);
+            _flpAnalyticsDateRanges.Name = "_flpAnalyticsDateRanges";
+            _flpAnalyticsDateRanges.Size = new Size(367, 29);
+            _flpAnalyticsDateRanges.TabIndex = 0;
+            // 
+            // _rbAnalyticsToday
+            // 
+            _rbAnalyticsToday.AutoSize = true;
+            _rbAnalyticsToday.Location = new Point(3, 3);
+            _rbAnalyticsToday.Name = "_rbAnalyticsToday";
+            _rbAnalyticsToday.Size = new Size(56, 19);
+            _rbAnalyticsToday.TabIndex = 0;
+            _rbAnalyticsToday.Text = "Today";
+            _rbAnalyticsToday.UseVisualStyleBackColor = true;
+            // 
+            // _rbAnalyticsWeek
+            // 
+            _rbAnalyticsWeek.AutoSize = true;
+            _rbAnalyticsWeek.Location = new Point(65, 3);
+            _rbAnalyticsWeek.Name = "_rbAnalyticsWeek";
+            _rbAnalyticsWeek.Size = new Size(80, 19);
+            _rbAnalyticsWeek.TabIndex = 1;
+            _rbAnalyticsWeek.Text = "Last 7 Days";
+            _rbAnalyticsWeek.UseVisualStyleBackColor = true;
+            // 
+            // _rbAnalyticsMonth
+            // 
+            _rbAnalyticsMonth.AutoSize = true;
+            _rbAnalyticsMonth.Checked = true;
+            _rbAnalyticsMonth.Location = new Point(151, 3);
+            _rbAnalyticsMonth.Name = "_rbAnalyticsMonth";
+            _rbAnalyticsMonth.Size = new Size(86, 19);
+            _rbAnalyticsMonth.TabIndex = 2;
+            _rbAnalyticsMonth.TabStop = true;
+            _rbAnalyticsMonth.Text = "Last 30 Days";
+            _rbAnalyticsMonth.UseVisualStyleBackColor = true;
+            // 
+            // _rbAnalyticsCustom
+            // 
+            _rbAnalyticsCustom.AutoSize = true;
+            _rbAnalyticsCustom.Location = new Point(243, 3);
+            _rbAnalyticsCustom.Name = "_rbAnalyticsCustom";
+            _rbAnalyticsCustom.Size = new Size(67, 19);
+            _rbAnalyticsCustom.TabIndex = 3;
+            _rbAnalyticsCustom.Text = "Custom";
+            _rbAnalyticsCustom.UseVisualStyleBackColor = true;
+            // 
+            // _flpAnalyticsShifts
+            // 
+            _flpAnalyticsShifts.AutoSize = true;
+            _flpAnalyticsShifts.Controls.Add(_cbShift1);
+            _flpAnalyticsShifts.Controls.Add(_cbShift2);
+            _flpAnalyticsShifts.Controls.Add(_cbShift3);
+            _flpAnalyticsShifts.Dock = DockStyle.Fill;
+            _flpAnalyticsShifts.Location = new Point(3, 90);
+            _flpAnalyticsShifts.Name = "_flpAnalyticsShifts";
+            _flpAnalyticsShifts.Size = new Size(367, 29);
+            _flpAnalyticsShifts.TabIndex = 13;
+            // 
+            // _cbShift1
+            // 
+            _cbShift1.AutoSize = true;
+            _cbShift1.Checked = true;
+            _cbShift1.CheckState = CheckState.Checked;
+            _cbShift1.Location = new Point(3, 3);
+            _cbShift1.Name = "_cbShift1";
+            _cbShift1.Size = new Size(60, 19);
+            _cbShift1.TabIndex = 0;
+            _cbShift1.Text = "Shift 1";
+            _cbShift1.UseVisualStyleBackColor = true;
+            // 
+            // _cbShift2
+            // 
+            _cbShift2.AutoSize = true;
+            _cbShift2.Checked = true;
+            _cbShift2.CheckState = CheckState.Checked;
+            _cbShift2.Location = new Point(69, 3);
+            _cbShift2.Name = "_cbShift2";
+            _cbShift2.Size = new Size(60, 19);
+            _cbShift2.TabIndex = 1;
+            _cbShift2.Text = "Shift 2";
+            _cbShift2.UseVisualStyleBackColor = true;
+            // 
+            // _cbShift3
+            // 
+            _cbShift3.AutoSize = true;
+            _cbShift3.Checked = true;
+            _cbShift3.CheckState = CheckState.Checked;
+            _cbShift3.Location = new Point(135, 3);
+            _cbShift3.Name = "_cbShift3";
+            _cbShift3.Size = new Size(60, 19);
+            _cbShift3.TabIndex = 2;
+            _cbShift3.Text = "Shift 3";
+            _cbShift3.UseVisualStyleBackColor = true;
             // 
             // lblAnalyticsStart
             // 
@@ -453,7 +642,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             groupBox1.Location = new Point(379, 6);
             groupBox1.Margin = new Padding(6);
             groupBox1.Name = "groupBox1";
-            tableLayoutPanel4.SetRowSpan(groupBox1, 6);
+            tableLayoutPanel4.SetRowSpan(groupBox1, 8);
             groupBox1.Size = new Size(362, 181);
             groupBox1.TabIndex = 12;
             groupBox1.TabStop = false;
@@ -542,5 +731,25 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         private CheckedListBox _clbUsers;
         private GroupBox groupBox1;
         private CheckedListBox _ProcessUserAnalytics;
+
+        // Lifecycle Date Ranges
+        private FlowLayoutPanel _flpLifecycleDateRanges;
+        private RadioButton _rbLifecycleToday;
+        private RadioButton _rbLifecycleWeek;
+        private RadioButton _rbLifecycleMonth;
+        private RadioButton _rbLifecycleCustom;
+
+        // Analytics Date Ranges
+        private FlowLayoutPanel _flpAnalyticsDateRanges;
+        private RadioButton _rbAnalyticsToday;
+        private RadioButton _rbAnalyticsWeek;
+        private RadioButton _rbAnalyticsMonth;
+        private RadioButton _rbAnalyticsCustom;
+
+        // Analytics Shift Filters
+        private FlowLayoutPanel _flpAnalyticsShifts;
+        private CheckBox _cbShift1;
+        private CheckBox _cbShift2;
+        private CheckBox _cbShift3;
     }
 }

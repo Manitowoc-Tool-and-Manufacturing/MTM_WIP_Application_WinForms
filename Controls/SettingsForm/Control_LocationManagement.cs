@@ -5,6 +5,7 @@ using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
+using MTM_WIP_Application_Winforms.Models.Enums;
 
 namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 {
@@ -156,16 +157,12 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 Control_LocationManagement_TextBox_EditNewLocation.TextBox.BackColor = System.Drawing.SystemColors.Window;
             }
 
-            Helper_SuggestionTextBox.ConfigureForLocations(
-                Control_LocationManagement_Suggestion_EditSelectLocation,
-                Helper_SuggestionTextBox.GetCachedLocationsAsync);
+            Control_LocationManagement_Suggestion_EditSelectLocation.SuggestionDataSource = Enum_SuggestionDataSource.MTM_Location;
 
-            Helper_SuggestionTextBox.ConfigureForLocations(
-                Control_LocationManagement_Suggestion_RemoveSelectLocation,
-                Helper_SuggestionTextBox.GetCachedLocationsAsync);
+            Control_LocationManagement_Suggestion_RemoveSelectLocation.SuggestionDataSource = Enum_SuggestionDataSource.MTM_Location;
                 
-            Helper_SuggestionTextBox.ConfigureForBuildings(Control_LocationManagement_ComboBox_AddBuilding);
-            Helper_SuggestionTextBox.ConfigureForBuildings(Control_LocationManagement_ComboBox_EditBuilding);
+            Control_LocationManagement_ComboBox_AddBuilding.SuggestionDataSource = Enum_SuggestionDataSource.MTM_Building;
+            Control_LocationManagement_ComboBox_EditBuilding.SuggestionDataSource = Enum_SuggestionDataSource.MTM_Building;
             
         }
 

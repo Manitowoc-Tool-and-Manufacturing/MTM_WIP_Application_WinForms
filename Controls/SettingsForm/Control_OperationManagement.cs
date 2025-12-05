@@ -5,6 +5,7 @@ using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
+using MTM_WIP_Application_Winforms.Models.Enums;
 
 namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 {
@@ -147,13 +148,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
         private void ConfigureInputs()
         {
-            Helper_SuggestionTextBox.ConfigureForOperations(
-                Control_OperationManagement_Suggestion_EditSelectOperation,
-                Helper_SuggestionTextBox.GetCachedOperationsAsync);
+            Control_OperationManagement_Suggestion_EditSelectOperation.SuggestionDataSource = Enum_SuggestionDataSource.MTM_Operation;
 
-            Helper_SuggestionTextBox.ConfigureForOperations(
-                Control_OperationManagement_Suggestion_RemoveSelectOperation,
-                Helper_SuggestionTextBox.GetCachedOperationsAsync);
+            Control_OperationManagement_Suggestion_RemoveSelectOperation.SuggestionDataSource = Enum_SuggestionDataSource.MTM_Operation;
         }
 
         private void WireUpEventHandlers()

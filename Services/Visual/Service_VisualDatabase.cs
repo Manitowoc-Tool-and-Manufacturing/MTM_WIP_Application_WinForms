@@ -285,20 +285,22 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
 
             string sql = @"
                 SELECT 
-                    ID, 
-                    DESCRIPTION, 
-                    USER_1, 
-                    USER_2, 
-                    USER_3, 
-                    USER_4, 
-                    USER_5, 
-                    USER_6, 
-                    USER_7, 
-                    USER_8, 
-                    USER_9, 
-                    USER_10
-                FROM PART 
-                WHERE ID = @PartNumber";
+                    P.ID, 
+                    P.DESCRIPTION, 
+                    P.USER_1, 
+                    P.USER_2, 
+                    P.USER_3, 
+                    P.USER_4, 
+                    P.USER_5, 
+                    P.USER_6, 
+                    P.USER_7, 
+                    P.USER_8, 
+                    P.USER_9, 
+                    P.USER_10,
+                    PS.AUTO_ISSUE_LOC_ID
+                FROM PART P
+                LEFT JOIN PART_SITE PS ON P.ID = PS.PART_ID
+                WHERE P.ID = @PartNumber";
 
             try
             {
@@ -326,7 +328,8 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                                     Customer = reader["USER_7"]?.ToString() ?? string.Empty,
                                     ScrapLocation = reader["USER_8"]?.ToString() ?? string.Empty,
                                     GenericType = reader["USER_9"]?.ToString() ?? string.Empty,
-                                    DetailedType = reader["USER_10"]?.ToString() ?? string.Empty
+                                    DetailedType = reader["USER_10"]?.ToString() ?? string.Empty,
+                                    AutoIssueLocation = reader["AUTO_ISSUE_LOC_ID"]?.ToString() ?? string.Empty
                                 };
 
                                 return Model_Dao_Result<Model_Visual_CoilFlatstock>.Success(model);
@@ -343,6 +346,70 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
             {
                 LoggingUtility.LogApplicationError(ex);
                 return Model_Dao_Result<Model_Visual_CoilFlatstock>.Failure($"Error retrieving coil info: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Retrieves a list of parent parts where the specified part is used as a component (BOM lookup).
+        /// </summary>
+        /// <param name="partId">The component part ID.</param>
+        /// <returns>DataTable containing parent part details.</returns>
+        public async Task<Model_Dao_Result<DataTable>> GetWhereUsedAsync(string partId)
+        {
+            if (string.IsNullOrEmpty(_userName) || string.IsNullOrEmpty(_password))
+            {
+                return new Model_Dao_Result<DataTable>
+                {
+                    IsSuccess = false,
+                    ErrorMessage = "Visual ERP credentials are not configured."
+                };
+            }
+
+            string sql = @"
+                SELECT DISTINCT
+                    WO.PART_ID as [Parent Part],
+                    P.DESCRIPTION as [Description],
+                    R.QTY_PER as [Qty Per]
+                FROM REQUIREMENT R
+                JOIN WORK_ORDER WO ON R.WORKORDER_BASE_ID = WO.BASE_ID 
+                                   AND R.WORKORDER_LOT_ID = WO.LOT_ID 
+                                   AND R.WORKORDER_SPLIT_ID = WO.SPLIT_ID 
+                                   AND R.WORKORDER_SUB_ID = WO.SUB_ID
+                JOIN PART P ON WO.PART_ID = P.ID
+                WHERE R.PART_ID = @PartId
+                AND WO.TYPE = 'M' -- Engineering Master
+                ORDER BY WO.PART_ID";
+
+            try
+            {
+                using (var connection = new SqlConnection(GetConnectionString()))
+                {
+                    await connection.OpenAsync();
+                    using (var command = new SqlCommand(sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@PartId", partId);
+
+                        using (var reader = await command.ExecuteReaderAsync())
+                        {
+                            var dataTable = new DataTable();
+                            dataTable.Load(reader);
+                            return new Model_Dao_Result<DataTable>
+                            {
+                                IsSuccess = true,
+                                Data = dataTable
+                            };
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+                return new Model_Dao_Result<DataTable>
+                {
+                    IsSuccess = false,
+                    ErrorMessage = $"Error retrieving Where Used data: {ex.Message}"
+                };
             }
         }
 

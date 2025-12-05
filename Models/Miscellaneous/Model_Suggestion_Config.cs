@@ -1,3 +1,5 @@
+using MTM_WIP_Application_Winforms.Models.Enums;
+
 namespace MTM_WIP_Application_Winforms.Models
 {
     /// <summary>
@@ -45,10 +47,21 @@ namespace MTM_WIP_Application_Winforms.Models
         public bool SuppressExactMatch { get; set; } = true;
 
         /// <summary>
+        /// Gets or sets the action to take when no matches are found.
+        /// Default: ShowWarningAndClear.
+        /// </summary>
+        public Enum_SuggestionNoMatchAction NoMatchAction { get; set; } = Enum_SuggestionNoMatchAction.ShowWarningAndClear;
+
+        /// <summary>
         /// Gets or sets whether to clear field when no matches found.
         /// Default: true (MTM validation pattern).
         /// </summary>
-        public bool ClearOnNoMatch { get; set; } = true;
+        [Obsolete("Use NoMatchAction instead")]
+        public bool ClearOnNoMatch
+        {
+            get => NoMatchAction == Enum_SuggestionNoMatchAction.ShowWarningAndClear || NoMatchAction == Enum_SuggestionNoMatchAction.ClearField;
+            set => NoMatchAction = value ? Enum_SuggestionNoMatchAction.ShowWarningAndClear : Enum_SuggestionNoMatchAction.None;
+        }
 
         /// <summary>
         /// Gets or sets the minimum input length before triggering suggestions.
@@ -93,7 +106,7 @@ namespace MTM_WIP_Application_Winforms.Models
                 ShowLoadingIndicator = this.ShowLoadingIndicator,
                 LoadingThresholdMs = this.LoadingThresholdMs,
                 SuppressExactMatch = this.SuppressExactMatch,
-                ClearOnNoMatch = this.ClearOnNoMatch,
+                NoMatchAction = this.NoMatchAction,
                 MinimumInputLength = this.MinimumInputLength
             };
         }

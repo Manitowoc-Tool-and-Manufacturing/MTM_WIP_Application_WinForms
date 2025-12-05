@@ -52,6 +52,13 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
         Task<Model_Dao_Result<Model_Visual_CoilFlatstock>> GetCoilFlatstockInfoAsync(string partNumber);
 
         /// <summary>
+        /// Retrieves a list of parent parts where the specified part is used as a component (BOM lookup).
+        /// </summary>
+        /// <param name="partId">The component part ID.</param>
+        /// <returns>DataTable containing parent part details.</returns>
+        Task<Model_Dao_Result<DataTable>> GetWhereUsedAsync(string partId);
+
+        /// <summary>
         /// Retrieves the receiving schedule based on specified filters.
         /// </summary>
         /// <param name="startDate">Start date for the schedule range.</param>

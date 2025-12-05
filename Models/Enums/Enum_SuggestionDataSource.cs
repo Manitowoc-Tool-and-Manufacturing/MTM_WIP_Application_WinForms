@@ -21,6 +21,7 @@ namespace MTM_WIP_Application_Winforms.Models.Enums
         Infor_PartNumber,
         Infor_User,
         Infor_Location,
+        Infor_Warehouse,
         Infor_Operation,
         Infor_PONumber,
         Infor_CONumber,

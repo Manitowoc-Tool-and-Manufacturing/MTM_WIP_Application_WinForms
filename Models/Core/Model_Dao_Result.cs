@@ -65,7 +65,7 @@ namespace MTM_WIP_Application_Winforms.Models
     ///     else
     ///     {
     ///         // Display user-friendly error message
-    ///         MessageBox.Show(result.ErrorMessage, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+    ///         Service_ErrorHandler.ShowUserError(result.ErrorMessage);
     ///         LoggingUtility.LogApplicationError(result.Exception, result.ErrorMessage);
     ///     }
     /// }
@@ -360,12 +360,12 @@ namespace MTM_WIP_Application_Winforms.Models
     ///
     ///     if (result.IsSuccess)
     ///     {
-    ///         MessageBox.Show(result.StatusMessage, "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+    ///         Service_ErrorHandler.ShowInformation(result.StatusMessage, "Success");
     ///         RefreshGrid();
     ///     }
     ///     else
     ///     {
-    ///         MessageBox.Show(result.ErrorMessage, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+    ///         Service_ErrorHandler.ShowUserError(result.ErrorMessage);
     ///         LoggingUtility.LogApplicationError(result.Exception, result.ErrorMessage);
     ///     }
     /// }

@@ -4,6 +4,7 @@ using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Models;
+using MTM_WIP_Application_Winforms.Services;
 
 namespace MTM_WIP_Application_Winforms.Forms.Settings;
 
@@ -177,11 +178,11 @@ public partial class Dialog_AddParameterOverride : ThemedForm
         // Procedure name required
         if (string.IsNullOrWhiteSpace(txtProcedureName.Text))
         {
-            MessageBox.Show(
+            Service_ErrorHandler.HandleValidationError(
                 "Procedure name is required.",
-                "Validation Error",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Warning);
+                field: "Procedure Name",
+                callerName: nameof(ValidateInput),
+                controlName: this.Name);
             txtProcedureName.Focus();
             return false;
         }
@@ -189,11 +190,11 @@ public partial class Dialog_AddParameterOverride : ThemedForm
         // Parameter name required
         if (string.IsNullOrWhiteSpace(txtParameterName.Text))
         {
-            MessageBox.Show(
+            Service_ErrorHandler.HandleValidationError(
                 "Parameter name is required.",
-                "Validation Error",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Warning);
+                field: "Parameter Name",
+                callerName: nameof(ValidateInput),
+                controlName: this.Name);
             txtParameterName.Focus();
             return false;
         }
@@ -201,11 +202,11 @@ public partial class Dialog_AddParameterOverride : ThemedForm
         // Reason required
         if (string.IsNullOrWhiteSpace(txtReason.Text))
         {
-            MessageBox.Show(
+            Service_ErrorHandler.HandleValidationError(
                 "Reason is required to document why this override is needed.",
-                "Validation Error",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Warning);
+                field: "Reason",
+                callerName: nameof(ValidateInput),
+                controlName: this.Name);
             txtReason.Focus();
             return false;
         }
@@ -265,7 +266,7 @@ public partial class Dialog_AddParameterOverride : ThemedForm
             
             if (!procedureExists)
             {
-                var result = MessageBox.Show(
+                var result = Service_ErrorHandler.ShowWarning(
                     $"Warning: Procedure '{txtProcedureName.Text.Trim()}' was not found in INFORMATION_SCHEMA.\n\n" +
                     "This may mean:\n" +
                     "• The procedure doesn't exist yet\n" +
@@ -312,11 +313,9 @@ public partial class Dialog_AddParameterOverride : ThemedForm
             }
             else
             {
-                MessageBox.Show(
+                Service_ErrorHandler.ShowUserError(
                     $"Failed to save override:\n\n{saveResult.ErrorMessage}",
-                    "Save Error",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
+                    "Save Error");
 
                 if (saveResult.Exception != null)
                 {
@@ -330,13 +329,16 @@ public partial class Dialog_AddParameterOverride : ThemedForm
         }
         catch (Exception ex)
         {
-            MessageBox.Show(
-                $"Unexpected error:\n\n{ex.Message}",
-                "Error",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Error);
-
-            LoggingUtility.LogApplicationError(ex);
+            Service_ErrorHandler.HandleException(
+                ex,
+                Enum_ErrorSeverity.Medium,
+                contextData: new Dictionary<string, object>
+                {
+                    ["Procedure"] = txtProcedureName.Text,
+                    ["Parameter"] = txtParameterName.Text
+                },
+                callerName: nameof(BtnSave_Click),
+                controlName: this.Name);
             
             lblStatus.Visible = false;
             btnSave.Enabled = true;

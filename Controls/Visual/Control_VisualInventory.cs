@@ -12,6 +12,7 @@ using MTM_WIP_Application_Winforms.Services;
 using MTM_WIP_Application_Winforms.Services.Visual;
 using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Helpers;
+using MTM_WIP_Application_Winforms.Models.Enums;
 
 namespace MTM_WIP_Application_Winforms.Controls.Visual
 {
@@ -50,32 +51,15 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         {
             // Part Number
             Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber.LabelText = "Part Number";
-            Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber.EnableSuggestions = true;
-            Helper_SuggestionTextBox.ConfigureForPartNumbers(Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber, Helper_SuggestionTextBox.GetCachedPartNumbersAsync);
+            Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber.SuggestionDataSource = Enum_SuggestionDataSource.Infor_PartNumber;
 
             // Warehouse
             Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse.LabelText = "Warehouse";
-            Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse.EnableSuggestions = true;
-            if (_visualService != null)
-            {
-                Helper_SuggestionTextBox.ConfigureForWarehouses(Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse, async () =>
-                {
-                    var result = await _visualService.GetWarehouseIdsAsync();
-                    return result.IsSuccess && result.Data != null ? result.Data : new List<string>();
-                });
-            }
+            Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse.SuggestionDataSource = Enum_SuggestionDataSource.Infor_Warehouse;
 
             // Location
             Control_VisualInventory_SuggestionTextBoxWithLabel_Location.LabelText = "Location";
-            Control_VisualInventory_SuggestionTextBoxWithLabel_Location.EnableSuggestions = true;
-            if (_visualService != null)
-            {
-                Helper_SuggestionTextBox.ConfigureForLocations(Control_VisualInventory_SuggestionTextBoxWithLabel_Location, async () =>
-                {
-                    var result = await _visualService.GetLocationIdsAsync();
-                    return result.IsSuccess && result.Data != null ? result.Data : new List<string>();
-                });
-            }
+            Control_VisualInventory_SuggestionTextBoxWithLabel_Location.SuggestionDataSource = Enum_SuggestionDataSource.Infor_Location;
         }
 
         private void WireUpEvents()

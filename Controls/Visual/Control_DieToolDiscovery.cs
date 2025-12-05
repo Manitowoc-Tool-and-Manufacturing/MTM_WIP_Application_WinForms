@@ -37,6 +37,14 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             btnCoilSearch.Click -= btnCoilSearch_Click;
             btnCoilSearch.Click += btnCoilSearch_Click;
 
+            // Wire up Where Used button
+            btnWhereUsed.Click -= btnWhereUsed_Click;
+            btnWhereUsed.Click += btnWhereUsed_Click;
+
+            // Wire up Radio Buttons
+            rbSearchByPart.CheckedChanged += (s, e) => UpdateSearchPlaceholder();
+            rbSearchByDie.CheckedChanged += (s, e) => UpdateSearchPlaceholder();
+
             _visualService = Program.ServiceProvider?.GetService<IService_VisualDatabase>();
 
             if (_visualService == null)
@@ -118,8 +126,16 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             {
                 txtSearch.TextBox.DataProvider = async () =>
                 {
-                    var result = await _visualService.GetDieIdsAsync();
-                    return result.IsSuccess && result.Data != null ? result.Data : new List<string>();
+                    if (rbSearchByPart.Checked)
+                    {
+                        var result = await _visualService.GetPartIdsAsync();
+                        return result.IsSuccess && result.Data != null ? result.Data : new List<string>();
+                    }
+                    else
+                    {
+                        var result = await _visualService.GetDieIdsAsync();
+                        return result.IsSuccess && result.Data != null ? result.Data : new List<string>();
+                    }
                 };
 
                 // Wire up Enter key for search
@@ -139,6 +155,18 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
 
                 // Wire up Enter key for coil search
                 txtCoilSearch.TextBox.KeyDown += txtCoilSearch_KeyDown;
+            }
+        }
+
+        private void UpdateSearchPlaceholder()
+        {
+            if (rbSearchByPart.Checked)
+            {
+                txtSearch.PlaceholderText = "Enter Part Number";
+            }
+            else
+            {
+                txtSearch.PlaceholderText = "Enter Die Number";
             }
         }
 
@@ -169,12 +197,11 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                 return;
             }
 
-            LoggingUtility.Log($"[Control_DieToolDiscovery] Search initiated | SearchTerm={searchTerm}, SearchByPart={true}");
+            bool searchByPart = rbSearchByPart.Checked;
+            LoggingUtility.Log($"[Control_DieToolDiscovery] Search initiated | SearchTerm={searchTerm}, SearchByPart={searchByPart}");
 
             try
             {
-                bool searchByPart = true;
-                
                 var result = await _visualService.SearchDiesAsync(searchTerm, searchByPart);
 
                 if (result.IsSuccess)
@@ -209,7 +236,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                     {
                         ["User"] = Model_Application_Variables.User,
                         ["SearchTerm"] = searchTerm,
-                        ["SearchByPart"] = true,
+                        ["SearchByPart"] = searchByPart,
                         ["Operation"] = "SearchDies"
                     },
                     callerName: nameof(PerformSearch),
@@ -259,6 +286,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                     txtScrapLocation.Text = info?.ScrapLocation;
                     txtGenericType.Text = info?.GenericType;
                     txtDetailedType.Text = info?.DetailedType;
+                    txtAutoIssueLocation.Text = info?.AutoIssueLocation;
                     LoggingUtility.Log($"[Control_DieToolDiscovery] Coil Search completed successfully");
                 }
                 else
@@ -287,6 +315,47 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             txtScrapLocation.Text = string.Empty;
             txtGenericType.Text = string.Empty;
             txtDetailedType.Text = string.Empty;
+            txtAutoIssueLocation.Text = string.Empty;
+        }
+
+        private async void btnWhereUsed_Click(object? sender, EventArgs e)
+        {
+            if (_visualService == null) return;
+
+            string partId = txtSearch.Text?.Trim() ?? "";
+            if (string.IsNullOrEmpty(partId))
+            {
+                Service_ErrorHandler.ShowInformation("Please enter a Part Number to search for usage.");
+                return;
+            }
+
+            try
+            {
+                var result = await _visualService.GetWhereUsedAsync(partId);
+                if (result.IsSuccess)
+                {
+                    gridResults.DataSource = result.Data;
+                    Service_DataGridView.ApplySmartNumericFormatting(gridResults);
+                    
+                    if (result.Data != null && result.Data.Rows.Count > 0)
+                    {
+                        gridResults.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.DisplayedCells);
+                        Service_ErrorHandler.ShowInformation($"Found {result.Data.Rows.Count} parent part(s).");
+                    }
+                    else
+                    {
+                        Service_ErrorHandler.ShowInformation("No parent parts found (Where Used).");
+                    }
+                }
+                else
+                {
+                    Service_ErrorHandler.ShowError(result.ErrorMessage);
+                }
+            }
+            catch (Exception ex)
+            {
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: nameof(btnWhereUsed_Click), controlName: this.Name);
+            }
         }
 
         #endregion

@@ -7,7 +7,9 @@ using System.Windows.Forms;
 using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
+using MTM_WIP_Application_Winforms.Services.Analytics;
 using MTM_WIP_Application_Winforms.Services.Maintenance;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace MTM_WIP_Application_Winforms.Forms.Maintenance
 {
@@ -353,6 +355,124 @@ namespace MTM_WIP_Application_Winforms.Forms.Maintenance
             {
                 Log($"RESET FAILED: {result.ErrorMessage}");
                 Service_ErrorHandler.ShowUserError($"Reset Failed: {result.ErrorMessage}");
+            }
+        }
+
+        private async void btnUpdateUserShifts_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Log("Calculating User Shifts...");
+                btnUpdateUserShifts.Enabled = false;
+
+                if (Program.ServiceProvider == null)
+                {
+                    Log("Error: Service Provider not initialized.");
+                    return;
+                }
+
+                var service = Program.ServiceProvider.GetRequiredService<IService_UserShiftLogic>();
+                var shiftsResult = await service.CalculateAllUserShiftsAsync();
+
+                if (!shiftsResult.IsSuccess)
+                {
+                    Log($"Calculation Failed: {shiftsResult.ErrorMessage}");
+                    return;
+                }
+
+                Log($"Calculated shifts for {shiftsResult.Data.Count} users.");
+
+                // Read existing data first to preserve names
+                var dao = Program.ServiceProvider.GetRequiredService<Data.IDao_VisualAnalytics>();
+                var existingDataResult = await dao.GetSysVisualDataAsync();
+                
+                Dictionary<string, string> names = new Dictionary<string, string>();
+                if (existingDataResult.IsSuccess && !string.IsNullOrEmpty(existingDataResult.Data.JsonUserFullNames))
+                {
+                    try 
+                    {
+                        names = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, string>>(existingDataResult.Data.JsonUserFullNames) 
+                                ?? new Dictionary<string, string>();
+                    }
+                    catch { /* ignore json error */ }
+                }
+
+                var saveResult = await service.SaveVisualMetadataAsync(shiftsResult.Data, names);
+
+                if (saveResult.IsSuccess)
+                {
+                    Log("User Shifts Updated Successfully.");
+                    Service_ErrorHandler.ShowInformation("User shifts updated based on last 50 transactions.", "Success");
+                }
+                else
+                {
+                    Log($"Save Failed: {saveResult.ErrorMessage}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Log($"Error: {ex.Message}");
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, controlName: nameof(Form_DatabaseMaintenance));
+            }
+            finally
+            {
+                btnUpdateUserShifts.Enabled = true;
+            }
+        }
+
+        private async void btnUpdateUserNames_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                Log("Fetching User Names from Visual...");
+                btnUpdateUserNames.Enabled = false;
+
+                var service = Program.ServiceProvider.GetRequiredService<IService_UserShiftLogic>();
+                var namesResult = await service.FetchUserFullNamesAsync();
+
+                if (!namesResult.IsSuccess)
+                {
+                    Log($"Fetch Failed: {namesResult.ErrorMessage}");
+                    return;
+                }
+
+                Log($"Fetched {namesResult.Data.Count} user names.");
+
+                // Read existing shifts to preserve them
+                var dao = Program.ServiceProvider.GetRequiredService<Data.IDao_VisualAnalytics>();
+                var existingDataResult = await dao.GetSysVisualDataAsync();
+                
+                Dictionary<string, int> shifts = new Dictionary<string, int>();
+                if (existingDataResult.IsSuccess && !string.IsNullOrEmpty(existingDataResult.Data.JsonShiftData))
+                {
+                    try 
+                    {
+                        shifts = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, int>>(existingDataResult.Data.JsonShiftData) 
+                                 ?? new Dictionary<string, int>();
+                    }
+                    catch { /* ignore json error */ }
+                }
+
+                var saveResult = await service.SaveVisualMetadataAsync(shifts, namesResult.Data);
+
+                if (saveResult.IsSuccess)
+                {
+                    Log("User Names Updated Successfully.");
+                    Service_ErrorHandler.ShowInformation("User names updated from Visual database.", "Success");
+                }
+                else
+                {
+                    Log($"Save Failed: {saveResult.ErrorMessage}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Log($"Error: {ex.Message}");
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, controlName: nameof(Form_DatabaseMaintenance));
+            }
+            finally
+            {
+                btnUpdateUserNames.Enabled = true;
             }
         }
     }

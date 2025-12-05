@@ -41,6 +41,11 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             txtScrapLocation = new MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBoxWithLabel();
             txtGenericType = new MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBoxWithLabel();
             txtDetailedType = new MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBoxWithLabel();
+            txtAutoIssueLocation = new MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBoxWithLabel();
+            flpSearchType = new FlowLayoutPanel();
+            rbSearchByPart = new RadioButton();
+            rbSearchByDie = new RadioButton();
+            btnWhereUsed = new Button();
             tabControlMain.SuspendLayout();
             tabLocator.SuspendLayout();
             grpSearch.SuspendLayout();
@@ -92,20 +97,60 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             // 
             tableLayoutPanel1.AutoSize = true;
             tableLayoutPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            tableLayoutPanel1.ColumnCount = 1;
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanel1.Controls.Add(tableLayoutPanel2, 0, 0);
-            tableLayoutPanel1.Controls.Add(btnSearch, 0, 1);
-            tableLayoutPanel1.Controls.Add(panel1, 0, 2);
+            tableLayoutPanel1.ColumnCount = 2;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel1.Controls.Add(flpSearchType, 0, 0);
+            tableLayoutPanel1.SetColumnSpan(flpSearchType, 2);
+            tableLayoutPanel1.Controls.Add(tableLayoutPanel2, 0, 1);
+            tableLayoutPanel1.SetColumnSpan(tableLayoutPanel2, 2);
+            tableLayoutPanel1.Controls.Add(btnSearch, 0, 2);
+            tableLayoutPanel1.Controls.Add(btnWhereUsed, 1, 2);
+            tableLayoutPanel1.Controls.Add(panel1, 0, 3);
+            tableLayoutPanel1.SetColumnSpan(panel1, 2);
             tableLayoutPanel1.Dock = DockStyle.Fill;
             tableLayoutPanel1.Location = new Point(3, 19);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
-            tableLayoutPanel1.RowCount = 3;
+            tableLayoutPanel1.RowCount = 4;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tableLayoutPanel1.Size = new Size(766, 280);
             tableLayoutPanel1.TabIndex = 5;
+            // 
+            // flpSearchType
+            // 
+            flpSearchType.AutoSize = true;
+            flpSearchType.Controls.Add(rbSearchByPart);
+            flpSearchType.Controls.Add(rbSearchByDie);
+            flpSearchType.Dock = DockStyle.Fill;
+            flpSearchType.Location = new Point(3, 3);
+            flpSearchType.Name = "flpSearchType";
+            flpSearchType.Size = new Size(760, 25);
+            flpSearchType.TabIndex = 0;
+            // 
+            // rbSearchByPart
+            // 
+            rbSearchByPart.AutoSize = true;
+            rbSearchByPart.Checked = true;
+            rbSearchByPart.Location = new Point(3, 3);
+            rbSearchByPart.Name = "rbSearchByPart";
+            rbSearchByPart.Size = new Size(143, 19);
+            rbSearchByPart.TabIndex = 0;
+            rbSearchByPart.TabStop = true;
+            rbSearchByPart.Text = "Search by Part Number";
+            rbSearchByPart.UseVisualStyleBackColor = true;
+            // 
+            // rbSearchByDie
+            // 
+            rbSearchByDie.AutoSize = true;
+            rbSearchByDie.Location = new Point(152, 3);
+            rbSearchByDie.Name = "rbSearchByDie";
+            rbSearchByDie.Size = new Size(139, 19);
+            rbSearchByDie.TabIndex = 1;
+            rbSearchByDie.Text = "Search by Die Number";
+            rbSearchByDie.UseVisualStyleBackColor = true;
             // 
             // tableLayoutPanel2
             // 
@@ -115,7 +160,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             tableLayoutPanel2.Controls.Add(txtSearch, 0, 0);
             tableLayoutPanel2.Dock = DockStyle.Fill;
-            tableLayoutPanel2.Location = new Point(3, 3);
+            tableLayoutPanel2.Location = new Point(3, 34);
             tableLayoutPanel2.Name = "tableLayoutPanel2";
             tableLayoutPanel2.RowCount = 1;
             tableLayoutPanel2.RowStyles.Add(new RowStyle());
@@ -143,13 +188,25 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             btnSearch.AutoSize = true;
             btnSearch.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             btnSearch.Dock = DockStyle.Fill;
-            btnSearch.Location = new Point(3, 38);
+            btnSearch.Location = new Point(3, 69);
             btnSearch.Name = "btnSearch";
-            btnSearch.Size = new Size(760, 25);
+            btnSearch.Size = new Size(377, 25);
             btnSearch.TabIndex = 4;
             btnSearch.Text = "Search";
             btnSearch.UseVisualStyleBackColor = true;
             btnSearch.Click += btnSearch_Click;
+            // 
+            // btnWhereUsed
+            // 
+            btnWhereUsed.AutoSize = true;
+            btnWhereUsed.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            btnWhereUsed.Dock = DockStyle.Fill;
+            btnWhereUsed.Location = new Point(386, 69);
+            btnWhereUsed.Name = "btnWhereUsed";
+            btnWhereUsed.Size = new Size(377, 25);
+            btnWhereUsed.TabIndex = 8;
+            btnWhereUsed.Text = "Where Used";
+            btnWhereUsed.UseVisualStyleBackColor = true;
             // 
             // panel1
             // 
@@ -158,10 +215,10 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             panel1.BorderStyle = BorderStyle.FixedSingle;
             panel1.Controls.Add(gridResults);
             panel1.Dock = DockStyle.Fill;
-            panel1.Location = new Point(3, 69);
+            panel1.Location = new Point(3, 100);
             panel1.Name = "panel1";
             panel1.Padding = new Padding(10);
-            panel1.Size = new Size(760, 208);
+            panel1.Size = new Size(760, 177);
             panel1.TabIndex = 7;
             // 
             // gridResults
@@ -246,10 +303,12 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             tableLayoutCoilDetails.Controls.Add(txtScrapLocation, 1, 3);
             tableLayoutCoilDetails.Controls.Add(txtGenericType, 0, 4);
             tableLayoutCoilDetails.Controls.Add(txtDetailedType, 1, 4);
+            tableLayoutCoilDetails.Controls.Add(txtAutoIssueLocation, 0, 5);
             tableLayoutCoilDetails.Dock = DockStyle.Fill;
             tableLayoutCoilDetails.Location = new Point(3, 80);
             tableLayoutCoilDetails.Name = "tableLayoutCoilDetails";
-            tableLayoutCoilDetails.RowCount = 6;
+            tableLayoutCoilDetails.RowCount = 7;
+            tableLayoutCoilDetails.RowStyles.Add(new RowStyle());
             tableLayoutCoilDetails.RowStyles.Add(new RowStyle());
             tableLayoutCoilDetails.RowStyles.Add(new RowStyle());
             tableLayoutCoilDetails.RowStyles.Add(new RowStyle());
@@ -449,6 +508,25 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             txtDetailedType.Size = new Size(371, 23);
             txtDetailedType.TabIndex = 19;
             // 
+            // txtAutoIssueLocation
+            // 
+            txtAutoIssueLocation.AutoSize = true;
+            txtAutoIssueLocation.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            txtAutoIssueLocation.Dock = DockStyle.Fill;
+            txtAutoIssueLocation.Enabled = false;
+            txtAutoIssueLocation.EnableSuggestions = false;
+            txtAutoIssueLocation.LabelText = "Auto-Issue Location";
+            txtAutoIssueLocation.LabelVisibility = Enum_LabelVisibility.Visible;
+            txtAutoIssueLocation.Location = new Point(6, 181);
+            txtAutoIssueLocation.Margin = new Padding(6);
+            txtAutoIssueLocation.MaxLength = 130;
+            txtAutoIssueLocation.MinimumSize = new Size(0, 23);
+            txtAutoIssueLocation.MinLength = 130;
+            txtAutoIssueLocation.Name = "txtAutoIssueLocation";
+            txtAutoIssueLocation.ShowF4Button = false;
+            txtAutoIssueLocation.Size = new Size(371, 23);
+            txtAutoIssueLocation.TabIndex = 20;
+            // 
             // Control_DieToolDiscovery
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
@@ -506,5 +584,10 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         private Shared.SuggestionTextBoxWithLabel txtScrapLocation;
         private Shared.SuggestionTextBoxWithLabel txtGenericType;
         private Shared.SuggestionTextBoxWithLabel txtDetailedType;
+        private Shared.SuggestionTextBoxWithLabel txtAutoIssueLocation;
+        private System.Windows.Forms.RadioButton rbSearchByPart;
+        private System.Windows.Forms.RadioButton rbSearchByDie;
+        private System.Windows.Forms.FlowLayoutPanel flpSearchType;
+        private System.Windows.Forms.Button btnWhereUsed;
     }
 }

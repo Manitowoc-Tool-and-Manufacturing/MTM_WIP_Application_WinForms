@@ -285,11 +285,11 @@ namespace MTM_WIP_Application_Winforms.Services.Startup
                 Console.WriteLine($"Error in global exception handler: {innerEx.Message}");
                 try
                 {
-                    _ = MessageBox.Show($"A critical error occurred and could not be handled properly.\n\n" +
+                    Service_ErrorHandler.ShowError($"A critical error occurred and could not be handled properly.\n\n" +
                                    $"Original error: {ex.Message}\n" +
                                    $"Handler error: {innerEx.Message}\n\n" +
                                    "The application will now exit.",
-                        "Critical Error", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                        "Critical Error");
                 }
                 catch
                 {
@@ -311,7 +311,7 @@ namespace MTM_WIP_Application_Winforms.Services.Startup
         {
             try
             {
-                MessageBox.Show(message, title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Service_ErrorHandler.ShowError(message, title);
             }
             catch (Exception ex)
             {
@@ -331,7 +331,7 @@ namespace MTM_WIP_Application_Winforms.Services.Startup
         {
             try
             {
-                MessageBox.Show(message, title, MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                Service_ErrorHandler.ShowError(message, title);
             }
             catch (Exception ex)
             {
@@ -348,7 +348,7 @@ namespace MTM_WIP_Application_Winforms.Services.Startup
         {
             try
             {
-                MessageBox.Show(message, title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Service_ErrorHandler.ShowWarning(message, title);
             }
             catch (Exception ex)
             {
@@ -365,7 +365,7 @@ namespace MTM_WIP_Application_Winforms.Services.Startup
         {
             try
             {
-                MessageBox.Show(message, title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Service_ErrorHandler.ShowError(message, title);
             }
             catch (Exception ex)
             {
@@ -382,7 +382,7 @@ namespace MTM_WIP_Application_Winforms.Services.Startup
         {
             try
             {
-                MessageBox.Show(message, title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Service_ErrorHandler.ShowWarning(message, title);
             }
             catch (Exception ex)
             {
@@ -399,7 +399,7 @@ namespace MTM_WIP_Application_Winforms.Services.Startup
         {
             try
             {
-                MessageBox.Show(message, title, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Service_ErrorHandler.ShowError(message, title);
             }
             catch (Exception ex)
             {
@@ -416,7 +416,7 @@ namespace MTM_WIP_Application_Winforms.Services.Startup
         {
             try
             {
-                MessageBox.Show(message, title, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                Service_ErrorHandler.ShowWarning(message, title);
             }
             catch (Exception ex)
             {
