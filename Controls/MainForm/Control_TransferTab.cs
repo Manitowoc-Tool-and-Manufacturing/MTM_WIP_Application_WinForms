@@ -1189,6 +1189,18 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 Control_TransferTab_TextBox_Operation.TextBox.TextChanged += (s, e) => Control_TransferTab_Update_ButtonStates();
                 Control_TransferTab_TextBox_ToLocation.TextBox.TextChanged += (s, e) => Control_TransferTab_Update_ButtonStates();
 
+                // Check for Dunnage on SuggestionSelected
+                Control_TransferTab_TextBox_Part.SuggestionSelected += async (s, e) =>
+                {
+                    await CheckPartTypeAndAdjustControlsAsync(e.SelectedValue);
+                };
+
+                // Check for Dunnage on Leave
+                Control_TransferTab_TextBox_Part.TextBox.Leave += async (s, e) =>
+                {
+                    await CheckPartTypeAndAdjustControlsAsync(Control_TransferTab_TextBox_Part.Text ?? string.Empty);
+                };
+
                 // Search button
                 Control_TransferTab_Button_Search.Click += Control_TransferTab_Button_Search_Click;
 
@@ -1351,6 +1363,96 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         #endregion
 
         #region Helper Methods
+
+        /// <summary>
+        /// Checks if the part is "Dunnage" and adjusts the quantity and operation fields accordingly.
+        /// </summary>
+        /// <param name="partNumber">The part number to check.</param>
+        private async Task CheckPartTypeAndAdjustControlsAsync(string partNumber)
+        {
+            if (string.IsNullOrWhiteSpace(partNumber)) return;
+
+            try
+            {
+                var result = await Dao_Part.GetPartByNumberAsync(partNumber);
+                if (result.IsSuccess && result.Data != null)
+                {
+                    string itemType = result.Data["ItemType"]?.ToString() ?? string.Empty;
+                    if (string.Equals(itemType, "Dunnage", StringComparison.OrdinalIgnoreCase))
+                    {
+                        // Set Operation to N/A and disable
+                        if (Control_TransferTab_TextBox_Operation.InvokeRequired)
+                        {
+                            Control_TransferTab_TextBox_Operation.Invoke(new Action(() =>
+                            {
+                                Control_TransferTab_TextBox_Operation.Text = "N/A";
+                                Control_TransferTab_TextBox_Operation.Enabled = false;
+                            }));
+                        }
+                        else
+                        {
+                            Control_TransferTab_TextBox_Operation.Text = "N/A";
+                            Control_TransferTab_TextBox_Operation.Enabled = false;
+                        }
+                    }
+                    else
+                    {
+                        // Enable input if not Dunnage
+                        if (!Model_Application_Variables.UserTypeReadOnly)
+                        {
+                            if (Control_TransferTab_TextBox_Operation.InvokeRequired)
+                            {
+                                Control_TransferTab_TextBox_Operation.Invoke(new Action(() =>
+                                {
+                                    Control_TransferTab_TextBox_Operation.Enabled = true;
+                                }));
+                            }
+                            else
+                            {
+                                Control_TransferTab_TextBox_Operation.Enabled = true;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    // Part not found or error - default to enabled
+                    if (!Model_Application_Variables.UserTypeReadOnly)
+                    {
+                        if (Control_TransferTab_TextBox_Operation.InvokeRequired)
+                        {
+                            Control_TransferTab_TextBox_Operation.Invoke(new Action(() =>
+                            {
+                                Control_TransferTab_TextBox_Operation.Enabled = true;
+                            }));
+                        }
+                        else
+                        {
+                            Control_TransferTab_TextBox_Operation.Enabled = true;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+                // Default to enabled on error
+                if (!Model_Application_Variables.UserTypeReadOnly)
+                {
+                    if (Control_TransferTab_TextBox_Operation.InvokeRequired)
+                    {
+                        Control_TransferTab_TextBox_Operation.Invoke(new Action(() =>
+                        {
+                            Control_TransferTab_TextBox_Operation.Enabled = true;
+                        }));
+                    }
+                    else
+                    {
+                        Control_TransferTab_TextBox_Operation.Enabled = true;
+                    }
+                }
+            }
+        }
 
         #region Arrow Animations
 

@@ -1867,12 +1867,16 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                             {
                                 Control_InventoryTab_SuggestionBox_Quantity.Text = "1";
                                 Control_InventoryTab_SuggestionBox_Quantity.Enabled = false;
+                                Control_InventoryTab_SuggestionBox_Operation.Text = "N/A";
+                                Control_InventoryTab_SuggestionBox_Operation.Enabled = false;
                             }));
                         }
                         else
                         {
                             Control_InventoryTab_SuggestionBox_Quantity.Text = "1";
                             Control_InventoryTab_SuggestionBox_Quantity.Enabled = false;
+                            Control_InventoryTab_SuggestionBox_Operation.Text = "N/A";
+                            Control_InventoryTab_SuggestionBox_Operation.Enabled = false;
                         }
                     }
                     else
@@ -1886,11 +1890,13 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                                 Control_InventoryTab_SuggestionBox_Quantity.Invoke(new Action(() =>
                                 {
                                     Control_InventoryTab_SuggestionBox_Quantity.Enabled = true;
+                                    Control_InventoryTab_SuggestionBox_Operation.Enabled = true;
                                 }));
                             }
                             else
                             {
                                 Control_InventoryTab_SuggestionBox_Quantity.Enabled = true;
+                                Control_InventoryTab_SuggestionBox_Operation.Enabled = true;
                             }
                         }
                     }
@@ -1905,11 +1911,13 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                             Control_InventoryTab_SuggestionBox_Quantity.Invoke(new Action(() =>
                             {
                                 Control_InventoryTab_SuggestionBox_Quantity.Enabled = true;
+                                Control_InventoryTab_SuggestionBox_Operation.Enabled = true;
                             }));
                         }
                         else
                         {
                             Control_InventoryTab_SuggestionBox_Quantity.Enabled = true;
+                            Control_InventoryTab_SuggestionBox_Operation.Enabled = true;
                         }
                     }
                 }
@@ -1925,11 +1933,13 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         Control_InventoryTab_SuggestionBox_Quantity.Invoke(new Action(() =>
                         {
                             Control_InventoryTab_SuggestionBox_Quantity.Enabled = true;
+                            Control_InventoryTab_SuggestionBox_Operation.Enabled = true;
                         }));
                     }
                     else
                     {
                         Control_InventoryTab_SuggestionBox_Quantity.Enabled = true;
+                        Control_InventoryTab_SuggestionBox_Operation.Enabled = true;
                     }
                 }
             }

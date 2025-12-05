@@ -378,10 +378,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
                 // Check for Dunnage on Leave
                 AdvancedInventory_Single_TextBox_Part.TextBox.Leave += async (s, e) => 
-                    await CheckPartTypeAndAdjustQuantityAsync(AdvancedInventory_Single_TextBox_Part.Text ?? string.Empty, AdvancedInventory_Single_TextBox_Qty);
+                    await CheckPartTypeAndAdjustQuantityAsync(AdvancedInventory_Single_TextBox_Part.Text ?? string.Empty, AdvancedInventory_Single_TextBox_Qty, AdvancedInventory_Single_TextBox_Op);
                 
                 AdvancedInventory_MultiLoc_TextBox_Part.TextBox.Leave += async (s, e) => 
-                    await CheckPartTypeAndAdjustQuantityAsync(AdvancedInventory_MultiLoc_TextBox_Part.Text ?? string.Empty, AdvancedInventory_MultiLoc_TextBox_Qty);
+                    await CheckPartTypeAndAdjustQuantityAsync(AdvancedInventory_MultiLoc_TextBox_Part.Text ?? string.Empty, AdvancedInventory_MultiLoc_TextBox_Qty, AdvancedInventory_MultiLoc_TextBox_Op);
             }
             catch (Exception ex)
             {
@@ -413,7 +413,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 HandleColorFlaggedPart(selectedPart, "Single Entry Part");
             }
 
-            await CheckPartTypeAndAdjustQuantityAsync(selectedPart, AdvancedInventory_Single_TextBox_Qty);
+            await CheckPartTypeAndAdjustQuantityAsync(selectedPart, AdvancedInventory_Single_TextBox_Qty, AdvancedInventory_Single_TextBox_Op);
         }
 
         /// <summary>
@@ -506,7 +506,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             HandleColorFlaggedPart(selectedPart, "Multi-Location Part");
             UpdateMultiSaveButtonState();
 
-            await CheckPartTypeAndAdjustQuantityAsync(selectedPart, AdvancedInventory_MultiLoc_TextBox_Qty);
+            await CheckPartTypeAndAdjustQuantityAsync(selectedPart, AdvancedInventory_MultiLoc_TextBox_Qty, AdvancedInventory_MultiLoc_TextBox_Op);
         }
 
         /// <summary>
@@ -2613,7 +2613,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         /// </summary>
         /// <param name="partNumber">The part number to check.</param>
         /// <param name="qtyControl">The quantity control to adjust.</param>
-        private async Task CheckPartTypeAndAdjustQuantityAsync(string partNumber, SuggestionTextBoxWithLabel qtyControl)
+        /// <param name="opControl">The operation control to adjust.</param>
+        private async Task CheckPartTypeAndAdjustQuantityAsync(string partNumber, SuggestionTextBoxWithLabel qtyControl, SuggestionTextBoxWithLabel opControl)
         {
             if (string.IsNullOrWhiteSpace(partNumber)) return;
 
@@ -2632,12 +2633,16 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                             {
                                 qtyControl.Text = "1";
                                 qtyControl.Enabled = false;
+                                opControl.Text = "N/A";
+                                opControl.Enabled = false;
                             }));
                         }
                         else
                         {
                             qtyControl.Text = "1";
                             qtyControl.Enabled = false;
+                            opControl.Text = "N/A";
+                            opControl.Enabled = false;
                         }
                     }
                     else
@@ -2648,11 +2653,13 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                             qtyControl.Invoke(new Action(() =>
                             {
                                 qtyControl.Enabled = true;
+                                opControl.Enabled = true;
                             }));
                         }
                         else
                         {
                             qtyControl.Enabled = true;
+                            opControl.Enabled = true;
                         }
                     }
                 }
@@ -2664,11 +2671,13 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         qtyControl.Invoke(new Action(() =>
                         {
                             qtyControl.Enabled = true;
+                            opControl.Enabled = true;
                         }));
                     }
                     else
                     {
                         qtyControl.Enabled = true;
+                        opControl.Enabled = true;
                     }
                 }
             }
@@ -2681,11 +2690,13 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     qtyControl.Invoke(new Action(() =>
                     {
                         qtyControl.Enabled = true;
+                        opControl.Enabled = true;
                     }));
                 }
                 else
                 {
                     qtyControl.Enabled = true;
+                    opControl.Enabled = true;
                 }
             }
         }
