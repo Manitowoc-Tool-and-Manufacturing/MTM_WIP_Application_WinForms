@@ -550,7 +550,18 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                     return;
                 }
 
-                // 2. Get Shift/Name Metadata from sys_visual
+                // 2. Get WIP Users for Shift Mapping
+                var wipUsersResult = await Dao_User.GetAllUsersAsync();
+                var wipUsers = new List<DataRow>();
+                if (wipUsersResult.IsSuccess && wipUsersResult.Data != null)
+                {
+                    foreach (DataRow row in wipUsersResult.Data.Rows)
+                    {
+                        wipUsers.Add(row);
+                    }
+                }
+
+                // 3. Get Shift/Name Metadata from sys_visual (Fallback)
                 if (_daoVisualAnalytics != null)
                 {
                     var metaResult = await _daoVisualAnalytics.GetSysVisualDataAsync();
@@ -568,16 +579,35 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                     }
                 }
 
-                // 3. Filter and Populate
+                // 4. Filter and Populate
                 var activeUsers = result.Data ?? new List<string>();
                 var selectedShifts = new HashSet<int>();
                 if (_cbShift1.Checked) selectedShifts.Add(1);
                 if (_cbShift2.Checked) selectedShifts.Add(2);
                 if (_cbShift3.Checked) selectedShifts.Add(3);
+                if (_cbShiftWeekend.Checked) selectedShifts.Add(4);
                 
                 foreach (var userId in activeUsers)
                 {
-                    int shift = _userShifts.ContainsKey(userId) ? _userShifts[userId] : 0;
+                    int shift = 0;
+
+                    // Try to find shift from WIP Users first
+                    var matchingWipUser = wipUsers.FirstOrDefault(r => IsUserMatch(userId, r["User"]?.ToString() ?? ""));
+                    if (matchingWipUser != null)
+                    {
+                        string shiftStr = matchingWipUser["Shift"]?.ToString() ?? "";
+                        if (int.TryParse(shiftStr, out int s)) shift = s;
+                        else if (shiftStr.StartsWith("First")) shift = 1;
+                        else if (shiftStr.StartsWith("Second")) shift = 2;
+                        else if (shiftStr.StartsWith("Third")) shift = 3;
+                        else if (shiftStr.StartsWith("Weekend")) shift = 4;
+                    }
+
+                    // Fallback to Visual Metadata if not found in WIP
+                    if (shift == 0 && _userShifts.ContainsKey(userId))
+                    {
+                        shift = _userShifts[userId];
+                    }
                     
                     // Filter by shift
                     // If shift is 0 (unknown), include it if Shift 1 is checked (fallback)
@@ -588,6 +618,10 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                     if (_userNames.ContainsKey(userId))
                     {
                         displayName = $"{_userNames[userId]} ({userId})";
+                    }
+                    else if (matchingWipUser != null)
+                    {
+                        displayName = $"{matchingWipUser["Full Name"]} ({userId})";
                     }
 
                     _clbUsers.Items.Add(new UserDisplayItem { UserId = userId, DisplayName = displayName });
@@ -605,6 +639,22 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                 _btnLoadUsers.Enabled = true;
                 _btnLoadUsers.Text = "Load Users";
             }
+        }
+
+        private bool IsUserMatch(string visualUser, string wipUser)
+        {
+            if (string.IsNullOrEmpty(visualUser) || visualUser.Length < 5) return false;
+            
+            char firstInitial = visualUser[0];
+            string lastPart = visualUser.Substring(1); // First 4 of last name (assuming 5 chars total)
+            
+            // Check if WIP User starts with First Initial AND contains Last Part
+            // Example: MSAMZ (Visual) vs MIKESAMZ (WIP)
+            // M matches M
+            // SAMZ is in MIKESAMZ
+            
+            return wipUser.StartsWith(firstInitial.ToString(), StringComparison.OrdinalIgnoreCase) &&
+                   wipUser.IndexOf(lastPart, StringComparison.OrdinalIgnoreCase) >= 0;
         }
 
         private void UpdateUserSelectionState()

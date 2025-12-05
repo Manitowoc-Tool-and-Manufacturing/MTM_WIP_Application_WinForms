@@ -504,6 +504,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             _flpAnalyticsShifts.Controls.Add(_cbShift1);
             _flpAnalyticsShifts.Controls.Add(_cbShift2);
             _flpAnalyticsShifts.Controls.Add(_cbShift3);
+            _flpAnalyticsShifts.Controls.Add(_cbShiftWeekend);
             _flpAnalyticsShifts.Dock = DockStyle.Fill;
             _flpAnalyticsShifts.Location = new Point(3, 90);
             _flpAnalyticsShifts.Name = "_flpAnalyticsShifts";
@@ -545,6 +546,18 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             _cbShift3.TabIndex = 2;
             _cbShift3.Text = "Shift 3";
             _cbShift3.UseVisualStyleBackColor = true;
+            // 
+            // _cbShiftWeekend
+            // 
+            _cbShiftWeekend.AutoSize = true;
+            _cbShiftWeekend.Checked = true;
+            _cbShiftWeekend.CheckState = CheckState.Checked;
+            _cbShiftWeekend.Location = new Point(201, 3);
+            _cbShiftWeekend.Name = "_cbShiftWeekend";
+            _cbShiftWeekend.Size = new Size(76, 19);
+            _cbShiftWeekend.TabIndex = 3;
+            _cbShiftWeekend.Text = "Weekend";
+            _cbShiftWeekend.UseVisualStyleBackColor = true;
             // 
             // lblAnalyticsStart
             // 
@@ -751,5 +764,6 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         private CheckBox _cbShift1;
         private CheckBox _cbShift2;
         private CheckBox _cbShift3;
+        private CheckBox _cbShiftWeekend;
     }
 }

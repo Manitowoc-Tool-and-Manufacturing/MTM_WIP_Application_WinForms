@@ -1,12 +1,9 @@
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
 using MTM_WIP_Application_Winforms.Data;
 using MTM_WIP_Application_Winforms.Models;
 using MySql.Data.MySqlClient;
 using MTM_WIP_Application_Winforms.Services.Logging;
+using Newtonsoft.Json;
 
 namespace MTM_WIP_Application_Winforms.Services.Analytics
 {
@@ -32,6 +29,8 @@ namespace MTM_WIP_Application_Winforms.Services.Analytics
             ORDER BY ReceiveDate DESC";
 
         private const string SqlAllUsers = "SELECT User FROM usr_users ORDER BY User";
+        
+        private readonly Dao_VisualAnalytics _visualDao = new Dao_VisualAnalytics();
         #endregion
 
 
@@ -96,13 +95,45 @@ namespace MTM_WIP_Application_Winforms.Services.Analytics
                     }
                 }
 
+                // Fetch Visual Data for Shift Mapping
+                var visualDataResult = await _visualDao.GetSysVisualDataAsync();
+                Dictionary<string, int> visualShifts = new Dictionary<string, int>();
+                if (visualDataResult.IsSuccess && !string.IsNullOrEmpty(visualDataResult.Data?.JsonShiftData))
+                {
+                    try 
+                    {
+                        visualShifts = JsonConvert.DeserializeObject<Dictionary<string, int>>(visualDataResult.Data.JsonShiftData) 
+                                       ?? new Dictionary<string, int>();
+                    }
+                    catch (Exception ex)
+                    {
+                        LoggingUtility.LogApplicationError(ex);
+                    }
+                }
+
                 var performanceList = new List<Model_User_Performance>();
                 foreach (var group in transactions.Where(t => !string.IsNullOrWhiteSpace(t.User))
                                                   .GroupBy(t => t.User))
                 {
                     string userKey = group.Key ?? "Unknown";
                     DataRow? userRow = FindUserRow(usersTable, userKey);
-                    string shift = userRow?["Shift"]?.ToString() ?? "Unknown";
+                    
+                    // Determine Shift from Visual first, then fallback to WIP DB
+                    string shift = "Unknown";
+                    foreach (var visualUser in visualShifts.Keys)
+                    {
+                        if (IsUserMatch(visualUser, userKey))
+                        {
+                            shift = ConvertShiftCodeToString(visualShifts[visualUser]);
+                            break;
+                        }
+                    }
+                    
+                    if (shift == "Unknown")
+                    {
+                        shift = userRow?["Shift"]?.ToString() ?? "Unknown";
+                    }
+
                     string fullName = userRow?["Full Name"]?.ToString() ?? userKey;
 
                     var stats = AnalyzeUserTransactions(group.ToList(), shift);
@@ -237,6 +268,34 @@ namespace MTM_WIP_Application_Winforms.Services.Analytics
             }
 
             return null;
+        }
+
+        private bool IsUserMatch(string visualUser, string wipUser)
+        {
+            if (string.IsNullOrEmpty(visualUser) || visualUser.Length < 5) return false;
+            
+            char firstInitial = visualUser[0];
+            string lastPart = visualUser.Substring(1); // First 4 of last name (assuming 5 chars total)
+            
+            // Check if WIP User starts with First Initial AND contains Last Part
+            // Example: MSAMZ (Visual) vs MIKESAMZ (WIP)
+            // M matches M
+            // SAMZ is in MIKESAMZ
+            
+            return wipUser.StartsWith(firstInitial.ToString(), StringComparison.OrdinalIgnoreCase) &&
+                   wipUser.IndexOf(lastPart, StringComparison.OrdinalIgnoreCase) >= 0;
+        }
+
+        private string ConvertShiftCodeToString(int shiftCode)
+        {
+            return shiftCode switch
+            {
+                1 => "First",
+                2 => "Second",
+                3 => "Third",
+                4 => "Weekend",
+                _ => "Unknown"
+            };
         }
 
         /// <summary>
