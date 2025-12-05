@@ -1746,6 +1746,7 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                     CREATE_DATE, 
                     LOCATION_ID, 
                     WORKORDER_BASE_ID, 
+                    CUST_ORDER_ID,
                     TRANSFER_TRANS_ID
                 FROM INVENTORY_TRANS
                 WHERE 
@@ -1787,91 +1788,101 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 resultDt.Columns.Add("ToLoc", typeof(string));
                 resultDt.Columns.Add("WorkOrder", typeof(string));
 
-                var rows = rawData.AsEnumerable().ToList();
-                
-                // Group by User, Part, and CreateDate (exact match) to find pairs
-                var groups = rows.GroupBy(r => new
-                {
-                    User = r["USER_ID"].ToString() ?? "",
-                    Part = r["PART_ID"].ToString() ?? "",
-                    Date = (DateTime)r["CREATE_DATE"]
-                });
+                var processedIds = new HashSet<int>();
+                var rows = rawData.AsEnumerable()
+                    .Select(r => new
+                    {
+                        Id = r.Field<int>("TRANSACTION_ID"),
+                        User = r.Field<string>("USER_ID") ?? "",
+                        Type = r.Field<string>("TYPE") ?? "",
+                        Part = r.Field<string>("PART_ID") ?? "",
+                        WO = r.Field<string>("WORKORDER_BASE_ID"),
+                        CO = r.Field<string>("CUST_ORDER_ID"),
+                        Qty = r.Field<decimal>("QTY"),
+                        Date = r.Field<DateTime>("CREATE_DATE"),
+                        Loc = r.Field<string>("LOCATION_ID") ?? ""
+                    })
+                    .ToList();
 
-                foreach (var group in groups)
+                // 1. Process Receipts (Work Orders)
+                for (int i = 0; i < rows.Count; i++)
                 {
-                    var outs = group.Where(r => r["TYPE"].ToString() == "O").ToList();
-                    var ins = group.Where(r => r["TYPE"].ToString() == "I").ToList();
-                    
-                    // Match O and I to form Transfers
-                    int transferCount = Math.Min(outs.Count, ins.Count);
-                    
-                    for (int i = 0; i < transferCount; i++)
+                    var t = rows[i];
+                    if (processedIds.Contains(t.Id)) continue;
+
+                    if (t.Type == "I" && !string.IsNullOrEmpty(t.WO))
                     {
-                        var outRow = outs[i];
-                        var inRow = ins[i];
-                        
-                        string partId = group.Key.Part;
-                        string category = "Location Transfer";
-                        
-                        if (partId.StartsWith("MMF")) category = "Flatstock";
-                        else if (partId.StartsWith("MMC")) category = "Coil";
-                        
-                        resultDt.Rows.Add(
-                            group.Key.User,
-                            category,
-                            partId,
-                            (decimal)inRow["QTY"],
-                            group.Key.Date,
-                            outRow["LOCATION_ID"].ToString(), // From
-                            inRow["LOCATION_ID"].ToString(), // To
-                            inRow["WORKORDER_BASE_ID"] == DBNull.Value ? null : inRow["WORKORDER_BASE_ID"].ToString()
-                        );
+                        AddAnalyticsRow(resultDt, t.User, t.Part, "Work Order", t.Qty, t.Date, null, t.Loc, t.WO);
+                        processedIds.Add(t.Id);
                     }
-                    
-                    // Process remaining Outs (Adjusted Out)
-                    for (int i = transferCount; i < outs.Count; i++)
+                }
+
+                // 2. Process Shipments (Customer Orders)
+                for (int i = 0; i < rows.Count; i++)
+                {
+                    var t = rows[i];
+                    if (processedIds.Contains(t.Id)) continue;
+
+                    if (t.Type == "O" && !string.IsNullOrEmpty(t.CO))
                     {
-                        var row = outs[i];
-                        string partId = group.Key.Part;
-                        string category = "Adjusted Out";
-                        
-                        if (partId.StartsWith("MMF")) category = "Flatstock";
-                        else if (partId.StartsWith("MMC")) category = "Coil";
-                        
-                        resultDt.Rows.Add(
-                            group.Key.User,
-                            category,
-                            partId,
-                            (decimal)row["QTY"],
-                            group.Key.Date,
-                            row["LOCATION_ID"].ToString(), // From
-                            null, // To
-                            row["WORKORDER_BASE_ID"] == DBNull.Value ? null : row["WORKORDER_BASE_ID"].ToString()
-                        );
+                        AddAnalyticsRow(resultDt, t.User, t.Part, "Adjusted Out", t.Qty, t.Date, t.Loc, null, null);
+                        processedIds.Add(t.Id);
                     }
-                    
-                    // Process remaining Ins (Work Order or Adjusted In)
-                    for (int i = transferCount; i < ins.Count; i++)
+                }
+
+                // 3. Process Transfers (Pair OUT with IN)
+                for (int i = 0; i < rows.Count; i++)
+                {
+                    var tOut = rows[i];
+                    if (processedIds.Contains(tOut.Id)) continue;
+
+                    if (tOut.Type == "O")
                     {
-                        var row = ins[i];
-                        string partId = group.Key.Part;
-                        string category = "Adjusted In";
-                        
-                        if (partId.StartsWith("MMF")) category = "Flatstock";
-                        else if (partId.StartsWith("MMC")) category = "Coil";
-                        else if (row["WORKORDER_BASE_ID"] != DBNull.Value) category = "Work Order";
-                        
-                        resultDt.Rows.Add(
-                            group.Key.User,
-                            category,
-                            partId,
-                            (decimal)row["QTY"],
-                            group.Key.Date,
-                            null, // From
-                            row["LOCATION_ID"].ToString(), // To
-                            row["WORKORDER_BASE_ID"] == DBNull.Value ? null : row["WORKORDER_BASE_ID"].ToString()
-                        );
+                        int bestMatchIndex = -1;
+                        double minTimeDiff = double.MaxValue;
+
+                        for (int j = 0; j < rows.Count; j++)
+                        {
+                            if (i == j || processedIds.Contains(rows[j].Id)) continue;
+                            var tIn = rows[j];
+
+                            if (tIn.Type == "I" && 
+                                string.IsNullOrEmpty(tIn.WO) && 
+                                tIn.Part == tOut.Part &&
+                                Math.Abs(tIn.Qty) == Math.Abs(tOut.Qty))
+                            {
+                                var diff = Math.Abs((tIn.Date - tOut.Date).TotalSeconds);
+                                if (diff < 300)
+                                {
+                                    if (diff < minTimeDiff)
+                                    {
+                                        minTimeDiff = diff;
+                                        bestMatchIndex = j;
+                                    }
+                                }
+                            }
+                        }
+
+                        if (bestMatchIndex != -1)
+                        {
+                            var tIn = rows[bestMatchIndex];
+                            AddAnalyticsRow(resultDt, tOut.User, tOut.Part, "Location Transfer", tOut.Qty, tOut.Date, tOut.Loc, tIn.Loc, null);
+                            processedIds.Add(tOut.Id);
+                            processedIds.Add(tIn.Id);
+                        }
                     }
+                }
+
+                // 4. Process Remaining
+                for (int i = 0; i < rows.Count; i++)
+                {
+                    var t = rows[i];
+                    if (processedIds.Contains(t.Id)) continue;
+
+                    if (t.Type == "I")
+                        AddAnalyticsRow(resultDt, t.User, t.Part, "Adjusted In", t.Qty, t.Date, null, t.Loc, null);
+                    else
+                        AddAnalyticsRow(resultDt, t.User, t.Part, "Adjusted Out", t.Qty, t.Date, t.Loc, null, null);
                 }
 
                 return new Model_Dao_Result<DataTable> { IsSuccess = true, Data = resultDt };
@@ -1885,6 +1896,15 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                     ErrorMessage = $"Error retrieving analytics data: {ex.Message}"
                 };
             }
+        }
+
+        private void AddAnalyticsRow(DataTable dt, string user, string partId, string baseCategory, decimal qty, DateTime date, string? fromLoc, string? toLoc, string? wo)
+        {
+            string category = baseCategory;
+            if (partId.StartsWith("MMF")) category = "Flatstock";
+            else if (partId.StartsWith("MMC")) category = "Coil";
+            
+            dt.Rows.Add(user, category, partId, qty, date, fromLoc, toLoc, wo);
         }
 
         /// <summary>
@@ -2039,16 +2059,20 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
             }
 
             // Fetch raw data for processing
+            // Added QTY and CUST_ORDER_ID for proper matching logic
             string sql = @"
                 SELECT 
+                    TRANSACTION_ID,
                     USER_ID,
                     TYPE,
                     PART_ID,
                     WORKORDER_BASE_ID,
+                    CUST_ORDER_ID,
+                    QTY,
                     CREATE_DATE
                 FROM INVENTORY_TRANS
                 WHERE TRANSACTION_DATE >= @StartDate AND TRANSACTION_DATE <= @EndDate
-                ORDER BY CREATE_DATE";
+                ORDER BY CREATE_DATE DESC";
 
             try
             {
@@ -2069,69 +2093,104 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                     }
                 }
 
-                // Process data in memory
+                // Process data in memory using Helper_VisualLifecycle logic
                 var stats = new Dictionary<(string User, string Category), int>();
-
-                var rows = rawData.AsEnumerable().ToList();
+                var processedIds = new HashSet<int>();
                 
-                // Group by User, Part, and CreateDate (exact match) to find pairs
-                var groups = rows.GroupBy(r => new
-                {
-                    User = r["USER_ID"].ToString() ?? "",
-                    Part = r["PART_ID"].ToString() ?? "",
-                    Date = (DateTime)r["CREATE_DATE"]
-                });
+                var rows = rawData.AsEnumerable()
+                    .Select(r => new
+                    {
+                        Id = r.Field<int>("TRANSACTION_ID"),
+                        User = r.Field<string>("USER_ID") ?? "",
+                        Type = r.Field<string>("TYPE") ?? "",
+                        Part = r.Field<string>("PART_ID") ?? "",
+                        WO = r.Field<string>("WORKORDER_BASE_ID"),
+                        CO = r.Field<string>("CUST_ORDER_ID"),
+                        Qty = r.Field<decimal>("QTY"),
+                        Date = r.Field<DateTime>("CREATE_DATE")
+                    })
+                    .ToList();
 
-                foreach (var group in groups)
+                // 1. Process Receipts (Work Orders)
+                for (int i = 0; i < rows.Count; i++)
                 {
-                    var outs = group.Where(r => r["TYPE"].ToString() == "O").ToList();
-                    var ins = group.Where(r => r["TYPE"].ToString() == "I").ToList();
-                    
-                    // Match O and I to form Transfers
-                    int transferCount = Math.Min(outs.Count, ins.Count);
-                    
-                    for (int i = 0; i < transferCount; i++)
+                    var t = rows[i];
+                    if (processedIds.Contains(t.Id)) continue;
+
+                    if (t.Type == "I" && !string.IsNullOrEmpty(t.WO))
                     {
-                        string partId = group.Key.Part;
-                        string category = "Location Transfer";
-                        
-                        if (partId.StartsWith("MMF")) category = "Flatstock";
-                        else if (partId.StartsWith("MMC")) category = "Coil";
-                        
-                        var key = (group.Key.User, category);
-                        if (!stats.ContainsKey(key)) stats[key] = 0;
-                        stats[key]++;
+                        AddStat(stats, t.User, t.Part, "Work Order");
+                        processedIds.Add(t.Id);
                     }
-                    
-                    // Process remaining Outs (Adjusted Out)
-                    for (int i = transferCount; i < outs.Count; i++)
+                }
+
+                // 2. Process Shipments (Customer Orders)
+                for (int i = 0; i < rows.Count; i++)
+                {
+                    var t = rows[i];
+                    if (processedIds.Contains(t.Id)) continue;
+
+                    if (t.Type == "O" && !string.IsNullOrEmpty(t.CO))
                     {
-                        string partId = group.Key.Part;
-                        string category = "Adjusted Out";
-                        
-                        if (partId.StartsWith("MMF")) category = "Flatstock";
-                        else if (partId.StartsWith("MMC")) category = "Coil";
-                        
-                        var key = (group.Key.User, category);
-                        if (!stats.ContainsKey(key)) stats[key] = 0;
-                        stats[key]++;
+                        AddStat(stats, t.User, t.Part, "Adjusted Out"); // Shipments count as Out
+                        processedIds.Add(t.Id);
                     }
-                    
-                    // Process remaining Ins (Work Order or Adjusted In)
-                    for (int i = transferCount; i < ins.Count; i++)
+                }
+
+                // 3. Process Transfers (Pair OUT with IN)
+                for (int i = 0; i < rows.Count; i++)
+                {
+                    var tOut = rows[i];
+                    if (processedIds.Contains(tOut.Id)) continue;
+
+                    if (tOut.Type == "O")
                     {
-                        var row = ins[i];
-                        string partId = group.Key.Part;
-                        string category = "Adjusted In";
-                        
-                        if (partId.StartsWith("MMF")) category = "Flatstock";
-                        else if (partId.StartsWith("MMC")) category = "Coil";
-                        else if (row["WORKORDER_BASE_ID"] != DBNull.Value) category = "Work Order";
-                        
-                        var key = (group.Key.User, category);
-                        if (!stats.ContainsKey(key)) stats[key] = 0;
-                        stats[key]++;
+                        // Look for matching IN
+                        // Same Part, Same Abs(Qty), Time diff < 5 mins
+                        // Note: rows are sorted by Date DESC
+                        int bestMatchIndex = -1;
+                        double minTimeDiff = double.MaxValue;
+
+                        for (int j = 0; j < rows.Count; j++)
+                        {
+                            if (i == j || processedIds.Contains(rows[j].Id)) continue;
+                            var tIn = rows[j];
+
+                            if (tIn.Type == "I" && 
+                                string.IsNullOrEmpty(tIn.WO) && // Not a WO
+                                tIn.Part == tOut.Part &&
+                                Math.Abs(tIn.Qty) == Math.Abs(tOut.Qty))
+                            {
+                                var diff = Math.Abs((tIn.Date - tOut.Date).TotalSeconds);
+                                if (diff < 300) // 5 minutes
+                                {
+                                    if (diff < minTimeDiff)
+                                    {
+                                        minTimeDiff = diff;
+                                        bestMatchIndex = j;
+                                    }
+                                }
+                            }
+                        }
+
+                        if (bestMatchIndex != -1)
+                        {
+                            // Found a pair
+                            AddStat(stats, tOut.User, tOut.Part, "Location Transfer");
+                            processedIds.Add(tOut.Id);
+                            processedIds.Add(rows[bestMatchIndex].Id);
+                        }
                     }
+                }
+
+                // 4. Process Remaining
+                for (int i = 0; i < rows.Count; i++)
+                {
+                    var t = rows[i];
+                    if (processedIds.Contains(t.Id)) continue;
+
+                    string category = t.Type == "I" ? "Adjusted In" : "Adjusted Out";
+                    AddStat(stats, t.User, t.Part, category);
                 }
 
                 // Convert to DataTable
@@ -2158,6 +2217,17 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                     ErrorMessage = $"Error retrieving material handler stats: {ex.Message}"
                 };
             }
+        }
+
+        private void AddStat(Dictionary<(string User, string Category), int> stats, string user, string partId, string baseCategory)
+        {
+            string category = baseCategory;
+            if (partId.StartsWith("MMF")) category = "Flatstock";
+            else if (partId.StartsWith("MMC")) category = "Coil";
+            
+            var key = (user, category);
+            if (!stats.ContainsKey(key)) stats[key] = 0;
+            stats[key]++;
         }
         #endregion
 
