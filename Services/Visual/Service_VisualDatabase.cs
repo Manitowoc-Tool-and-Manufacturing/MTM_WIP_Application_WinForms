@@ -1943,6 +1943,195 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
             }
         }
 
+        /// <summary>
+        /// Retrieves transaction history for shift calculation (last 30 days).
+        /// </summary>
+        /// <returns>DataTable with USER_ID and TRANSACTION_DATE.</returns>
+        public async Task<Model_Dao_Result<DataTable>> GetUserShiftDataAsync()
+        {
+            if (_useSampleData)
+            {
+                // Return sample data
+                var dt = new DataTable();
+                dt.Columns.Add("USER_ID", typeof(string));
+                dt.Columns.Add("TRANSACTION_DATE", typeof(DateTime));
+                
+                var rnd = new Random();
+                var users = new[] { "JDOE", "BSMITH", "MJONES" };
+                for (int i = 0; i < 100; i++)
+                {
+                    dt.Rows.Add(users[rnd.Next(users.Length)], DateTime.Now.AddDays(-rnd.Next(30)));
+                }
+                return new Model_Dao_Result<DataTable> { IsSuccess = true, Data = dt };
+            }
+
+            if (string.IsNullOrEmpty(_userName) || string.IsNullOrEmpty(_password))
+            {
+                return new Model_Dao_Result<DataTable>
+                {
+                    IsSuccess = false,
+                    ErrorMessage = "Visual ERP credentials are not configured."
+                };
+            }
+
+            string sql = @"
+                SELECT USER_ID, TRANSACTION_DATE
+                FROM INVENTORY_TRANS
+                WHERE TRANSACTION_DATE >= DATEADD(day, -30, GETDATE())
+                ORDER BY USER_ID, TRANSACTION_DATE DESC";
+
+            try
+            {
+                using (var connection = new SqlConnection(GetConnectionString()))
+                {
+                    await connection.OpenAsync();
+                    using (var command = new SqlCommand(sql, connection))
+                    {
+                        using (var reader = await command.ExecuteReaderAsync())
+                        {
+                            var dt = new DataTable();
+                            dt.Load(reader);
+                            return new Model_Dao_Result<DataTable> { IsSuccess = true, Data = dt };
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+                return new Model_Dao_Result<DataTable>
+                {
+                    IsSuccess = false,
+                    ErrorMessage = $"Error retrieving shift data: {ex.Message}"
+                };
+            }
+        }
+
+        /// <summary>
+        /// Retrieves full names for all employees.
+        /// </summary>
+        /// <returns>DataTable with USER_ID, FIRST_NAME, LAST_NAME.</returns>
+        public async Task<Model_Dao_Result<DataTable>> GetUserFullNamesAsync()
+        {
+            if (_useSampleData)
+            {
+                var dt = new DataTable();
+                dt.Columns.Add("USER_ID", typeof(string));
+                dt.Columns.Add("FIRST_NAME", typeof(string));
+                dt.Columns.Add("LAST_NAME", typeof(string));
+                dt.Rows.Add("JDOE", "John", "Doe");
+                dt.Rows.Add("BSMITH", "Bob", "Smith");
+                dt.Rows.Add("MJONES", "Mary", "Jones");
+                return new Model_Dao_Result<DataTable> { IsSuccess = true, Data = dt };
+            }
+
+            if (string.IsNullOrEmpty(_userName) || string.IsNullOrEmpty(_password))
+            {
+                return new Model_Dao_Result<DataTable>
+                {
+                    IsSuccess = false,
+                    ErrorMessage = "Visual ERP credentials are not configured."
+                };
+            }
+
+            string sql = @"
+                SELECT USER_ID, FIRST_NAME, LAST_NAME 
+                FROM EMPLOYEE
+                WHERE USER_ID IS NOT NULL AND USER_ID <> ''";
+
+            try
+            {
+                using (var connection = new SqlConnection(GetConnectionString()))
+                {
+                    await connection.OpenAsync();
+                    using (var command = new SqlCommand(sql, connection))
+                    {
+                        using (var reader = await command.ExecuteReaderAsync())
+                        {
+                            var dt = new DataTable();
+                            dt.Load(reader);
+                            return new Model_Dao_Result<DataTable> { IsSuccess = true, Data = dt };
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+                return new Model_Dao_Result<DataTable>
+                {
+                    IsSuccess = false,
+                    ErrorMessage = $"Error retrieving user names: {ex.Message}"
+                };
+            }
+        }
+
+        /// <summary>
+        /// Retrieves material handler statistics for scoring.
+        /// </summary>
+        public async Task<Model_Dao_Result<DataTable>> GetMaterialHandlerStatsAsync(DateTime startDate, DateTime endDate)
+        {
+            if (_useSampleData)
+            {
+                var dt = new DataTable();
+                dt.Columns.Add("User", typeof(string));
+                dt.Columns.Add("TransactionType", typeof(string));
+                dt.Columns.Add("TransactionCount", typeof(int));
+                
+                dt.Rows.Add("JDOE", "R", 50);
+                dt.Rows.Add("JDOE", "I", 30);
+                dt.Rows.Add("BSMITH", "I", 80);
+                
+                return new Model_Dao_Result<DataTable> { IsSuccess = true, Data = dt };
+            }
+
+            if (string.IsNullOrEmpty(_userName) || string.IsNullOrEmpty(_password))
+            {
+                return new Model_Dao_Result<DataTable>
+                {
+                    IsSuccess = false,
+                    ErrorMessage = "Visual ERP credentials are not configured."
+                };
+            }
+
+            string sql = @"
+                SELECT 
+                    USER_ID as [User],
+                    TYPE as [TransactionType],
+                    COUNT(*) as [TransactionCount]
+                FROM INVENTORY_TRANS
+                WHERE TRANSACTION_DATE >= @StartDate AND TRANSACTION_DATE <= @EndDate
+                GROUP BY USER_ID, TYPE";
+
+            try
+            {
+                using (var connection = new SqlConnection(GetConnectionString()))
+                {
+                    await connection.OpenAsync();
+                    using (var command = new SqlCommand(sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@StartDate", startDate);
+                        command.Parameters.AddWithValue("@EndDate", endDate);
+
+                        using (var reader = await command.ExecuteReaderAsync())
+                        {
+                            var dt = new DataTable();
+                            dt.Load(reader);
+                            return new Model_Dao_Result<DataTable> { IsSuccess = true, Data = dt };
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+                return new Model_Dao_Result<DataTable>
+                {
+                    IsSuccess = false,
+                    ErrorMessage = $"Error retrieving material handler stats: {ex.Message}"
+                };
+            }
+        }
         #endregion
 
     }
