@@ -209,7 +209,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             _txtPromiseDate!.Text = FormatDate(row["Promise Date"]);
             _txtUnitPrice!.Text = FormatCurrency(row["Unit Price"]);
             _txtTotalAmount!.Text = FormatCurrency(row["Total Amount"]);
-            _rtbSpecs!.Text = row["Description"]?.ToString();
+            _rtbSpecs!.Text = row["Specs"]?.ToString();
 
             _lblCounter!.Text = $"Line {_currentIndex + 1} of {_poData.Rows.Count}";
             _btnPrev!.Enabled = _currentIndex > 0;

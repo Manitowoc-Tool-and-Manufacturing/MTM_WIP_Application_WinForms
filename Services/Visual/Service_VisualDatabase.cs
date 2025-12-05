@@ -658,9 +658,13 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                     POL.PROMISE_DATE as [Promise Date],
                     POL.LINE_STATUS as [Status],
                     POL.UNIT_PRICE as [Unit Price],
-                    POL.TOTAL_AMT_ORDERED as [Total Amount]
+                    POL.TOTAL_AMT_ORDERED as [Total Amount],
+                    CAST(PLB.BITS AS VARCHAR(MAX)) as [Specs]
                 FROM PURC_ORDER_LINE POL
                 LEFT JOIN PART P ON POL.PART_ID = P.ID
+                LEFT JOIN PURC_LINE_BINARY PLB ON POL.PURC_ORDER_ID = PLB.PURC_ORDER_ID 
+                                               AND POL.LINE_NO = PLB.PURC_ORDER_LINE_NO
+                                               AND PLB.TYPE = 'S'
                 WHERE POL.PURC_ORDER_ID = @PoNumber
                 ORDER BY POL.LINE_NO
             ";
@@ -1608,6 +1612,7 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
             dt.Columns.Add("Status");
             dt.Columns.Add("Unit Price", typeof(decimal));
             dt.Columns.Add("Total Amount", typeof(decimal));
+            dt.Columns.Add("Specs");
 
             var rnd = new Random();
             for (int i = 1; i <= 3; i++)
@@ -1625,7 +1630,8 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                     DateTime.Today.AddDays(7),
                     "O",
                     Math.Round(price, 2),
-                    Math.Round(price * qty, 2)
+                    Math.Round(price * qty, 2),
+                    $"Sample Specs for Line {i}\n- Spec 1\n- Spec 2"
                 );
             }
 
