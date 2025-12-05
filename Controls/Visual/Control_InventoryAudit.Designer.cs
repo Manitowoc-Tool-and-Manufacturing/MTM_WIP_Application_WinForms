@@ -76,6 +76,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             _cbShift1 = new CheckBox();
             _cbShift2 = new CheckBox();
             _cbShift3 = new CheckBox();
+            _cbShiftWeekend = new CheckBox();
 
             mainLayout.SuspendLayout();
             _tabControl.SuspendLayout();
