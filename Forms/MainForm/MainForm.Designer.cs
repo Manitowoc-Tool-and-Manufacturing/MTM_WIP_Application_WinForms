@@ -25,6 +25,10 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
         private ToolStripMenuItem MainForm_MenuStrip_View_PersonalHistory;
         private ToolStripSeparator MainForm_MenuStrip_View_Separator2;
         private ToolStripMenuItem MainForm_MenuStrip_Visual;
+        private ToolStripMenuItem MainForm_MenuStrip_Visual_Inventory;
+        private ToolStripMenuItem MainForm_MenuStrip_Visual_Receiving;
+        private ToolStripMenuItem MainForm_MenuStrip_Visual_DieTool;
+        private ToolStripMenuItem MainForm_MenuStrip_Visual_Audit;
 
         private StatusStrip MainForm_StatusStrip;
         public ToolStripStatusLabel MainForm_StatusStrip_SavedStatus;
@@ -81,6 +85,10 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             MainForm_MenuStrip_View_PersonalHistory = new ToolStripMenuItem();
             MainForm_MenuStrip_View_Separator2 = new ToolStripSeparator();
             MainForm_MenuStrip_Visual = new ToolStripMenuItem();
+            MainForm_MenuStrip_Visual_Inventory = new ToolStripMenuItem();
+            MainForm_MenuStrip_Visual_Receiving = new ToolStripMenuItem();
+            MainForm_MenuStrip_Visual_DieTool = new ToolStripMenuItem();
+            MainForm_MenuStrip_Visual_Audit = new ToolStripMenuItem();
             developmentToolStripMenuItem = new ToolStripMenuItem();
             viewErrorReportsToolStripMenuItem = new ToolStripMenuItem();
             viewApplicationLogsToolStripMenuItem = new ToolStripMenuItem();
@@ -184,10 +192,38 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             // 
             // MainForm_MenuStrip_Visual
             // 
+            MainForm_MenuStrip_Visual.DropDownItems.AddRange(new ToolStripItem[] { MainForm_MenuStrip_Visual_Inventory, MainForm_MenuStrip_Visual_Receiving, MainForm_MenuStrip_Visual_DieTool, MainForm_MenuStrip_Visual_Audit });
             MainForm_MenuStrip_Visual.Name = "MainForm_MenuStrip_Visual";
             MainForm_MenuStrip_Visual.Size = new Size(50, 24);
             MainForm_MenuStrip_Visual.Text = "Visual";
-            MainForm_MenuStrip_Visual.Click += MainForm_MenuStrip_Visual_Click;
+            // 
+            // MainForm_MenuStrip_Visual_Inventory
+            // 
+            MainForm_MenuStrip_Visual_Inventory.Name = "MainForm_MenuStrip_Visual_Inventory";
+            MainForm_MenuStrip_Visual_Inventory.Size = new Size(180, 22);
+            MainForm_MenuStrip_Visual_Inventory.Text = "Visual Inventory";
+            MainForm_MenuStrip_Visual_Inventory.Click += MainForm_MenuStrip_Visual_Inventory_Click;
+            // 
+            // MainForm_MenuStrip_Visual_Receiving
+            // 
+            MainForm_MenuStrip_Visual_Receiving.Name = "MainForm_MenuStrip_Visual_Receiving";
+            MainForm_MenuStrip_Visual_Receiving.Size = new Size(180, 22);
+            MainForm_MenuStrip_Visual_Receiving.Text = "Receiving Analytics";
+            MainForm_MenuStrip_Visual_Receiving.Click += MainForm_MenuStrip_Visual_Receiving_Click;
+            // 
+            // MainForm_MenuStrip_Visual_DieTool
+            // 
+            MainForm_MenuStrip_Visual_DieTool.Name = "MainForm_MenuStrip_Visual_DieTool";
+            MainForm_MenuStrip_Visual_DieTool.Size = new Size(180, 22);
+            MainForm_MenuStrip_Visual_DieTool.Text = "Die && Tool Discovery";
+            MainForm_MenuStrip_Visual_DieTool.Click += MainForm_MenuStrip_Visual_DieTool_Click;
+            // 
+            // MainForm_MenuStrip_Visual_Audit
+            // 
+            MainForm_MenuStrip_Visual_Audit.Name = "MainForm_MenuStrip_Visual_Audit";
+            MainForm_MenuStrip_Visual_Audit.Size = new Size(180, 22);
+            MainForm_MenuStrip_Visual_Audit.Text = "Inventory Audit";
+            MainForm_MenuStrip_Visual_Audit.Click += MainForm_MenuStrip_Visual_Audit_Click;
             // 
             // developmentToolStripMenuItem
             // 

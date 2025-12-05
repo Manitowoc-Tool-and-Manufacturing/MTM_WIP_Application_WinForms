@@ -406,6 +406,16 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
                 await _controlVisualInventory.PerformExternalSearchAsync(partNumber);
             }
         }
+
+        /// <summary>
+        /// Selects and loads a specific dashboard category programmatically.
+        /// </summary>
+        /// <param name="category">The category to load.</param>
+        public async Task SelectCategoryAsync(Enum_VisualDashboardCategory category)
+        {
+            await LoadCategoryDataAsync(category);
+        }
+
         /// <summary>
         /// Centers the form on the screen.
         /// </summary>

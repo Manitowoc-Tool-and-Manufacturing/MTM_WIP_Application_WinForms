@@ -407,7 +407,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             }
         }
 
-        private void MainForm_MenuStrip_Visual_Click(object? sender, EventArgs e)
+        private void OpenVisualDashboard(Enum_VisualDashboardCategory category)
         {
             try
             {
@@ -431,11 +431,32 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
 
                 var visualForm = new Forms.Visual.InforVisualDashboard();
                 visualForm.Show();
+                _ = visualForm.SelectCategoryAsync(category);
             }
             catch (Exception ex)
             {
                 Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, controlName: nameof(MainForm));
             }
+        }
+
+        private void MainForm_MenuStrip_Visual_Inventory_Click(object? sender, EventArgs e)
+        {
+            OpenVisualDashboard(Enum_VisualDashboardCategory.Inventory);
+        }
+
+        private void MainForm_MenuStrip_Visual_Receiving_Click(object? sender, EventArgs e)
+        {
+            OpenVisualDashboard(Enum_VisualDashboardCategory.Receiving);
+        }
+
+        private void MainForm_MenuStrip_Visual_DieTool_Click(object? sender, EventArgs e)
+        {
+            OpenVisualDashboard(Enum_VisualDashboardCategory.DieToolDiscovery);
+        }
+
+        private void MainForm_MenuStrip_Visual_Audit_Click(object? sender, EventArgs e)
+        {
+            OpenVisualDashboard(Enum_VisualDashboardCategory.InventoryAuditing);
         }
 
         private void SetInitialFocusToInventoryTab()
