@@ -248,23 +248,11 @@ namespace MTM_WIP_Application_Winforms.Services.Analytics
                     {
                         string user = row["User"]?.ToString()?.Trim().ToUpperInvariant() ?? "UNKNOWN";
                         string visualType = row["TransactionType"]?.ToString() ?? "";
-                        string partCategory = row.Table.Columns.Contains("PartCategory") ? row["PartCategory"]?.ToString() ?? "" : "";
-                        string hasWO = row.Table.Columns.Contains("HasWorkOrder") ? row["HasWorkOrder"]?.ToString() ?? "" : "";
                         int count = Convert.ToInt32(row["TransactionCount"]);
 
                         // Map Visual Types to Logic Types
-                        string type = "Unknown";
-
-                        if (partCategory == "Coil") type = "Coil";
-                        else if (partCategory == "Flatstock") type = "Flatstock";
-                        else if (hasWO == "Y") type = "Work Order";
-                        else 
-                        {
-                            if (visualType == "O") type = "Location Transfer";
-                            else if (visualType == "R") type = "Adjusted In"; // Receive
-                            else if (visualType == "I") type = "Adjusted Out"; // Pick/Issue
-                            else type = "Adjusted In"; // Default for others
-                        }
+                        // The Service_VisualDatabase now returns the final category in TransactionType
+                        string type = visualType; // "Location Transfer", "Work Order", "Adjusted In", "Adjusted Out", "Coil", "Flatstock"
 
                         if (!userScores.ContainsKey(user))
                         {

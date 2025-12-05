@@ -1787,147 +1787,91 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 resultDt.Columns.Add("ToLoc", typeof(string));
                 resultDt.Columns.Add("WorkOrder", typeof(string));
 
-                var processedIds = new HashSet<int>();
                 var rows = rawData.AsEnumerable().ToList();
-
-                // Index for faster lookups
-                // Group by (CreateDate, Part, User) for legacy matching
-                var legacyLookup = rows
-                    .Where(r => r["TYPE"].ToString() == "I" && r["WORKORDER_BASE_ID"] == DBNull.Value)
-                    .GroupBy(r => new { 
-                        Date = (DateTime)r["CREATE_DATE"], 
-                        Part = r["PART_ID"].ToString() ?? "", 
-                        User = r["USER_ID"].ToString() ?? ""
-                    })
-                    .ToDictionary(g => g.Key, g => g.ToList());
-
-                // Dictionary for ID-based lookup (Transaction ID -> Row)
-                var idLookup = rows.ToDictionary(r => (int)r["TRANSACTION_ID"]);
-
-                foreach (var row in rows)
+                
+                // Group by User, Part, and CreateDate (exact match) to find pairs
+                var groups = rows.GroupBy(r => new
                 {
-                    int transId = (int)row["TRANSACTION_ID"];
-                    if (processedIds.Contains(transId)) continue;
+                    User = r["USER_ID"].ToString() ?? "",
+                    Part = r["PART_ID"].ToString() ?? "",
+                    Date = (DateTime)r["CREATE_DATE"]
+                });
 
-                    string userId = row["USER_ID"].ToString() ?? "";
-                    string partId = row["PART_ID"].ToString() ?? "";
-                    string type = row["TYPE"].ToString() ?? "";
-                    decimal qty = (decimal)row["QTY"];
-                    DateTime date = (DateTime)row["CREATE_DATE"];
-                    string locId = row["LOCATION_ID"] == DBNull.Value ? "" : row["LOCATION_ID"].ToString() ?? "";
-                    string? woBaseId = row["WORKORDER_BASE_ID"] == DBNull.Value ? null : row["WORKORDER_BASE_ID"].ToString();
-                    int? transferId = row["TRANSFER_TRANS_ID"] == DBNull.Value ? null : (int?)row["TRANSFER_TRANS_ID"];
-
-                    string category = "Unknown";
-                    string? toLoc = null;
-
-                    // 1. Determine Category
-                    if (partId.StartsWith("MMF")) category = "Flatstock";
-                    else if (partId.StartsWith("MMC")) category = "Coil";
-                    else if (woBaseId != null) category = "Work Order";
-                    else if (type == "O")
+                foreach (var group in groups)
+                {
+                    var outs = group.Where(r => r["TYPE"].ToString() == "O").ToList();
+                    var ins = group.Where(r => r["TYPE"].ToString() == "I").ToList();
+                    
+                    // Match O and I to form Transfers
+                    int transferCount = Math.Min(outs.Count, ins.Count);
+                    
+                    for (int i = 0; i < transferCount; i++)
                     {
-                        // Check for Transfer
-                        DataRow? match = null;
-
-                        // Strategy A: ID Match (Out points to In? or In points to Out?)
-                        // Usually In points to Out via TRANSFER_TRANS_ID.
-                        // But sometimes Out has TRANSFER_TRANS_ID pointing to In?
-                        // Let's check if any 'I' record points to this 'O' record.
-                        // This is hard to do efficiently without a reverse lookup.
-                        // Let's assume we look for 'I' records.
-
-                        // Strategy B: Legacy Match (Same Date, Part, User)
-                        var key = new { Date = date, Part = partId, User = userId };
-                        if (legacyLookup.TryGetValue(key, out var candidates))
-                        {
-                            // Find an unprocessed 'I' candidate
-                            match = candidates.FirstOrDefault(c => !processedIds.Contains((int)c["TRANSACTION_ID"]));
-                        }
-
-                        if (match != null)
-                        {
-                            category = "Location Transfer";
-                            toLoc = match["LOCATION_ID"] == DBNull.Value ? "" : match["LOCATION_ID"].ToString();
-                            processedIds.Add((int)match["TRANSACTION_ID"]);
-                        }
-                        else
-                        {
-                            category = "Adjusted Out";
-                        }
+                        var outRow = outs[i];
+                        var inRow = ins[i];
+                        
+                        string partId = group.Key.Part;
+                        string category = "Location Transfer";
+                        
+                        if (partId.StartsWith("MMF")) category = "Flatstock";
+                        else if (partId.StartsWith("MMC")) category = "Coil";
+                        
+                        resultDt.Rows.Add(
+                            group.Key.User,
+                            category,
+                            partId,
+                            (decimal)inRow["QTY"],
+                            group.Key.Date,
+                            outRow["LOCATION_ID"].ToString(), // From
+                            inRow["LOCATION_ID"].ToString(), // To
+                            inRow["WORKORDER_BASE_ID"] == DBNull.Value ? null : inRow["WORKORDER_BASE_ID"].ToString()
+                        );
                     }
-                    else if (type == "I")
+                    
+                    // Process remaining Outs (Adjusted Out)
+                    for (int i = transferCount; i < outs.Count; i++)
                     {
-                        // If we are here, it wasn't matched by an 'O' record yet.
-                        // Check if it's a transfer where 'I' points to 'O' via TRANSFER_TRANS_ID
-                        if (transferId.HasValue && idLookup.TryGetValue(transferId.Value, out var outRow))
-                        {
-                            // We found the 'O' record. 
-                            // But wait, if we are iterating by Date DESC, we might see 'I' before 'O' or vice versa.
-                            // If we see 'I' first, and it points to 'O', we should probably handle it.
-                            // But our logic above handles 'O' looking for 'I'.
-                            // If 'I' has TRANSFER_TRANS_ID, it means it's linked.
-                            // If we haven't processed the 'O' yet, we can process it now?
-                            // Or just mark this as "Location Transfer" (Inbound side) and mark 'O' as processed?
-                            
-                            // Let's stick to: 'O' drives the transfer logic.
-                            // If we encounter 'I' and it hasn't been processed, it's an orphan "Adjusted In".
-                            // UNLESS it has a TRANSFER_TRANS_ID that points to an 'O' we haven't seen yet?
-                            // If we sort by Date DESC, 'I' and 'O' are usually same time.
-                            
-                            // Let's refine:
-                            // If 'I' has TRANSFER_TRANS_ID, it IS a transfer.
-                            // If we haven't processed it via 'O' logic, maybe we missed the 'O' or 'O' is missing?
-                            // If 'O' is missing, it's still a transfer (inbound side).
-                            // But usually we want to show the "From -> To".
-                            // If 'O' is missing, we don't know "From".
-                            
-                            // Let's assume standard flow: O and I exist.
-                            // If I process 'O' and find 'I', I mark 'I'.
-                            // If I encounter 'I' and it's not marked, it means I didn't find a matching 'O' (or 'O' didn't find 'I').
-                            
-                            // Special case: 'I' has TRANSFER_TRANS_ID.
-                            if (transferId.HasValue)
-                            {
-                                // It is a transfer.
-                                // Try to find the 'O' to get the "From" location.
-                                if (idLookup.TryGetValue(transferId.Value, out var linkedOut))
-                                {
-                                    // We found the source.
-                                    // If the source is 'O', we can treat this as a transfer.
-                                    // But we might have skipped the 'O' if it was processed?
-                                    // If 'O' was processed, then 'I' should be processed.
-                                    // So if 'I' is NOT processed, then 'O' was NOT processed.
-                                    
-                                    // So we can treat this as the transfer record.
-                                    category = "Location Transfer";
-                                    toLoc = locId; // This is 'I', so this is To
-                                    locId = linkedOut["LOCATION_ID"] == DBNull.Value ? "" : linkedOut["LOCATION_ID"].ToString() ?? ""; // From is the linked Out
-                                    
-                                    processedIds.Add((int)linkedOut["TRANSACTION_ID"]);
-                                }
-                                else
-                                {
-                                    // Linked 'O' not found in dataset (maybe outside date range?)
-                                    category = "Location Transfer"; // Still a transfer
-                                    toLoc = locId;
-                                    locId = "?"; // Unknown source
-                                }
-                            }
-                            else
-                            {
-                                category = "Adjusted In";
-                            }
-                        }
-                        else
-                        {
-                            category = "Adjusted In";
-                        }
+                        var row = outs[i];
+                        string partId = group.Key.Part;
+                        string category = "Adjusted Out";
+                        
+                        if (partId.StartsWith("MMF")) category = "Flatstock";
+                        else if (partId.StartsWith("MMC")) category = "Coil";
+                        
+                        resultDt.Rows.Add(
+                            group.Key.User,
+                            category,
+                            partId,
+                            (decimal)row["QTY"],
+                            group.Key.Date,
+                            row["LOCATION_ID"].ToString(), // From
+                            null, // To
+                            row["WORKORDER_BASE_ID"] == DBNull.Value ? null : row["WORKORDER_BASE_ID"].ToString()
+                        );
                     }
-
-                    // Add to result
-                    resultDt.Rows.Add(userId, category, partId, qty, date, locId, toLoc, woBaseId);
-                    processedIds.Add(transId);
+                    
+                    // Process remaining Ins (Work Order or Adjusted In)
+                    for (int i = transferCount; i < ins.Count; i++)
+                    {
+                        var row = ins[i];
+                        string partId = group.Key.Part;
+                        string category = "Adjusted In";
+                        
+                        if (partId.StartsWith("MMF")) category = "Flatstock";
+                        else if (partId.StartsWith("MMC")) category = "Coil";
+                        else if (row["WORKORDER_BASE_ID"] != DBNull.Value) category = "Work Order";
+                        
+                        resultDt.Rows.Add(
+                            group.Key.User,
+                            category,
+                            partId,
+                            (decimal)row["QTY"],
+                            group.Key.Date,
+                            null, // From
+                            row["LOCATION_ID"].ToString(), // To
+                            row["WORKORDER_BASE_ID"] == DBNull.Value ? null : row["WORKORDER_BASE_ID"].ToString()
+                        );
+                    }
                 }
 
                 return new Model_Dao_Result<DataTable> { IsSuccess = true, Data = resultDt };
@@ -2078,9 +2022,9 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 dt.Columns.Add("TransactionType", typeof(string));
                 dt.Columns.Add("TransactionCount", typeof(int));
                 
-                dt.Rows.Add("JDOE", "R", 50);
-                dt.Rows.Add("JDOE", "I", 30);
-                dt.Rows.Add("BSMITH", "I", 80);
+                dt.Rows.Add("JDOE", "Adjusted In", 50);
+                dt.Rows.Add("JDOE", "Adjusted Out", 30);
+                dt.Rows.Add("BSMITH", "Location Transfer", 80);
                 
                 return new Model_Dao_Result<DataTable> { IsSuccess = true, Data = dt };
             }
@@ -2094,53 +2038,116 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 };
             }
 
+            // Fetch raw data for processing
             string sql = @"
                 SELECT 
-                    USER_ID as [User],
-                    TYPE as [TransactionType],
-                    CASE 
-                        WHEN PART_ID LIKE 'MMC%' THEN 'Coil'
-                        WHEN PART_ID LIKE 'MMF%' THEN 'Flatstock'
-                        ELSE 'Standard'
-                    END as [PartCategory],
-                    CASE 
-                        WHEN WORKORDER_BASE_ID IS NOT NULL AND WORKORDER_BASE_ID <> '' THEN 'Y'
-                        ELSE 'N'
-                    END as [HasWorkOrder],
-                    COUNT(*) as [TransactionCount]
+                    USER_ID,
+                    TYPE,
+                    PART_ID,
+                    WORKORDER_BASE_ID,
+                    CREATE_DATE
                 FROM INVENTORY_TRANS
                 WHERE TRANSACTION_DATE >= @StartDate AND TRANSACTION_DATE <= @EndDate
-                GROUP BY 
-                    USER_ID, 
-                    TYPE,
-                    CASE 
-                        WHEN PART_ID LIKE 'MMC%' THEN 'Coil'
-                        WHEN PART_ID LIKE 'MMF%' THEN 'Flatstock'
-                        ELSE 'Standard'
-                    END,
-                    CASE 
-                        WHEN WORKORDER_BASE_ID IS NOT NULL AND WORKORDER_BASE_ID <> '' THEN 'Y'
-                        ELSE 'N'
-                    END";
+                ORDER BY CREATE_DATE";
 
             try
             {
+                var rawData = new DataTable();
                 using (var connection = new SqlConnection(GetConnectionString()))
                 {
                     await connection.OpenAsync();
                     using (var command = new SqlCommand(sql, connection))
                     {
+                        command.CommandTimeout = 120;
                         command.Parameters.AddWithValue("@StartDate", startDate);
                         command.Parameters.AddWithValue("@EndDate", endDate);
 
                         using (var reader = await command.ExecuteReaderAsync())
                         {
-                            var dt = new DataTable();
-                            dt.Load(reader);
-                            return new Model_Dao_Result<DataTable> { IsSuccess = true, Data = dt };
+                            rawData.Load(reader);
                         }
                     }
                 }
+
+                // Process data in memory
+                var stats = new Dictionary<(string User, string Category), int>();
+
+                var rows = rawData.AsEnumerable().ToList();
+                
+                // Group by User, Part, and CreateDate (exact match) to find pairs
+                var groups = rows.GroupBy(r => new
+                {
+                    User = r["USER_ID"].ToString() ?? "",
+                    Part = r["PART_ID"].ToString() ?? "",
+                    Date = (DateTime)r["CREATE_DATE"]
+                });
+
+                foreach (var group in groups)
+                {
+                    var outs = group.Where(r => r["TYPE"].ToString() == "O").ToList();
+                    var ins = group.Where(r => r["TYPE"].ToString() == "I").ToList();
+                    
+                    // Match O and I to form Transfers
+                    int transferCount = Math.Min(outs.Count, ins.Count);
+                    
+                    for (int i = 0; i < transferCount; i++)
+                    {
+                        string partId = group.Key.Part;
+                        string category = "Location Transfer";
+                        
+                        if (partId.StartsWith("MMF")) category = "Flatstock";
+                        else if (partId.StartsWith("MMC")) category = "Coil";
+                        
+                        var key = (group.Key.User, category);
+                        if (!stats.ContainsKey(key)) stats[key] = 0;
+                        stats[key]++;
+                    }
+                    
+                    // Process remaining Outs (Adjusted Out)
+                    for (int i = transferCount; i < outs.Count; i++)
+                    {
+                        string partId = group.Key.Part;
+                        string category = "Adjusted Out";
+                        
+                        if (partId.StartsWith("MMF")) category = "Flatstock";
+                        else if (partId.StartsWith("MMC")) category = "Coil";
+                        
+                        var key = (group.Key.User, category);
+                        if (!stats.ContainsKey(key)) stats[key] = 0;
+                        stats[key]++;
+                    }
+                    
+                    // Process remaining Ins (Work Order or Adjusted In)
+                    for (int i = transferCount; i < ins.Count; i++)
+                    {
+                        var row = ins[i];
+                        string partId = group.Key.Part;
+                        string category = "Adjusted In";
+                        
+                        if (partId.StartsWith("MMF")) category = "Flatstock";
+                        else if (partId.StartsWith("MMC")) category = "Coil";
+                        else if (row["WORKORDER_BASE_ID"] != DBNull.Value) category = "Work Order";
+                        
+                        var key = (group.Key.User, category);
+                        if (!stats.ContainsKey(key)) stats[key] = 0;
+                        stats[key]++;
+                    }
+                }
+
+                // Convert to DataTable
+                var dt = new DataTable();
+                dt.Columns.Add("User", typeof(string));
+                dt.Columns.Add("TransactionType", typeof(string));
+                dt.Columns.Add("TransactionCount", typeof(int));
+                dt.Columns.Add("PartCategory", typeof(string)); 
+                dt.Columns.Add("HasWorkOrder", typeof(string));
+
+                foreach (var kvp in stats)
+                {
+                    dt.Rows.Add(kvp.Key.User, kvp.Key.Category, kvp.Value, "", "");
+                }
+
+                return new Model_Dao_Result<DataTable> { IsSuccess = true, Data = dt };
             }
             catch (Exception ex)
             {
