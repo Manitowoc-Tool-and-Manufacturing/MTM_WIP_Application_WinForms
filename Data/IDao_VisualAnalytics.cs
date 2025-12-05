@@ -24,13 +24,5 @@ namespace MTM_WIP_Application_Winforms.Data
         /// <param name="jsonNames">JSON string for user full names.</param>
         /// <returns>Model_Dao_Result indicating success.</returns>
         Task<Model_Dao_Result<bool>> UpdateSysVisualDataAsync(string jsonShifts, string jsonNames);
-
-        /// <summary>
-        /// Gets raw transaction counts for material handler scoring.
-        /// </summary>
-        /// <param name="startDate">Start date for the report.</param>
-        /// <param name="endDate">End date for the report.</param>
-        /// <returns>Model_Dao_Result containing DataTable with transaction stats.</returns>
-        Task<Model_Dao_Result<DataTable>> GetMaterialHandlerStatsAsync(DateTime startDate, DateTime endDate);
     }
 }

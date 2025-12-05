@@ -18,10 +18,12 @@ namespace MTM_WIP_Application_Winforms.Services.Analytics
     public class Service_UserShiftLogic : IService_UserShiftLogic
     {
         private readonly IDao_VisualAnalytics _daoVisualAnalytics;
+        private readonly Visual.IService_VisualDatabase _serviceVisualDatabase;
 
-        public Service_UserShiftLogic(IDao_VisualAnalytics daoVisualAnalytics)
+        public Service_UserShiftLogic(IDao_VisualAnalytics daoVisualAnalytics, Visual.IService_VisualDatabase serviceVisualDatabase)
         {
             _daoVisualAnalytics = daoVisualAnalytics;
+            _serviceVisualDatabase = serviceVisualDatabase;
         }
 
         /// <summary>
@@ -32,12 +34,8 @@ namespace MTM_WIP_Application_Winforms.Services.Analytics
             try
             {
                 // 1. Get list of active users from last 30 days of transactions
-                // Using stored procedure md_visual_GetUserShiftData
-                var connectionString = Helper_Database_Variables.GetConnectionString(null, null, null, null);
-                var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
-                    connectionString,
-                    "md_visual_GetUserShiftData",
-                    null);
+                // Using Visual Service directly to query SQL Server
+                var result = await _serviceVisualDatabase.GetUserShiftDataAsync();
 
                 if (!result.IsSuccess)
                 {
@@ -154,12 +152,8 @@ namespace MTM_WIP_Application_Winforms.Services.Analytics
         {
             try
             {
-                // Query Visual EMPLOYEE table via stored procedure
-                var connectionString = Helper_Database_Variables.GetConnectionString(null, null, null, null);
-                var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
-                    connectionString,
-                    "md_visual_GetUserFullNames",
-                    null);
+                // Query Visual EMPLOYEE table via Visual Service
+                var result = await _serviceVisualDatabase.GetUserFullNamesAsync();
                 
                 if (!result.IsSuccess)
                 {
@@ -222,8 +216,8 @@ namespace MTM_WIP_Application_Winforms.Services.Analytics
         {
             try
             {
-                // 1. Get Raw Stats
-                var statsResult = await _daoVisualAnalytics.GetMaterialHandlerStatsAsync(startDate, endDate);
+                // 1. Get Raw Stats from Visual Database
+                var statsResult = await _serviceVisualDatabase.GetMaterialHandlerStatsAsync(startDate, endDate);
                 if (!statsResult.IsSuccess) return Model_Dao_Result<List<Model_Visual_MaterialHandlerScore>>.Failure(statsResult.ErrorMessage);
 
                 // 2. Get Metadata (Shifts and Names)
@@ -253,8 +247,13 @@ namespace MTM_WIP_Application_Winforms.Services.Analytics
                     foreach (DataRow row in statsResult.Data.Rows)
                     {
                         string user = row["User"]?.ToString()?.Trim().ToUpperInvariant() ?? "UNKNOWN";
-                        string type = row["TransactionType"]?.ToString() ?? "";
+                        string visualType = row["TransactionType"]?.ToString() ?? "";
                         int count = Convert.ToInt32(row["TransactionCount"]);
+
+                        // Map Visual Types to Logic Types
+                        string type = visualType;
+                        if (visualType == "R") type = "Receive";
+                        else if (visualType == "I") type = "Pick";
 
                         if (!userScores.ContainsKey(user))
                         {

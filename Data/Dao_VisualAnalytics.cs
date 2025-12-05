@@ -94,34 +94,5 @@ namespace MTM_WIP_Application_Winforms.Data
                 return Model_Dao_Result<bool>.Failure("Failed to update Visual metadata.", ex);
             }
         }
-
-        /// <summary>
-        /// Gets raw transaction counts for material handler scoring.
-        /// </summary>
-        /// <param name="startDate">Start date for the report.</param>
-        /// <param name="endDate">End date for the report.</param>
-        /// <returns>Model_Dao_Result containing DataTable with transaction stats.</returns>
-        public async Task<Model_Dao_Result<DataTable>> GetMaterialHandlerStatsAsync(DateTime startDate, DateTime endDate)
-        {
-            try
-            {
-                var parameters = new Dictionary<string, object>
-                {
-                    { "StartDate", startDate },
-                    { "EndDate", endDate }
-                };
-
-                var connectionString = Helper_Database_Variables.GetConnectionString(null, null, null, null);
-                return await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
-                    connectionString,
-                    "md_visual_GetMaterialHandlerStats",
-                    parameters);
-            }
-            catch (Exception ex)
-            {
-                Service_ErrorHandler.HandleDatabaseError(ex, callerName: nameof(GetMaterialHandlerStatsAsync));
-                return Model_Dao_Result<DataTable>.Failure("Failed to retrieve material handler stats.", ex);
-            }
-        }
     }
 }
