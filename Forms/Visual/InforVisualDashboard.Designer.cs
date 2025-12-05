@@ -6,35 +6,65 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(InforVisualDashboard));
             panelContent = new Panel();
+            labelLoading = new Label();
+            controlEmptyState = new MTM_WIP_Application_Winforms.Controls.Shared.Control_EmptyState();
             tableLayoutPanelMain = new TableLayoutPanel();
             panelNavigation = new Panel();
             tableLayoutPanelNavigation = new TableLayoutPanel();
             btnInventory = new Button();
-            controlEmptyState = new MTM_WIP_Application_Winforms.Controls.Shared.Control_EmptyState();
             btnReceiving = new Button();
             btnShipping = new Button();
             btnInventoryAuditing = new Button();
             btnDieToolDiscovery = new Button();
             btnMaterialHandlerGeneral = new Button();
             btnMaterialHandlerTeam = new Button();
-            labelLoading = new Label();
+            labelReadOnly = new Label();
+            tableLayoutPanel1 = new TableLayoutPanel();
             panelContent.SuspendLayout();
             tableLayoutPanelMain.SuspendLayout();
             panelNavigation.SuspendLayout();
             tableLayoutPanelNavigation.SuspendLayout();
+            tableLayoutPanel1.SuspendLayout();
             SuspendLayout();
             // 
             // panelContent
             // 
             panelContent.AutoSize = true;
             panelContent.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            panelContent.Controls.Add(labelLoading);
+            panelContent.Controls.Add(tableLayoutPanel1);
             panelContent.Controls.Add(controlEmptyState);
             panelContent.Dock = DockStyle.Fill;
             panelContent.Location = new Point(160, 3);
             panelContent.Name = "panelContent";
-            panelContent.Size = new Size(359, 361);
+            panelContent.Size = new Size(586, 521);
             panelContent.TabIndex = 0;
+            // 
+            // labelLoading
+            // 
+            labelLoading.Dock = DockStyle.Fill;
+            labelLoading.Font = new Font("Segoe UI Emoji", 14F);
+            labelLoading.Location = new Point(3, 107);
+            labelLoading.Margin = new Padding(3);
+            labelLoading.Name = "labelLoading";
+            labelLoading.Size = new Size(580, 411);
+            labelLoading.TabIndex = 2;
+            labelLoading.Text = "Loading...";
+            labelLoading.TextAlign = ContentAlignment.MiddleCenter;
+            labelLoading.Visible = false;
+            // 
+            // controlEmptyState
+            // 
+            controlEmptyState.Action = null;
+            controlEmptyState.ActionText = "Retry";
+            controlEmptyState.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            controlEmptyState.Dock = DockStyle.Fill;
+            controlEmptyState.Image = null;
+            controlEmptyState.Location = new Point(0, 0);
+            controlEmptyState.Margin = new Padding(6);
+            controlEmptyState.Message = "Select a category to view data.";
+            controlEmptyState.Name = "controlEmptyState";
+            controlEmptyState.Size = new Size(586, 521);
+            controlEmptyState.TabIndex = 1;
             // 
             // tableLayoutPanelMain
             // 
@@ -50,7 +80,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             tableLayoutPanelMain.Name = "tableLayoutPanelMain";
             tableLayoutPanelMain.RowCount = 1;
             tableLayoutPanelMain.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanelMain.Size = new Size(522, 367);
+            tableLayoutPanelMain.Size = new Size(749, 527);
             tableLayoutPanelMain.TabIndex = 5;
             // 
             // panelNavigation
@@ -62,7 +92,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             panelNavigation.Dock = DockStyle.Fill;
             panelNavigation.Location = new Point(3, 3);
             panelNavigation.Name = "panelNavigation";
-            panelNavigation.Size = new Size(151, 361);
+            panelNavigation.Size = new Size(151, 521);
             panelNavigation.TabIndex = 3;
             // 
             // tableLayoutPanelNavigation
@@ -90,7 +120,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             tableLayoutPanelNavigation.RowStyles.Add(new RowStyle());
             tableLayoutPanelNavigation.RowStyles.Add(new RowStyle());
             tableLayoutPanelNavigation.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanelNavigation.Size = new Size(149, 359);
+            tableLayoutPanelNavigation.Size = new Size(149, 519);
             tableLayoutPanelNavigation.TabIndex = 0;
             // 
             // btnInventory
@@ -102,24 +132,10 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             btnInventory.Name = "btnInventory";
             btnInventory.Size = new Size(143, 45);
             btnInventory.TabIndex = 7;
-            btnInventory.Tag = MTM_WIP_Application_Winforms.Models.Enum_VisualDashboardCategory.Inventory;
+            btnInventory.Tag = Models.Enum_VisualDashboardCategory.Inventory;
             btnInventory.Text = "Inventory";
             btnInventory.TextAlign = ContentAlignment.MiddleLeft;
             btnInventory.UseVisualStyleBackColor = false;
-            // 
-            // controlEmptyState
-            // 
-            controlEmptyState.Action = null;
-            controlEmptyState.ActionText = "Retry";
-            controlEmptyState.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            controlEmptyState.Dock = DockStyle.Fill;
-            controlEmptyState.Image = null;
-            controlEmptyState.Location = new Point(0, 0);
-            controlEmptyState.Margin = new Padding(6);
-            controlEmptyState.Message = "Select a category to view data.";
-            controlEmptyState.Name = "controlEmptyState";
-            controlEmptyState.Size = new Size(359, 361);
-            controlEmptyState.TabIndex = 1;
             // 
             // btnReceiving
             // 
@@ -130,7 +146,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             btnReceiving.Name = "btnReceiving";
             btnReceiving.Size = new Size(143, 45);
             btnReceiving.TabIndex = 8;
-            btnReceiving.Tag = MTM_WIP_Application_Winforms.Models.Enum_VisualDashboardCategory.Receiving;
+            btnReceiving.Tag = Models.Enum_VisualDashboardCategory.Receiving;
             btnReceiving.Text = "Receiving";
             btnReceiving.TextAlign = ContentAlignment.MiddleLeft;
             btnReceiving.UseVisualStyleBackColor = false;
@@ -144,7 +160,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             btnShipping.Name = "btnShipping";
             btnShipping.Size = new Size(143, 45);
             btnShipping.TabIndex = 9;
-            btnShipping.Tag = MTM_WIP_Application_Winforms.Models.Enum_VisualDashboardCategory.Shipping;
+            btnShipping.Tag = Models.Enum_VisualDashboardCategory.Shipping;
             btnShipping.Text = "Shipping";
             btnShipping.TextAlign = ContentAlignment.MiddleLeft;
             btnShipping.UseVisualStyleBackColor = false;
@@ -159,7 +175,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             btnInventoryAuditing.Name = "btnInventoryAuditing";
             btnInventoryAuditing.Size = new Size(143, 45);
             btnInventoryAuditing.TabIndex = 10;
-            btnInventoryAuditing.Tag = MTM_WIP_Application_Winforms.Models.Enum_VisualDashboardCategory.InventoryAuditing;
+            btnInventoryAuditing.Tag = Models.Enum_VisualDashboardCategory.InventoryAuditing;
             btnInventoryAuditing.Text = "Inventory Auditing";
             btnInventoryAuditing.TextAlign = ContentAlignment.MiddleLeft;
             btnInventoryAuditing.UseVisualStyleBackColor = false;
@@ -173,7 +189,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             btnDieToolDiscovery.Name = "btnDieToolDiscovery";
             btnDieToolDiscovery.Size = new Size(143, 45);
             btnDieToolDiscovery.TabIndex = 11;
-            btnDieToolDiscovery.Tag = MTM_WIP_Application_Winforms.Models.Enum_VisualDashboardCategory.DieToolDiscovery;
+            btnDieToolDiscovery.Tag = Models.Enum_VisualDashboardCategory.DieToolDiscovery;
             btnDieToolDiscovery.Text = "Die Tool Discovery";
             btnDieToolDiscovery.TextAlign = ContentAlignment.MiddleLeft;
             btnDieToolDiscovery.UseVisualStyleBackColor = false;
@@ -187,7 +203,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             btnMaterialHandlerGeneral.Name = "btnMaterialHandlerGeneral";
             btnMaterialHandlerGeneral.Size = new Size(143, 45);
             btnMaterialHandlerGeneral.TabIndex = 12;
-            btnMaterialHandlerGeneral.Tag = MTM_WIP_Application_Winforms.Models.Enum_VisualDashboardCategory.MaterialHandlerAnalytics_General;
+            btnMaterialHandlerGeneral.Tag = Models.Enum_VisualDashboardCategory.MaterialHandlerAnalytics_General;
             btnMaterialHandlerGeneral.Text = "MH Analytics (General)";
             btnMaterialHandlerGeneral.TextAlign = ContentAlignment.MiddleLeft;
             btnMaterialHandlerGeneral.UseVisualStyleBackColor = false;
@@ -202,43 +218,62 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             btnMaterialHandlerTeam.Name = "btnMaterialHandlerTeam";
             btnMaterialHandlerTeam.Size = new Size(143, 45);
             btnMaterialHandlerTeam.TabIndex = 13;
-            btnMaterialHandlerTeam.Tag = MTM_WIP_Application_Winforms.Models.Enum_VisualDashboardCategory.MaterialHandlerAnalytics_Team;
+            btnMaterialHandlerTeam.Tag = Models.Enum_VisualDashboardCategory.MaterialHandlerAnalytics_Team;
             btnMaterialHandlerTeam.Text = "MH Analytics (Team)";
             btnMaterialHandlerTeam.TextAlign = ContentAlignment.MiddleLeft;
             btnMaterialHandlerTeam.UseVisualStyleBackColor = false;
             btnMaterialHandlerTeam.Visible = false;
             // 
-            // labelLoading
+            // labelReadOnly
             // 
-            labelLoading.Dock = DockStyle.Fill;
-            labelLoading.Font = new Font("Segoe UI Emoji", 14F);
-            labelLoading.Location = new Point(0, 0);
-            labelLoading.Margin = new Padding(6);
-            labelLoading.Name = "labelLoading";
-            labelLoading.Size = new Size(359, 361);
-            labelLoading.TabIndex = 2;
-            labelLoading.Text = "Loading...";
-            labelLoading.TextAlign = ContentAlignment.MiddleCenter;
-            labelLoading.Visible = false;
+            labelReadOnly.Dock = DockStyle.Fill;
+            labelReadOnly.Font = new Font("Segoe UI Emoji", 14F);
+            labelReadOnly.ForeColor = Color.Indigo;
+            labelReadOnly.Location = new Point(3, 3);
+            labelReadOnly.Margin = new Padding(3);
+            labelReadOnly.Name = "labelReadOnly";
+            labelReadOnly.Size = new Size(580, 98);
+            labelReadOnly.TabIndex = 3;
+            labelReadOnly.Text = "The Infor Visual Dashboard is a READ ONLY Tool.\r\nThis will and can not change.";
+            labelReadOnly.TextAlign = ContentAlignment.MiddleCenter;
+            labelReadOnly.Visible = false;
+            // 
+            // tableLayoutPanel1
+            // 
+            tableLayoutPanel1.AutoSize = true;
+            tableLayoutPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            tableLayoutPanel1.ColumnCount = 1;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel1.Controls.Add(labelLoading, 0, 1);
+            tableLayoutPanel1.Controls.Add(labelReadOnly, 0, 0);
+            tableLayoutPanel1.Dock = DockStyle.Fill;
+            tableLayoutPanel1.Location = new Point(0, 0);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 2;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 80F));
+            tableLayoutPanel1.Size = new Size(586, 521);
+            tableLayoutPanel1.TabIndex = 4;
             // 
             // InforVisualDashboard
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
             AutoSize = true;
-            AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            ClientSize = new Size(522, 367);
+            ClientSize = new Size(749, 527);
             Controls.Add(tableLayoutPanelMain);
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "InforVisualDashboard";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Infor Visual Dashboard";
             panelContent.ResumeLayout(false);
+            panelContent.PerformLayout();
             tableLayoutPanelMain.ResumeLayout(false);
             tableLayoutPanelMain.PerformLayout();
             panelNavigation.ResumeLayout(false);
             panelNavigation.PerformLayout();
             tableLayoutPanelNavigation.ResumeLayout(false);
+            tableLayoutPanel1.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -255,5 +290,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
         private Button btnDieToolDiscovery;
         private Button btnMaterialHandlerGeneral;
         private Button btnMaterialHandlerTeam;
+        private TableLayoutPanel tableLayoutPanel1;
+        private Label labelReadOnly;
     }
 }
