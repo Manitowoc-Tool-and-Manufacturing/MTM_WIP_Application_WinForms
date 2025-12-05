@@ -1618,7 +1618,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
         {
             try
             {
-                using var analyticsForm = new Forms.Analytics.Form_Analytics();
+                using var analyticsForm = new Forms.Analytics.Form_WIPUserAnalytics();
                 analyticsForm.ShowDialog(this);
             }
             catch (Exception ex)
