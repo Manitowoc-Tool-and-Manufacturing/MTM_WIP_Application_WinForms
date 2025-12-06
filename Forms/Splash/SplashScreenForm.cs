@@ -60,10 +60,6 @@ namespace MTM_WIP_Application_Winforms.Forms.Splash
             _versionLabel.Text = $"Version {Model_Application_Variables.Version ?? "4.6.0.0"}";
 
             Service_DebugTracer.TraceUIAction("THEME_APPLIED", nameof(SplashScreenForm));
-            // MIGRATION NOTE: SplashScreenForm should be migrated to ThemedForm base class
-            // For now, we apply theme colors manually without using Core_Themes.ApplyTheme()
-            // which would override the colors we just set above.
-            // TODO: Migrate SplashScreenForm to inherit from ThemedForm
 
             Service_DebugTracer.TraceUIAction("SPLASH_FORM_INITIALIZATION", nameof(SplashScreenForm),
                 new Dictionary<string, object>

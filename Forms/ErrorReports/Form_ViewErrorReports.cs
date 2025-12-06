@@ -2,6 +2,7 @@ using MTM_WIP_Application_Winforms.Controls.ErrorReports;
 using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
+using MTM_WIP_Application_Winforms.Helpers;
 
 namespace MTM_WIP_Application_Winforms.Forms.ErrorReports
 {
@@ -43,6 +44,34 @@ namespace MTM_WIP_Application_Winforms.Forms.ErrorReports
         {
             controlErrorReportsGrid.ReportSelected += ControlErrorReportsGrid_ReportSelected;
             Shown += Form_ViewErrorReports_Shown;
+            btnChangeFolder.Click += btnChangeFolder_Click;
+        }
+
+        private void btnChangeFolder_Click(object? sender, EventArgs e)
+        {
+            try
+            {
+                using var dialog = new FolderBrowserDialog();
+                dialog.Description = "Select Log Directory";
+                dialog.UseDescriptionForTitle = true;
+                
+                string? currentCustom = Helper_LogPath.GetCustomLogDirectory();
+                if (!string.IsNullOrEmpty(currentCustom))
+                {
+                    dialog.InitialDirectory = currentCustom;
+                }
+
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    string selectedPath = dialog.SelectedPath;
+                    Helper_LogPath.SetCustomLogDirectory(selectedPath);
+                    Service_ErrorHandler.ShowInformation($"Log directory temporarily changed to:\n{selectedPath}\n\nThis setting will reset when the application restarts.", "Folder Changed");
+                }
+            }
+            catch (Exception ex)
+            {
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, controlName: Name);
+            }
         }
 
         #endregion
@@ -92,6 +121,7 @@ namespace MTM_WIP_Application_Winforms.Forms.ErrorReports
         {
             controlErrorReportsGrid.ReportSelected -= ControlErrorReportsGrid_ReportSelected;
             Shown -= Form_ViewErrorReports_Shown;
+            btnChangeFolder.Click -= btnChangeFolder_Click;
             base.OnFormClosed(e);
         }
 

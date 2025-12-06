@@ -27,12 +27,24 @@ public static class Helper_LogPath
         "Logs");
 
     /// <summary>
+    /// Custom log directory set by the user at runtime.
+    /// If set, this overrides the default directory logic.
+    /// </summary>
+    private static string? _customLogDirectory;
+
+    /// <summary>
     /// Gets the base log directory, preferring primary location if it exists.
     /// </summary>
     private static string BaseLogDirectory
     {
         get
         {
+            // Check custom directory first
+            if (!string.IsNullOrWhiteSpace(_customLogDirectory) && Directory.Exists(_customLogDirectory))
+            {
+                return _customLogDirectory;
+            }
+
             // Check if primary directory exists or is accessible
             if (Directory.Exists(PrimaryLogDirectory))
             {
@@ -59,7 +71,6 @@ public static class Helper_LogPath
     {
         if (string.IsNullOrWhiteSpace(filePath))
         {
-            
             return false;
         }
 
@@ -73,17 +84,13 @@ public static class Helper_LogPath
             // Ensure the path starts with either primary or fallback log directory
             bool isWithinPrimary = fullPath.StartsWith(primaryFullPath, StringComparison.OrdinalIgnoreCase);
             bool isWithinFallback = fullPath.StartsWith(fallbackFullPath, StringComparison.OrdinalIgnoreCase);
+            bool isWithinCustom = !string.IsNullOrWhiteSpace(_customLogDirectory) && 
+                                  fullPath.StartsWith(Path.GetFullPath(_customLogDirectory), StringComparison.OrdinalIgnoreCase);
 
-            if (!isWithinPrimary && !isWithinFallback)
-            {
-                
-            }
-
-            return isWithinPrimary || isWithinFallback;
+            return isWithinPrimary || isWithinFallback || isWithinCustom;
         }
         catch (Exception ex)
         {
-            
             LoggingUtility.LogApplicationError(ex);
             return false;
         }
@@ -118,6 +125,13 @@ public static class Helper_LogPath
     {
         var directories = new List<string>();
 
+        // If custom directory is set, return ONLY that one to scope the view
+        if (!string.IsNullOrWhiteSpace(_customLogDirectory) && Directory.Exists(_customLogDirectory))
+        {
+            directories.Add(_customLogDirectory);
+            return directories.ToArray();
+        }
+
         // Add primary if it exists
         if (Directory.Exists(PrimaryLogDirectory))
         {
@@ -149,7 +163,6 @@ public static class Helper_LogPath
     {
         if (string.IsNullOrWhiteSpace(username))
         {
-            
             return null;
         }
 
@@ -158,7 +171,18 @@ public static class Helper_LogPath
 
         if (string.IsNullOrWhiteSpace(safeUsername))
         {
-            
+            return null;
+        }
+
+        // Check custom directory first
+        if (!string.IsNullOrWhiteSpace(_customLogDirectory) && Directory.Exists(_customLogDirectory))
+        {
+            string customUserDirectory = Path.Combine(_customLogDirectory, safeUsername);
+            if (Directory.Exists(customUserDirectory) && IsDirectorySafe(customUserDirectory))
+            {
+                return customUserDirectory;
+            }
+            // If custom is set but user dir doesn't exist there, return null (don't fall back to default)
             return null;
         }
 
@@ -182,11 +206,42 @@ public static class Helper_LogPath
         // Validate the constructed path
         if (!IsDirectorySafe(userDirectory))
         {
-            
             return null;
         }
 
         return userDirectory;
+    }
+
+    #endregion
+
+    #region Custom Directory Management
+
+    /// <summary>
+    /// Sets a temporary custom log directory for the current session.
+    /// </summary>
+    /// <param name="path">The full path to the custom log directory.</param>
+    public static void SetCustomLogDirectory(string path)
+    {
+        if (Directory.Exists(path))
+        {
+            _customLogDirectory = path;
+        }
+    }
+
+    /// <summary>
+    /// Clears the custom log directory, reverting to default behavior.
+    /// </summary>
+    public static void ClearCustomLogDirectory()
+    {
+        _customLogDirectory = null;
+    }
+
+    /// <summary>
+    /// Gets the current custom log directory, if set.
+    /// </summary>
+    public static string? GetCustomLogDirectory()
+    {
+        return _customLogDirectory;
     }
 
     #endregion

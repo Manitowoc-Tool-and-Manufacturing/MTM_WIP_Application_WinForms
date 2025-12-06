@@ -36,6 +36,7 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
             lblSelectUser = new Label();
             cmbUsers = new ComboBox();
             btnRefresh = new Button();
+            btnChangeFolder = new Button();
             lblUserCount = new Label();
             chkAutoRefresh = new CheckBox();
             chkGroupErrors = new CheckBox();
@@ -317,7 +318,8 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
             // 
             // tableLayoutPanel4
             // 
-            tableLayoutPanel4.ColumnCount = 7;
+            tableLayoutPanel4.ColumnCount = 8;
+            tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle());
             tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle());
             tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle());
             tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle());
@@ -328,9 +330,10 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
             tableLayoutPanel4.Controls.Add(lblSelectUser, 0, 0);
             tableLayoutPanel4.Controls.Add(cmbUsers, 1, 0);
             tableLayoutPanel4.Controls.Add(btnRefresh, 2, 0);
-            tableLayoutPanel4.Controls.Add(lblUserCount, 3, 0);
-            tableLayoutPanel4.Controls.Add(chkAutoRefresh, 6, 0);
-            tableLayoutPanel4.Controls.Add(chkGroupErrors, 5, 0);
+            tableLayoutPanel4.Controls.Add(btnChangeFolder, 3, 0);
+            tableLayoutPanel4.Controls.Add(lblUserCount, 4, 0);
+            tableLayoutPanel4.Controls.Add(chkAutoRefresh, 7, 0);
+            tableLayoutPanel4.Controls.Add(chkGroupErrors, 6, 0);
             tableLayoutPanel4.Dock = DockStyle.Fill;
             tableLayoutPanel4.Location = new Point(10, 10);
             tableLayoutPanel4.Name = "tableLayoutPanel4";
@@ -372,15 +375,25 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
             btnRefresh.Text = "Refresh";
             btnRefresh.UseVisualStyleBackColor = true;
             // 
+            // btnChangeFolder
+            // 
+            btnChangeFolder.Dock = DockStyle.Fill;
+            btnChangeFolder.Location = new Point(393, 3);
+            btnChangeFolder.Name = "btnChangeFolder";
+            btnChangeFolder.Size = new Size(100, 24);
+            btnChangeFolder.TabIndex = 3;
+            btnChangeFolder.Text = "Change Folder";
+            btnChangeFolder.UseVisualStyleBackColor = true;
+            // 
             // lblUserCount
             // 
             lblUserCount.AutoSize = true;
             lblUserCount.Dock = DockStyle.Fill;
-            lblUserCount.Location = new Point(393, 3);
+            lblUserCount.Location = new Point(499, 3);
             lblUserCount.Margin = new Padding(3);
             lblUserCount.Name = "lblUserCount";
             lblUserCount.Size = new Size(43, 24);
-            lblUserCount.TabIndex = 3;
+            lblUserCount.TabIndex = 4;
             lblUserCount.Text = "0 users";
             lblUserCount.TextAlign = ContentAlignment.MiddleLeft;
             // 
@@ -391,7 +404,7 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
             chkAutoRefresh.Location = new Point(601, 3);
             chkAutoRefresh.Name = "chkAutoRefresh";
             chkAutoRefresh.Size = new Size(94, 24);
-            chkAutoRefresh.TabIndex = 4;
+            chkAutoRefresh.TabIndex = 6;
             chkAutoRefresh.Text = "Auto Refresh";
             chkAutoRefresh.UseVisualStyleBackColor = true;
             // 
@@ -876,6 +889,7 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
         private System.Windows.Forms.Label lblSelectUser;
         private System.Windows.Forms.ComboBox cmbUsers;
         private System.Windows.Forms.Button btnRefresh;
+        private System.Windows.Forms.Button btnChangeFolder;
         private System.Windows.Forms.CheckBox chkAutoRefresh;
         private System.Windows.Forms.Label lblUserCount;
         private System.Windows.Forms.Panel panelFileList;

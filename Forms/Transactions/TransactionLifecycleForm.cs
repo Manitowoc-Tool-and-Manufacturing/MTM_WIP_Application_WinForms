@@ -1,4 +1,6 @@
+using System.Data;
 using MTM_WIP_Application_Winforms.Data;
+using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Models;
@@ -24,6 +26,7 @@ internal partial class TransactionLifecycleForm : ThemedForm
     private readonly string _partId;
     private readonly string _batchNumber;
     private readonly Dao_Transactions _daoTransactions;
+    private List<Model_Transactions_Core>? _transactions;
 
     #endregion
 
@@ -101,10 +104,10 @@ internal partial class TransactionLifecycleForm : ThemedForm
                 return;
             }
 
-            var transactions = result.Data;
+            _transactions = result.Data;
             
 
-            if (transactions.Count == 0)
+            if (_transactions.Count == 0)
             {
                 Service_ErrorHandler.HandleValidationError(
                     $"No transactions found for batch {_batchNumber}.",
@@ -114,7 +117,7 @@ internal partial class TransactionLifecycleForm : ThemedForm
             }
 
             // Build the TreeView from transactions
-            BuildLifecycleTree(transactions);
+            BuildLifecycleTree(_transactions);
 
             
         }
@@ -341,51 +344,123 @@ internal partial class TransactionLifecycleForm : ThemedForm
 
     #region Button Clicks
 
-    private void BtnExport_Click(object? sender, EventArgs e)
+    private DataTable GetLifecycleDataTable()
+    {
+        var dt = new DataTable();
+        dt.Columns.Add("Type", typeof(string));
+        dt.Columns.Add("Date", typeof(DateTime));
+        dt.Columns.Add("From", typeof(string));
+        dt.Columns.Add("To", typeof(string));
+        dt.Columns.Add("Qty", typeof(int));
+        dt.Columns.Add("User", typeof(string));
+        dt.Columns.Add("Notes", typeof(string));
+
+        if (_transactions != null)
+        {
+            foreach (var t in _transactions)
+            {
+                dt.Rows.Add(
+                    t.TransactionType.ToString(),
+                    t.DateTime,
+                    t.FromLocation,
+                    t.ToLocation,
+                    t.Quantity,
+                    t.User,
+                    t.Notes
+                );
+            }
+        }
+        return dt;
+    }
+
+    private async void BtnExport_Click(object? sender, EventArgs e)
     {
         try
         {
+            if (_transactions == null || _transactions.Count == 0)
+            {
+                Service_ErrorHandler.ShowInformation("No data to export.", "Export");
+                return;
+            }
+
+            var dt = GetLifecycleDataTable();
+            var columnOrder = new List<string> { "Type", "Date", "From", "To", "Qty", "User", "Notes" };
+            var visibleColumns = new List<string>(columnOrder);
             
-            
-            // TODO: T069+ - Implement lifecycle export functionality
-            Service_ErrorHandler.ShowConfirmation(
-                "Export functionality will be implemented in a future task.",
-                "Export"
-            );
+            var job = new Model_Print_Job(dt, columnOrder, visibleColumns, $"Lifecycle - {_partId} - {_batchNumber}")
+            {
+                Landscape = true
+            };
+
+            using var saveFileDialog = new SaveFileDialog
+            {
+                Title = "Export to Excel",
+                Filter = "Excel Workbook (*.xlsx)|*.xlsx|All files (*.*)|*.*",
+                DefaultExt = "xlsx",
+                FileName = $"{_partId}_{_batchNumber}_Lifecycle_{DateTime.Now:yyyyMMdd}.xlsx"
+            };
+
+            if (saveFileDialog.ShowDialog(this) != DialogResult.OK)
+                return;
+
+            Cursor = Cursors.WaitCursor;
+            try
+            {
+                var result = await Helper_ExportManager.ExportToExcelAsync(job, saveFileDialog.FileName);
+                if (result.IsSuccess)
+                {
+                    Service_ErrorHandler.ShowInformation($"Export successful.\n{saveFileDialog.FileName}", "Export");
+                }
+                else
+                {
+                    Service_ErrorHandler.ShowUserError(result.ErrorMessage ?? "Export failed.");
+                }
+            }
+            finally
+            {
+                Cursor = Cursors.Default;
+            }
         }
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
                 controlName: nameof(TransactionLifecycleForm));
         }
     }
 
     private void BtnPrint_Click(object? sender, EventArgs e)
     {
-        // TEMPORARY: Print system being refactored (Phase 1 - Task T002)
-        Service_ErrorHandler.ShowInformation(
-            "Print functionality is being rebuilt. Coming soon!",
-            "Feature Temporarily Unavailable");
-        
-        /* OLD IMPLEMENTATION - Kept for reference, will be restored in Phase 7
         try
         {
+            if (_transactions == null || _transactions.Count == 0)
+            {
+                Service_ErrorHandler.ShowInformation("No data to print.", "Print");
+                return;
+            }
+
+            var dt = GetLifecycleDataTable();
+            var columnOrder = new List<string> { "Type", "Date", "From", "To", "Qty", "User", "Notes" };
+            var visibleColumns = new List<string>(columnOrder);
             
-            
-            // TODO: T069+ - Implement lifecycle print functionality
-            Service_ErrorHandler.ShowConfirmation(
-                "Print functionality will be implemented in a future task.",
-                "Print"
-            );
+            var job = new Model_Print_Job(dt, columnOrder, visibleColumns, $"Lifecycle - {_partId} - {_batchNumber}")
+            {
+                PrinterName = null, // Default
+                Landscape = true
+            };
+
+            // Load settings
+            var settings = Model_Print_Settings.Load(this.Name);
+
+            using var printForm = new PrintForm(job, settings);
+            printForm.ShowDialog(this);
         }
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
                 controlName: nameof(TransactionLifecycleForm));
         }
-        */
     }
 
     private void BtnClose_Click(object? sender, EventArgs e)

@@ -285,6 +285,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
         Resize += ViewApplicationLogsForm_Resize; // T047: Pause/resume timer on minimize/restore
         cmbUsers.SelectedIndexChanged += cmbUsers_SelectedIndexChanged;
         btnRefresh.Click += btnRefresh_Click;
+        btnChangeFolder.Click += btnChangeFolder_Click;
         chkAutoRefresh.CheckedChanged += chkAutoRefresh_CheckedChanged;
         chkGroupErrors.CheckedChanged += chkGroupErrors_CheckedChanged; // T068: Error grouping
         lstLogFiles.SelectedIndexChanged += lstLogFiles_SelectedIndexChanged;
@@ -665,6 +666,47 @@ public partial class ViewApplicationLogsForm : ThemedForm
             {
                 RestoreFileSelection(selectedFileName, currentEntryIndex);
             }
+        }
+    }
+
+    /// <summary>
+    /// Handles Change Folder button click.
+    /// Allows user to temporarily select a different log directory.
+    /// </summary>
+    private async void btnChangeFolder_Click(object? sender, EventArgs e)
+    {
+        try
+        {
+            using var dialog = new FolderBrowserDialog();
+            dialog.Description = "Select Log Directory";
+            dialog.UseDescriptionForTitle = true;
+            
+            // Set initial directory if custom is already set
+            string? currentCustom = Helper_LogPath.GetCustomLogDirectory();
+            if (!string.IsNullOrEmpty(currentCustom))
+            {
+                dialog.InitialDirectory = currentCustom;
+            }
+
+            if (dialog.ShowDialog() == DialogResult.OK)
+            {
+                string selectedPath = dialog.SelectedPath;
+                
+                // Set custom directory
+                Helper_LogPath.SetCustomLogDirectory(selectedPath);
+                
+                // Refresh user list
+                await LoadUserListAsync();
+                
+                // Update status
+                lblStatus.Text = $"Log directory changed to: {selectedPath}";
+                Service_ErrorHandler.ShowInformation($"Log directory temporarily changed to:\n{selectedPath}\n\nThis setting will reset when the application restarts.", "Folder Changed");
+            }
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogApplicationError(ex);
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, controlName: nameof(ViewApplicationLogsForm));
         }
     }
 

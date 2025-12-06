@@ -36,6 +36,7 @@ namespace MTM_WIP_Application_Winforms.Forms.ErrorReports
             btnExportCsv = new Button();
             btnExportExcel = new Button();
             btnExportSelected = new Button();
+            btnChangeFolder = new Button();
             panelExportButtons.SuspendLayout();
             SuspendLayout();
             // 
@@ -52,6 +53,7 @@ namespace MTM_WIP_Application_Winforms.Forms.ErrorReports
             panelExportButtons.Controls.Add(btnExportCsv);
             panelExportButtons.Controls.Add(btnExportExcel);
             panelExportButtons.Controls.Add(btnExportSelected);
+            panelExportButtons.Controls.Add(btnChangeFolder);
             panelExportButtons.Dock = DockStyle.Bottom;
             panelExportButtons.Location = new Point(0, 560);
             panelExportButtons.Name = "panelExportButtons";
@@ -86,6 +88,15 @@ namespace MTM_WIP_Application_Winforms.Forms.ErrorReports
             btnExportSelected.Text = "Export Selected";
             btnExportSelected.UseVisualStyleBackColor = true;
             // 
+            // btnChangeFolder
+            // 
+            btnChangeFolder.Location = new Point(400, 8);
+            btnChangeFolder.Name = "btnChangeFolder";
+            btnChangeFolder.Size = new Size(120, 25);
+            btnChangeFolder.TabIndex = 3;
+            btnChangeFolder.Text = "Change Folder";
+            btnChangeFolder.UseVisualStyleBackColor = true;
+            // 
             // Form_ViewErrorReports
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
@@ -109,5 +120,6 @@ namespace MTM_WIP_Application_Winforms.Forms.ErrorReports
         private Button btnExportCsv;
         private Button btnExportExcel;
         private Button btnExportSelected;
+        private Button btnChangeFolder;
     }
 }

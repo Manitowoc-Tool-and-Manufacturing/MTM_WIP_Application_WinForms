@@ -418,9 +418,7 @@ internal partial class Transactions : ThemedForm
             {
                 
                 return;
-            }
-
-            
+            }           
 
             // Use a wide date range to capture all transactions
             // TODO: Store search criteria to use actual date range from search filters

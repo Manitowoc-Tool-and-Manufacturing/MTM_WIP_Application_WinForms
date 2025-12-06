@@ -367,7 +367,6 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 Control_InventoryTab_Button_AdvancedEntry.Visible = true;
                 Control_InventoryTab_Button_Toggle_RightPanel.Visible = true;
             }
-            // TODO: If there are TreeView branches, set their .Visible property here as well.
         }
 
         #endregion
