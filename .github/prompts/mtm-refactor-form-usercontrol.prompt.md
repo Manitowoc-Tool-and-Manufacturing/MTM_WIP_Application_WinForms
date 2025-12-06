@@ -365,7 +365,8 @@ private method InitializeDesigner()
     // NEVER: DataSource, Items.Add(), SelectedIndex
     
     // SECTION 5: Event Subscriptions
-    this.{FormName}_Button_Submit.Click += EventHandler(this.OnSubmitClick);
+    // MOVED TO CODEBEHIND: Event handlers must be subscribed in the Constructor, NOT here.
+    // this.{FormName}_Button_Submit.Click += EventHandler(this.OnSubmitClick); // REMOVE
     
     // SECTION 6: Container Hierarchy (children before parents)
     this.{FormName}_Panel_Main.Controls.Add(this.{FormName}_Button_Submit);
@@ -850,6 +851,9 @@ public Constructor MyForm(string title, int userId)
     Service_LoggingUtility.Log($"[{FormName}] Constructor called with title='{title}', userId={userId}")
     
     InitializeDesigner() // ONLY designer call - added if missing
+
+    // Event Subscriptions - REQUIRED IN CODEBEHIND
+    this.btnSave.Click += OnSaveClick
     
     // Non-UI initialization - ACCEPTABLE
     this.Text = title // Dynamic form title OK
