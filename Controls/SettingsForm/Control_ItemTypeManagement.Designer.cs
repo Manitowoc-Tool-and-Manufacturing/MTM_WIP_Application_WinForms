@@ -1,7 +1,7 @@
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-using MTM_WIP_Application_Winforms.Controls.Shared;
+using MTM_WIP_Application_Winforms.Components.Shared;
 
 namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 {
@@ -42,7 +42,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         private Label Control_ItemTypeManagement_Label_AddIcon = null!;
         private Label Control_ItemTypeManagement_Label_AddTitle = null!;
         private TableLayoutPanel Control_ItemTypeManagement_TableLayout_AddContent = null!;
-        private SuggestionTextBoxWithLabel Control_ItemTypeManagement_TextBox_AddItemType = null!;
+        private Component_SuggestionTextBoxWithLabel Control_ItemTypeManagement_TextBox_AddItemType = null!;
         private Label Control_ItemTypeManagement_Label_AddIssuedBy = null!;
         private Label Control_ItemTypeManagement_Label_AddIssuedByValue = null!;
         private TableLayoutPanel Control_ItemTypeManagement_TableLayout_AddActions = null!;
@@ -54,8 +54,8 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         private Label Control_ItemTypeManagement_Label_EditIcon = null!;
         private Label Control_ItemTypeManagement_Label_EditTitle = null!;
         private TableLayoutPanel Control_ItemTypeManagement_TableLayout_EditContent = null!;
-        private SuggestionTextBoxWithLabel Control_ItemTypeManagement_Suggestion_EditSelectItemType = null!;
-        private SuggestionTextBoxWithLabel Control_ItemTypeManagement_TextBox_EditNewItemType = null!;
+        private Component_SuggestionTextBoxWithLabel Control_ItemTypeManagement_Suggestion_EditSelectItemType = null!;
+        private Component_SuggestionTextBoxWithLabel Control_ItemTypeManagement_TextBox_EditNewItemType = null!;
         private Label Control_ItemTypeManagement_Label_EditIssuedBy = null!;
         private Label Control_ItemTypeManagement_Label_EditIssuedByValue = null!;
         private TableLayoutPanel Control_ItemTypeManagement_TableLayout_EditActions = null!;
@@ -67,7 +67,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         private Label Control_ItemTypeManagement_Label_RemoveIcon = null!;
         private Label Control_ItemTypeManagement_Label_RemoveTitle = null!;
         private TableLayoutPanel Control_ItemTypeManagement_TableLayout_RemoveContent = null!;
-        private SuggestionTextBoxWithLabel Control_ItemTypeManagement_Suggestion_RemoveSelectItemType = null!;
+        private Component_SuggestionTextBoxWithLabel Control_ItemTypeManagement_Suggestion_RemoveSelectItemType = null!;
         private TableLayoutPanel Control_ItemTypeManagement_TableLayout_RemoveDetails = null!;
         private Label Control_ItemTypeManagement_Label_RemoveItemType = null!;
         private Label Control_ItemTypeManagement_Label_RemoveItemTypeValue = null!;
@@ -122,7 +122,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_ItemTypeManagement_Label_AddIcon = new Label();
             Control_ItemTypeManagement_Label_AddTitle = new Label();
             Control_ItemTypeManagement_TableLayout_AddContent = new TableLayoutPanel();
-            Control_ItemTypeManagement_TextBox_AddItemType = new SuggestionTextBoxWithLabel();
+            Control_ItemTypeManagement_TextBox_AddItemType = new Component_SuggestionTextBoxWithLabel();
             Control_ItemTypeManagement_TableLayout_AddActions = new TableLayoutPanel();
             Control_ItemTypeManagement_Button_AddSave = new Button();
             Control_ItemTypeManagement_Button_AddClear = new Button();
@@ -132,15 +132,15 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_ItemTypeManagement_Label_EditIcon = new Label();
             Control_ItemTypeManagement_Label_EditTitle = new Label();
             Control_ItemTypeManagement_TableLayout_EditContent = new TableLayoutPanel();
-            Control_ItemTypeManagement_Suggestion_EditSelectItemType = new SuggestionTextBoxWithLabel();
-            Control_ItemTypeManagement_TextBox_EditNewItemType = new SuggestionTextBoxWithLabel();
+            Control_ItemTypeManagement_Suggestion_EditSelectItemType = new Component_SuggestionTextBoxWithLabel();
+            Control_ItemTypeManagement_TextBox_EditNewItemType = new Component_SuggestionTextBoxWithLabel();
             Control_ItemTypeManagement_TableLayout_EditActions = new TableLayoutPanel();
             Control_ItemTypeManagement_Button_EditSave = new Button();
             Control_ItemTypeManagement_Button_EditReset = new Button();
             Control_ItemTypeManagement_Panel_RemoveCard = new Panel();
             Control_ItemTypeManagement_TableLayout_Remove = new TableLayoutPanel();
             Control_ItemTypeManagement_TableLayout_RemoveContent = new TableLayoutPanel();
-            Control_ItemTypeManagement_Suggestion_RemoveSelectItemType = new SuggestionTextBoxWithLabel();
+            Control_ItemTypeManagement_Suggestion_RemoveSelectItemType = new Component_SuggestionTextBoxWithLabel();
             Control_ItemTypeManagement_TableLayout_RemoveDetails = new TableLayoutPanel();
             Control_ItemTypeManagement_Label_RemoveItemType = new Label();
             Control_ItemTypeManagement_Label_RemoveItemTypeValue = new Label();

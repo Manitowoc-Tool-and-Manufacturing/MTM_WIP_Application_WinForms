@@ -1,6 +1,6 @@
 using System.Data;
 using Microsoft.Extensions.DependencyInjection;
-using MTM_WIP_Application_Winforms.Controls.Shared;
+using MTM_WIP_Application_Winforms.Components.Shared;
 using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
@@ -19,13 +19,13 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         private bool _isHandlingFilterLogic = false;
         
         // Animation controls for expand/collapse
-        private readonly Control_TextAnimationSequence _dateRangeAnimation;
-        private readonly Control_TextAnimationSequence _filtersAnimation;
-        private readonly Control_TextAnimationSequence _poStatesAnimation;
-        private readonly Control_TextAnimationSequence _deliveryStatesAnimation;
-        private readonly Control_TextAnimationSequence _receivingScopeAnimation;
-        private readonly Control_TextAnimationSequence _outsideScopeAnimation;
-        private readonly Control_TextAnimationSequence _searchPanelAnimation;
+        private readonly Component_TextAnimationSequence _dateRangeAnimation;
+        private readonly Component_TextAnimationSequence _filtersAnimation;
+        private readonly Component_TextAnimationSequence _poStatesAnimation;
+        private readonly Component_TextAnimationSequence _deliveryStatesAnimation;
+        private readonly Component_TextAnimationSequence _receivingScopeAnimation;
+        private readonly Component_TextAnimationSequence _outsideScopeAnimation;
+        private readonly Component_TextAnimationSequence _searchPanelAnimation;
         
         // Expanded state tracking
         private bool _isDateRangeExpanded = true;
@@ -47,37 +47,37 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             _visualService = Program.ServiceProvider?.GetService<IService_VisualDatabase>();
 
             // Initialize Animation Controls
-            _dateRangeAnimation = new Control_TextAnimationSequence();
+            _dateRangeAnimation = new Component_TextAnimationSequence();
             _dateRangeAnimation.TargetButton = Control_ReceivingAnalytics_Button_DateRangeHeader;
             _dateRangeAnimation.UsePreset(TextAnimationPreset.Up);
             _dateRangeAnimation.StartAnimation();
 
-            _filtersAnimation = new Control_TextAnimationSequence();
+            _filtersAnimation = new Component_TextAnimationSequence();
             _filtersAnimation.TargetButton = Control_ReceivingAnalytics_Button_FiltersHeader;
             _filtersAnimation.UsePreset(TextAnimationPreset.Up);
             _filtersAnimation.StartAnimation();
 
-            _poStatesAnimation = new Control_TextAnimationSequence();
+            _poStatesAnimation = new Component_TextAnimationSequence();
             _poStatesAnimation.TargetButton = Control_ReceivingAnalytics_Button_POStatesHeader;
             _poStatesAnimation.UsePreset(TextAnimationPreset.Up);
             _poStatesAnimation.StartAnimation();
 
-            _deliveryStatesAnimation = new Control_TextAnimationSequence();
+            _deliveryStatesAnimation = new Component_TextAnimationSequence();
             _deliveryStatesAnimation.TargetButton = Control_ReceivingAnalytics_Button_DeliveryStatesHeader;
             _deliveryStatesAnimation.UsePreset(TextAnimationPreset.Up);
             _deliveryStatesAnimation.StartAnimation();
 
-            _receivingScopeAnimation = new Control_TextAnimationSequence();
+            _receivingScopeAnimation = new Component_TextAnimationSequence();
             _receivingScopeAnimation.TargetButton = Control_ReceivingAnalytics_Button_ReceivingScopeHeader;
             _receivingScopeAnimation.UsePreset(TextAnimationPreset.Up);
             _receivingScopeAnimation.StartAnimation();
 
-            _outsideScopeAnimation = new Control_TextAnimationSequence();
+            _outsideScopeAnimation = new Component_TextAnimationSequence();
             _outsideScopeAnimation.TargetButton = Control_ReceivingAnalytics_Button_OutsideScopeHeader;
             _outsideScopeAnimation.UsePreset(TextAnimationPreset.Up);
             _outsideScopeAnimation.StartAnimation();
 
-            _searchPanelAnimation = new Control_TextAnimationSequence();
+            _searchPanelAnimation = new Component_TextAnimationSequence();
             _searchPanelAnimation.TargetButton = button1;
             _searchPanelAnimation.SuffixText = " All";
             _searchPanelAnimation.UsePreset(TextAnimationPreset.Up);
@@ -765,7 +765,7 @@ void ToggleSearchPanel(object? sender, EventArgs e)
         {
             try
             {
-                using (var dlg = new ColumnOrderDialog(Control_ReceivingAnalytics_DataGridView_Results))
+                using (var dlg = new Component_ColumnOrderDialog(Control_ReceivingAnalytics_DataGridView_Results))
                 {
                     if (dlg.ShowDialog(this) == DialogResult.OK)
                     {

@@ -1,6 +1,6 @@
 using System.Drawing;
 using System.Windows.Forms;
-using MTM_WIP_Application_Winforms.Controls.Shared;
+using MTM_WIP_Application_Winforms.Components.Shared;
 using MTM_WIP_Application_Winforms.Models.Enums;
 
 namespace MTM_WIP_Application_Winforms.Controls.Transactions
@@ -62,12 +62,12 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
             TransactionSearchControl_GroupBox_Search = new GroupBox();
             TransactionSearchControl_TableLayout_Left = new TableLayoutPanel();
             TransactionSearchControl_TableLayout_Search = new TableLayoutPanel();
-            TransactionSearchControl_Suggestion_Operation = new SuggestionTextBoxWithLabel();
-            TransactionSearchControl_Suggestion_User = new SuggestionTextBoxWithLabel();
-            TransactionSearchControl_Suggestion_FromLocation = new SuggestionTextBoxWithLabel();
-            TransactionSearchControl_Suggestion_Notes = new SuggestionTextBoxWithLabel();
-            TransactionSearchControl_Suggestion_PartNumber = new SuggestionTextBoxWithLabel();
-            TransactionSearchControl_Suggestion_ToLocation = new SuggestionTextBoxWithLabel();
+            TransactionSearchControl_Suggestion_Operation = new Component_SuggestionTextBoxWithLabel();
+            TransactionSearchControl_Suggestion_User = new Component_SuggestionTextBoxWithLabel();
+            TransactionSearchControl_Suggestion_FromLocation = new Component_SuggestionTextBoxWithLabel();
+            TransactionSearchControl_Suggestion_Notes = new Component_SuggestionTextBoxWithLabel();
+            TransactionSearchControl_Suggestion_PartNumber = new Component_SuggestionTextBoxWithLabel();
+            TransactionSearchControl_Suggestion_ToLocation = new Component_SuggestionTextBoxWithLabel();
             TransactionSearchControl_Panel_Buttons = new Panel();
             TransactionSearchControl_TableLayoutPanel_LeftLow = new TableLayoutPanel();
             TransactionSearchControl_TableLayout_Buttons = new TableLayoutPanel();
@@ -781,12 +781,12 @@ namespace MTM_WIP_Application_Winforms.Controls.Transactions
         private TableLayoutPanel TransactionSearchControl_TableLayout_Options;
         private TableLayoutPanel TransactionSearchControl_TableLayout_Left;
         private TableLayoutPanel TransactionSearchControl_TableLayout_Search;
-        private SuggestionTextBoxWithLabel TransactionSearchControl_Suggestion_PartNumber;
-        private SuggestionTextBoxWithLabel TransactionSearchControl_Suggestion_FromLocation;
-        private SuggestionTextBoxWithLabel TransactionSearchControl_Suggestion_User;
-        private SuggestionTextBoxWithLabel TransactionSearchControl_Suggestion_ToLocation;
-        private SuggestionTextBoxWithLabel TransactionSearchControl_Suggestion_Operation;
-        private SuggestionTextBoxWithLabel TransactionSearchControl_Suggestion_Notes;
+        private Component_SuggestionTextBoxWithLabel TransactionSearchControl_Suggestion_PartNumber;
+        private Component_SuggestionTextBoxWithLabel TransactionSearchControl_Suggestion_FromLocation;
+        private Component_SuggestionTextBoxWithLabel TransactionSearchControl_Suggestion_User;
+        private Component_SuggestionTextBoxWithLabel TransactionSearchControl_Suggestion_ToLocation;
+        private Component_SuggestionTextBoxWithLabel TransactionSearchControl_Suggestion_Operation;
+        private Component_SuggestionTextBoxWithLabel TransactionSearchControl_Suggestion_Notes;
         private Panel TransactionSearchControl_Panel_Buttons;
         private TableLayoutPanel TransactionSearchControl_TableLayoutPanel_LeftLow;
         private TableLayoutPanel TransactionSearchControl_TableLayout_Buttons;

@@ -34,7 +34,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Splash
             _logoBox = new PictureBox();
             _titleLabel = new Label();
             _versionLabel = new Label();
-            _progressControl = new MTM_WIP_Application_Winforms.Controls.Shared.Control_ProgressBarUserControl();
+            _progressControl = new MTM_WIP_Application_Winforms.Components.Shared.Component_ProgressBarUserControl();
             _mainPanel = new Panel();
             _mainLayout.SuspendLayout();
             _headerLayout.SuspendLayout();
@@ -174,7 +174,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Splash
 
         #endregion
 
-        private Controls.Shared.Control_ProgressBarUserControl _progressControl;
+        private Components.Shared.Component_ProgressBarUserControl _progressControl;
         private PictureBox _logoBox;
         private Panel _mainPanel;
     }

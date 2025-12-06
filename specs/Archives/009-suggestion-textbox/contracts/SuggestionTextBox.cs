@@ -2,7 +2,7 @@
 // Purpose: Enhanced TextBox control with suggestion/autocomplete support
 // Base Class: System.Windows.Forms.TextBox
 
-namespace MTM_WIP_Application_Winforms.Controls.Shared
+namespace MTM_WIP_Application_Winforms.Components.Shared
 {
     using System;
     using System.Collections.Generic;

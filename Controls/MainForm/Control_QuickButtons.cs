@@ -6,7 +6,7 @@ using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Services;
 using MySql.Data.MySqlClient;
-using MTM_WIP_Application_Winforms.Controls.Shared;
+using MTM_WIP_Application_Winforms.Components.Shared;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace MTM_WIP_Application_Winforms.Controls.MainForm
@@ -555,14 +555,14 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         {
             const BindingFlags bindingFlags = BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance;
             FieldInfo? field = control.GetType().GetField(fieldName, bindingFlags);
-            if (field?.GetValue(control) is SuggestionTextBoxWithLabel tb)
+            if (field?.GetValue(control) is Component_SuggestionTextBoxWithLabel tb)
             {
                 tb.Text = value;
                 return;
             }
 
             field = control.GetType().GetField(fieldName, bindingFlags);
-            if (field?.GetValue(control) is SuggestionTextBox tbLegacy)
+            if (field?.GetValue(control) is Component_SuggestionTextBox tbLegacy)
             {
                 tbLegacy.Text = value;
             }

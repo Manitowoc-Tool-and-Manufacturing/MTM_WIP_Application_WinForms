@@ -1,7 +1,7 @@
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-using MTM_WIP_Application_Winforms.Controls.Shared;
+using MTM_WIP_Application_Winforms.Components.Shared;
 
 namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 {
@@ -42,8 +42,8 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         private Label Control_LocationManagement_Label_AddIcon = null!;
         private Label Control_LocationManagement_Label_AddTitle = null!;
         private TableLayoutPanel Control_LocationManagement_TableLayoutPanel_AddContent = null!;
-        private SuggestionTextBoxWithLabel Control_LocationManagement_TextBox_AddLocation = null!;
-        private SuggestionTextBoxWithLabel Control_LocationManagement_ComboBox_AddBuilding = null!;
+        private Component_SuggestionTextBoxWithLabel Control_LocationManagement_TextBox_AddLocation = null!;
+        private Component_SuggestionTextBoxWithLabel Control_LocationManagement_ComboBox_AddBuilding = null!;
         private Label Control_LocationManagement_Label_AddIssuedBy = null!;
         private Label Control_LocationManagement_Label_AddIssuedByValue = null!;
         private TableLayoutPanel Control_LocationManagement_TableLayoutPanel_AddActions = null!;
@@ -54,9 +54,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         private TableLayoutPanel Control_LocationManagement_TableLayoutPanel_Edit = null!;
         private Label Control_LocationManagement_Label_EditIcon = null!;
         private Label Control_LocationManagement_Label_EditTitle = null!;
-        private SuggestionTextBoxWithLabel Control_LocationManagement_Suggestion_EditSelectLocation = null!;
-        private SuggestionTextBoxWithLabel Control_LocationManagement_TextBox_EditNewLocation = null!;
-        private SuggestionTextBoxWithLabel Control_LocationManagement_ComboBox_EditBuilding = null!;
+        private Component_SuggestionTextBoxWithLabel Control_LocationManagement_Suggestion_EditSelectLocation = null!;
+        private Component_SuggestionTextBoxWithLabel Control_LocationManagement_TextBox_EditNewLocation = null!;
+        private Component_SuggestionTextBoxWithLabel Control_LocationManagement_ComboBox_EditBuilding = null!;
         private Label Control_LocationManagement_Label_EditIssuedBy = null!;
         private Label Control_LocationManagement_Label_EditIssuedByValue = null!;
 
@@ -65,7 +65,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         private Label Control_LocationManagement_Label_RemoveIcon = null!;
         private Label Control_LocationManagement_Label_RemoveTitle = null!;
         private TableLayoutPanel Control_LocationManagement_TableLayoutPanel_RemoveContent = null!;
-        private SuggestionTextBoxWithLabel Control_LocationManagement_Suggestion_RemoveSelectLocation = null!;
+        private Component_SuggestionTextBoxWithLabel Control_LocationManagement_Suggestion_RemoveSelectLocation = null!;
         private TableLayoutPanel Control_LocationManagement_TableLayoutPanel_RemoveDetails = null!;
         private Label Control_LocationManagement_Label_RemoveLocation = null!;
         private Label Control_LocationManagement_Label_RemoveLocationValue = null!;
@@ -123,8 +123,8 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_LocationManagement_Label_AddTitle = new Label();
             Control_LocationManagement_TableLayoutPanel_AddContent = new TableLayoutPanel();
             label1 = new Label();
-            Control_LocationManagement_ComboBox_AddBuilding = new SuggestionTextBoxWithLabel();
-            Control_LocationManagement_TextBox_AddLocation = new SuggestionTextBoxWithLabel();
+            Control_LocationManagement_ComboBox_AddBuilding = new Component_SuggestionTextBoxWithLabel();
+            Control_LocationManagement_TextBox_AddLocation = new Component_SuggestionTextBoxWithLabel();
             label2 = new Label();
             Control_LocationManagement_TableLayoutPanel_AddActions = new TableLayoutPanel();
             Control_LocationManagement_Button_AddSave = new Button();
@@ -135,9 +135,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_LocationManagement_TableLayoutPanel_EditActions = new TableLayoutPanel();
             Control_LocationManagement_Button_EditSave = new Button();
             Control_LocationManagement_Button_EditReset = new Button();
-            Control_LocationManagement_ComboBox_EditBuilding = new SuggestionTextBoxWithLabel();
-            Control_LocationManagement_TextBox_EditNewLocation = new SuggestionTextBoxWithLabel();
-            Control_LocationManagement_Suggestion_EditSelectLocation = new SuggestionTextBoxWithLabel();
+            Control_LocationManagement_ComboBox_EditBuilding = new Component_SuggestionTextBoxWithLabel();
+            Control_LocationManagement_TextBox_EditNewLocation = new Component_SuggestionTextBoxWithLabel();
+            Control_LocationManagement_Suggestion_EditSelectLocation = new Component_SuggestionTextBoxWithLabel();
             label3 = new Label();
             label4 = new Label();
             tableLayoutPanel2 = new TableLayoutPanel();
@@ -149,7 +149,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_LocationManagement_Label_RemoveTitle = new Label();
             Control_LocationManagement_Label_RemoveIcon = new Label();
             Control_LocationManagement_TableLayoutPanel_RemoveContent = new TableLayoutPanel();
-            Control_LocationManagement_Suggestion_RemoveSelectLocation = new SuggestionTextBoxWithLabel();
+            Control_LocationManagement_Suggestion_RemoveSelectLocation = new Component_SuggestionTextBoxWithLabel();
             Control_LocationManagement_TableLayoutPanel_RemoveDetails = new TableLayoutPanel();
             Control_LocationManagement_Label_RemoveLocation = new Label();
             Control_LocationManagement_Label_RemoveLocationValue = new Label();

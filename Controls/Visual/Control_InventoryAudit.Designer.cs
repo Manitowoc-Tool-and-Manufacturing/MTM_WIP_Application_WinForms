@@ -34,7 +34,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             _tabControl = new TabControl();
             _tabLifecycle = new TabPage();
             pnlLifecycle = new TableLayoutPanel();
-            _txtSearchBy = new MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBoxWithLabel();
+            _txtSearchBy = new MTM_WIP_Application_Winforms.Components.Shared.Component_SuggestionTextBoxWithLabel();
             _dataGridView = new DataGridView();
             tableLayoutPanel1 = new TableLayoutPanel();
             lblLifecycleStart = new Label();
@@ -44,7 +44,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             tableLayoutPanel3 = new TableLayoutPanel();
             _btnExport = new Button();
             _btnSearch = new Button();
-            _txtLifecyclePart = new MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBoxWithLabel();
+            _txtLifecyclePart = new MTM_WIP_Application_Winforms.Components.Shared.Component_SuggestionTextBoxWithLabel();
             _tabUserAnalytics = new TabPage();
             pnlUserAnalytics = new TableLayoutPanel();
             tableLayoutPanel4 = new TableLayoutPanel();
@@ -720,7 +720,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         private System.Windows.Forms.TabControl _tabControl;
         private System.Windows.Forms.TabPage _tabLifecycle;
         private System.Windows.Forms.TableLayoutPanel pnlLifecycle;
-        private MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBoxWithLabel _txtLifecyclePart;
+        private MTM_WIP_Application_Winforms.Components.Shared.Component_SuggestionTextBoxWithLabel _txtLifecyclePart;
         private System.Windows.Forms.Label lblLifecycleStart;
         private System.Windows.Forms.DateTimePicker _dtpLifecycleStart;
         private System.Windows.Forms.Label lblLifecycleEnd;
@@ -731,7 +731,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         private System.Windows.Forms.DataGridView _dataGridView;
         private TableLayoutPanel tableLayoutPanel1;
         private TableLayoutPanel tableLayoutPanel3;
-        private Shared.SuggestionTextBoxWithLabel _txtSearchBy;
+        private Components.Shared.Component_SuggestionTextBoxWithLabel _txtSearchBy;
         private TableLayoutPanel pnlUserAnalytics;
         private TableLayoutPanel tableLayoutPanel4;
         private Label lblAnalyticsStart;

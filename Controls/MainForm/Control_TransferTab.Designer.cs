@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
-using MTM_WIP_Application_Winforms.Controls.Shared;
+using MTM_WIP_Application_Winforms.Components.Shared;
 using MTM_WIP_Application_Winforms.Models.Enums;
 
 namespace MTM_WIP_Application_Winforms.Controls.MainForm
@@ -44,9 +44,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_TransferTab_ContextMenu_DataGridView = new ContextMenuStrip(components);
             Control_TransferTab_Panel_Inputs = new Panel();
             Control_TransferTab_TableLayout_Inputs = new TableLayoutPanel();
-            Control_TransferTab_TextBox_Part = new SuggestionTextBoxWithLabel();
-            Control_TransferTab_TextBox_Operation = new SuggestionTextBoxWithLabel();
-            Control_TransferTab_TextBox_ToLocation = new SuggestionTextBoxWithLabel();
+            Control_TransferTab_TextBox_Part = new Component_SuggestionTextBoxWithLabel();
+            Control_TransferTab_TextBox_Operation = new Component_SuggestionTextBoxWithLabel();
+            Control_TransferTab_TextBox_ToLocation = new Component_SuggestionTextBoxWithLabel();
             Control_TransferTab_Label_Quantity = new Label();
             tableLayoutPanel2 = new TableLayoutPanel();
             Control_TransferTab_TableLayout_SaveSearch = new TableLayoutPanel();
@@ -507,9 +507,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         private Button Control_TransferTab_Button_Toggle_Split;
         private Button Control_TransferTab_Button_Toggle_RightPanel;
         private TableLayoutPanel Control_TransferTab_TableLayout_Inputs;
-        private SuggestionTextBoxWithLabel Control_TransferTab_TextBox_Operation;
-        internal SuggestionTextBoxWithLabel Control_TransferTab_TextBox_Part;
-        private SuggestionTextBoxWithLabel Control_TransferTab_TextBox_ToLocation;
+        private Component_SuggestionTextBoxWithLabel Control_TransferTab_TextBox_Operation;
+        internal Component_SuggestionTextBoxWithLabel Control_TransferTab_TextBox_Part;
+        private Component_SuggestionTextBoxWithLabel Control_TransferTab_TextBox_ToLocation;
         private Label Control_TransferTab_Label_Quantity;
         private TableLayoutPanel tableLayoutPanel2;
         private Button Control_TransferTab_Button_Transfer;

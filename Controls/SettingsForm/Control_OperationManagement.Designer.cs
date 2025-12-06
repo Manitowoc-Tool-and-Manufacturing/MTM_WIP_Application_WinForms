@@ -1,7 +1,7 @@
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-using MTM_WIP_Application_Winforms.Controls.Shared;
+using MTM_WIP_Application_Winforms.Components.Shared;
 
 namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 {
@@ -42,7 +42,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         private Label Control_OperationManagement_Label_AddIcon = null!;
         private Label Control_OperationManagement_Label_AddTitle = null!;
         private TableLayoutPanel Control_OperationManagement_TableLayout_AddContent = null!;
-        private SuggestionTextBoxWithLabel Control_OperationManagement_TextBox_AddOperation = null!;
+        private Component_SuggestionTextBoxWithLabel Control_OperationManagement_TextBox_AddOperation = null!;
         private Label Control_OperationManagement_Label_AddIssuedBy = null!;
         private Label Control_OperationManagement_Label_AddIssuedByValue = null!;
         private TableLayoutPanel Control_OperationManagement_TableLayout_AddActions = null!;
@@ -54,8 +54,8 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         private Label Control_OperationManagement_Label_EditIcon = null!;
         private Label Control_OperationManagement_Label_EditTitle = null!;
         private TableLayoutPanel Control_OperationManagement_TableLayout_EditContent = null!;
-        private SuggestionTextBoxWithLabel Control_OperationManagement_Suggestion_EditSelectOperation = null!;
-        private SuggestionTextBoxWithLabel Control_OperationManagement_TextBox_EditNewOperation = null!;
+        private Component_SuggestionTextBoxWithLabel Control_OperationManagement_Suggestion_EditSelectOperation = null!;
+        private Component_SuggestionTextBoxWithLabel Control_OperationManagement_TextBox_EditNewOperation = null!;
         private Label Control_OperationManagement_Label_EditIssuedBy = null!;
         private Label Control_OperationManagement_Label_EditIssuedByValue = null!;
         private TableLayoutPanel Control_OperationManagement_TableLayout_EditActions = null!;
@@ -67,7 +67,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         private Label Control_OperationManagement_Label_RemoveIcon = null!;
         private Label Control_OperationManagement_Label_RemoveTitle = null!;
         private TableLayoutPanel Control_OperationManagement_TableLayout_RemoveContent = null!;
-        private SuggestionTextBoxWithLabel Control_OperationManagement_Suggestion_RemoveSelectOperation = null!;
+        private Component_SuggestionTextBoxWithLabel Control_OperationManagement_Suggestion_RemoveSelectOperation = null!;
         private TableLayoutPanel Control_OperationManagement_TableLayout_RemoveDetails = null!;
         private Label Control_OperationManagement_Label_RemoveOperation = null!;
         private Label Control_OperationManagement_Label_RemoveOperationValue = null!;
@@ -124,7 +124,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_OperationManagement_Label_AddTitle = new Label();
             Control_OperationManagement_Label_AddIcon = new Label();
             Control_OperationManagement_TableLayout_AddContent = new TableLayoutPanel();
-            Control_OperationManagement_TextBox_AddOperation = new SuggestionTextBoxWithLabel();
+            Control_OperationManagement_TextBox_AddOperation = new Component_SuggestionTextBoxWithLabel();
             Control_OperationManagement_TableLayout_AddActions = new TableLayoutPanel();
             Control_OperationManagement_Button_AddSave = new Button();
             Control_OperationManagement_Button_AddClear = new Button();
@@ -134,8 +134,8 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_OperationManagement_Label_EditIcon = new Label();
             Control_OperationManagement_Label_EditTitle = new Label();
             Control_OperationManagement_TableLayout_EditContent = new TableLayoutPanel();
-            Control_OperationManagement_Suggestion_EditSelectOperation = new SuggestionTextBoxWithLabel();
-            Control_OperationManagement_TextBox_EditNewOperation = new SuggestionTextBoxWithLabel();
+            Control_OperationManagement_Suggestion_EditSelectOperation = new Component_SuggestionTextBoxWithLabel();
+            Control_OperationManagement_TextBox_EditNewOperation = new Component_SuggestionTextBoxWithLabel();
             Control_OperationManagement_TableLayout_EditActions = new TableLayoutPanel();
             Control_OperationManagement_Button_EditSave = new Button();
             Control_OperationManagement_Button_EditReset = new Button();
@@ -145,7 +145,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_OperationManagement_Label_RemoveTitle = new Label();
             Control_OperationManagement_Label_RemoveIcon = new Label();
             Control_OperationManagement_TableLayout_RemoveContent = new TableLayoutPanel();
-            Control_OperationManagement_Suggestion_RemoveSelectOperation = new SuggestionTextBoxWithLabel();
+            Control_OperationManagement_Suggestion_RemoveSelectOperation = new Component_SuggestionTextBoxWithLabel();
             Control_OperationManagement_TableLayout_RemoveDetails = new TableLayoutPanel();
             Control_OperationManagement_Label_RemoveOperation = new Label();
             Control_OperationManagement_Label_RemoveOperationValue = new Label();

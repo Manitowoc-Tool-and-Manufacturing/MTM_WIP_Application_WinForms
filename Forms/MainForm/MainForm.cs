@@ -429,7 +429,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                 }
 #endif
 
-                var visualForm = new Forms.Visual.InforVisualDashboard();
+                var visualForm = new Forms.Visual.Form_InforVisualDashboard();
                 visualForm.Show();
                 _ = visualForm.SelectCategoryAsync(category);
             }
@@ -1639,7 +1639,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
         {
             try
             {
-                using var analyticsForm = new Forms.Analytics.Form_WIPUserAnalytics();
+                using var analyticsForm = new Forms.WIPAppAnalytics.Form_WIPUserAnalytics();
                 analyticsForm.ShowDialog(this);
             }
             catch (Exception ex)

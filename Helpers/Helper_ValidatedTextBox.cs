@@ -1,4 +1,4 @@
-using MTM_WIP_Application_Winforms.Controls.Shared;
+using MTM_WIP_Application_Winforms.Components.Shared;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
 
@@ -18,7 +18,7 @@ public static class Helper_ValidatedTextBox
     /// </summary>
     /// <param name="control">The SuggestionTextBoxWithLabel control to configure</param>
     /// <param name="showValidationColor">Whether to show validation colors (default: true)</param>
-    public static void ConfigureForQuantity(SuggestionTextBoxWithLabel control, bool showValidationColor = true)
+    public static void ConfigureForQuantity(Component_SuggestionTextBoxWithLabel control, bool showValidationColor = true)
     {
         if (control == null)
         {
@@ -34,7 +34,7 @@ public static class Helper_ValidatedTextBox
     /// </summary>
     /// <param name="control">The control to configure.</param>
     /// <param name="showValidationColor">Whether to show validation colors (default: true).</param>
-    public static void ConfigureForWorkOrder(SuggestionTextBoxWithLabel control, bool showValidationColor = true)
+    public static void ConfigureForWorkOrder(Component_SuggestionTextBoxWithLabel control, bool showValidationColor = true)
     {
         if (control == null)
         {

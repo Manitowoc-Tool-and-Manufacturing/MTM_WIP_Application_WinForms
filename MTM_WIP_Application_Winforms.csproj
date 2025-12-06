@@ -149,16 +149,6 @@
         </Compile>
 
         <!-- Embedded Resource Updates -->
-        <EmbeddedResource Update="Controls\ErrorReports\Control_ErrorReportsGrid.resx">
-            <SubType>Designer</SubType>
-            <DependentUpon>Control_ErrorReportsGrid.cs</DependentUpon>
-        </EmbeddedResource>
-        <EmbeddedResource Update="Controls\MainForm\Control_RemoveTab.resx">
-            <SubType>Designer</SubType>
-        </EmbeddedResource>
-        <EmbeddedResource Update="Controls\MainForm\Control_TransferTab.resx">
-            <SubType>Designer</SubType>
-        </EmbeddedResource>
         <EmbeddedResource Update="Properties\Resources.resx">
             <Generator>ResXFileCodeGenerator</Generator>
             <LastGenOutput>Resources.Designer.cs</LastGenOutput>

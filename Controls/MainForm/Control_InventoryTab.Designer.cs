@@ -1,7 +1,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 
-using MTM_WIP_Application_Winforms.Controls.Shared;
+using MTM_WIP_Application_Winforms.Components.Shared;
 using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Models.Enums;
 
@@ -22,15 +22,15 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         private Button Control_InventoryTab_Button_Save;
         private Label Control_InventoryTab_Label_Version;
         private Button Control_InventoryTab_Button_AdvancedEntry;
-        private SuggestionTextBoxWithLabel Control_InventoryTab_SuggestionBox_Quantity;
+        private Component_SuggestionTextBoxWithLabel Control_InventoryTab_SuggestionBox_Quantity;
         private TableLayoutPanel Control_InventoryTab_TableLayout_Main;
         private Button Control_InventoryTab_Button_Toggle_RightPanel;
-        public SuggestionTextBoxWithLabel Control_InventoryTab_SuggestionBox_Part;
-        private SuggestionTextBoxWithLabel Control_InventoryTab_SuggestionBox_Operation;
-        private SuggestionTextBoxWithLabel Control_InventoryTab_SuggestionBox_Location;
-        internal SuggestionTextBoxWithLabel Control_InventoryTab_SuggestionBox_ColorCode;
+        public Component_SuggestionTextBoxWithLabel Control_InventoryTab_SuggestionBox_Part;
+        private Component_SuggestionTextBoxWithLabel Control_InventoryTab_SuggestionBox_Operation;
+        private Component_SuggestionTextBoxWithLabel Control_InventoryTab_SuggestionBox_Location;
+        internal Component_SuggestionTextBoxWithLabel Control_InventoryTab_SuggestionBox_ColorCode;
         private ToolTip Control_InventoryTab_Tooltip;
-        internal SuggestionTextBoxWithLabel Control_InventoryTab_SuggestionBox_WorkOrder;
+        internal Component_SuggestionTextBoxWithLabel Control_InventoryTab_SuggestionBox_WorkOrder;
         
 
         
@@ -58,12 +58,12 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             NotesPanel = new Panel();
             Control_InventoryTab_RichTextBox_Notes = new RichTextBox();
             Control_InventoryTab_TableLayout_TopGroup = new TableLayoutPanel();
-            Control_InventoryTab_SuggestionBox_Location = new SuggestionTextBoxWithLabel();
-            Control_InventoryTab_SuggestionBox_Quantity = new SuggestionTextBoxWithLabel();
-            Control_InventoryTab_SuggestionBox_Operation = new SuggestionTextBoxWithLabel();
-            Control_InventoryTab_SuggestionBox_Part = new SuggestionTextBoxWithLabel();
-            Control_InventoryTab_SuggestionBox_ColorCode = new SuggestionTextBoxWithLabel();
-            Control_InventoryTab_SuggestionBox_WorkOrder = new SuggestionTextBoxWithLabel();
+            Control_InventoryTab_SuggestionBox_Location = new Component_SuggestionTextBoxWithLabel();
+            Control_InventoryTab_SuggestionBox_Quantity = new Component_SuggestionTextBoxWithLabel();
+            Control_InventoryTab_SuggestionBox_Operation = new Component_SuggestionTextBoxWithLabel();
+            Control_InventoryTab_SuggestionBox_Part = new Component_SuggestionTextBoxWithLabel();
+            Control_InventoryTab_SuggestionBox_ColorCode = new Component_SuggestionTextBoxWithLabel();
+            Control_InventoryTab_SuggestionBox_WorkOrder = new Component_SuggestionTextBoxWithLabel();
             Control_InventoryTab_TableLayout_BottomGroup = new TableLayoutPanel();
             Control_InventoryTab_Button_Toggle_RightPanel = new Button();
             Control_InventoryTab_Label_Version = new Label();

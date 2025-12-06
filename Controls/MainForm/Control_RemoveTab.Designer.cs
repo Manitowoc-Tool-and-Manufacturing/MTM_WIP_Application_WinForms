@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
-using MTM_WIP_Application_Winforms.Controls.Shared;
+using MTM_WIP_Application_Winforms.Components.Shared;
 using MTM_WIP_Application_Winforms.Models.Enums;
 
 namespace MTM_WIP_Application_Winforms.Controls.MainForm
@@ -13,8 +13,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
         private System.ComponentModel.IContainer components = null;
         private GroupBox Control_RemoveTab_GroupBox_MainControl;
-        internal SuggestionTextBoxWithLabel Control_RemoveTab_TextBox_Part;
-        internal SuggestionTextBoxWithLabel Control_RemoveTab_TextBox_Operation;
+        internal Component_SuggestionTextBoxWithLabel Control_RemoveTab_TextBox_Part;
+        internal Component_SuggestionTextBoxWithLabel Control_RemoveTab_TextBox_Operation;
         private Panel Control_RemoveTab_Panel_DataGridView;
         private PictureBox Control_RemoveTab_Image_NothingFound;
         private DataGridView Control_RemoveTab_DataGridView_Main;
@@ -59,8 +59,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_RemoveTab_ContextMenu_DataGridView = new ContextMenuStrip(components);
             Control_RemoveTab_Panel_Header = new Panel();
             Control_RemoveTab_TableLayout_Top = new TableLayoutPanel();
-            Control_RemoveTab_TextBox_Part = new SuggestionTextBoxWithLabel();
-            Control_RemoveTab_TextBox_Operation = new SuggestionTextBoxWithLabel();
+            Control_RemoveTab_TextBox_Part = new Component_SuggestionTextBoxWithLabel();
+            Control_RemoveTab_TextBox_Operation = new Component_SuggestionTextBoxWithLabel();
             Control_RemoveTab_TableLayout_Bottom = new TableLayoutPanel();
             Control_RemoveTab_Button_ShowAll = new Button();
             Control_RemoveTab_Button_AdvancedItemRemoval = new Button();

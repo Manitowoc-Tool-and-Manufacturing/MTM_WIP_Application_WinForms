@@ -2,7 +2,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using Microsoft.Extensions.DependencyInjection;
 using MTM_WIP_Application_Winforms.Core;
-using MTM_WIP_Application_Winforms.Controls.Shared;
+using MTM_WIP_Application_Winforms.Components.Shared;
 using MTM_WIP_Application_Winforms.Data;
 using MTM_WIP_Application_Winforms.Forms.MainForm.Classes;
 using MTM_WIP_Application_Winforms.Forms.Shared;
@@ -23,7 +23,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         public static Forms.MainForm.MainForm? MainFormInstance { get; set; }
 
         private Helper_StoredProcedureProgress? _progressHelper;
-        private Control_TextAnimationSequence? _quickButtonsPanelAnimator;
+        private Component_TextAnimationSequence? _quickButtonsPanelAnimator;
         private readonly IShortcutService? _shortcutService;
 
         #endregion

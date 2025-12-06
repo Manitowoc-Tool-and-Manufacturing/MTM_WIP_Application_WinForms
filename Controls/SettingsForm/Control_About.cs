@@ -74,7 +74,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 if (File.Exists(releaseNotesPath))
                 {
                     string jsonContent = File.ReadAllText(releaseNotesPath);
-                    using (var form = new ViewReleaseNotesForm(jsonContent))
+                    using (var form = new SettingsForm_ViewReleaseNotesHTML(jsonContent))
                     {
                         form.ShowDialog(this);
                     }

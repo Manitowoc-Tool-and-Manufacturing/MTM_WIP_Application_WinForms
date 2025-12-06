@@ -1,7 +1,7 @@
 using System.ComponentModel;
 using System.Data;
 using System.Text;
-using MTM_WIP_Application_Winforms.Controls.Shared;
+using MTM_WIP_Application_Winforms.Components.Shared;
 using MTM_WIP_Application_Winforms.Core;
 using MTM_WIP_Application_Winforms.Data;
 using MTM_WIP_Application_Winforms.Forms.Shared;
@@ -23,8 +23,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
         private readonly List<Model_History_Remove> _lastRemovedItems = [];
         private Helper_StoredProcedureProgress? _progressHelper;
-        private Control_TextAnimationSequence? _quickButtonsPanelAnimator;
-        private Control_TextAnimationSequence? _searchPanelAnimator;
+        private Component_TextAnimationSequence? _quickButtonsPanelAnimator;
+        private Component_TextAnimationSequence? _searchPanelAnimator;
         private bool _isSearchPanelCollapsed;
         private ToolTip? _searchPanelToggleToolTip;
         private readonly IShortcutService? _shortcutService;
@@ -903,7 +903,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         loc.ForeColor = Model_Application_Variables.UserUiColors.ComboBoxErrorForeColor ?? Color.Red;
                     }
 
-                    if (adv.Controls.Find("Control_AdvancedRemove_SuggestionBox_User", true).FirstOrDefault() is SuggestionTextBoxWithLabel
+                    if (adv.Controls.Find("Control_AdvancedRemove_SuggestionBox_User", true).FirstOrDefault() is Component_SuggestionTextBoxWithLabel
                         user)
                     {
                         user.Text = string.Empty;
@@ -1148,7 +1148,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 string partNumber = Control_RemoveTab_TextBox_Part.Text?.Trim() ?? "";
                 if (string.IsNullOrWhiteSpace(partNumber)) return;
 
-                var dashboard = new Forms.Visual.InforVisualDashboard();
+                var dashboard = new Forms.Visual.Form_InforVisualDashboard();
                 dashboard.Show();
                 await dashboard.OpenInventorySearchAsync(partNumber);
             }

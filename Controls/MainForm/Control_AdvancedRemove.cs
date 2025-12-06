@@ -1,7 +1,7 @@
 using System.Data;
 using System.Diagnostics;
 using System.Text;
-using MTM_WIP_Application_Winforms.Controls.Shared;
+using MTM_WIP_Application_Winforms.Components.Shared;
 using MTM_WIP_Application_Winforms.Core;
 using MTM_WIP_Application_Winforms.Data;
 using MTM_WIP_Application_Winforms.Forms.MainForm.Classes;
@@ -22,8 +22,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         private readonly List<Model_History_Remove> _lastRemovedItems = [];
         public static Forms.MainForm.MainForm? MainFormInstance { get; set; }
         private Helper_StoredProcedureProgress? _progressHelper;
-        private Control_TextAnimationSequence? _sidePanelAnimator;
-        private Control_TextAnimationSequence? _quickButtonsAnimator;
+        private Component_TextAnimationSequence? _sidePanelAnimator;
+        private Component_TextAnimationSequence? _quickButtonsAnimator;
         private bool _isInputPanelCollapsed = false;
         private readonly IShortcutService? _shortcutService;
 
@@ -211,7 +211,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 if (removeTab != null)
                 {
                     if (removeTab.Controls.Find("Control_RemoveTab_TextBox_Part", true)
-                            .FirstOrDefault() is SuggestionTextBoxWithLabel part)
+                            .FirstOrDefault() is Component_SuggestionTextBoxWithLabel part)
                     {
                         part.Text = string.Empty;
                         part.TextBox.ForeColor = Model_Application_Variables.UserUiColors.TextBoxForeColor ?? Color.Black;
@@ -219,7 +219,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     }
 
                     if (removeTab.Controls.Find("Control_RemoveTab_TextBox_Operation", true)
-                            .FirstOrDefault() is SuggestionTextBoxWithLabel op)
+                            .FirstOrDefault() is Component_SuggestionTextBoxWithLabel op)
                     {
                         op.Text = string.Empty;
                         op.TextBox.ForeColor = Model_Application_Variables.UserUiColors.TextBoxForeColor ?? Color.Black;
@@ -935,7 +935,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     return;
                 }
 
-                var dashboard = new Forms.Visual.InforVisualDashboard();
+                var dashboard = new Forms.Visual.Form_InforVisualDashboard();
                 dashboard.Show();
                 await dashboard.OpenInventorySearchAsync(partNumber);
             }

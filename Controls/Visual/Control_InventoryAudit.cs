@@ -130,6 +130,16 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
 
         #region Methods
         
+        public void SelectUserAnalyticsTab()
+        {
+            _tabControl.SelectedTab = _tabUserAnalytics;
+        }
+
+        public void SelectLifecycleTab()
+        {
+            _tabControl.SelectedTab = _tabLifecycle;
+        }
+
         private void OnSearchBySelected()
         {
             string selection = _txtSearchBy.Text ?? "";

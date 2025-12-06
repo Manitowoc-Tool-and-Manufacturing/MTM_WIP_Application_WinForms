@@ -1,5 +1,5 @@
 using System.ComponentModel;
-using MTM_WIP_Application_Winforms.Controls.Shared;
+using MTM_WIP_Application_Winforms.Components.Shared;
 using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Models;
 
@@ -21,7 +21,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
         /// and falling back to static glyphs otherwise.
         /// </summary>
         public static void ApplyAnimationState(
-            ref Control_TextAnimationSequence? animator,
+            ref Component_TextAnimationSequence? animator,
             IContainer? components,
             Button? button,
             bool collapsed,
@@ -50,7 +50,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
         /// Convenience wrapper for left/right arrow buttons.
         /// </summary>
         public static void ApplyHorizontalArrow(
-            ref Control_TextAnimationSequence? animator,
+            ref Component_TextAnimationSequence? animator,
             IContainer? components,
             Button? button,
             bool collapsed)
@@ -138,16 +138,16 @@ namespace MTM_WIP_Application_Winforms.Helpers
         /// The method `EnsureAnimator` is returning the `animator` object after setting its `TargetButton`
         /// property to the `targetButton` parameter.
         /// </returns>
-        private static Control_TextAnimationSequence? EnsureAnimator(
-            ref Control_TextAnimationSequence? animator,
+        private static Component_TextAnimationSequence? EnsureAnimator(
+            ref Component_TextAnimationSequence? animator,
             IContainer? components,
             Button targetButton)
         {
             if (animator == null)
             {
                 animator = components != null
-                    ? new Control_TextAnimationSequence(components)
-                    : new Control_TextAnimationSequence();
+                    ? new Component_TextAnimationSequence(components)
+                    : new Component_TextAnimationSequence();
 
                 animator.Interval = 140;
                 animator.RestoreOriginalTextOnStop = false;

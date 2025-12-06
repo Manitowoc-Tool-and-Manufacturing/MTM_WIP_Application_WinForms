@@ -1,4 +1,4 @@
-using MTM_WIP_Application_Winforms.Controls.Shared;
+using MTM_WIP_Application_Winforms.Components.Shared;
 using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Models;
@@ -20,7 +20,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
     public static class Helper_SuggestionTextBox
     {
         private static readonly object OverlayLock = new();
-        private static readonly HashSet<SuggestionTextBox> ActiveOverlayRequests = new();
+        private static readonly HashSet<Component_SuggestionTextBox> ActiveOverlayRequests = new();
 
         #region F4 Trigger (Show Full List)
 
@@ -29,7 +29,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
         /// </summary>
         /// <param name="suggestionTextBox">The SuggestionTextBox control to trigger</param>
         /// <returns>Task that completes when overlay is closed</returns>
-        public static async Task ShowFullSuggestionListAsync(SuggestionTextBox suggestionTextBox)
+        public static async Task ShowFullSuggestionListAsync(Component_SuggestionTextBox suggestionTextBox)
         {
             if (suggestionTextBox == null)
                 throw new ArgumentNullException(nameof(suggestionTextBox));
@@ -126,7 +126,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
         /// Registers F4 and Down arrow key handlers on a SuggestionTextBox to show full suggestion list.
         /// </summary>
         /// <param name="suggestionTextBox">The SuggestionTextBox control</param>
-        public static void RegisterF4Handler(SuggestionTextBox suggestionTextBox)
+        public static void RegisterF4Handler(Component_SuggestionTextBox suggestionTextBox)
         {
             if (suggestionTextBox == null)
                 throw new ArgumentNullException(nameof(suggestionTextBox));
@@ -152,7 +152,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
         /// Configures a SuggestionTextBox for Part Number suggestions.
         /// Standard configuration: MaxResults=100, EnableWildcards=true, ClearOnNoMatch=true
         /// </summary>
-        public static void ConfigureForPartNumbers(SuggestionTextBox suggestionTextBox, Func<Task<List<string>>> dataProvider, bool enableF4 = true)
+        public static void ConfigureForPartNumbers(Component_SuggestionTextBox suggestionTextBox, Func<Task<List<string>>> dataProvider, bool enableF4 = true)
         {
             if (suggestionTextBox == null)
                 throw new ArgumentNullException(nameof(suggestionTextBox));
@@ -175,7 +175,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
         /// Configures a SuggestionTextBox for Operation suggestions.
         /// Standard configuration: MaxResults=50, EnableWildcards=true, ClearOnNoMatch=true
         /// </summary>
-        public static void ConfigureForOperations(SuggestionTextBox suggestionTextBox, Func<Task<List<string>>> dataProvider, bool enableF4 = true)
+        public static void ConfigureForOperations(Component_SuggestionTextBox suggestionTextBox, Func<Task<List<string>>> dataProvider, bool enableF4 = true)
         {
             if (suggestionTextBox == null)
                 throw new ArgumentNullException(nameof(suggestionTextBox));
@@ -198,7 +198,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
         /// Configures a SuggestionTextBox for Location suggestions.
         /// Standard configuration: MaxResults=100, EnableWildcards=true, ClearOnNoMatch=true
         /// </summary>
-        public static void ConfigureForLocations(SuggestionTextBox suggestionTextBox, Func<Task<List<string>>> dataProvider, bool enableF4 = true)
+        public static void ConfigureForLocations(Component_SuggestionTextBox suggestionTextBox, Func<Task<List<string>>> dataProvider, bool enableF4 = true)
         {
             if (suggestionTextBox == null)
                 throw new ArgumentNullException(nameof(suggestionTextBox));
@@ -221,7 +221,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
         /// Configures a SuggestionTextBox for Item Type suggestions.
         /// Standard configuration: MaxResults=50, EnableWildcards=false, ClearOnNoMatch=true
         /// </summary>
-        public static void ConfigureForItemTypes(SuggestionTextBox suggestionTextBox, Func<Task<List<string>>> dataProvider, bool enableF4 = true)
+        public static void ConfigureForItemTypes(Component_SuggestionTextBox suggestionTextBox, Func<Task<List<string>>> dataProvider, bool enableF4 = true)
         {
             if (suggestionTextBox == null)
                 throw new ArgumentNullException(nameof(suggestionTextBox));
@@ -244,7 +244,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
         /// Configures a SuggestionTextBox for Color Code suggestions.
         /// Standard configuration: MaxResults=20, EnableWildcards=false, ClearOnNoMatch=false
         /// </summary>
-        public static void ConfigureForColorCodes(SuggestionTextBox suggestionTextBox, Func<Task<List<string>>> dataProvider, bool enableF4 = true)
+        public static void ConfigureForColorCodes(Component_SuggestionTextBox suggestionTextBox, Func<Task<List<string>>> dataProvider, bool enableF4 = true)
         {
             if (suggestionTextBox == null)
                 throw new ArgumentNullException(nameof(suggestionTextBox));
@@ -267,7 +267,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
         /// Configures a SuggestionTextBoxWithLabel for Part Number suggestions.
         /// Standard configuration: MaxResults=100, EnableWildcards=true, ClearOnNoMatch=true, F4 button enabled.
         /// </summary>
-        public static void ConfigureForPartNumbers(SuggestionTextBoxWithLabel control, Func<Task<List<string>>> dataProvider)
+        public static void ConfigureForPartNumbers(Component_SuggestionTextBoxWithLabel control, Func<Task<List<string>>> dataProvider)
         {
             if (control == null)
                 throw new ArgumentNullException(nameof(control));
@@ -280,7 +280,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
         /// Configures a SuggestionTextBoxWithLabel for Operation suggestions.
         /// Standard configuration: MaxResults=50, EnableWildcards=true, ClearOnNoMatch=true, F4 button enabled.
         /// </summary>
-        public static void ConfigureForOperations(SuggestionTextBoxWithLabel control, Func<Task<List<string>>> dataProvider)
+        public static void ConfigureForOperations(Component_SuggestionTextBoxWithLabel control, Func<Task<List<string>>> dataProvider)
         {
             if (control == null)
                 throw new ArgumentNullException(nameof(control));
@@ -293,7 +293,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
         /// Configures a SuggestionTextBoxWithLabel for Location suggestions.
         /// Standard configuration: MaxResults=100, EnableWildcards=true, ClearOnNoMatch=true, F4 button enabled.
         /// </summary>
-        public static void ConfigureForLocations(SuggestionTextBoxWithLabel control, Func<Task<List<string>>> dataProvider)
+        public static void ConfigureForLocations(Component_SuggestionTextBoxWithLabel control, Func<Task<List<string>>> dataProvider)
         {
             if (control == null)
                 throw new ArgumentNullException(nameof(control));
@@ -306,7 +306,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
         /// Configures a SuggestionTextBox for Warehouse suggestions.
         /// Standard configuration: MaxResults=50, EnableWildcards=true, ClearOnNoMatch=true
         /// </summary>
-        public static void ConfigureForWarehouses(SuggestionTextBox suggestionTextBox, Func<Task<List<string>>> dataProvider, bool enableF4 = true)
+        public static void ConfigureForWarehouses(Component_SuggestionTextBox suggestionTextBox, Func<Task<List<string>>> dataProvider, bool enableF4 = true)
         {
             if (suggestionTextBox == null)
                 throw new ArgumentNullException(nameof(suggestionTextBox));
@@ -327,7 +327,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
         /// Configures a SuggestionTextBoxWithLabel for Warehouse suggestions.
         /// Standard configuration: MaxResults=50, EnableWildcards=true, ClearOnNoMatch=true, F4 button enabled.
         /// </summary>
-        public static void ConfigureForWarehouses(SuggestionTextBoxWithLabel control, Func<Task<List<string>>> dataProvider)
+        public static void ConfigureForWarehouses(Component_SuggestionTextBoxWithLabel control, Func<Task<List<string>>> dataProvider)
         {
             if (control == null)
                 throw new ArgumentNullException(nameof(control));
@@ -339,7 +339,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
         /// Configures a SuggestionTextBoxWithLabel for Item Type suggestions.
         /// Standard configuration: MaxResults=50, EnableWildcards=false, ClearOnNoMatch=true, F4 button enabled.
         /// </summary>
-        public static void ConfigureForItemTypes(SuggestionTextBoxWithLabel control, Func<Task<List<string>>> dataProvider)
+        public static void ConfigureForItemTypes(Component_SuggestionTextBoxWithLabel control, Func<Task<List<string>>> dataProvider)
         {
             if (control == null)
                 throw new ArgumentNullException(nameof(control));
@@ -352,7 +352,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
         /// Configures a SuggestionTextBoxWithLabel for Color Code suggestions.
         /// Standard configuration: MaxResults=20, EnableWildcards=false, ClearOnNoMatch=false, F4 button enabled.
         /// </summary>
-        public static void ConfigureForColorCodes(SuggestionTextBoxWithLabel control, Func<Task<List<string>>> dataProvider)
+        public static void ConfigureForColorCodes(Component_SuggestionTextBoxWithLabel control, Func<Task<List<string>>> dataProvider)
         {
             if (control == null)
                 throw new ArgumentNullException(nameof(control));
@@ -365,7 +365,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
         /// Configures a SuggestionTextBox for User suggestions.
         /// Standard configuration: MaxResults=50, EnableWildcards=false, ClearOnNoMatch=true
         /// </summary>
-        public static void ConfigureForUsers(SuggestionTextBox suggestionTextBox, Func<Task<List<string>>> dataProvider, bool enableF4 = true)
+        public static void ConfigureForUsers(Component_SuggestionTextBox suggestionTextBox, Func<Task<List<string>>> dataProvider, bool enableF4 = true)
         {
             if (suggestionTextBox == null)
                 throw new ArgumentNullException(nameof(suggestionTextBox));
@@ -388,7 +388,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
         /// Configures a SuggestionTextBoxWithLabel for User suggestions.
         /// Standard configuration: MaxResults=50, EnableWildcards=false, ClearOnNoMatch=true, F4 button enabled.
         /// </summary>
-        public static void ConfigureForUsers(SuggestionTextBoxWithLabel control, Func<Task<List<string>>> dataProvider)
+        public static void ConfigureForUsers(Component_SuggestionTextBoxWithLabel control, Func<Task<List<string>>> dataProvider)
         {
             if (control == null)
                 throw new ArgumentNullException(nameof(control));
@@ -401,7 +401,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
         /// Configures a SuggestionTextBox for Work Order suggestions.
         /// Standard configuration: MaxResults=50, EnableWildcards=true, ClearOnNoMatch=true
         /// </summary>
-        public static void ConfigureForWorkOrders(SuggestionTextBox suggestionTextBox, Func<Task<List<string>>> dataProvider, bool enableF4 = true)
+        public static void ConfigureForWorkOrders(Component_SuggestionTextBox suggestionTextBox, Func<Task<List<string>>> dataProvider, bool enableF4 = true)
         {
             if (suggestionTextBox == null)
                 throw new ArgumentNullException(nameof(suggestionTextBox));
@@ -421,7 +421,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
         /// <summary>
         /// Configures a SuggestionTextBoxWithLabel for Work Order suggestions.
         /// </summary>
-        public static void ConfigureForWorkOrders(SuggestionTextBoxWithLabel control, Func<Task<List<string>>> dataProvider)
+        public static void ConfigureForWorkOrders(Component_SuggestionTextBoxWithLabel control, Func<Task<List<string>>> dataProvider)
         {
             if (control == null) throw new ArgumentNullException(nameof(control));
             ConfigureForWorkOrders(control.TextBox, dataProvider, enableF4: false);
@@ -431,7 +431,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
         /// Configures a SuggestionTextBox for Purchase Order suggestions.
         /// Standard configuration: MaxResults=50, EnableWildcards=true, ClearOnNoMatch=true
         /// </summary>
-        public static void ConfigureForPurchaseOrders(SuggestionTextBox suggestionTextBox, Func<Task<List<string>>> dataProvider, bool enableF4 = true)
+        public static void ConfigureForPurchaseOrders(Component_SuggestionTextBox suggestionTextBox, Func<Task<List<string>>> dataProvider, bool enableF4 = true)
         {
             if (suggestionTextBox == null)
                 throw new ArgumentNullException(nameof(suggestionTextBox));
@@ -451,7 +451,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
         /// <summary>
         /// Configures a SuggestionTextBoxWithLabel for Purchase Order suggestions.
         /// </summary>
-        public static void ConfigureForPurchaseOrders(SuggestionTextBoxWithLabel control, Func<Task<List<string>>> dataProvider)
+        public static void ConfigureForPurchaseOrders(Component_SuggestionTextBoxWithLabel control, Func<Task<List<string>>> dataProvider)
         {
             if (control == null) throw new ArgumentNullException(nameof(control));
             ConfigureForPurchaseOrders(control.TextBox, dataProvider, enableF4: false);
@@ -461,7 +461,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
         /// Configures a SuggestionTextBox for Customer Order suggestions.
         /// Standard configuration: MaxResults=50, EnableWildcards=true, ClearOnNoMatch=true
         /// </summary>
-        public static void ConfigureForCustomerOrders(SuggestionTextBox suggestionTextBox, Func<Task<List<string>>> dataProvider, bool enableF4 = true)
+        public static void ConfigureForCustomerOrders(Component_SuggestionTextBox suggestionTextBox, Func<Task<List<string>>> dataProvider, bool enableF4 = true)
         {
             if (suggestionTextBox == null)
                 throw new ArgumentNullException(nameof(suggestionTextBox));
@@ -481,7 +481,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
         /// <summary>
         /// Configures a SuggestionTextBoxWithLabel for Customer Order suggestions.
         /// </summary>
-        public static void ConfigureForCustomerOrders(SuggestionTextBoxWithLabel control, Func<Task<List<string>>> dataProvider)
+        public static void ConfigureForCustomerOrders(Component_SuggestionTextBoxWithLabel control, Func<Task<List<string>>> dataProvider)
         {
             if (control == null) throw new ArgumentNullException(nameof(control));
             ConfigureForCustomerOrders(control.TextBox, dataProvider, enableF4: false);
@@ -500,7 +500,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
         /// Configures a SuggestionTextBoxWithLabel for Building suggestions.
         /// Standard configuration: MaxResults=20, EnableWildcards=false, ClearOnNoMatch=true, F4 button enabled.
         /// </summary>
-        public static void ConfigureForBuildings(SuggestionTextBoxWithLabel control)
+        public static void ConfigureForBuildings(Component_SuggestionTextBoxWithLabel control)
         {
             if (control == null)
                 throw new ArgumentNullException(nameof(control));
@@ -515,92 +515,92 @@ namespace MTM_WIP_Application_Winforms.Helpers
 
         #region Infor Visual Configuration Helpers
 
-        public static void ConfigureForInforPartNumbers(SuggestionTextBox suggestionTextBox, bool enableF4 = true)
+        public static void ConfigureForInforPartNumbers(Component_SuggestionTextBox suggestionTextBox, bool enableF4 = true)
         {
             ConfigureForPartNumbers(suggestionTextBox, GetCachedInforPartNumbersAsync, enableF4);
         }
 
-        public static void ConfigureForInforPartNumbers(SuggestionTextBoxWithLabel control)
+        public static void ConfigureForInforPartNumbers(Component_SuggestionTextBoxWithLabel control)
         {
             ConfigureForPartNumbers(control.TextBox, GetCachedInforPartNumbersAsync, enableF4: false);
         }
 
-        public static void ConfigureForInforUsers(SuggestionTextBox suggestionTextBox, bool enableF4 = true)
+        public static void ConfigureForInforUsers(Component_SuggestionTextBox suggestionTextBox, bool enableF4 = true)
         {
             ConfigureForUsers(suggestionTextBox, GetCachedInforUsersAsync, enableF4);
         }
 
-        public static void ConfigureForInforUsers(SuggestionTextBoxWithLabel control)
+        public static void ConfigureForInforUsers(Component_SuggestionTextBoxWithLabel control)
         {
             ConfigureForUsers(control.TextBox, GetCachedInforUsersAsync, enableF4: false);
         }
 
-        public static void ConfigureForInforLocations(SuggestionTextBox suggestionTextBox, bool enableF4 = true)
+        public static void ConfigureForInforLocations(Component_SuggestionTextBox suggestionTextBox, bool enableF4 = true)
         {
             ConfigureForLocations(suggestionTextBox, GetCachedInforLocationsAsync, enableF4);
         }
 
-        public static void ConfigureForInforLocations(SuggestionTextBoxWithLabel control)
+        public static void ConfigureForInforLocations(Component_SuggestionTextBoxWithLabel control)
         {
             ConfigureForLocations(control.TextBox, GetCachedInforLocationsAsync, enableF4: false);
         }
 
-        public static void ConfigureForInforWarehouses(SuggestionTextBox suggestionTextBox, bool enableF4 = true)
+        public static void ConfigureForInforWarehouses(Component_SuggestionTextBox suggestionTextBox, bool enableF4 = true)
         {
             ConfigureForWarehouses(suggestionTextBox, GetCachedInforWarehousesAsync, enableF4);
         }
 
-        public static void ConfigureForInforWarehouses(SuggestionTextBoxWithLabel control)
+        public static void ConfigureForInforWarehouses(Component_SuggestionTextBoxWithLabel control)
         {
             ConfigureForWarehouses(control.TextBox, GetCachedInforWarehousesAsync, enableF4: false);
         }
 
-        public static void ConfigureForInforWorkOrders(SuggestionTextBox suggestionTextBox, bool enableF4 = true)
+        public static void ConfigureForInforWorkOrders(Component_SuggestionTextBox suggestionTextBox, bool enableF4 = true)
         {
             ConfigureForWorkOrders(suggestionTextBox, GetCachedInforWorkOrdersAsync, enableF4);
         }
 
-        public static void ConfigureForInforWorkOrders(SuggestionTextBoxWithLabel control)
+        public static void ConfigureForInforWorkOrders(Component_SuggestionTextBoxWithLabel control)
         {
             ConfigureForWorkOrders(control.TextBox, GetCachedInforWorkOrdersAsync, enableF4: false);
         }
 
-        public static void ConfigureForInforPurchaseOrders(SuggestionTextBox suggestionTextBox, bool enableF4 = true)
+        public static void ConfigureForInforPurchaseOrders(Component_SuggestionTextBox suggestionTextBox, bool enableF4 = true)
         {
             ConfigureForPurchaseOrders(suggestionTextBox, GetCachedInforPurchaseOrdersAsync, enableF4);
         }
 
-        public static void ConfigureForInforPurchaseOrders(SuggestionTextBoxWithLabel control)
+        public static void ConfigureForInforPurchaseOrders(Component_SuggestionTextBoxWithLabel control)
         {
             ConfigureForPurchaseOrders(control.TextBox, GetCachedInforPurchaseOrdersAsync, enableF4: false);
         }
 
-        public static void ConfigureForInforCustomerOrders(SuggestionTextBox suggestionTextBox, bool enableF4 = true)
+        public static void ConfigureForInforCustomerOrders(Component_SuggestionTextBox suggestionTextBox, bool enableF4 = true)
         {
             ConfigureForCustomerOrders(suggestionTextBox, GetCachedInforCustomerOrdersAsync, enableF4);
         }
 
-        public static void ConfigureForInforCustomerOrders(SuggestionTextBoxWithLabel control)
+        public static void ConfigureForInforCustomerOrders(Component_SuggestionTextBoxWithLabel control)
         {
             ConfigureForCustomerOrders(control.TextBox, GetCachedInforCustomerOrdersAsync, enableF4: false);
         }
 
-        public static void ConfigureForInforFGTNumbers(SuggestionTextBox suggestionTextBox, bool enableF4 = true)
+        public static void ConfigureForInforFGTNumbers(Component_SuggestionTextBox suggestionTextBox, bool enableF4 = true)
         {
             ConfigureForPartNumbers(suggestionTextBox, GetCachedInforFGTNumbersAsync, enableF4);
         }
 
-        public static void ConfigureForInforFGTNumbers(SuggestionTextBoxWithLabel control)
+        public static void ConfigureForInforFGTNumbers(Component_SuggestionTextBoxWithLabel control)
         {
             ConfigureForPartNumbers(control.TextBox, GetCachedInforFGTNumbersAsync, enableF4: false);
         }
 
-        public static void ConfigureForInforCoilFlatstockNumbers(SuggestionTextBox suggestionTextBox, bool enableF4 = true)
+        public static void ConfigureForInforCoilFlatstockNumbers(Component_SuggestionTextBox suggestionTextBox, bool enableF4 = true)
         {
             ConfigureForPartNumbers(suggestionTextBox, GetCachedInforCoilFlatstockNumbersAsync, enableF4);
         }
 
-        public static void ConfigureForInforCoilFlatstockNumbers(SuggestionTextBoxWithLabel control)
+        public static void ConfigureForInforCoilFlatstockNumbers(Component_SuggestionTextBoxWithLabel control)
         {
             ConfigureForPartNumbers(control.TextBox, GetCachedInforCoilFlatstockNumbersAsync, enableF4: false);
         }
@@ -615,7 +615,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
         /// Configures multiple SuggestionTextBox controls at once with F4 support.
         /// </summary>
         /// <param name="configurations">Array of configuration tuples (control, dataProvider, configurationType)</param>
-        public static void ConfigureMultiple(params (SuggestionTextBox control, Func<Task<List<string>>> dataProvider, SuggestionType type)[] configurations)
+        public static void ConfigureMultiple(params (Component_SuggestionTextBox control, Func<Task<List<string>>> dataProvider, SuggestionType type)[] configurations)
         {
             foreach (var (control, dataProvider, type) in configurations)
             {
@@ -650,7 +650,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
         /// <param name="suggestionTextBox">The control to validate</param>
         /// <param name="fieldName">Friendly name for error messages</param>
         /// <returns>True if valid, false otherwise</returns>
-        public static async Task<bool> ValidateSelectionAsync(SuggestionTextBox suggestionTextBox, string fieldName)
+        public static async Task<bool> ValidateSelectionAsync(Component_SuggestionTextBox suggestionTextBox, string fieldName)
         {
             if (suggestionTextBox == null)
                 throw new ArgumentNullException(nameof(suggestionTextBox));
@@ -695,7 +695,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
         /// <summary>
         /// Clears a SuggestionTextBox and optionally refreshes its data source.
         /// </summary>
-        public static void Clear(SuggestionTextBox suggestionTextBox, bool refreshDataSource = false)
+        public static void Clear(Component_SuggestionTextBox suggestionTextBox, bool refreshDataSource = false)
         {
             if (suggestionTextBox == null)
                 throw new ArgumentNullException(nameof(suggestionTextBox));
@@ -933,7 +933,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
         /// <summary>
         /// Enables or disables a SuggestionTextBox.
         /// </summary>
-        public static void SetEnabled(SuggestionTextBox suggestionTextBox, bool enabled)
+        public static void SetEnabled(Component_SuggestionTextBox suggestionTextBox, bool enabled)
         {
             if (suggestionTextBox == null)
                 throw new ArgumentNullException(nameof(suggestionTextBox));
@@ -944,7 +944,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
         /// <summary>
         /// Sets the enabled state of multiple SuggestionTextBox controls.
         /// </summary>
-        public static void SetEnabledMultiple(bool enabled, params SuggestionTextBox[] suggestionTextBoxes)
+        public static void SetEnabledMultiple(bool enabled, params Component_SuggestionTextBox[] suggestionTextBoxes)
         {
             foreach (var control in suggestionTextBoxes)
             {
@@ -955,7 +955,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
         /// <summary>
         /// Clears multiple SuggestionTextBox controls.
         /// </summary>
-        public static void ClearMultiple(bool refreshDataSource = false, params SuggestionTextBox[] suggestionTextBoxes)
+        public static void ClearMultiple(bool refreshDataSource = false, params Component_SuggestionTextBox[] suggestionTextBoxes)
         {
             foreach (var control in suggestionTextBoxes)
             {

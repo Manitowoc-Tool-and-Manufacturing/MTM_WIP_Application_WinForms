@@ -1,7 +1,7 @@
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-using MTM_WIP_Application_Winforms.Controls.Shared;
+using MTM_WIP_Application_Winforms.Components.Shared;
 
 namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 {
@@ -39,8 +39,8 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         private TableLayoutPanel Control_PartIDManagement_TableLayout_Add = null!;
         private Label Control_PartIDManagement_Label_AddIcon = null!;
         private Label Control_PartIDManagement_Label_AddTitle = null!;
-        private SuggestionTextBoxWithLabel Control_PartIDManagement_Suggestion_AddPartNumber = null!;
-        private SuggestionTextBoxWithLabel Control_PartIDManagement_Suggestion_AddItemType = null!;
+        private Component_SuggestionTextBoxWithLabel Control_PartIDManagement_Suggestion_AddPartNumber = null!;
+        private Component_SuggestionTextBoxWithLabel Control_PartIDManagement_Suggestion_AddItemType = null!;
         private Label Control_PartIDManagement_Label_AddIssuedBy = null!;
         private Label Control_PartIDManagement_Label_AddIssuedByValue = null!;
         private CheckBox Control_PartIDManagement_CheckBox_AddRequiresColorCode = null!;
@@ -52,9 +52,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         private Label Control_PartIDManagement_Label_EditIcon = null!;
         private Label Control_PartIDManagement_Label_EditTitle = null!;
         private TableLayoutPanel Control_PartIDManagement_TableLayout_EditContent = null!;
-        private SuggestionTextBoxWithLabel Control_PartIDManagement_Suggestion_EditSelectPart = null!;
-        private SuggestionTextBoxWithLabel Control_PartIDManagement_Suggestion_EditNewPartNumber = null!;
-        private SuggestionTextBoxWithLabel Control_PartIDManagement_Suggestion_EditItemType = null!;
+        private Component_SuggestionTextBoxWithLabel Control_PartIDManagement_Suggestion_EditSelectPart = null!;
+        private Component_SuggestionTextBoxWithLabel Control_PartIDManagement_Suggestion_EditNewPartNumber = null!;
+        private Component_SuggestionTextBoxWithLabel Control_PartIDManagement_Suggestion_EditItemType = null!;
         private Label Control_PartIDManagement_Label_EditIssuedBy = null!;
         private Label Control_PartIDManagement_Label_EditIssuedByValue = null!;
         private CheckBox Control_PartIDManagement_CheckBox_EditRequiresColorCode = null!;
@@ -66,7 +66,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         private Label Control_PartIDManagement_Label_RemoveIcon = null!;
         private Label Control_PartIDManagement_Label_RemoveTitle = null!;
         private TableLayoutPanel Control_PartIDManagement_TableLayout_RemoveContent = null!;
-        private SuggestionTextBoxWithLabel Control_PartIDManagement_Suggestion_RemoveSelectPart = null!;
+        private Component_SuggestionTextBoxWithLabel Control_PartIDManagement_Suggestion_RemoveSelectPart = null!;
         private TableLayoutPanel Control_PartIDManagement_TableLayout_RemoveDetails = null!;
         private Label Control_PartIDManagement_Label_RemoveItemNumber = null!;
         private Label Control_PartIDManagement_Label_RemoveItemNumberValue = null!;
@@ -120,7 +120,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_PartIDManagement_TableLayout_RemoveActions = new TableLayoutPanel();
             Control_PartIDManagement_Button_RemoveCancel = new Button();
             Control_PartIDManagement_Button_RemoveConfirm = new Button();
-            Control_PartIDManagement_Suggestion_RemoveSelectPart = new SuggestionTextBoxWithLabel();
+            Control_PartIDManagement_Suggestion_RemoveSelectPart = new Component_SuggestionTextBoxWithLabel();
             Control_PartIDManagement_TableLayout_RemoveDetails = new TableLayoutPanel();
             Control_PartIDManagement_Label_RemoveItemNumber = new Label();
             Control_PartIDManagement_Label_RemoveItemNumberValue = new Label();
@@ -135,8 +135,8 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_PartIDManagement_Panel_AddCard = new Panel();
             Control_PartIDManagement_TableLayout_Add = new TableLayoutPanel();
             Control_PartIDManagement_TableLayout_AddContent = new TableLayoutPanel();
-            Control_PartIDManagement_Suggestion_AddPartNumber = new SuggestionTextBoxWithLabel();
-            Control_PartIDManagement_Suggestion_AddItemType = new SuggestionTextBoxWithLabel();
+            Control_PartIDManagement_Suggestion_AddPartNumber = new Component_SuggestionTextBoxWithLabel();
+            Control_PartIDManagement_Suggestion_AddItemType = new Component_SuggestionTextBoxWithLabel();
             Control_PartIDManagement_CheckBox_AddRequiresColorCode = new CheckBox();
             Control_PartIDManagement_TableLayout_AddActions = new TableLayoutPanel();
             Control_PartIDManagement_Button_AddSave = new Button();
@@ -153,10 +153,10 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_PartIDManagement_TableLayoutPanel_EditActions = new TableLayoutPanel();
             Control_PartIDManagement_Button_EditSave = new Button();
             Control_PartIDManagement_Button_EditReset = new Button();
-            Control_PartIDManagement_Suggestion_EditSelectPart = new SuggestionTextBoxWithLabel();
-            Control_PartIDManagement_Suggestion_EditItemType = new SuggestionTextBoxWithLabel();
+            Control_PartIDManagement_Suggestion_EditSelectPart = new Component_SuggestionTextBoxWithLabel();
+            Control_PartIDManagement_Suggestion_EditItemType = new Component_SuggestionTextBoxWithLabel();
             Control_PartIDManagement_CheckBox_EditRequiresColorCode = new CheckBox();
-            Control_PartIDManagement_Suggestion_EditNewPartNumber = new SuggestionTextBoxWithLabel();
+            Control_PartIDManagement_Suggestion_EditNewPartNumber = new Component_SuggestionTextBoxWithLabel();
             Control_PartIDManagement_TableLayoutPanel_BackButton = new TableLayoutPanel();
             Control_PartIDManagement_Button_Back = new Button();
             Control_PartIDManagement_Label_Header = new Label();

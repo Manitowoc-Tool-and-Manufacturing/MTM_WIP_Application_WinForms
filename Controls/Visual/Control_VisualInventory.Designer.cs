@@ -33,9 +33,9 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_VisualInventory_TableLayoutPanel_Main = new TableLayoutPanel();
             Control_VisualInventory_TableLayoutPanel_Search = new TableLayoutPanel();
             tableLayoutPanel1 = new TableLayoutPanel();
-            Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse = new MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBoxWithLabel();
-            Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber = new MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBoxWithLabel();
-            Control_VisualInventory_SuggestionTextBoxWithLabel_Location = new MTM_WIP_Application_Winforms.Controls.Shared.SuggestionTextBoxWithLabel();
+            Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse = new MTM_WIP_Application_Winforms.Components.Shared.Component_SuggestionTextBoxWithLabel();
+            Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber = new MTM_WIP_Application_Winforms.Components.Shared.Component_SuggestionTextBoxWithLabel();
+            Control_VisualInventory_SuggestionTextBoxWithLabel_Location = new MTM_WIP_Application_Winforms.Components.Shared.Component_SuggestionTextBoxWithLabel();
             tableLayoutPanel2 = new TableLayoutPanel();
             Control_VisualInventory_Button_Search = new Button();
             Control_VisualInventory_CheckBox_NonZeroOnly = new CheckBox();
@@ -266,12 +266,12 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
 
         private TableLayoutPanel Control_VisualInventory_TableLayoutPanel_Main;
         private TableLayoutPanel Control_VisualInventory_TableLayoutPanel_Search;
-        private Shared.SuggestionTextBoxWithLabel Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber;
-        private Shared.SuggestionTextBoxWithLabel Control_VisualInventory_SuggestionTextBoxWithLabel_Location;
+        private Components.Shared.Component_SuggestionTextBoxWithLabel Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber;
+        private Components.Shared.Component_SuggestionTextBoxWithLabel Control_VisualInventory_SuggestionTextBoxWithLabel_Location;
         private Button Control_VisualInventory_Button_Search;
         private CheckBox Control_VisualInventory_CheckBox_NonZeroOnly;
         private Button Control_VisualInventory_Button_Export;
-        private Shared.SuggestionTextBoxWithLabel Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse;
+        private Components.Shared.Component_SuggestionTextBoxWithLabel Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse;
         private TableLayoutPanel tableLayoutPanel1;
         private TableLayoutPanel tableLayoutPanel2;
         private Panel panel1;

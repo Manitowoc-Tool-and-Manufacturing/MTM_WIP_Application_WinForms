@@ -5,7 +5,7 @@ using System.Security;
 
 using ClosedXML.Excel;
 
-using MTM_WIP_Application_Winforms.Controls.Shared;
+using MTM_WIP_Application_Winforms.Components.Shared;
 using MTM_WIP_Application_Winforms.Core;
 using MTM_WIP_Application_Winforms.Data;
 using MTM_WIP_Application_Winforms.Forms.MainForm.Classes;
@@ -29,11 +29,11 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         public static Forms.MainForm.MainForm? MainFormInstance { get; set; }
 
         private Helper_StoredProcedureProgress? _progressHelper;
-        private Control_TextAnimationSequence? _singleInputAnimator;
-        private Control_TextAnimationSequence? _multiInputAnimator;
-        private Control_TextAnimationSequence? _singleQuickButtonAnimator;
-        private Control_TextAnimationSequence? _multiQuickButtonAnimator;
-        private Control_TextAnimationSequence? _importQuickButtonAnimator;
+        private Component_TextAnimationSequence? _singleInputAnimator;
+        private Component_TextAnimationSequence? _multiInputAnimator;
+        private Component_TextAnimationSequence? _singleQuickButtonAnimator;
+        private Component_TextAnimationSequence? _multiQuickButtonAnimator;
+        private Component_TextAnimationSequence? _importQuickButtonAnimator;
         private bool _singleInputCollapsed;
         private bool _multiInputCollapsed;
         private float _singleInputStoredWidth = SingleInputFallbackWidth;
@@ -246,16 +246,19 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         private void ConfigureSuggestionTextBoxes()
         {
             // Single Entry tab
+            AdvancedInventory_Single_TextBox_Part.ShowF4Button = true;
             Helper_SuggestionTextBox.ConfigureForPartNumbers(
                 AdvancedInventory_Single_TextBox_Part.TextBox,
                 Helper_SuggestionTextBox.GetCachedPartNumbersAsync,
                 enableF4: true);
 
+            AdvancedInventory_Single_TextBox_Op.ShowF4Button = true;
             Helper_SuggestionTextBox.ConfigureForOperations(
                 AdvancedInventory_Single_TextBox_Op.TextBox,
                 Helper_SuggestionTextBox.GetCachedOperationsAsync,
                 enableF4: true);            
 
+            AdvancedInventory_Single_TextBox_Loc.ShowF4Button = true;
             Helper_SuggestionTextBox.ConfigureForLocations(
                 AdvancedInventory_Single_TextBox_Loc.TextBox,
                 Helper_SuggestionTextBox.GetCachedLocationsAsync,
@@ -271,16 +274,19 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             AdvancedInventory_MultiLoc_TextBox_Qty.TextBox.Enabled = true;
 
             // Multi-Location tab
+            AdvancedInventory_MultiLoc_TextBox_Part.ShowF4Button = true;
             Helper_SuggestionTextBox.ConfigureForPartNumbers(
                 AdvancedInventory_MultiLoc_TextBox_Part.TextBox,
                 Helper_SuggestionTextBox.GetCachedPartNumbersAsync,
                 enableF4: true);
 
+            AdvancedInventory_MultiLoc_TextBox_Op.ShowF4Button = true;
             Helper_SuggestionTextBox.ConfigureForOperations(
                 AdvancedInventory_MultiLoc_TextBox_Op.TextBox,
                 Helper_SuggestionTextBox.GetCachedOperationsAsync,
                 enableF4: true);
 
+            AdvancedInventory_MultiLoc_TextBox_Loc.ShowF4Button = true;
             Helper_SuggestionTextBox.ConfigureForLocations(
                 AdvancedInventory_MultiLoc_TextBox_Loc.TextBox,
                 Helper_SuggestionTextBox.GetCachedLocationsAsync,
@@ -900,7 +906,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
         #region Validation and Utility Methods
 
-        private void AttachValidationOnLeave(SuggestionTextBoxWithLabel control, Func<Task<List<string>>> dataProvider, string entityName)
+        private void AttachValidationOnLeave(Component_SuggestionTextBoxWithLabel control, Func<Task<List<string>>> dataProvider, string entityName)
         {
             control.TextBox.Leave += async (s, e) =>
             {
@@ -1020,7 +1026,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         /// Validates quantity input in SuggestionTextBox and applies appropriate foreground color based on validation result.
         /// </summary>
         /// <param name="textBox">The SuggestionTextBox control containing quantity input to validate</param>
-        public static void ValidateQtyTextBox(SuggestionTextBox textBox)
+        public static void ValidateQtyTextBox(Component_SuggestionTextBox textBox)
         {
             string text = textBox.Text.Trim();
             if (string.IsNullOrEmpty(text))
@@ -1639,10 +1645,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                         var part = invTab.Control_InventoryTab_SuggestionBox_Part;
                         var op = invTab.GetType().GetField("Control_InventoryTab_SuggestionBox_Operation",
                                 System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
-                            ?.GetValue(invTab) as Controls.Shared.SuggestionTextBoxWithLabel;
+                            ?.GetValue(invTab) as Components.Shared.Component_SuggestionTextBoxWithLabel;
                         var loc = invTab.GetType().GetField("Control_InventoryTab_SuggestionBox_Location",
                                 System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
-                            ?.GetValue(invTab) as Controls.Shared.SuggestionTextBoxWithLabel;
+                            ?.GetValue(invTab) as Components.Shared.Component_SuggestionTextBoxWithLabel;
                         if (part is not null)
                         {
                             part.Text = string.Empty;
@@ -1856,6 +1862,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
                 if (string.IsNullOrWhiteSpace(op))
                 {
+                   
                     Service_ErrorHandler.HandleValidationError(@"Please select a valid Operation.", nameof(AdvancedInventory_MultiLoc_TextBox_Op));
                     AdvancedInventory_MultiLoc_TextBox_Op.TextBox.Focus();
                     return;
@@ -2626,7 +2633,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         /// <param name="partNumber">The part number to check.</param>
         /// <param name="qtyControl">The quantity control to adjust.</param>
         /// <param name="opControl">The operation control to adjust.</param>
-        private async Task CheckPartTypeAndAdjustQuantityAsync(string partNumber, SuggestionTextBoxWithLabel qtyControl, SuggestionTextBoxWithLabel opControl)
+        private async Task CheckPartTypeAndAdjustQuantityAsync(string partNumber, Component_SuggestionTextBoxWithLabel qtyControl, Component_SuggestionTextBoxWithLabel opControl)
         {
             if (string.IsNullOrWhiteSpace(partNumber)) return;
 

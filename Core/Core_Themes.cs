@@ -1,6 +1,6 @@
 using System.Data;
 using System.Text.Json;
-using MTM_WIP_Application_Winforms.Controls.Shared;
+using MTM_WIP_Application_Winforms.Components.Shared;
 using MTM_WIP_Application_Winforms.Data;
 using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Models;
@@ -279,7 +279,7 @@ namespace MTM_WIP_Application_Winforms.Core
             ToolStripMenuItem changeOrderItem = new("Change Column Order");
             changeOrderItem.Click += (s, e) =>
             {
-                using (ColumnOrderDialog dlg = new(dgv))
+                using (Component_ColumnOrderDialog dlg = new(dgv))
                 {
                     if (dlg.ShowDialog() == DialogResult.OK)
                     {

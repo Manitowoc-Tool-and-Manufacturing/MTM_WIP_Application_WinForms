@@ -6,7 +6,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
     partial class ProgressDialog
     {
         private IContainer components = null;
-        private MTM_WIP_Application_Winforms.Controls.Shared.Control_ProgressBarUserControl _progressControl;
+        private MTM_WIP_Application_Winforms.Components.Shared.Component_ProgressBarUserControl _progressControl;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -25,7 +25,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
 
         private void InitializeComponent()
         {
-            _progressControl = new MTM_WIP_Application_Winforms.Controls.Shared.Control_ProgressBarUserControl();
+            _progressControl = new MTM_WIP_Application_Winforms.Components.Shared.Component_ProgressBarUserControl();
             SuspendLayout();
             // 
             // _progressControl

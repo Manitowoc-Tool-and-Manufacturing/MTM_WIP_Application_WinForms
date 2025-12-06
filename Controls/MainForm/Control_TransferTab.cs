@@ -3,7 +3,7 @@ using System.Data;
 using System.Diagnostics;
 using System.Text;
 using MTM_WIP_Application_Winforms.Core;
-using MTM_WIP_Application_Winforms.Controls.Shared;
+using MTM_WIP_Application_Winforms.Components.Shared;
 using MTM_WIP_Application_Winforms.Data;
 using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Services.Logging;
@@ -26,8 +26,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         // Cache ToolTip to avoid repeated instantiation
         private static readonly ToolTip SharedToolTip = new();
         private Helper_StoredProcedureProgress? _progressHelper;
-        private Control_TextAnimationSequence? _inputPanelAnimator;
-        private Control_TextAnimationSequence? _rightPanelAnimator;
+        private Component_TextAnimationSequence? _inputPanelAnimator;
+        private Component_TextAnimationSequence? _rightPanelAnimator;
         private float _inputPanelStoredWidth = InputPanelFallbackWidth;
         private bool _inputPanelInitialWidthCaptured;
         private readonly IShortcutService? _shortcutService;

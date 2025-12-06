@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
-using MTM_WIP_Application_Winforms.Controls.Shared;
+using MTM_WIP_Application_Winforms.Components.Shared;
 using MTM_WIP_Application_Winforms.Models.Enums;
 
 namespace MTM_WIP_Application_Winforms.Controls.MainForm
@@ -30,7 +30,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         private System.Windows.Forms.TextBox Control_AdvancedRemove_TextBox_Notes;
         private System.Windows.Forms.DataGridView Control_AdvancedRemove_DataGridView_Results;
         private Panel Control_AdvancedRemove_Panel_DGV;
-        internal SuggestionTextBoxWithLabel Control_AdvancedRemove_SuggestionBox_User;
+        internal Component_SuggestionTextBoxWithLabel Control_AdvancedRemove_SuggestionBox_User;
         private PictureBox Control_AdvancedRemove_Image_NothingFound;
         private Button Control_AdvancedRemove_Button_Undo;
         private Button Control_AdvancedRemove_Button_Delete;
@@ -100,7 +100,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_AdvancedRemove_RadioButton_Week = new RadioButton();
             Control_AdvancedRemove_RadioButton_Everything = new RadioButton();
             Control_AdvancedRemove_RadioButton_Custom = new RadioButton();
-            Control_AdvancedRemove_SuggestionBox_User = new SuggestionTextBoxWithLabel();
+            Control_AdvancedRemove_SuggestionBox_User = new Component_SuggestionTextBoxWithLabel();
             Control_AdvancedRemove_GroupBox_Main.SuspendLayout();
             Control_AdvancedRemove_TableLayout_Main.SuspendLayout();
             Control_AdvancedRemove_TableLayout_Bottom_Buttons.SuspendLayout();
