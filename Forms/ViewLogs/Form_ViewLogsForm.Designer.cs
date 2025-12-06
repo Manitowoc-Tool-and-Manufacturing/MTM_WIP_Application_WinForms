@@ -15,7 +15,6 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ViewApplicationLogsForm));
             tableLayoutMain = new TableLayoutPanel();
             panel1 = new Panel();
             lblStatus = new Label();
@@ -50,6 +49,7 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
             colSize = new ColumnHeader();
             panelNavigation = new Panel();
             tableLayoutPanel2 = new TableLayoutPanel();
+            lblEntryPosition = new Label();
             btnPrevious = new Button();
             btnNext = new Button();
             btnToggleView = new Button();
@@ -76,7 +76,6 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
             btnErrorsOnly = new Button();
             btnPerformance = new Button();
             btnToday = new Button();
-            lblEntryPosition = new Label();
             tableLayoutMain.SuspendLayout();
             panel1.SuspendLayout();
             panelEntryDisplay.SuspendLayout();
@@ -520,6 +519,18 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
             tableLayoutPanel2.Size = new Size(718, 78);
             tableLayoutPanel2.TabIndex = 8;
             // 
+            // lblEntryPosition
+            // 
+            lblEntryPosition.AutoSize = true;
+            lblEntryPosition.Dock = DockStyle.Fill;
+            lblEntryPosition.Location = new Point(242, 3);
+            lblEntryPosition.Margin = new Padding(3);
+            lblEntryPosition.Name = "lblEntryPosition";
+            lblEntryPosition.Size = new Size(233, 32);
+            lblEntryPosition.TabIndex = 1;
+            lblEntryPosition.Text = "No entry loaded";
+            lblEntryPosition.TextAlign = ContentAlignment.MiddleCenter;
+            // 
             // btnPrevious
             // 
             btnPrevious.Dock = DockStyle.Fill;
@@ -818,25 +829,12 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
             btnToday.Text = "Today";
             btnToday.UseVisualStyleBackColor = true;
             // 
-            // lblEntryPosition
-            // 
-            lblEntryPosition.AutoSize = true;
-            lblEntryPosition.Dock = DockStyle.Fill;
-            lblEntryPosition.Location = new Point(242, 3);
-            lblEntryPosition.Margin = new Padding(3);
-            lblEntryPosition.Name = "lblEntryPosition";
-            lblEntryPosition.Size = new Size(233, 32);
-            lblEntryPosition.TabIndex = 1;
-            lblEntryPosition.Text = "No entry loaded";
-            lblEntryPosition.TextAlign = ContentAlignment.MiddleCenter;
-            // 
             // ViewApplicationLogsForm
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
             ClientSize = new Size(724, 801);
             Controls.Add(tableLayoutMain);
-            Icon = (Icon)resources.GetObject("$this.Icon");
             MaximizeBox = false;
             MaximumSize = new Size(740, 840);
             MinimizeBox = false;
