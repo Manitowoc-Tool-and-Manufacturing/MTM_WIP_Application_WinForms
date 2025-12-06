@@ -13,10 +13,6 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
 
         public bool HasChanges = false;
         private readonly Dictionary<string, Panel> _settingsPanels;
-        private Control_PartIDManagement? _controlPartManagement;
-        private Control_LocationManagement? _controlLocationManagement;
-        private Control_OperationManagement? _controlOperationManagement;
-        private Control_ItemTypeManagement? _controlItemTypeManagement;
 
         #endregion
 
@@ -69,14 +65,6 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
                 ["About"] = SettingsForm_Panel_About
             };
 
-            Service_DebugTracer.TraceUIAction("INITIALIZE_CONTROLS", nameof(SettingsForm),
-                new Dictionary<string, object> { ["Phase"] = "START" });
-            InitializeUserControls();
-            
-            Service_DebugTracer.TraceUIAction("INITIALIZE_FORM", nameof(SettingsForm),
-                new Dictionary<string, object> { ["Phase"] = "START" });
-            InitializeForm();
-
             Service_DebugTracer.TraceUIAction("SETTINGS_FORM_INITIALIZATION", nameof(SettingsForm),
                 new Dictionary<string, object>
                 {
@@ -124,115 +112,12 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
             // Don't auto-select any node - homepage is the default view
         }
 
-        private void InitializeUserControls()
+        protected override void OnLoad(EventArgs e)
         {
-            // Homepage control
-            Control_SettingsHome controlHome = new() { Dock = DockStyle.Fill };
-            controlHome.NavigationRequested += (s, e) =>
-            {
-                ShowPanel(e.Target);
-                // Update TreeView selection to match
-                SelectTreeNodeByName(e.Target);
-            };
-            SettingsForm_Panel_Home.Controls.Add(controlHome);
-            // Initialize categories based on privileges - call after form is shown
-            this.Shown += (s, e) => controlHome.InitializeCategories();
+            base.OnLoad(e);
 
-            Control_Shortcuts controlShortcuts = new() { Dock = DockStyle.Fill };
-            controlShortcuts.ShortcutsUpdated += (s, e) =>
-            {
-                UpdateStatus("Shortcuts updated successfully.");
-                HasChanges = true;
-            };
-            controlShortcuts.StatusMessageChanged += (s, message) => { UpdateStatus(message); };
-            controlShortcuts.RequestNavigationHome += (_, _) => ShowPanel("Home");
-            SettingsForm_Panel_Shortcuts.Controls.Add(controlShortcuts);
-
-            Control_Theme controlTheme = new() { Dock = DockStyle.Fill };
-            controlTheme.ThemeChanged += (s, e) =>
-            {
-                UpdateStatus("Theme changed successfully.");
-                HasChanges = true;
-            };
-            controlTheme.StatusMessageChanged += (s, message) => { UpdateStatus(message); };
-            SettingsForm_Panel_Theme.Controls.Add(controlTheme);
-
-            Control_Database controlDatabase = new() { Dock = DockStyle.Fill };
-            controlDatabase.DatabaseSettingsUpdated += (s, e) =>
-            {
-                UpdateStatus("Database settings updated successfully.");
-                HasChanges = true;
-            };
-            controlDatabase.StatusMessageChanged += (s, message) => { UpdateStatus(message); };
-            SettingsForm_Panel_Database.Controls.Add(controlDatabase);
-
-            Control_About controlAbout = new() { Dock = DockStyle.Fill };
-            SettingsForm_Panel_About.Controls.Add(controlAbout);
-
-            Control_User_Management controlUserManagement = new() { Dock = DockStyle.Fill };
-            controlUserManagement.BackToHomeRequested += (_, _) => ShowPanel("Home");
-            controlUserManagement.UserListChanged += (_, _) =>
-            {
-                UpdateStatus("User list updated successfully.");
-                HasChanges = true;
-            };
-            SettingsForm_Panel_AddUser.Controls.Add(controlUserManagement);
-
-            _controlPartManagement = new Control_PartIDManagement { Dock = DockStyle.Fill };
-            _controlPartManagement.PartListChanged += (_, _) =>
-            {
-                UpdateStatus("Part numbers updated successfully.");
-                HasChanges = true;
-            };
-            _controlPartManagement.BackToHomeRequested += (_, _) => ShowPanel("Home");
-            SettingsForm_Panel_PartNumbers.Controls.Add(_controlPartManagement);
-
-            _controlOperationManagement = new Control_OperationManagement { Dock = DockStyle.Fill };
-            _controlOperationManagement.SetProgressControls(SettingsForm_ProgressBar, SettingsForm_StatusText);
-            _controlOperationManagement.OperationListChanged += (_, _) =>
-            {
-                UpdateStatus("Operations updated successfully.");
-                HasChanges = true;
-            };
-            _controlOperationManagement.StatusMessageChanged += (_, message) => UpdateStatus(message);
-            _controlOperationManagement.BackToHomeRequested += (_, _) => ShowPanel("Home");
-            SettingsForm_Panel_AddOperation.Controls.Add(_controlOperationManagement);
-            SettingsForm_Panel_EditOperation.Visible = false;
-            SettingsForm_Panel_RemoveOperation.Visible = false;
-
-            _controlLocationManagement = new Control_LocationManagement { Dock = DockStyle.Fill };
-            _controlLocationManagement.LocationListChanged += (_, _) =>
-            {
-                UpdateStatus("Locations updated successfully.");
-                HasChanges = true;
-            };
-            _controlLocationManagement.BackToHomeRequested += (_, _) => ShowPanel("Home");
-            // Use AddLocation panel as the container (hide Edit/Remove panels)
-            SettingsForm_Panel_AddLocation.Controls.Add(_controlLocationManagement);
-            SettingsForm_Panel_EditLocation.Visible = false;
-            SettingsForm_Panel_RemoveLocation.Visible = false;
-
-            _controlItemTypeManagement = new Control_ItemTypeManagement { Dock = DockStyle.Fill };
-            _controlItemTypeManagement.SetProgressControls(SettingsForm_ProgressBar, SettingsForm_StatusText);
-            _controlItemTypeManagement.ItemTypeListChanged += (_, _) =>
-            {
-                UpdateStatus("ItemTypes updated successfully.");
-                HasChanges = true;
-            };
-            _controlItemTypeManagement.StatusMessageChanged += (_, message) => UpdateStatus(message);
-            _controlItemTypeManagement.BackToHomeRequested += (_, _) => ShowPanel("Home");
-            SettingsForm_Panel_AddItemType.Controls.Add(_controlItemTypeManagement);
-            SettingsForm_Panel_EditItemType.Visible = false;
-            SettingsForm_Panel_RemoveItemType.Visible = false;
-        }
-
-        private void InitializeForm()
-        {
-            Text = "Settings - MTM WIP Application";
-            FormBorderStyle = FormBorderStyle.FixedDialog;
-            MaximizeBox = false;
-            MinimizeBox = false;
-            StartPosition = FormStartPosition.CenterParent;
+            Service_DebugTracer.TraceUIAction("INITIALIZE_FORM", nameof(SettingsForm),
+                new Dictionary<string, object> { ["Phase"] = "START" });
 
             foreach (Panel panel in _settingsPanels.Values)
             {
@@ -241,6 +126,81 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
 
             InitializeCategoryTreeView();
             ShowPanel("Home");
+
+            // Wire up events
+            SettingsForm_Control_Home.NavigationRequested += (s, args) =>
+            {
+                ShowPanel(args.Target);
+                SelectTreeNodeByName(args.Target);
+            };
+            this.Shown += (s, args) => SettingsForm_Control_Home.InitializeCategories();
+
+            SettingsForm_Control_Shortcuts.ShortcutsUpdated += (s, args) =>
+            {
+                UpdateStatus("Shortcuts updated successfully.");
+                HasChanges = true;
+            };
+            SettingsForm_Control_Shortcuts.StatusMessageChanged += (s, message) => { UpdateStatus(message); };
+            SettingsForm_Control_Shortcuts.RequestNavigationHome += (_, _) => ShowPanel("Home");
+
+            SettingsForm_Control_Theme.ThemeChanged += (s, args) =>
+            {
+                UpdateStatus("Theme changed successfully.");
+                HasChanges = true;
+            };
+            SettingsForm_Control_Theme.StatusMessageChanged += (s, message) => { UpdateStatus(message); };
+
+            SettingsForm_Control_Database.DatabaseSettingsUpdated += (s, args) =>
+            {
+                UpdateStatus("Database settings updated successfully.");
+                HasChanges = true;
+            };
+            SettingsForm_Control_Database.StatusMessageChanged += (s, message) => { UpdateStatus(message); };
+
+            SettingsForm_Control_UserManagement.BackToHomeRequested += (_, _) => ShowPanel("Home");
+            SettingsForm_Control_UserManagement.UserListChanged += (_, _) =>
+            {
+                UpdateStatus("User list updated successfully.");
+                HasChanges = true;
+            };
+
+            SettingsForm_Control_PartManagement.PartListChanged += (_, _) =>
+            {
+                UpdateStatus("Part numbers updated successfully.");
+                HasChanges = true;
+            };
+            SettingsForm_Control_PartManagement.BackToHomeRequested += (_, _) => ShowPanel("Home");
+
+            SettingsForm_Control_OperationManagement.SetProgressControls(SettingsForm_ProgressBar, SettingsForm_StatusText);
+            SettingsForm_Control_OperationManagement.OperationListChanged += (_, _) =>
+            {
+                UpdateStatus("Operations updated successfully.");
+                HasChanges = true;
+            };
+            SettingsForm_Control_OperationManagement.StatusMessageChanged += (_, message) => UpdateStatus(message);
+            SettingsForm_Control_OperationManagement.BackToHomeRequested += (_, _) => ShowPanel("Home");
+            SettingsForm_Panel_EditOperation.Visible = false;
+            SettingsForm_Panel_RemoveOperation.Visible = false;
+
+            SettingsForm_Control_LocationManagement.LocationListChanged += (_, _) =>
+            {
+                UpdateStatus("Locations updated successfully.");
+                HasChanges = true;
+            };
+            SettingsForm_Control_LocationManagement.BackToHomeRequested += (_, _) => ShowPanel("Home");
+            SettingsForm_Panel_EditLocation.Visible = false;
+            SettingsForm_Panel_RemoveLocation.Visible = false;
+
+            SettingsForm_Control_ItemTypeManagement.SetProgressControls(SettingsForm_ProgressBar, SettingsForm_StatusText);
+            SettingsForm_Control_ItemTypeManagement.ItemTypeListChanged += (_, _) =>
+            {
+                UpdateStatus("ItemTypes updated successfully.");
+                HasChanges = true;
+            };
+            SettingsForm_Control_ItemTypeManagement.StatusMessageChanged += (_, message) => UpdateStatus(message);
+            SettingsForm_Control_ItemTypeManagement.BackToHomeRequested += (_, _) => ShowPanel("Home");
+            SettingsForm_Panel_EditItemType.Visible = false;
+            SettingsForm_Panel_RemoveItemType.Visible = false;
 
             ApplyPrivileges();
         }
@@ -297,7 +257,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
             bool canEditParts = hasAdminAccess;
             bool canRemoveParts = hasAdminAccess;
 
-            _controlPartManagement?.ApplyPrivileges(canAddParts, canEditParts, canRemoveParts);
+            SettingsForm_Control_PartManagement.ApplyPrivileges(canAddParts, canEditParts, canRemoveParts);
 
             if (!canAddParts && !canEditParts && !canRemoveParts)
             {
@@ -309,7 +269,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
             bool canEditItemTypes = hasAdminAccess;
             bool canRemoveItemTypes = hasAdminAccess;
 
-            _controlItemTypeManagement?.ApplyPrivileges(canAddItemTypes, canEditItemTypes, canRemoveItemTypes);
+            SettingsForm_Control_ItemTypeManagement.ApplyPrivileges(canAddItemTypes, canEditItemTypes, canRemoveItemTypes);
 
             if (!canAddItemTypes && !canEditItemTypes && !canRemoveItemTypes)
             {
@@ -321,7 +281,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
             bool canEditOperations = hasAdminAccess;
             bool canRemoveOperations = hasAdminAccess;
 
-            _controlOperationManagement?.ApplyPrivileges(canAddOperations, canEditOperations, canRemoveOperations);
+            SettingsForm_Control_OperationManagement.ApplyPrivileges(canAddOperations, canEditOperations, canRemoveOperations);
 
             if (!canAddOperations && !canEditOperations && !canRemoveOperations)
             {
@@ -333,7 +293,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
             bool canEditLocations = hasAdminAccess;
             bool canRemoveLocations = hasAdminAccess;
 
-            _controlLocationManagement?.ApplyPrivileges(canAddLocations, canEditLocations, canRemoveLocations);
+            SettingsForm_Control_LocationManagement.ApplyPrivileges(canAddLocations, canEditLocations, canRemoveLocations);
 
             if (!canAddLocations && !canEditLocations && !canRemoveLocations)
             {

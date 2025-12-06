@@ -10,6 +10,8 @@ using MTM_WIP_Application_Winforms.Services.Analytics;
 using Newtonsoft.Json;
 using Microsoft.Extensions.DependencyInjection;
 using ClosedXML.Excel;
+using MTM_WIP_Application_Winforms.Services;
+using MTM_WIP_Application_Winforms.Services.Logging;
 
 namespace MTM_WIP_Application_Winforms.Controls.Visual
 {
@@ -36,48 +38,48 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         private void InitializeComponent()
         {
             this.webView = new Microsoft.Web.WebView2.WinForms.WebView2();
-            this.dtpStart = new System.Windows.Forms.DateTimePicker();
-            this.dtpEnd = new System.Windows.Forms.DateTimePicker();
-            this.btnRefresh = new System.Windows.Forms.Button();
-            this.btnExport = new System.Windows.Forms.Button();
-            this.lblStatus = new System.Windows.Forms.Label();
+            this.dtpStart = new DateTimePicker();
+            this.dtpEnd = new DateTimePicker();
+            this.btnRefresh = new Button();
+            this.btnExport = new Button();
+            this.lblStatus = new Label();
             ((System.ComponentModel.ISupportInitialize)(this.webView)).BeginInit();
             this.SuspendLayout();
             // 
             // webView
             // 
-            this.webView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.webView.Anchor = (((AnchorStyles.Top | AnchorStyles.Bottom)
+            | AnchorStyles.Left)
+            | AnchorStyles.Right);
             this.webView.CreationProperties = null;
-            this.webView.DefaultBackgroundColor = System.Drawing.Color.FromArgb(30, 30, 30);
-            this.webView.Location = new System.Drawing.Point(0, 50);
+            this.webView.DefaultBackgroundColor = Color.FromArgb(30, 30, 30);
+            this.webView.Location = new Point(0, 50);
             this.webView.Name = "webView";
-            this.webView.Size = new System.Drawing.Size(800, 550);
+            this.webView.Size = new Size(800, 550);
             this.webView.TabIndex = 0;
             this.webView.ZoomFactor = 1D;
             // 
             // dtpStart
             // 
-            this.dtpStart.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpStart.Location = new System.Drawing.Point(13, 13);
+            this.dtpStart.Format = DateTimePickerFormat.Short;
+            this.dtpStart.Location = new Point(13, 13);
             this.dtpStart.Name = "dtpStart";
-            this.dtpStart.Size = new System.Drawing.Size(100, 23);
+            this.dtpStart.Size = new Size(100, 23);
             this.dtpStart.TabIndex = 1;
             // 
             // dtpEnd
             // 
-            this.dtpEnd.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpEnd.Location = new System.Drawing.Point(119, 13);
+            this.dtpEnd.Format = DateTimePickerFormat.Short;
+            this.dtpEnd.Location = new Point(119, 13);
             this.dtpEnd.Name = "dtpEnd";
-            this.dtpEnd.Size = new System.Drawing.Size(100, 23);
+            this.dtpEnd.Size = new Size(100, 23);
             this.dtpEnd.TabIndex = 2;
             // 
             // btnRefresh
             // 
-            this.btnRefresh.Location = new System.Drawing.Point(225, 12);
+            this.btnRefresh.Location = new Point(225, 12);
             this.btnRefresh.Name = "btnRefresh";
-            this.btnRefresh.Size = new System.Drawing.Size(75, 25);
+            this.btnRefresh.Size = new Size(75, 25);
             this.btnRefresh.TabIndex = 3;
             this.btnRefresh.Text = "Refresh";
             this.btnRefresh.UseVisualStyleBackColor = true;
@@ -85,9 +87,9 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             // 
             // btnExport
             // 
-            this.btnExport.Location = new System.Drawing.Point(306, 12);
+            this.btnExport.Location = new Point(306, 12);
             this.btnExport.Name = "btnExport";
-            this.btnExport.Size = new System.Drawing.Size(75, 25);
+            this.btnExport.Size = new Size(75, 25);
             this.btnExport.TabIndex = 5;
             this.btnExport.Text = "Export";
             this.btnExport.UseVisualStyleBackColor = true;
@@ -96,9 +98,9 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             // lblStatus
             // 
             this.lblStatus.AutoSize = true;
-            this.lblStatus.Location = new System.Drawing.Point(400, 17);
+            this.lblStatus.Location = new Point(400, 17);
             this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(39, 15);
+            this.lblStatus.Size = new Size(39, 15);
             this.lblStatus.TabIndex = 4;
             this.lblStatus.Text = "Ready";
             // 
@@ -111,7 +113,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             this.Controls.Add(this.dtpStart);
             this.Controls.Add(this.webView);
             this.Name = "Control_MaterialHandlerAnalytics";
-            this.Size = new System.Drawing.Size(800, 600);
+            this.Size = new Size(800, 600);
             ((System.ComponentModel.ISupportInitialize)(this.webView)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -143,6 +145,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         {
             try
             {
+                LoggingUtility.Log("[Control_MaterialHandlerAnalytics] Refresh clicked");
                 lblStatus.Text = "Loading...";
                 btnRefresh.Enabled = false;
                 btnExport.Enabled = false;
@@ -166,13 +169,13 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                 else
                 {
                     lblStatus.Text = "Error loading data.";
-                    MessageBox.Show(result.ErrorMessage, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Service_ErrorHandler.ShowError(result.ErrorMessage);
                 }
             }
             catch (Exception ex)
             {
                 lblStatus.Text = "Error.";
-                MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Service_ErrorHandler.HandleException(ex, Models.Enum_ErrorSeverity.Medium, controlName: this.Name);
             }
             finally
             {
@@ -185,9 +188,11 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         {
             if (_currentData == null || _currentData.Count == 0)
             {
-                MessageBox.Show("No data to export.", "Export", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                Service_ErrorHandler.ShowInformation("No data to export.", "Export");
                 return;
             }
+
+            LoggingUtility.Log("[Control_MaterialHandlerAnalytics] Export clicked");
 
             using (var sfd = new SaveFileDialog())
             {
@@ -241,12 +246,12 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                         });
 
                         lblStatus.Text = "Export Complete.";
-                        MessageBox.Show("Export completed successfully.", "Export", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        Service_ErrorHandler.ShowInformation("Export completed successfully.", "Export");
                     }
                     catch (Exception ex)
                     {
                         lblStatus.Text = "Export Error.";
-                        MessageBox.Show("Export failed: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        Service_ErrorHandler.HandleException(ex, Models.Enum_ErrorSeverity.Medium, controlName: this.Name);
                     }
                     finally
                     {

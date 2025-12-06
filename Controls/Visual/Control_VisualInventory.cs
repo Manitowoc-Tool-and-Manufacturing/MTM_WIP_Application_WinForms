@@ -83,6 +83,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
 
             try
             {
+                LoggingUtility.Log("[Control_VisualInventory] Search started");
                 Control_VisualInventory_Button_Search.Enabled = false;
                 Control_VisualInventory_Button_Search.Text = "Searching...";
 
@@ -150,6 +151,8 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                 Service_ErrorHandler.ShowError("No data to export.");
                 return;
             }
+
+            LoggingUtility.Log("[Control_VisualInventory] Export clicked");
 
             using var saveFileDialog = new SaveFileDialog
             {

@@ -275,6 +275,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
 
             try
             {
+                LoggingUtility.Log("[Control_ReceivingAnalytics] FetchData started");
                 Control_ReceivingAnalytics_Button_Search.Enabled = false;
                 Control_ReceivingAnalytics_Button_Search.Text = "Loading...";
 
@@ -635,6 +636,7 @@ void ToggleSearchPanel(object? sender, EventArgs e)
         {
             try
             {
+                LoggingUtility.Log("[Control_ReceivingAnalytics] Analytics clicked");
                 string htmlPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "Html", "ReceivingAnalytics_Enhanced.html");
                 
                 // Fallback for development environment if not copied to bin

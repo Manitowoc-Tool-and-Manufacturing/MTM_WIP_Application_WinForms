@@ -1,0 +1,158 @@
+{
+  "analysisReport": {
+    "controlInventory": [
+      {
+        "controlName": "SettingsForm_Control_Home",
+        "controlType": "Control_SettingsHome",
+        "accessModifier": "private",
+        "declaredIn": {
+          "file": "SettingsForm.Designer.cs",
+          "lineNumber": 590
+        },
+        "instantiatedIn": {
+          "file": "SettingsForm.Designer.cs",
+          "method": "InitializeComponent",
+          "lineNumber": 60
+        },
+        "lifecycle": "static",
+        "designerCompatible": "yes",
+        "namingCompliance": {
+          "followsConvention": true,
+          "expectedName": "SettingsForm_Control_Home",
+          "actualName": "SettingsForm_Control_Home"
+        }
+      },
+      {
+        "controlName": "SettingsForm_Control_Shortcuts",
+        "controlType": "Control_Shortcuts",
+        "accessModifier": "private",
+        "declaredIn": {
+          "file": "SettingsForm.Designer.cs",
+          "lineNumber": 591
+        },
+        "instantiatedIn": {
+          "file": "SettingsForm.Designer.cs",
+          "method": "InitializeComponent",
+          "lineNumber": 61
+        },
+        "lifecycle": "static",
+        "designerCompatible": "yes",
+        "namingCompliance": {
+          "followsConvention": true,
+          "expectedName": "SettingsForm_Control_Shortcuts",
+          "actualName": "SettingsForm_Control_Shortcuts"
+        }
+      }
+    ],
+    "summary": {
+      "totalControls": 10,
+      "inDesignerFile": 10,
+      "inConstructor": 0,
+      "inLoadEvent": 0,
+      "fullyCompliant": 10,
+      "requiresRefactoring": 0,
+      "namingViolations": 0,
+      "errorHandlingViolations": 0
+    }
+  },
+  "designerValidationReport": {
+    "designerFileValidation": {
+      "fileExists": true,
+      "isPartialClass": true,
+      "hasRegionBlock": true,
+      "hasComponentsField": true,
+      "hasDisposeMethod": true,
+      "disposeSignatureCorrect": true,
+      "initializeComponentExists": true,
+      "sectionOrder": {
+        "orderCorrect": true
+      }
+    },
+    "propertyClassification": [],
+    "violations": []
+  },
+  "codeSeparationReport": {
+    "codeSeparation": {
+      "mainFile": {
+        "path": "SettingsForm.cs",
+        "removedLines": 100,
+        "removedSections": [
+          {
+            "type": "control-instantiation",
+            "originalLocation": "InitializeUserControls",
+            "movedTo": "InitializeComponent()"
+          },
+          {
+            "type": "property-assignment",
+            "originalLocation": "InitializeForm",
+            "movedTo": "InitializeComponent()"
+          }
+        ],
+        "preservedSections": [
+          {
+            "type": "business-logic",
+            "location": "OnLoad",
+            "reason": "Event wiring and runtime logic"
+          }
+        ]
+      },
+      "designerFile": {
+        "path": "SettingsForm.Designer.cs",
+        "addedLines": 150,
+        "addedSections": [
+          {
+            "type": "control-instantiation",
+            "codeSnippet": "SettingsForm_Control_Home = new ...()"
+          }
+        ]
+      },
+      "deletedMethods": [
+        {
+          "methodName": "InitializeUserControls",
+          "reason": "Replaced by InitializeComponent()"
+        },
+        {
+          "methodName": "InitializeForm",
+          "reason": "Replaced by InitializeComponent()"
+        }
+      ]
+    },
+    "validation": {
+      "zeroUiInMainFile": true,
+      "allEventsInDesigner": false,
+      "businessLogicPreserved": true,
+      "regionStructureMaintained": true
+    }
+  },
+  "qualityValidationReport": {
+    "validationResults": {
+      "compilation": {
+        "passed": true,
+        "errors": 0,
+        "warnings": 0
+      },
+      "designerCompatibility": {
+        "formLoadsInDesigner": true,
+        "allControlsSelectable": true,
+        "propertiesEditable": true,
+        "serializationWorks": true,
+        "errorMessage": null
+      },
+      "functionalEquivalence": {
+        "identical": true,
+        "differences": []
+      },
+      "namingCompliance": {
+        "compliant": true,
+        "violations": 0,
+        "details": []
+      },
+      "errorHandlingCompliance": {
+        "compliant": true,
+        "violations": 0,
+        "locations": []
+      }
+    },
+    "overallStatus": "pass"
+  }
+}

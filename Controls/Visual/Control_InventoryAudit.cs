@@ -10,6 +10,7 @@ using MTM_WIP_Application_Winforms.Data;
 using MTM_WIP_Application_Winforms.Models.Analytics;
 using MTM_WIP_Application_Winforms.Models.Enums;
 using Newtonsoft.Json;
+using MTM_WIP_Application_Winforms.Services.Logging;
 
 namespace MTM_WIP_Application_Winforms.Controls.Visual
 {
@@ -368,6 +369,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
 
             try
             {
+                LoggingUtility.Log("[Control_InventoryAudit] Search started");
                 _btnSearch.Enabled = false;
                 _btnSearch.Text = "Searching...";
 
@@ -487,6 +489,8 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                 Service_ErrorHandler.ShowError("No data to export.");
                 return;
             }
+
+            LoggingUtility.Log("[Control_InventoryAudit] Export clicked");
 
             using var saveFileDialog = new SaveFileDialog
             {
