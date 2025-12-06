@@ -25,7 +25,6 @@ namespace MTM_WIP_Application_Winforms.Controls.ErrorReports
 
         private void InitializeComponent()
         {
-            components = new System.ComponentModel.Container();
             tableLayoutMain = new TableLayoutPanel();
             lblHeader = new Label();
             tableLayoutMetadata = new TableLayoutPanel();
@@ -89,12 +88,12 @@ namespace MTM_WIP_Application_Winforms.Controls.ErrorReports
             tableLayoutMain.Margin = new Padding(4, 3, 4, 3);
             tableLayoutMain.Name = "tableLayoutMain";
             tableLayoutMain.RowCount = 6;
-            tableLayoutMain.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            tableLayoutMain.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            tableLayoutMain.RowStyles.Add(new RowStyle());
+            tableLayoutMain.RowStyles.Add(new RowStyle());
             tableLayoutMain.RowStyles.Add(new RowStyle(SizeType.Absolute, 120F));
             tableLayoutMain.RowStyles.Add(new RowStyle(SizeType.Absolute, 150F));
             tableLayoutMain.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutMain.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            tableLayoutMain.RowStyles.Add(new RowStyle());
             tableLayoutMain.Size = new Size(960, 680);
             tableLayoutMain.TabIndex = 0;
             // 
@@ -102,7 +101,7 @@ namespace MTM_WIP_Application_Winforms.Controls.ErrorReports
             // 
             lblHeader.AutoSize = true;
             lblHeader.Dock = DockStyle.Fill;
-            lblHeader.Font = new Font("Segoe UI Emoji", 12F, FontStyle.Bold, GraphicsUnit.Point);
+            lblHeader.Font = new Font("Segoe UI Emoji", 12F, FontStyle.Bold);
             lblHeader.Location = new Point(4, 0);
             lblHeader.Margin = new Padding(4, 0, 4, 8);
             lblHeader.Name = "lblHeader";
@@ -113,9 +112,9 @@ namespace MTM_WIP_Application_Winforms.Controls.ErrorReports
             // tableLayoutMetadata
             // 
             tableLayoutMetadata.ColumnCount = 4;
-            tableLayoutMetadata.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
+            tableLayoutMetadata.ColumnStyles.Add(new ColumnStyle());
             tableLayoutMetadata.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tableLayoutMetadata.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
+            tableLayoutMetadata.ColumnStyles.Add(new ColumnStyle());
             tableLayoutMetadata.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             tableLayoutMetadata.Controls.Add(lblReportId, 0, 0);
             tableLayoutMetadata.Controls.Add(txtReportId, 1, 0);
@@ -140,11 +139,11 @@ namespace MTM_WIP_Application_Winforms.Controls.ErrorReports
             tableLayoutMetadata.Margin = new Padding(4, 0, 4, 8);
             tableLayoutMetadata.Name = "tableLayoutMetadata";
             tableLayoutMetadata.RowCount = 5;
-            tableLayoutMetadata.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            tableLayoutMetadata.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            tableLayoutMetadata.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            tableLayoutMetadata.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-            tableLayoutMetadata.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            tableLayoutMetadata.RowStyles.Add(new RowStyle());
+            tableLayoutMetadata.RowStyles.Add(new RowStyle());
+            tableLayoutMetadata.RowStyles.Add(new RowStyle());
+            tableLayoutMetadata.RowStyles.Add(new RowStyle());
+            tableLayoutMetadata.RowStyles.Add(new RowStyle());
             tableLayoutMetadata.Size = new Size(952, 140);
             tableLayoutMetadata.TabIndex = 1;
             // 
@@ -152,9 +151,11 @@ namespace MTM_WIP_Application_Winforms.Controls.ErrorReports
             // 
             lblReportId.Anchor = AnchorStyles.Left;
             lblReportId.AutoSize = true;
+            lblReportId.Location = new Point(0, 4);
             lblReportId.Margin = new Padding(0, 0, 6, 6);
             lblReportId.Name = "lblReportId";
-            lblReportId.Size = new Size(63, 15);
+            lblReportId.Size = new Size(59, 15);
+            lblReportId.TabIndex = 0;
             lblReportId.Text = "Report ID:";
             // 
             // txtReportId
@@ -162,18 +163,23 @@ namespace MTM_WIP_Application_Winforms.Controls.ErrorReports
             txtReportId.BackColor = Color.White;
             txtReportId.BorderStyle = BorderStyle.FixedSingle;
             txtReportId.Dock = DockStyle.Fill;
+            txtReportId.Location = new Point(93, 0);
             txtReportId.Margin = new Padding(0, 0, 12, 6);
             txtReportId.Name = "txtReportId";
             txtReportId.ReadOnly = true;
+            txtReportId.Size = new Size(369, 23);
+            txtReportId.TabIndex = 1;
             txtReportId.TabStop = false;
             // 
             // lblReportDate
             // 
             lblReportDate.Anchor = AnchorStyles.Left;
             lblReportDate.AutoSize = true;
+            lblReportDate.Location = new Point(474, 4);
             lblReportDate.Margin = new Padding(0, 0, 6, 6);
             lblReportDate.Name = "lblReportDate";
-            lblReportDate.Size = new Size(75, 15);
+            lblReportDate.Size = new Size(72, 15);
+            lblReportDate.TabIndex = 2;
             lblReportDate.Text = "Date / Time:";
             // 
             // txtReportDate
@@ -181,18 +187,23 @@ namespace MTM_WIP_Application_Winforms.Controls.ErrorReports
             txtReportDate.BackColor = Color.White;
             txtReportDate.BorderStyle = BorderStyle.FixedSingle;
             txtReportDate.Dock = DockStyle.Fill;
+            txtReportDate.Location = new Point(571, 0);
             txtReportDate.Margin = new Padding(0, 0, 0, 6);
             txtReportDate.Name = "txtReportDate";
             txtReportDate.ReadOnly = true;
+            txtReportDate.Size = new Size(381, 23);
+            txtReportDate.TabIndex = 3;
             txtReportDate.TabStop = false;
             // 
             // lblUserName
             // 
             lblUserName.Anchor = AnchorStyles.Left;
             lblUserName.AutoSize = true;
+            lblUserName.Location = new Point(0, 33);
             lblUserName.Margin = new Padding(0, 0, 6, 6);
             lblUserName.Name = "lblUserName";
             lblUserName.Size = new Size(68, 15);
+            lblUserName.TabIndex = 4;
             lblUserName.Text = "User Name:";
             // 
             // txtUserName
@@ -200,18 +211,23 @@ namespace MTM_WIP_Application_Winforms.Controls.ErrorReports
             txtUserName.BackColor = Color.White;
             txtUserName.BorderStyle = BorderStyle.FixedSingle;
             txtUserName.Dock = DockStyle.Fill;
+            txtUserName.Location = new Point(93, 29);
             txtUserName.Margin = new Padding(0, 0, 12, 6);
             txtUserName.Name = "txtUserName";
             txtUserName.ReadOnly = true;
+            txtUserName.Size = new Size(369, 23);
+            txtUserName.TabIndex = 5;
             txtUserName.TabStop = false;
             // 
             // lblMachineName
             // 
             lblMachineName.Anchor = AnchorStyles.Left;
             lblMachineName.AutoSize = true;
+            lblMachineName.Location = new Point(474, 33);
             lblMachineName.Margin = new Padding(0, 0, 6, 6);
             lblMachineName.Name = "lblMachineName";
-            lblMachineName.Size = new Size(86, 15);
+            lblMachineName.Size = new Size(91, 15);
+            lblMachineName.TabIndex = 6;
             lblMachineName.Text = "Machine Name:";
             // 
             // txtMachineName
@@ -219,18 +235,23 @@ namespace MTM_WIP_Application_Winforms.Controls.ErrorReports
             txtMachineName.BackColor = Color.White;
             txtMachineName.BorderStyle = BorderStyle.FixedSingle;
             txtMachineName.Dock = DockStyle.Fill;
+            txtMachineName.Location = new Point(571, 29);
             txtMachineName.Margin = new Padding(0, 0, 0, 6);
             txtMachineName.Name = "txtMachineName";
             txtMachineName.ReadOnly = true;
+            txtMachineName.Size = new Size(381, 23);
+            txtMachineName.TabIndex = 7;
             txtMachineName.TabStop = false;
             // 
             // lblAppVersion
             // 
             lblAppVersion.Anchor = AnchorStyles.Left;
             lblAppVersion.AutoSize = true;
+            lblAppVersion.Location = new Point(0, 62);
             lblAppVersion.Margin = new Padding(0, 0, 6, 6);
             lblAppVersion.Name = "lblAppVersion";
-            lblAppVersion.Size = new Size(76, 15);
+            lblAppVersion.Size = new Size(73, 15);
+            lblAppVersion.TabIndex = 8;
             lblAppVersion.Text = "App Version:";
             // 
             // txtAppVersion
@@ -238,18 +259,23 @@ namespace MTM_WIP_Application_Winforms.Controls.ErrorReports
             txtAppVersion.BackColor = Color.White;
             txtAppVersion.BorderStyle = BorderStyle.FixedSingle;
             txtAppVersion.Dock = DockStyle.Fill;
+            txtAppVersion.Location = new Point(93, 58);
             txtAppVersion.Margin = new Padding(0, 0, 12, 6);
             txtAppVersion.Name = "txtAppVersion";
             txtAppVersion.ReadOnly = true;
+            txtAppVersion.Size = new Size(369, 23);
+            txtAppVersion.TabIndex = 9;
             txtAppVersion.TabStop = false;
             // 
             // lblErrorType
             // 
             lblErrorType.Anchor = AnchorStyles.Left;
             lblErrorType.AutoSize = true;
+            lblErrorType.Location = new Point(474, 62);
             lblErrorType.Margin = new Padding(0, 0, 6, 6);
             lblErrorType.Name = "lblErrorType";
             lblErrorType.Size = new Size(63, 15);
+            lblErrorType.TabIndex = 10;
             lblErrorType.Text = "Error Type:";
             // 
             // txtErrorType
@@ -257,18 +283,23 @@ namespace MTM_WIP_Application_Winforms.Controls.ErrorReports
             txtErrorType.BackColor = Color.White;
             txtErrorType.BorderStyle = BorderStyle.FixedSingle;
             txtErrorType.Dock = DockStyle.Fill;
+            txtErrorType.Location = new Point(571, 58);
             txtErrorType.Margin = new Padding(0, 0, 0, 6);
             txtErrorType.Name = "txtErrorType";
             txtErrorType.ReadOnly = true;
+            txtErrorType.Size = new Size(381, 23);
+            txtErrorType.TabIndex = 11;
             txtErrorType.TabStop = false;
             // 
             // lblStatus
             // 
             lblStatus.Anchor = AnchorStyles.Left;
             lblStatus.AutoSize = true;
+            lblStatus.Location = new Point(0, 91);
             lblStatus.Margin = new Padding(0, 0, 6, 6);
             lblStatus.Name = "lblStatus";
             lblStatus.Size = new Size(42, 15);
+            lblStatus.TabIndex = 12;
             lblStatus.Text = "Status:";
             // 
             // txtStatus
@@ -276,18 +307,23 @@ namespace MTM_WIP_Application_Winforms.Controls.ErrorReports
             txtStatus.BackColor = Color.White;
             txtStatus.BorderStyle = BorderStyle.FixedSingle;
             txtStatus.Dock = DockStyle.Fill;
+            txtStatus.Location = new Point(93, 87);
             txtStatus.Margin = new Padding(0, 0, 12, 6);
             txtStatus.Name = "txtStatus";
             txtStatus.ReadOnly = true;
+            txtStatus.Size = new Size(369, 23);
+            txtStatus.TabIndex = 13;
             txtStatus.TabStop = false;
             // 
             // lblReviewedBy
             // 
             lblReviewedBy.Anchor = AnchorStyles.Left;
             lblReviewedBy.AutoSize = true;
+            lblReviewedBy.Location = new Point(474, 91);
             lblReviewedBy.Margin = new Padding(0, 0, 6, 6);
             lblReviewedBy.Name = "lblReviewedBy";
-            lblReviewedBy.Size = new Size(77, 15);
+            lblReviewedBy.Size = new Size(76, 15);
+            lblReviewedBy.TabIndex = 14;
             lblReviewedBy.Text = "Reviewed By:";
             // 
             // txtReviewedBy
@@ -295,18 +331,23 @@ namespace MTM_WIP_Application_Winforms.Controls.ErrorReports
             txtReviewedBy.BackColor = Color.White;
             txtReviewedBy.BorderStyle = BorderStyle.FixedSingle;
             txtReviewedBy.Dock = DockStyle.Fill;
+            txtReviewedBy.Location = new Point(571, 87);
             txtReviewedBy.Margin = new Padding(0, 0, 0, 6);
             txtReviewedBy.Name = "txtReviewedBy";
             txtReviewedBy.ReadOnly = true;
+            txtReviewedBy.Size = new Size(381, 23);
+            txtReviewedBy.TabIndex = 15;
             txtReviewedBy.TabStop = false;
             // 
             // lblReviewedDate
             // 
             lblReviewedDate.Anchor = AnchorStyles.Left;
             lblReviewedDate.AutoSize = true;
+            lblReviewedDate.Location = new Point(0, 120);
             lblReviewedDate.Margin = new Padding(0, 0, 6, 0);
             lblReviewedDate.Name = "lblReviewedDate";
             lblReviewedDate.Size = new Size(87, 15);
+            lblReviewedDate.TabIndex = 16;
             lblReviewedDate.Text = "Reviewed Date:";
             // 
             // txtReviewedDate
@@ -315,16 +356,19 @@ namespace MTM_WIP_Application_Winforms.Controls.ErrorReports
             txtReviewedDate.BorderStyle = BorderStyle.FixedSingle;
             tableLayoutMetadata.SetColumnSpan(txtReviewedDate, 3);
             txtReviewedDate.Dock = DockStyle.Fill;
-            txtReviewedDate.Margin = new Padding(0, 0, 0, 0);
+            txtReviewedDate.Location = new Point(93, 116);
+            txtReviewedDate.Margin = new Padding(0);
             txtReviewedDate.Name = "txtReviewedDate";
             txtReviewedDate.ReadOnly = true;
+            txtReviewedDate.Size = new Size(859, 23);
+            txtReviewedDate.TabIndex = 17;
             txtReviewedDate.TabStop = false;
             // 
             // grpErrorSummary
             // 
             grpErrorSummary.Controls.Add(txtErrorSummary);
             grpErrorSummary.Dock = DockStyle.Fill;
-            grpErrorSummary.Font = new Font("Segoe UI Emoji", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            grpErrorSummary.Font = new Font("Segoe UI Emoji", 9F, FontStyle.Bold);
             grpErrorSummary.Location = new Point(4, 177);
             grpErrorSummary.Margin = new Padding(4, 0, 4, 8);
             grpErrorSummary.Name = "grpErrorSummary";
@@ -339,18 +383,21 @@ namespace MTM_WIP_Application_Winforms.Controls.ErrorReports
             txtErrorSummary.BackColor = Color.White;
             txtErrorSummary.BorderStyle = BorderStyle.FixedSingle;
             txtErrorSummary.Dock = DockStyle.Fill;
+            txtErrorSummary.Location = new Point(8, 24);
             txtErrorSummary.Margin = new Padding(0);
             txtErrorSummary.Multiline = true;
             txtErrorSummary.Name = "txtErrorSummary";
             txtErrorSummary.ReadOnly = true;
             txtErrorSummary.ScrollBars = ScrollBars.Vertical;
+            txtErrorSummary.Size = new Size(936, 80);
+            txtErrorSummary.TabIndex = 0;
             txtErrorSummary.TabStop = false;
             // 
             // grpUserNotes
             // 
             grpUserNotes.Controls.Add(txtUserNotes);
             grpUserNotes.Dock = DockStyle.Fill;
-            grpUserNotes.Font = new Font("Segoe UI Emoji", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            grpUserNotes.Font = new Font("Segoe UI Emoji", 9F, FontStyle.Bold);
             grpUserNotes.Location = new Point(4, 297);
             grpUserNotes.Margin = new Padding(4, 0, 4, 8);
             grpUserNotes.Name = "grpUserNotes";
@@ -365,11 +412,14 @@ namespace MTM_WIP_Application_Winforms.Controls.ErrorReports
             txtUserNotes.BackColor = Color.FromArgb(255, 250, 205);
             txtUserNotes.BorderStyle = BorderStyle.FixedSingle;
             txtUserNotes.Dock = DockStyle.Fill;
+            txtUserNotes.Location = new Point(8, 24);
             txtUserNotes.Margin = new Padding(0);
             txtUserNotes.Multiline = true;
             txtUserNotes.Name = "txtUserNotes";
             txtUserNotes.ReadOnly = true;
             txtUserNotes.ScrollBars = ScrollBars.Vertical;
+            txtUserNotes.Size = new Size(936, 110);
+            txtUserNotes.TabIndex = 0;
             txtUserNotes.TabStop = false;
             // 
             // tableLayoutDetails
@@ -387,15 +437,15 @@ namespace MTM_WIP_Application_Winforms.Controls.ErrorReports
             tableLayoutDetails.RowCount = 2;
             tableLayoutDetails.RowStyles.Add(new RowStyle(SizeType.Absolute, 120F));
             tableLayoutDetails.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutDetails.Size = new Size(952, 170);
+            tableLayoutDetails.Size = new Size(952, 172);
             tableLayoutDetails.TabIndex = 4;
             // 
             // grpDeveloperNotes
             // 
-            grpDeveloperNotes.Controls.Add(txtDeveloperNotes);
             tableLayoutDetails.SetColumnSpan(grpDeveloperNotes, 2);
+            grpDeveloperNotes.Controls.Add(txtDeveloperNotes);
             grpDeveloperNotes.Dock = DockStyle.Fill;
-            grpDeveloperNotes.Font = new Font("Segoe UI Emoji", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            grpDeveloperNotes.Font = new Font("Segoe UI Emoji", 9F, FontStyle.Bold);
             grpDeveloperNotes.Location = new Point(0, 0);
             grpDeveloperNotes.Margin = new Padding(0, 0, 0, 8);
             grpDeveloperNotes.Name = "grpDeveloperNotes";
@@ -410,23 +460,26 @@ namespace MTM_WIP_Application_Winforms.Controls.ErrorReports
             txtDeveloperNotes.BackColor = Color.White;
             txtDeveloperNotes.BorderStyle = BorderStyle.FixedSingle;
             txtDeveloperNotes.Dock = DockStyle.Fill;
+            txtDeveloperNotes.Location = new Point(8, 24);
             txtDeveloperNotes.Margin = new Padding(0);
             txtDeveloperNotes.Multiline = true;
             txtDeveloperNotes.Name = "txtDeveloperNotes";
             txtDeveloperNotes.ReadOnly = true;
             txtDeveloperNotes.ScrollBars = ScrollBars.Vertical;
+            txtDeveloperNotes.Size = new Size(936, 80);
+            txtDeveloperNotes.TabIndex = 0;
             txtDeveloperNotes.TabStop = false;
             // 
             // grpTechnicalDetails
             // 
             grpTechnicalDetails.Controls.Add(txtTechnicalDetails);
             grpTechnicalDetails.Dock = DockStyle.Fill;
-            grpTechnicalDetails.Font = new Font("Segoe UI Emoji", 9F, FontStyle.Bold, GraphicsUnit.Point);
+            grpTechnicalDetails.Font = new Font("Segoe UI Emoji", 9F, FontStyle.Bold);
             grpTechnicalDetails.Location = new Point(0, 120);
             grpTechnicalDetails.Margin = new Padding(0, 0, 4, 0);
             grpTechnicalDetails.Name = "grpTechnicalDetails";
             grpTechnicalDetails.Padding = new Padding(8);
-            grpTechnicalDetails.Size = new Size(472, 50);
+            grpTechnicalDetails.Size = new Size(472, 52);
             grpTechnicalDetails.TabIndex = 1;
             grpTechnicalDetails.TabStop = false;
             grpTechnicalDetails.Text = "Technical Details";
@@ -436,24 +489,27 @@ namespace MTM_WIP_Application_Winforms.Controls.ErrorReports
             txtTechnicalDetails.BorderStyle = BorderStyle.FixedSingle;
             txtTechnicalDetails.DetectUrls = false;
             txtTechnicalDetails.Dock = DockStyle.Fill;
-            txtTechnicalDetails.Font = new Font("Consolas", 9F, FontStyle.Regular, GraphicsUnit.Point);
+            txtTechnicalDetails.Font = new Font("Consolas", 9F);
+            txtTechnicalDetails.Location = new Point(8, 24);
             txtTechnicalDetails.Margin = new Padding(0);
             txtTechnicalDetails.Name = "txtTechnicalDetails";
             txtTechnicalDetails.ReadOnly = true;
-            txtTechnicalDetails.ScrollBars = RichTextBoxScrollBars.Both;
-            txtTechnicalDetails.WordWrap = false;
+            txtTechnicalDetails.Size = new Size(456, 20);
+            txtTechnicalDetails.TabIndex = 0;
             txtTechnicalDetails.TabStop = false;
+            txtTechnicalDetails.Text = "";
+            txtTechnicalDetails.WordWrap = false;
             // 
             // grpCallStack
             // 
             grpCallStack.Controls.Add(txtCallStack);
             grpCallStack.Dock = DockStyle.Fill;
-            grpCallStack.Font = new Font("Segoe UI Emoji", 9F, FontStyle.Bold, GraphicsUnit.Point);
-            grpCallStack.Location = new Point(476, 120);
+            grpCallStack.Font = new Font("Segoe UI Emoji", 9F, FontStyle.Bold);
+            grpCallStack.Location = new Point(480, 120);
             grpCallStack.Margin = new Padding(4, 0, 0, 0);
             grpCallStack.Name = "grpCallStack";
             grpCallStack.Padding = new Padding(8);
-            grpCallStack.Size = new Size(476, 50);
+            grpCallStack.Size = new Size(472, 52);
             grpCallStack.TabIndex = 2;
             grpCallStack.TabStop = false;
             grpCallStack.Text = "Call Stack";
@@ -463,13 +519,16 @@ namespace MTM_WIP_Application_Winforms.Controls.ErrorReports
             txtCallStack.BorderStyle = BorderStyle.FixedSingle;
             txtCallStack.DetectUrls = false;
             txtCallStack.Dock = DockStyle.Fill;
-            txtCallStack.Font = new Font("Consolas", 9F, FontStyle.Regular, GraphicsUnit.Point);
+            txtCallStack.Font = new Font("Consolas", 9F);
+            txtCallStack.Location = new Point(8, 24);
             txtCallStack.Margin = new Padding(0);
             txtCallStack.Name = "txtCallStack";
             txtCallStack.ReadOnly = true;
-            txtCallStack.ScrollBars = RichTextBoxScrollBars.Both;
-            txtCallStack.WordWrap = false;
+            txtCallStack.Size = new Size(456, 20);
+            txtCallStack.TabIndex = 0;
             txtCallStack.TabStop = false;
+            txtCallStack.Text = "";
+            txtCallStack.WordWrap = false;
             // 
             // flowButtons
             // 
@@ -480,22 +539,22 @@ namespace MTM_WIP_Application_Winforms.Controls.ErrorReports
             flowButtons.Controls.Add(btnMarkReviewed);
             flowButtons.Dock = DockStyle.Fill;
             flowButtons.FlowDirection = FlowDirection.RightToLeft;
-            flowButtons.Location = new Point(4, 625);
+            flowButtons.Location = new Point(4, 627);
             flowButtons.Margin = new Padding(4, 0, 4, 0);
             flowButtons.Name = "flowButtons";
             flowButtons.Padding = new Padding(0, 8, 0, 8);
-            flowButtons.Size = new Size(952, 55);
+            flowButtons.Size = new Size(952, 53);
             flowButtons.TabIndex = 5;
             // 
             // btnExportReport
             // 
             btnExportReport.AutoSize = true;
             btnExportReport.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            btnExportReport.Location = new Point(832, 8);
+            btnExportReport.Location = new Point(840, 8);
             btnExportReport.Margin = new Padding(4, 0, 0, 0);
             btnExportReport.Name = "btnExportReport";
             btnExportReport.Padding = new Padding(12, 6, 12, 6);
-            btnExportReport.Size = new Size(120, 34);
+            btnExportReport.Size = new Size(112, 37);
             btnExportReport.TabIndex = 0;
             btnExportReport.Text = "Export Report";
             btnExportReport.UseVisualStyleBackColor = true;
@@ -509,7 +568,7 @@ namespace MTM_WIP_Application_Winforms.Controls.ErrorReports
             btnCopyAll.Margin = new Padding(4, 0, 4, 0);
             btnCopyAll.Name = "btnCopyAll";
             btnCopyAll.Padding = new Padding(12, 6, 12, 6);
-            btnCopyAll.Size = new Size(110, 34);
+            btnCopyAll.Size = new Size(124, 37);
             btnCopyAll.TabIndex = 1;
             btnCopyAll.Text = "Copy All Details";
             btnCopyAll.UseVisualStyleBackColor = true;
@@ -519,11 +578,11 @@ namespace MTM_WIP_Application_Winforms.Controls.ErrorReports
             // 
             btnMarkResolved.AutoSize = true;
             btnMarkResolved.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            btnMarkResolved.Location = new Point(584, 8);
+            btnMarkResolved.Location = new Point(568, 8);
             btnMarkResolved.Margin = new Padding(4, 0, 4, 0);
             btnMarkResolved.Name = "btnMarkResolved";
             btnMarkResolved.Padding = new Padding(12, 6, 12, 6);
-            btnMarkResolved.Size = new Size(116, 34);
+            btnMarkResolved.Size = new Size(132, 37);
             btnMarkResolved.TabIndex = 2;
             btnMarkResolved.Text = "Mark as Resolved";
             btnMarkResolved.UseVisualStyleBackColor = true;
@@ -534,11 +593,11 @@ namespace MTM_WIP_Application_Winforms.Controls.ErrorReports
             // 
             btnMarkReviewed.AutoSize = true;
             btnMarkReviewed.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            btnMarkReviewed.Location = new Point(444, 8);
+            btnMarkReviewed.Location = new Point(425, 8);
             btnMarkReviewed.Margin = new Padding(4, 0, 4, 0);
             btnMarkReviewed.Name = "btnMarkReviewed";
             btnMarkReviewed.Padding = new Padding(12, 6, 12, 6);
-            btnMarkReviewed.Size = new Size(132, 34);
+            btnMarkReviewed.Size = new Size(135, 37);
             btnMarkReviewed.TabIndex = 3;
             btnMarkReviewed.Text = "Mark as Reviewed";
             btnMarkReviewed.UseVisualStyleBackColor = true;

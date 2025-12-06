@@ -57,7 +57,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Splash
             _mainLayout.RowStyles.Add(new RowStyle());
             _mainLayout.RowStyles.Add(new RowStyle());
             _mainLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            _mainLayout.Size = new Size(862, 379);
+            _mainLayout.Size = new Size(666, 336);
             _mainLayout.TabIndex = 0;
             // 
             // _headerLayout
@@ -81,7 +81,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Splash
             _headerLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
             _headerLayout.RowStyles.Add(new RowStyle());
             _headerLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
-            _headerLayout.Size = new Size(854, 187);
+            _headerLayout.Size = new Size(658, 187);
             _headerLayout.TabIndex = 0;
             // 
             // _logoBox
@@ -106,7 +106,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Splash
             _titleLabel.Location = new Point(283, 38);
             _titleLabel.Margin = new Padding(4);
             _titleLabel.Name = "_titleLabel";
-            _titleLabel.Size = new Size(564, 48);
+            _titleLabel.Size = new Size(368, 48);
             _titleLabel.TabIndex = 1;
             _titleLabel.Text = "Manitowoc Tool and Manufacturing\r\nWork in Progress Application";
             _titleLabel.TextAlign = ContentAlignment.MiddleCenter;
@@ -120,7 +120,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Splash
             _versionLabel.Location = new Point(283, 125);
             _versionLabel.Margin = new Padding(4);
             _versionLabel.Name = "_versionLabel";
-            _versionLabel.Size = new Size(564, 24);
+            _versionLabel.Size = new Size(368, 24);
             _versionLabel.TabIndex = 2;
             _versionLabel.Text = "18.3.0.0";
             _versionLabel.TextAlign = ContentAlignment.MiddleCenter;
@@ -135,7 +135,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Splash
             _progressControl.Margin = new Padding(9);
             _progressControl.Name = "_progressControl";
             _progressControl.Padding = new Padding(3);
-            _progressControl.Size = new Size(844, 123);
+            _progressControl.Size = new Size(648, 123);
             _progressControl.TabIndex = 1;
             // 
             // _mainPanel
@@ -146,7 +146,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Splash
             _mainPanel.Location = new Point(0, 0);
             _mainPanel.Margin = new Padding(4);
             _mainPanel.Name = "_mainPanel";
-            _mainPanel.Size = new Size(862, 379);
+            _mainPanel.Size = new Size(666, 336);
             _mainPanel.TabIndex = 1;
             // 
             // SplashScreenForm
@@ -155,7 +155,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Splash
             AutoScaleMode = AutoScaleMode.Dpi;
             AutoSize = true;
             BackColor = Color.FromArgb(30, 30, 30);
-            ClientSize = new Size(862, 379);
+            ClientSize = new Size(666, 336);
             Controls.Add(_mainPanel);
             FormBorderStyle = FormBorderStyle.None;
             Margin = new Padding(4);
