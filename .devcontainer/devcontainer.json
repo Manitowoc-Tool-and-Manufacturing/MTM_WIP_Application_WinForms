@@ -1,3 +1,4 @@
+
 {
   "name": "MTM WIP Application (with MySQL 5.7.24)",
   "dockerComposeFile": "docker-compose.yml",

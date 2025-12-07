@@ -1,12 +1,12 @@
 FROM mcr.microsoft.com/devcontainers/dotnet:1-8.0
 
-# Install Python 3.12
+# Install Python 3 and MySQL client
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && apt-get -y install --no-install-recommends \
-    python3.12 \
+    python3 \
     python3-pip \
     python3-venv \
-    mysql-client \
+    default-mysql-client \
     && apt-get clean -y && rm -rf /var/lib/apt/lists/*
 
 # Install PowerShell

@@ -19,6 +19,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
         private Control_ReceivingAnalytics? _controlReceivingAnalytics;
         private Control_VisualInventory? _controlVisualInventory;
         private Control_InventoryAudit? _controlInventoryAudit;
+        private Control_VisualUserAnalytics? _controlVisualUserAnalytics;
         #endregion
 
         #region Properties
@@ -271,8 +272,6 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
                 await LoadCategoryDataAsync(category);
             }
         }
-
-
         #endregion
 
         #region Helpers
@@ -309,17 +308,15 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             EnsureInventoryAuditControl();
             HideAllCustomControls(_controlInventoryAudit);
             _controlInventoryAudit!.Visible = true;
-            _controlInventoryAudit.SelectLifecycleTab();
             CenterFormOnScreen();
         }
 
         private void ShowMaterialHandlerAnalyticsControl()
         {
             HideGenericControls();
-            EnsureInventoryAuditControl();
-            HideAllCustomControls(_controlInventoryAudit);
-            _controlInventoryAudit!.Visible = true;
-            _controlInventoryAudit.SelectUserAnalyticsTab();
+            EnsureVisualUserAnalyticsControl();
+            HideAllCustomControls(_controlVisualUserAnalytics);
+            _controlVisualUserAnalytics!.Visible = true;
             CenterFormOnScreen();
         }
 
@@ -353,6 +350,11 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             if (_controlInventoryAudit != null)
             {
                 _controlInventoryAudit.Visible = _controlInventoryAudit == exception;
+            }
+
+            if (_controlVisualUserAnalytics != null)
+            {
+                _controlVisualUserAnalytics.Visible = _controlVisualUserAnalytics == exception;
             }
         }
 
@@ -404,19 +406,16 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             _controlInventoryAudit.BringToFront();
         }
 
-        private string GetCategoryTitle(Enum_VisualDashboardCategory category)
+        private void EnsureVisualUserAnalyticsControl()
         {
-            return category switch
+            if (_controlVisualUserAnalytics != null)
             {
-                Enum_VisualDashboardCategory.Inventory => "Inventory",
-                Enum_VisualDashboardCategory.Receiving => "Receiving",
-                Enum_VisualDashboardCategory.Shipping => "Shipping",
-                Enum_VisualDashboardCategory.InventoryAuditing => "Inventory Auditing",
-                Enum_VisualDashboardCategory.DieToolDiscovery => "Die Tool Discovery",
-                Enum_VisualDashboardCategory.MaterialHandlerAnalytics_General => "MH Analytics (General)",
-                Enum_VisualDashboardCategory.MaterialHandlerAnalytics_Team => "MH Analytics (Team)",
-                _ => "Dashboard"
-            };
+                return;
+            }
+
+            _controlVisualUserAnalytics = new Control_VisualUserAnalytics { Dock = DockStyle.Fill };
+            InforVisualDashboard_Panel_Content.Controls.Add(_controlVisualUserAnalytics);
+            _controlVisualUserAnalytics.BringToFront();
         }
 
         /// <summary>
