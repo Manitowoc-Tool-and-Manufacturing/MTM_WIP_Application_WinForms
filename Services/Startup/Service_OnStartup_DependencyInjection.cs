@@ -39,6 +39,13 @@ namespace MTM_WIP_Application_Winforms.Services.Startup
                 services.AddTransient<MTM_WIP_Application_Winforms.Data.IDao_VisualAnalytics, MTM_WIP_Application_Winforms.Data.Dao_VisualAnalytics>();
                 services.AddTransient<MTM_WIP_Application_Winforms.Services.Analytics.IService_UserShiftLogic, MTM_WIP_Application_Winforms.Services.Analytics.Service_UserShiftLogic>();
 
+                // Register Feedback Services
+                services.AddTransient<IDao_UserFeedback, Dao_UserFeedback>();
+                services.AddTransient<IDao_UserFeedbackComments, Dao_UserFeedbackComments>();
+                services.AddTransient<IDao_WindowFormMapping, Dao_WindowFormMapping>();
+                services.AddTransient<IDao_UserControlMapping, Dao_UserControlMapping>();
+                services.AddTransient<MTM_WIP_Application_Winforms.Services.IService_FeedbackManager, MTM_WIP_Application_Winforms.Services.Service_FeedbackManager>();
+
                 // Build the service provider
                 ServiceProvider serviceProvider = services.BuildServiceProvider();
 

@@ -4,6 +4,7 @@ using MTM_WIP_Application_Winforms.Services.Help;
 using MTM_WIP_Application_Winforms.Services;
 using MTM_WIP_Application_Winforms.Models.Help;
 using MTM_WIP_Application_Winforms.Services.Logging;
+using System.Text.Json;
 
 namespace MTM_WIP_Application_Winforms.Forms.Help
 {
@@ -123,14 +124,30 @@ namespace MTM_WIP_Application_Winforms.Forms.Help
             try
             {
                 string json = e.TryGetWebMessageAsString();
-                if (json.Contains("\"type\":\"search\""))
+                if (string.IsNullOrEmpty(json)) return;
+
+                using JsonDocument doc = JsonDocument.Parse(json);
+                JsonElement root = doc.RootElement;
+
+                if (root.TryGetProperty("type", out JsonElement typeElement))
                 {
-                    int queryStartIndex = json.IndexOf("\"query\":\"") + 9;
-                    int queryEndIndex = json.LastIndexOf('\"');
-                    if (queryStartIndex > 8 && queryEndIndex > queryStartIndex)
+                    string type = typeElement.GetString() ?? string.Empty;
+
+                    switch (type)
                     {
-                        string query = json.Substring(queryStartIndex, queryEndIndex - queryStartIndex);
-                        PerformSearch(query);
+                        case "search":
+                            if (root.TryGetProperty("query", out JsonElement queryElement))
+                            {
+                                PerformSearch(queryElement.GetString() ?? string.Empty);
+                            }
+                            break;
+
+                        case "submitFeedback":
+                            if (root.TryGetProperty("data", out JsonElement dataElement))
+                            {
+                                HandleFeedbackSubmission(dataElement);
+                            }
+                            break;
                     }
                 }
             }
@@ -138,6 +155,16 @@ namespace MTM_WIP_Application_Winforms.Forms.Help
             {
                 LoggingUtility.LogApplicationError(ex);
             }
+        }
+
+        /// <summary>
+        /// Handles feedback submission from the help viewer.
+        /// </summary>
+        /// <param name="data">The feedback data.</param>
+        private void HandleFeedbackSubmission(JsonElement data)
+        {
+            // Scaffolding for Phase 6
+            LoggingUtility.Log("Feedback submission received (scaffolding)");
         }
 
         /// <summary>

@@ -3,54 +3,54 @@
 ## Phases
 
 ### Phase 1 – Setup
-- [ ] T001 Ensure MySQL 5.7.24 reachable (localhost:3306, root/root) and WebView2 runtime installed (manual check)
-  - [ ] T001.1 Verify MySQL connection: `& "C:\MAMP\bin\mysql\bin\mysql.exe" -h localhost -P 3306 -u root -proot -e "SELECT VERSION();"`
-  - [ ] T001.2 Verify WebView2 runtime installed via registry or test app launch
-  - [ ] T001.3 Document any missing prerequisites in quickstart.md
-- [ ] T002 Restore/build solution: `dotnet build MTM_WIP_Application_Winforms.csproj -c Debug`
-  - [ ] T002.1 Run `dotnet restore MTM_WIP_Application_Winforms.csproj`
-  - [ ] T002.2 Run `dotnet build MTM_WIP_Application_Winforms.csproj -c Debug`
-  - [ ] T002.3 Verify zero errors before proceeding
-- [ ] T003 Create feature DB scripts staging area under Database/UpdatedStoredProcedures/feedback and Database/UpdatedStoredProcedures/system (no code changes yet)
-  - [ ] T003.1 Create folder `Database/UpdatedStoredProcedures/feedback/`
-  - [ ] T003.2 Create folder `Database/UpdatedStoredProcedures/system/` (if not exists)
-  - [ ] T003.3 Add placeholder README.md in each folder documenting purpose
+- [X] T001 Ensure MySQL 5.7.24 reachable (localhost:3306, root/root) and WebView2 runtime installed (manual check)
+  - [X] T001.1 Verify MySQL connection: `& "C:\MAMP\bin\mysql\bin\mysql.exe" -h localhost -P 3306 -u root -proot -e "SELECT VERSION();"`
+  - [X] T001.2 Verify WebView2 runtime installed via registry or test app launch
+  - [X] T001.3 Document any missing prerequisites in quickstart.md
+- [X] T002 Restore/build solution: `dotnet build MTM_WIP_Application_Winforms.csproj -c Debug`
+  - [X] T002.1 Run `dotnet restore MTM_WIP_Application_Winforms.csproj`
+  - [X] T002.2 Run `dotnet build MTM_WIP_Application_Winforms.csproj -c Debug`
+  - [X] T002.3 Verify zero errors before proceeding
+- [X] T003 Create feature DB scripts staging area under Database/UpdatedStoredProcedures/feedback and Database/UpdatedStoredProcedures/system (no code changes yet)
+  - [X] T003.1 Create folder `Database/UpdatedStoredProcedures/feedback/`
+  - [X] T003.2 Create folder `Database/UpdatedStoredProcedures/system/` (if not exists)
+  - [X] T003.3 Add placeholder README.md in each folder documenting purpose
 
 ### Phase 2 – Foundational (blocking)
-- [ ] T004 Add DDL scripts for new tables (UserFeedback, UserFeedbackComments, WindowFormMapping, UserControlMapping, TrackingNumberSequence, EmailNotificationConfig) in Database/UpdatedDatabase/ with MySQL 5.7.24 syntax
-  - [ ] T004.1 Create `schema_user_feedback.sql` with UserFeedback table (all columns from spec: FeedbackID, FeedbackType, TrackingNumber, UserID, timestamps, metadata, content fields, status fields, duplicate tracking); include UNIQUE constraint on TrackingNumber, FK to usr_users
-  - [ ] T004.2 Create `schema_user_feedback_comments.sql` with UserFeedbackComments table (CommentID, FeedbackID FK, UserID FK, CommentDateTime, CommentText, IsInternalNote); include CASCADE DELETE on FeedbackID
-  - [ ] T004.3 Create `schema_window_form_mapping.sql` with WindowFormMapping table (MappingID, CodebaseName UNIQUE, UserFriendlyName, IsActive, timestamps)
-  - [ ] T004.4 Create `schema_user_control_mapping.sql` with UserControlMapping table (MappingID, WindowFormMappingID FK, CodebaseName, UserFriendlyName, IsActive, timestamps); include CASCADE DELETE
-  - [ ] T004.5 Create `schema_tracking_number_sequence.sql` with TrackingNumberSequence table (SequenceID, FeedbackType, Year, NextNumber, LastGeneratedDateTime); include UNIQUE constraint on (FeedbackType, Year)
-  - [ ] T004.6 Create `schema_email_notification_config.sql` with EmailNotificationConfig table (ConfigID, FeedbackCategory UNIQUE, RecipientEmails, IsActive, timestamps)
-  - [ ] T004.7 Create indexes per spec: IX_UserFeedback_UserID, IX_UserFeedback_Status, IX_UserFeedback_FeedbackType, IX_UserFeedback_SubmissionDateTime, IX_UserFeedbackComments_FeedbackID, etc.
-  - [ ] T004.8 Run all DDL scripts against mtm_wip_application_winforms database and verify tables created
-- [ ] T005 [P] Add stored procedure scripts for UserFeedback* and UserFeedbackComments* under Database/UpdatedStoredProcedures/feedback/
-  - [ ] T005.1 Create `md_feedback_Insert.sql` with all input params (FeedbackType, UserID, WindowForm, ActiveSection, Category, CustomCategory, Severity, Priority, Title, Description, StepsToReproduce, ExpectedBehavior, ActualBehavior, BusinessJustification, AffectedUsers, Location1, Location2, ExpectedConsistency, ApplicationVersion, OSVersion, MachineIdentifier) and output params (p_Status, p_ErrorMsg, p_FeedbackID, p_TrackingNumber); call sys_tracking_number_GetNext internally
-  - [ ] T005.2 Create `md_feedback_GetAll.sql` with optional filter params (FilterStatus, FilterFeedbackType, FilterUserID, FilterDateFrom, FilterDateTo, FilterAssignedDeveloperID, FilterCategory) and output params; return DataTable with user info joined
-  - [ ] T005.3 Create `md_feedback_GetByUser.sql` with UserID input and output params; return all feedback for user
-  - [ ] T005.4 Create `md_feedback_GetById.sql` with FeedbackID input and output params; return single record with user info
-  - [ ] T005.5 Create `md_feedback_UpdateStatus.sql` with FeedbackID, NewStatus, AssignedToDeveloperID (optional), DeveloperNotes (optional), ModifiedByUserID inputs and output params; update LastUpdatedDateTime; validate developer role if assigned
-  - [ ] T005.6 Create `md_feedback_MarkDuplicate.sql` with FeedbackID, DuplicateOfFeedbackID, ModifiedByUserID inputs and output params; set IsDuplicate=1 and link
-  - [ ] T005.7 Create `md_feedback_ExportToCsv.sql` with filter params and output params; return all fields for CSV export
-  - [ ] T005.8 Create `md_feedback_comment_Insert.sql` with FeedbackID, UserID, CommentText, IsInternalNote inputs and output params (p_CommentID); update parent LastUpdatedDateTime
-  - [ ] T005.9 Create `md_feedback_comment_GetByFeedbackId.sql` with FeedbackID input and output params; return comments ordered by CommentDateTime with user info
-  - [ ] T005.10 Run all stored procedure scripts and verify creation via `SHOW PROCEDURE STATUS WHERE Db = 'mtm_wip_application_winforms'`
-- [ ] T006 [P] Add stored procedure scripts for mappings/tracking/email under Database/UpdatedStoredProcedures/system/
-  - [ ] T006.1 Create `sys_windowform_mapping_GetAll.sql` with IncludeInactive optional param and output params; return active or all mappings
-  - [ ] T006.2 Create `sys_windowform_mapping_Upsert.sql` with CodebaseName, UserFriendlyName, IsActive inputs and output params (p_MappingID); insert if not exists, update if exists
-  - [ ] T006.3 Create `sys_usercontrol_mapping_GetByWindow.sql` with WindowFormMappingID, IncludeInactive inputs and output params; return controls for window
-  - [ ] T006.4 Create `sys_usercontrol_mapping_Upsert.sql` with WindowFormMappingID, CodebaseName, UserFriendlyName, IsActive inputs and output params (p_MappingID)
-  - [ ] T006.5 Create `sys_tracking_number_GetNext.sql` with FeedbackType, Year inputs and output params (p_TrackingNumber); implement atomic increment with transaction + row lock; format as {PREFIX}-{YEAR}-{SEQUENCE}; handle collision with retry up to 3 times
-  - [ ] T006.6 Create `sys_email_notification_GetRecipients.sql` with FeedbackCategory input and output params (p_RecipientEmails); fall back to 'All' category if specific not found
-  - [ ] T006.7 Create `sys_email_notification_Upsert.sql` with FeedbackCategory, RecipientEmails, IsActive inputs and output params
-  - [ ] T006.8 Run all stored procedure scripts and verify creation
-- [ ] T007 Seed initial WindowFormMapping/UserControlMapping and EmailNotificationConfig data via migration script in Database/UpdatedDatabase/
-  - [ ] T007.1 Create `seed_window_form_mapping.sql` with INSERT statements for all forms from FR-001 table: MainForm, SettingsForm, PrintForm, Transactions, TransactionLifecycleForm, Form_InforVisualDashboard, Form_WIPUserAnalytics, Form_AnalyticsViewer, Form_ViewLogsForm, Form_ViewErrorReports, SettingsForm_ViewReleaseNotesHTML, Form_QuickButtonEdit, Form_ShortcutEdit, Form_PODetails, HelpViewerForm
-  - [ ] T007.2 Create `seed_user_control_mapping.sql` with INSERT statements for all controls from FR-001 table mapped to their parent forms (Control_InventoryTab, Control_AdvancedInventory, Control_RemoveTab, Control_AdvancedRemove, Control_TransferTab, Control_About, Control_Database, Control_PartIDManagement, Control_OperationManagement, Control_LocationManagement, Control_ItemTypeManagement, Control_User_Management, Control_Shortcuts, Control_Theme)
-  - [ ] T007.3 Create `seed_email_notification_config.sql` with fallback category 'All' and any team-specific categories (e.g., 'Integration Issue (Infor Visual)')
-  - [ ] T007.4 Run seed scripts and verify data via SELECT queries
+- [X] T004 Add DDL scripts for new tables (UserFeedback, UserFeedbackComments, WindowFormMapping, UserControlMapping, TrackingNumberSequence, EmailNotificationConfig) in Database/UpdatedDatabase/ with MySQL 5.7.24 syntax
+  - [X] T004.1 Create `schema_user_feedback.sql` with UserFeedback table (all columns from spec: FeedbackID, FeedbackType, TrackingNumber, UserID, timestamps, metadata, content fields, status fields, duplicate tracking); include UNIQUE constraint on TrackingNumber, FK to usr_users
+  - [X] T004.2 Create `schema_user_feedback_comments.sql` with UserFeedbackComments table (CommentID, FeedbackID FK, UserID FK, CommentDateTime, CommentText, IsInternalNote); include CASCADE DELETE on FeedbackID
+  - [X] T004.3 Create `schema_window_form_mapping.sql` with WindowFormMapping table (MappingID, CodebaseName UNIQUE, UserFriendlyName, IsActive, timestamps)
+  - [X] T004.4 Create `schema_user_control_mapping.sql` with UserControlMapping table (MappingID, WindowFormMappingID FK, CodebaseName, UserFriendlyName, IsActive, timestamps); include CASCADE DELETE
+  - [X] T004.5 Create `schema_tracking_number_sequence.sql` with TrackingNumberSequence table (SequenceID, FeedbackType, Year, NextNumber, LastGeneratedDateTime); include UNIQUE constraint on (FeedbackType, Year)
+  - [X] T004.6 Create `schema_email_notification_config.sql` with EmailNotificationConfig table (ConfigID, FeedbackCategory UNIQUE, RecipientEmails, IsActive, timestamps)
+  - [X] T004.7 Create indexes per spec: IX_UserFeedback_UserID, IX_UserFeedback_Status, IX_UserFeedback_FeedbackType, IX_UserFeedback_SubmissionDateTime, IX_UserFeedbackComments_FeedbackID, etc.
+  - [X] T004.8 Run all DDL scripts against mtm_wip_application_winforms database and verify tables created
+- [X] T005 [P] Add stored procedure scripts for UserFeedback* and UserFeedbackComments* under Database/UpdatedStoredProcedures/feedback/
+  - [X] T005.1 Create `md_feedback_Insert.sql` with all input params (FeedbackType, UserID, WindowForm, ActiveSection, Category, CustomCategory, Severity, Priority, Title, Description, StepsToReproduce, ExpectedBehavior, ActualBehavior, BusinessJustification, AffectedUsers, Location1, Location2, ExpectedConsistency, ApplicationVersion, OSVersion, MachineIdentifier) and output params (p_Status, p_ErrorMsg, p_FeedbackID, p_TrackingNumber); call sys_tracking_number_GetNext internally
+  - [X] T005.2 Create `md_feedback_GetAll.sql` with optional filter params (FilterStatus, FilterFeedbackType, FilterUserID, FilterDateFrom, FilterDateTo, FilterAssignedDeveloperID, FilterCategory) and output params; return DataTable with user info joined
+  - [X] T005.3 Create `md_feedback_GetByUser.sql` with UserID input and output params; return all feedback for user
+  - [X] T005.4 Create `md_feedback_GetById.sql` with FeedbackID input and output params; return single record with user info
+  - [X] T005.5 Create `md_feedback_UpdateStatus.sql` with FeedbackID, NewStatus, AssignedToDeveloperID (optional), DeveloperNotes (optional), ModifiedByUserID inputs and output params; update LastUpdatedDateTime; validate developer role if assigned
+  - [X] T005.6 Create `md_feedback_MarkDuplicate.sql` with FeedbackID, DuplicateOfFeedbackID, ModifiedByUserID inputs and output params; set IsDuplicate=1 and link
+  - [X] T005.7 Create `md_feedback_ExportToCsv.sql` with filter params and output params; return all fields for CSV export
+  - [X] T005.8 Create `md_feedback_comment_Insert.sql` with FeedbackID, UserID, CommentText, IsInternalNote inputs and output params (p_CommentID); update parent LastUpdatedDateTime
+  - [X] T005.9 Create `md_feedback_comment_GetByFeedbackId.sql` with FeedbackID input and output params; return comments ordered by CommentDateTime with user info
+  - [X] T005.10 Run all stored procedure scripts and verify creation via `SHOW PROCEDURE STATUS WHERE Db = 'mtm_wip_application_winforms'`
+- [X] T006 [P] Add stored procedure scripts for mappings/tracking/email under Database/UpdatedStoredProcedures/system/
+  - [X] T006.1 Create `sys_windowform_mapping_GetAll.sql` with IncludeInactive optional param and output params; return active or all mappings
+  - [X] T006.2 Create `sys_windowform_mapping_Upsert.sql` with CodebaseName, UserFriendlyName, IsActive inputs and output params (p_MappingID); insert if not exists, update if exists
+  - [X] T006.3 Create `sys_usercontrol_mapping_GetByWindow.sql` with WindowFormMappingID, IncludeInactive inputs and output params; return controls for window
+  - [X] T006.4 Create `sys_usercontrol_mapping_Upsert.sql` with WindowFormMappingID, CodebaseName, UserFriendlyName, IsActive inputs and output params (p_MappingID)
+  - [X] T006.5 Create `sys_tracking_number_GetNext.sql` with FeedbackType, Year inputs and output params (p_TrackingNumber); implement atomic increment with transaction + row lock; format as {PREFIX}-{YEAR}-{SEQUENCE}; handle collision with retry up to 3 times
+  - [X] T006.6 Create `sys_email_notification_GetRecipients.sql` with FeedbackCategory input and output params (p_RecipientEmails); fall back to 'All' category if specific not found
+  - [X] T006.7 Create `sys_email_notification_Upsert.sql` with FeedbackCategory, RecipientEmails, IsActive inputs and output params
+  - [X] T006.8 Run all stored procedure scripts and verify creation
+- [X] T007 Seed initial WindowFormMapping/UserControlMapping and EmailNotificationConfig data via migration script in Database/UpdatedDatabase/
+  - [X] T007.1 Create `seed_window_form_mapping.sql` with INSERT statements for all forms from FR-001 table: MainForm, SettingsForm, PrintForm, Transactions, TransactionLifecycleForm, Form_InforVisualDashboard, Form_WIPUserAnalytics, Form_AnalyticsViewer, Form_ViewLogsForm, Form_ViewErrorReports, SettingsForm_ViewReleaseNotesHTML, Form_QuickButtonEdit, Form_ShortcutEdit, Form_PODetails, HelpViewerForm
+  - [X] T007.2 Create `seed_user_control_mapping.sql` with INSERT statements for all controls from FR-001 table mapped to their parent forms (Control_InventoryTab, Control_AdvancedInventory, Control_RemoveTab, Control_AdvancedRemove, Control_TransferTab, Control_About, Control_Database, Control_PartIDManagement, Control_OperationManagement, Control_LocationManagement, Control_ItemTypeManagement, Control_User_Management, Control_Shortcuts, Control_Theme)
+  - [X] T007.3 Create `seed_email_notification_config.sql` with fallback category 'All' and any team-specific categories (e.g., 'Integration Issue (Infor Visual)')
+  - [X] T007.4 Run seed scripts and verify data via SELECT queries
 - [ ] T008 Add Dao_UserFeedback and Dao_UserFeedbackComments (interface + implementation) in Data/
   - [ ] T008.1 Create `IDao_UserFeedback.cs` interface with methods: GetAllAsync(filters), GetByUserIdAsync(userId), GetByIdAsync(feedbackId), InsertAsync(model), UpdateStatusAsync(feedbackId, newStatus, assignedDeveloperId, notes, modifiedByUserId), MarkAsDuplicateAsync(feedbackId, duplicateOfId, modifiedByUserId), ExportToCsvAsync(filters)
   - [ ] T008.2 Create `Dao_UserFeedback.cs` implementation using Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync and ExecuteNonQueryWithStatusAsync; return Model_Dao_Result<T> for all methods; implement #region structure per coding standards
