@@ -196,7 +196,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             InforVisualDashboard_Button_Shipping.Text = "Shipping";
             InforVisualDashboard_Button_Shipping.TextAlign = ContentAlignment.MiddleLeft;
             InforVisualDashboard_Button_Shipping.UseVisualStyleBackColor = false;
-            InforVisualDashboard_Button_Shipping.Visible = false;
+            InforVisualDashboard_Button_Shipping.Visible = true;
             // 
             // InforVisualDashboard_Button_InventoryAuditing
             // 
@@ -239,7 +239,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             InforVisualDashboard_Button_MaterialHandlerGeneral.Text = "MH Analytics (General)";
             InforVisualDashboard_Button_MaterialHandlerGeneral.TextAlign = ContentAlignment.MiddleLeft;
             InforVisualDashboard_Button_MaterialHandlerGeneral.UseVisualStyleBackColor = false;
-            InforVisualDashboard_Button_MaterialHandlerGeneral.Visible = false;
+            InforVisualDashboard_Button_MaterialHandlerGeneral.Visible = true;
             // 
             // InforVisualDashboard_Button_MaterialHandlerTeam
             // 
@@ -254,7 +254,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             InforVisualDashboard_Button_MaterialHandlerTeam.Text = "MH Analytics (Team)";
             InforVisualDashboard_Button_MaterialHandlerTeam.TextAlign = ContentAlignment.MiddleLeft;
             InforVisualDashboard_Button_MaterialHandlerTeam.UseVisualStyleBackColor = false;
-            InforVisualDashboard_Button_MaterialHandlerTeam.Visible = false;
+            InforVisualDashboard_Button_MaterialHandlerTeam.Visible = true;
             // 
             // InforVisualDashboard
             // 
