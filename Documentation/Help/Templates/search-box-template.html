@@ -1,0 +1,17 @@
+<div class="search-container">
+    <input type="text" id="searchInput" placeholder="Search help..." 
+           style="width: 100%; padding: 8px; border: 1px solid var(--sidebar-border); border-radius: 4px; background: var(--bg-color); color: var(--text-color);">
+</div>
+<script>
+    const searchInput = document.getElementById('searchInput');
+    let debounceTimer;
+    
+    searchInput.addEventListener('input', (e) => {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+            if (window.chrome && window.chrome.webview) {
+                window.chrome.webview.postMessage({ type: 'search', query: e.target.value });
+            }
+        }, 300);
+    });
+</script>

@@ -1,0 +1,25 @@
+{
+  "CategoryId": "remove-operations",
+  "Title": "Remove Operations",
+  "Icon": "🗑️",
+  "Description": "Learn how to remove items from inventory.",
+  "Order": 3,
+  "Topics": [
+    {
+      "TopicId": "remove-basic",
+      "Title": "Basic Remove",
+      "Summary": "Remove items using the normal Remove tab.",
+      "Content": "<h2>Basic Remove</h2><p>The Remove tab provides a simple interface for removing inventory items from the system.</p><h3>How to Remove Items</h3><ol><li>Navigate to the <strong>Remove</strong> tab (Ctrl+2).</li><li>Enter or scan the <strong>Part Number</strong>.</li><li>Enter or scan the <strong>Location</strong>.</li><li>Enter the <strong>Quantity</strong> to remove.</li><li>Click <strong>Delete</strong> or press <strong>Delete</strong> key.</li></ol><h3>Undo</h3><p>You can undo the last deletion by pressing <strong>Ctrl+Z</strong>. This restores the most recently removed item back to inventory.</p><p><em>Note: Only the most recent deletion can be undone. Once you perform another operation, the undo buffer is cleared.</em></p>",
+      "Keywords": ["delete", "remove", "basic"],
+      "LastUpdated": "2025-12-07T10:00:00"
+    },
+    {
+      "TopicId": "advanced-remove",
+      "Title": "Advanced Remove",
+      "Summary": "Search and remove multiple items at once.",
+      "Content": "<h2>Advanced Remove</h2><p>For more complex removal operations, use Advanced Remove to search for and remove multiple items.</p><h3>How to Use</h3><ol><li>Click <strong>Advanced Remove</strong> button or press <strong>Ctrl+N</strong> to toggle between Normal and Advanced modes.</li><li>Enter search criteria (Part Number, Location, Job Number, etc.).</li><li>Click <strong>Search</strong> (Ctrl+S) to find matching items.</li><li>Review the results in the grid.</li><li>Select items to remove (use Shift or Ctrl for multiple selections).</li><li>Press <strong>Delete</strong> to remove selected items.</li></ol><h3>Reset Search</h3><p>Press <strong>Ctrl+R</strong> to clear all search fields and results.</p>",
+      "Keywords": ["advanced", "search", "bulk", "multiple"],
+      "LastUpdated": "2025-12-07T10:00:00"
+    }
+  ]
+}

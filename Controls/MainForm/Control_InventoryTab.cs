@@ -10,6 +10,7 @@ using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
+using MTM_WIP_Application_Winforms.Services.Help;
 
 namespace MTM_WIP_Application_Winforms.Controls.MainForm
 {
@@ -739,6 +740,14 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     return true;
                 }
 
+                Keys helpKey = _shortcutService?.GetShortcutKey("Shortcut_Help") ?? Keys.F1;
+                if (keyData == helpKey)
+                {
+                    Control_InventoryTab_Button_Help.PerformClick();
+                    Service_DebugTracer.TraceMethodExit(new { KeyHandled = true, Action = "Help" }, nameof(Control_InventoryTab), nameof(ProcessCmdKey));
+                    return true;
+                }
+
                 Service_DebugTracer.TraceMethodExit(new { KeyHandled = false, PassedToBase = true }, nameof(Control_InventoryTab), nameof(ProcessCmdKey));
                 return base.ProcessCmdKey(ref msg, keyData);
             }
@@ -764,6 +773,38 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         #endregion
 
         #region Button Clicks
+
+        private async void Control_InventoryTab_Button_Help_Click(object sender, EventArgs e)
+        {
+            Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
+            {
+                ["Sender"] = sender?.GetType().Name ?? "null",
+                ["EventArgs"] = e?.GetType().Name ?? "null"
+            }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_Button_Help_Click));
+
+            try
+            {
+                var helpForm = new Forms.Help.HelpViewerForm();
+                helpForm.Show();
+                helpForm.ShowHelp("inventory-operations");
+
+                Service_DebugTracer.TraceMethodExit("Success", nameof(Control_InventoryTab), nameof(Control_InventoryTab_Button_Help_Click));
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+                Service_DebugTracer.TraceMethodExit(new { Exception = ex.Message }, nameof(Control_InventoryTab), nameof(Control_InventoryTab_Button_Help_Click));
+
+                Service_ErrorHandler.HandleException(
+                    ex,
+                    Enum_ErrorSeverity.Medium,
+                    contextData: new Dictionary<string, object>
+                    {
+                        ["MethodName"] = nameof(Control_InventoryTab_Button_Help_Click)
+                    },
+                    controlName: nameof(Control_InventoryTab_Button_Help));
+            }
+        }
 
         private static void Control_InventoryTab_Button_AdvancedEntry_Click()
         {
@@ -1276,8 +1317,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             }
         }
 
-        private static async Task AddToLast10TransactionsIfUniqueAsync(string user, string partId, string operation,
-            int quantity)
+        private static async Task AddToLast10TransactionsIfUniqueAsync(string user, string partId, string operation, int quantity)
         {
             Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
             {
@@ -1529,8 +1569,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         {
             try
             {
-                Control_InventoryTab_Button_Save.Click +=
-                    async (s, e) => await Control_InventoryTab_Button_Save_Click_Async();
+                Control_InventoryTab_Button_Save.Click += async (s, e) => await Control_InventoryTab_Button_Save_Click_Async();
                 Control_InventoryTab_Button_Reset.Click += (s, e) => Control_InventoryTab_Button_Reset_Click();
 
                 // NOTE: Part and Operation now use SuggestionTextBox - wire up SuggestionSelected events instead
@@ -1649,8 +1688,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     Control_InventoryTab_Update_SaveButtonState();
                 };
 
-                Control_InventoryTab_Button_AdvancedEntry.Click +=
-                    (s, e) => Control_InventoryTab_Button_AdvancedEntry_Click();
+                Control_InventoryTab_Button_AdvancedEntry.Click += (s, e) => Control_InventoryTab_Button_AdvancedEntry_Click();
 
                 // F4 buttons now handled automatically by SuggestionTextBoxWithLabel composite control
                 // The F4 button in each composite control automatically triggers Helper_SuggestionTextBox.ShowFullSuggestionListAsync

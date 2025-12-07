@@ -1,0 +1,25 @@
+{
+  "CategoryId": "advanced-features",
+  "Title": "Advanced Features",
+  "Icon": "🔬",
+  "Description": "Explore advanced capabilities of the application.",
+  "Order": 5,
+  "Topics": [
+    {
+      "TopicId": "quick-buttons",
+      "Title": "Quick Buttons",
+      "Summary": "Configure one-click shortcuts for common tasks.",
+      "Content": "<h2>Quick Buttons</h2><p>Quick Buttons provide instant access to frequently used parts and locations.</p><h3>Using Quick Buttons</h3><p>Quick Buttons appear on the right side of each tab (Inventory, Remove, Transfer). Click a button to instantly fill in the Part Number and Location fields.</p><h3>Function Key Shortcuts</h3><p>Quick Buttons 1-10 are mapped to function keys F1-F10 for keyboard access.</p><h3>Configuring Quick Buttons</h3><ol><li>Right-click on a Quick Button.</li><li>Select <strong>Edit</strong> from the context menu.</li><li>Enter the Part Number and Location you want to save.</li><li>Give it a descriptive name (e.g., 'Warehouse A - Part 123').</li><li>Click <strong>Save</strong>.</li></ol><p><em>Note: Quick Button configurations are saved per user and persist across sessions.</em></p>",
+      "Keywords": ["quick buttons", "shortcuts", "favorites", "f-keys"],
+      "LastUpdated": "2025-12-07T10:00:00"
+    },
+    {
+      "TopicId": "grid-customization",
+      "Title": "Grid Customization",
+      "Summary": "Customize data grid columns and layout.",
+      "Content": "<h2>Grid Customization</h2><p>You can customize which columns are visible and their order in all data grids.</p><h3>Column Visibility</h3><ol><li>Right-click on any grid header row.</li><li>A context menu will appear showing all available columns.</li><li>Check or uncheck columns to show or hide them.</li><li>Changes are automatically saved to your user profile.</li></ol><h3>Column Reordering</h3><ol><li>Right-click on the grid header.</li><li>Select <strong>Change Column Order</strong>.</li><li>Use the dialog to rearrange columns by dragging them.</li><li>Click <strong>OK</strong> to apply changes.</li></ol><h3>Quick Actions</h3><ul><li><strong>Select All:</strong> Shows all columns.</li><li><strong>Deselect All:</strong> Hides all columns except the first one.</li></ul><p><em>Grid settings are saved automatically when you make changes.</em></p>",
+      "Keywords": ["grid", "columns", "customize", "layout"],
+      "LastUpdated": "2025-12-07T10:00:00"
+    }
+  ]
+}

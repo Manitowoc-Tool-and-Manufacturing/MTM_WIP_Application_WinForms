@@ -1,0 +1,33 @@
+{
+  "CategoryId": "settings-management",
+  "Title": "Settings Management",
+  "Icon": "🔧",
+  "Description": "Configure application settings, themes, shortcuts, and user preferences.",
+  "Order": 9,
+  "Topics": [
+    {
+      "TopicId": "theme-settings",
+      "Title": "Theme Customization",
+      "Summary": "Personalize the application appearance with themes.",
+      "Content": "<h2>Theme Customization</h2><p>The application supports multiple visual themes to suit your preference and lighting conditions.</p><h3>Available Themes</h3><ul><li><strong>Default:</strong> Standard light theme with high contrast.</li><li><strong>Dark:</strong> Dark mode for low-light environments to reduce eye strain.</li><li><strong>Blue:</strong> Professional blue-tinted interface.</li><li><strong>Forest:</strong> Calming green-tinted interface.</li></ul><h3>Changing Themes</h3><ol><li>Navigate to the <strong>Settings</strong> tab.</li><li>Select the <strong>Themes</strong> card.</li><li>Choose your preferred theme from the dropdown menu.</li><li>Click <strong>Save</strong> to apply changes immediately.</li></ol><p><em>Note: Theme preferences are saved to your user profile and will persist across sessions.</em></p>",
+      "Keywords": ["theme", "color", "dark mode", "appearance", "style"],
+      "LastUpdated": "2025-12-07T10:00:00"
+    },
+    {
+      "TopicId": "shortcut-customization",
+      "Title": "Shortcut Customization",
+      "Summary": "Customize keyboard shortcuts for maximum productivity.",
+      "Content": "<h2>Shortcut Customization</h2><p>You can modify keyboard shortcuts to match your workflow.</p><h3>How to Customize</h3><ol><li>Go to <strong>Settings > Shortcuts</strong>.</li><li>Expand the category you wish to modify (e.g., <em>Inventory</em>, <em>Navigation</em>).</li><li>Click the <strong>...</strong> button next to the action you want to change.</li><li>Press the new key combination in the dialog window.</li><li>Click <strong>Save</strong>.</li></ol><h3>Conflict Resolution</h3><p>The system will prevent you from assigning a shortcut that is already in use. If a conflict occurs, you must first reassign or clear the existing shortcut.</p><h3>Resetting Defaults</h3><p>To restore all shortcuts to their original system defaults, click the <strong>Reset to Defaults</strong> button at the bottom of the Shortcuts panel.</p>",
+      "Keywords": ["shortcuts", "hotkeys", "key binding", "customization"],
+      "LastUpdated": "2025-12-07T10:00:00"
+    },
+    {
+      "TopicId": "general-preferences",
+      "Title": "General Preferences",
+      "Summary": "Configure general application behavior.",
+      "Content": "<h2>General Preferences</h2><p>Manage core application settings.</p><ul><li><strong>Animations:</strong> Toggle UI animations for smoother transitions or faster performance.</li><li><strong>Font Size:</strong> Adjust the base font size for better readability.</li><li><strong>Grid Settings:</strong> Column visibility and order for data grids are automatically saved when you modify them via the right-click context menu on grid headers.</li></ul>",
+      "Keywords": ["font", "animations", "grid", "columns"],
+      "LastUpdated": "2025-12-07T10:00:00"
+    }
+  ]
+}

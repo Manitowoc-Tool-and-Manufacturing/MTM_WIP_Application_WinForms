@@ -1096,6 +1096,27 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                     return true;
                 }
 
+                Keys helpKey = _shortcutService?.GetShortcutKey("Shortcut_Help") ?? Keys.F1;
+                if (keyData == helpKey)
+                {
+                    ShowHelp();
+                    return true;
+                }
+
+                Keys gettingStartedKey = _shortcutService?.GetShortcutKey("Shortcut_Help_GettingStarted") ?? (Keys.Control | Keys.F1);
+                if (keyData == gettingStartedKey)
+                {
+                    ShowHelp("getting-started");
+                    return true;
+                }
+
+                Keys keyboardShortcutsKey = _shortcutService?.GetShortcutKey("Shortcut_Help_KeyboardShortcuts") ?? (Keys.Control | Keys.Shift | Keys.K);
+                if (keyData == keyboardShortcutsKey)
+                {
+                    ShowHelp("keyboard-shortcuts");
+                    return true;
+                }
+
                 return base.ProcessCmdKey(ref msg, keyData);
             }
             catch (Exception ex)
@@ -1505,29 +1526,18 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
 
         #region Help Menu Event Handlers
 
-        private void MainFomr_MenuStrip_Help_Warn()
-        {
-            try
-            {
-                Service_ErrorHandler.ShowInformation("Be aware that not all data in these files are accurate as I have not gotten to updating them yet.", "Help");
-            }
-            catch (Exception ex)
-            {
-                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, controlName: nameof(MainForm));
-            }
-        }
+
         private void MainForm_MenuStrip_Help_GettingStarted_Click(object sender, EventArgs e)
         {
             try
             {
-                MainFomr_MenuStrip_Help_Warn();
-                OpenHelpFile("getting-started.html");
+                ShowHelp("getting-started");
             }
             catch (Exception ex)
             {
                 Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
                     controlName: nameof(MainForm),
-                    contextData: new Dictionary<string, object> { ["HelpFile"] = "getting-started.html" });
+                    contextData: new Dictionary<string, object> { ["HelpCategory"] = "getting-started" });
             }
         }
 
@@ -1535,15 +1545,12 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
         {
             try
             {
-
-                MainFomr_MenuStrip_Help_Warn();
-                OpenHelpFile("index.html");
+                ShowHelp();
             }
             catch (Exception ex)
             {
                 Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
-                    controlName: nameof(MainForm),
-                    contextData: new Dictionary<string, object> { ["HelpFile"] = "index.html" });
+                    controlName: nameof(MainForm));
             }
         }
 
@@ -1551,34 +1558,13 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
         {
             try
             {
-
-                MainFomr_MenuStrip_Help_Warn();
-                OpenHelpFile("keyboard-shortcuts.html");
+                ShowHelp("keyboard-shortcuts");
             }
             catch (Exception ex)
             {
                 Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
                     controlName: nameof(MainForm),
-                    contextData: new Dictionary<string, object> { ["HelpFile"] = "keyboard-shortcuts.html" });
-            }
-        }
-
-        private void MainForm_MenuStrip_Help_About_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                var aboutMessage = $"MTM Inventory Application\n" +
-                                  $"Version: {Assembly.GetExecutingAssembly().GetName().Version}\n" +
-                                  $"© 2025 Manitowoc Tool and Manufacturing\n\n" +
-                                  $"Built with .NET 8 and Windows Forms\n" +
-                                  $"Database: MySQL with stored procedures\n" +
-                                  $"Environment: {(Model_Shared_Users.Database == "MTM_WIP_Application_Winforms" ? "Release" : "Debug")}";
-
-                Service_ErrorHandler.ShowInformation("About MTM Inventory", aboutMessage);
-            }
-            catch (Exception ex)
-            {
-                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low, controlName: nameof(MainForm));
+                    contextData: new Dictionary<string, object> { ["HelpCategory"] = "keyboard-shortcuts" });
             }
         }
 
@@ -1587,42 +1573,25 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
         #region Help System Methods
 
         /// <summary>
-        /// Opens a help file using the default browser
+        /// Opens the new Help Viewer.
         /// </summary>
-        /// <param name="fileName">Name of the help file (e.g., "getting-started.html")</param>
-        private void OpenHelpFile(string fileName)
+        /// <param name="categoryId">Optional category ID to open.</param>
+        /// <param name="topicId">Optional topic ID to open.</param>
+        private void ShowHelp(string? categoryId = null, string? topicId = null)
         {
             try
             {
-                var helpPath = Path.Combine(Application.StartupPath, "Documentation", "Help", fileName);
-
-                if (!File.Exists(helpPath))
+                var helpForm = new Forms.Help.HelpViewerForm();
+                helpForm.Show(); // Show non-modal
+                
+                if (!string.IsNullOrEmpty(categoryId))
                 {
-                    // If file doesn't exist locally, create a basic error message
-                    var errorMessage = $"Help file not found: {fileName}\n\n" +
-                                     $"Expected location: {helpPath}\n\n" +
-                                     $"Please ensure the Documentation/Help folder exists and contains the help files.";
-                    Service_ErrorHandler.ShowWarning("Help File Missing", errorMessage);
-                    return;
+                    helpForm.ShowHelp(categoryId, topicId);
                 }
-
-                // Try to open with default browser
-                var startInfo = new ProcessStartInfo
-                {
-                    FileName = helpPath,
-                    UseShellExecute = true,
-                    Verb = "open"
-                };
-
-                Process.Start(startInfo);
-                LoggingUtility.LogApplicationInfo($"Opened help file: {fileName}");
             }
             catch (Exception ex)
             {
-                var fallbackMessage = $"Unable to open help file: {fileName}\n\n" +
-                                    $"Error: {ex.Message}\n\n" +
-                                    $"Please check that you have a web browser installed and configured as default.";
-                Service_ErrorHandler.ShowWarning("Cannot Open Help", fallbackMessage);
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, controlName: nameof(MainForm));
             }
         }
 

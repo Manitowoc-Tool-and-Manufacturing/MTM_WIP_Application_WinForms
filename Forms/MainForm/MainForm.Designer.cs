@@ -113,8 +113,6 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             gettingStartedToolStripMenuItem = new ToolStripMenuItem();
             userGuideToolStripMenuItem = new ToolStripMenuItem();
             keyboardShortcutsToolStripMenuItem = new ToolStripMenuItem();
-            helpSeparator1 = new ToolStripSeparator();
-            aboutMTMInventoryToolStripMenuItem = new ToolStripMenuItem();
             MainForm_StatusStrip = new StatusStrip();
             MainForm_ProgressBar = new ToolStripProgressBar();
             MainForm_StatusText = new ToolStripStatusLabel();
@@ -322,16 +320,15 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             // 
             // helpToolStripMenuItem
             // 
-            helpToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { gettingStartedToolStripMenuItem, userGuideToolStripMenuItem, keyboardShortcutsToolStripMenuItem, helpSeparator1, aboutMTMInventoryToolStripMenuItem });
+            helpToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { gettingStartedToolStripMenuItem, userGuideToolStripMenuItem, keyboardShortcutsToolStripMenuItem });
             helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             helpToolStripMenuItem.Size = new Size(44, 24);
             helpToolStripMenuItem.Text = "Help";
-            helpToolStripMenuItem.Visible = false;
+            helpToolStripMenuItem.Visible = true;
             // 
             // gettingStartedToolStripMenuItem
             // 
             gettingStartedToolStripMenuItem.Name = "gettingStartedToolStripMenuItem";
-            gettingStartedToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.F1;
             gettingStartedToolStripMenuItem.Size = new Size(257, 22);
             gettingStartedToolStripMenuItem.Text = "Getting Started";
             gettingStartedToolStripMenuItem.Click += MainForm_MenuStrip_Help_GettingStarted_Click;
@@ -339,7 +336,6 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             // userGuideToolStripMenuItem
             // 
             userGuideToolStripMenuItem.Name = "userGuideToolStripMenuItem";
-            userGuideToolStripMenuItem.ShortcutKeys = Keys.F1;
             userGuideToolStripMenuItem.Size = new Size(257, 22);
             userGuideToolStripMenuItem.Text = "User Guide";
             userGuideToolStripMenuItem.Click += MainForm_MenuStrip_Help_UserGuide_Click;
@@ -347,23 +343,9 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             // keyboardShortcutsToolStripMenuItem
             // 
             keyboardShortcutsToolStripMenuItem.Name = "keyboardShortcutsToolStripMenuItem";
-            keyboardShortcutsToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.Shift | Keys.K;
             keyboardShortcutsToolStripMenuItem.Size = new Size(257, 22);
             keyboardShortcutsToolStripMenuItem.Text = "Keyboard Shortcuts";
             keyboardShortcutsToolStripMenuItem.Click += MainForm_MenuStrip_Help_KeyboardShortcuts_Click;
-            // 
-            // helpSeparator1
-            // 
-            helpSeparator1.Name = "helpSeparator1";
-            helpSeparator1.Size = new Size(254, 6);
-            // 
-            // aboutMTMInventoryToolStripMenuItem
-            // 
-            aboutMTMInventoryToolStripMenuItem.Name = "aboutMTMInventoryToolStripMenuItem";
-            aboutMTMInventoryToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.Alt | Keys.A;
-            aboutMTMInventoryToolStripMenuItem.Size = new Size(257, 22);
-            aboutMTMInventoryToolStripMenuItem.Text = "About MTM Inventory";
-            aboutMTMInventoryToolStripMenuItem.Click += MainForm_MenuStrip_Help_About_Click;
             // 
             // MainForm_StatusStrip
             // 
@@ -657,8 +639,8 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
         private ToolStripMenuItem gettingStartedToolStripMenuItem;
         private ToolStripMenuItem userGuideToolStripMenuItem;
         private ToolStripMenuItem keyboardShortcutsToolStripMenuItem;
-        private ToolStripSeparator helpSeparator1;
-        private ToolStripMenuItem aboutMTMInventoryToolStripMenuItem;
+        // private ToolStripSeparator helpSeparator1;
+        // private ToolStripMenuItem aboutMTMInventoryToolStripMenuItem;
 
     }
 

@@ -1,0 +1,41 @@
+{
+  "CategoryId": "getting-started",
+  "Title": "Getting Started",
+  "Icon": "🚀",
+  "Description": "Learn the basics of the MTM WIP Application.",
+  "Order": 1,
+  "Topics": [
+    {
+      "TopicId": "overview",
+      "Title": "Application Overview",
+      "Summary": "Introduction to the main features and interface.",
+      "Content": "<h2>Welcome to MTM WIP Application</h2><p>This application helps you track Work In Progress (WIP) inventory, manage transactions, and generate reports.</p><h3>Key Features</h3><ul><li><strong>Real-time Inventory:</strong> Track parts, locations, and quantities instantly.</li><li><strong>Barcode Scanning:</strong> Use scanners for fast and accurate data entry.</li><li><strong>Infor Visual Integration:</strong> Seamlessly sync data with the ERP system.</li><li><strong>Customizable Interface:</strong> Choose themes and shortcuts that work for you.</li></ul>",
+      "Keywords": ["intro", "basics", "welcome"],
+      "LastUpdated": "2025-12-07T10:00:00"
+    },
+    {
+      "TopicId": "login",
+      "Title": "Logging In",
+      "Summary": "How to access the system securely.",
+      "Content": "<h2>Logging In</h2><p>The application uses your Windows credentials or a specific Employee ID for authentication.</p><ol><li>Launch the application.</li><li>If prompted, enter your Employee ID or scan your badge.</li><li>The system will load your user profile, including your saved theme and shortcut preferences.</li></ol>",
+      "Keywords": ["auth", "signin", "password"],
+      "LastUpdated": "2025-12-07T10:00:00"
+    },
+    {
+      "TopicId": "navigation",
+      "Title": "Navigating the Interface",
+      "Summary": "Understanding the main tabs and controls.",
+      "Content": "<h2>Main Interface</h2><p>The application is organized into tabs for different workflows:</p><ul><li><strong>Inventory (Ctrl+1):</strong> The main dashboard for viewing and managing current stock.</li><li><strong>Remove (Ctrl+2):</strong> Process inventory removal transactions.</li><li><strong>Transfer (Ctrl+3):</strong> Move inventory between locations.</li><li><strong>Settings:</strong> Configure application preferences.</li></ul><h3>Quick Access</h3><p>Use the <strong>Quick Buttons</strong> panel on the right side of the screen for one-click access to common actions. These can also be triggered using Function keys (F1-F10).</p>",
+      "Keywords": ["tabs", "menu", "interface", "gui"],
+      "LastUpdated": "2025-12-07T10:00:00"
+    },
+    {
+      "TopicId": "help-system",
+      "Title": "Using the Help System",
+      "Summary": "How to find answers and documentation.",
+      "Content": "<h2>Accessing Help</h2><p>You can access this help system at any time by pressing <strong>F1</strong>.</p><ul><li><strong>Search:</strong> Use the search bar at the top left to find specific topics.</li><li><strong>Browse:</strong> Navigate through categories using the sidebar.</li><li><strong>Context Help:</strong> Many screens have specific help shortcuts (e.g., Ctrl+F1 for Getting Started).</li></ul>",
+      "Keywords": ["help", "support", "documentation", "manual"],
+      "LastUpdated": "2025-12-07T10:00:00"
+    }
+  ]
+}

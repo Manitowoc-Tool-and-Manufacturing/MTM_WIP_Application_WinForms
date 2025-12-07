@@ -186,6 +186,24 @@
     "Category": "MainForm"
   },
   {
+    "Name": "Shortcut_Help",
+    "Keys": 123,
+    "Description": "Open Help",
+    "Category": "MainForm"
+  },
+  {
+    "Name": "Shortcut_Help_GettingStarted",
+    "Keys": 131184,
+    "Description": "Getting Started",
+    "Category": "MainForm"
+  },
+  {
+    "Name": "Shortcut_Help_KeyboardShortcuts",
+    "Keys": 196683,
+    "Description": "Keyboard Shortcuts",
+    "Category": "MainForm"
+  },
+  {
     "Name": "Shortcut_QuickButton_01",
     "Keys": 112,
     "Description": "Quick Button 1",

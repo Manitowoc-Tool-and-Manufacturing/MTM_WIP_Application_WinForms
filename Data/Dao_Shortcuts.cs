@@ -22,6 +22,24 @@ namespace MTM_WIP_Application_Winforms.Data
                 Model_Application_Variables.ConnectionString, "usr_user_shortcuts_GetByUser", parameters);
         }
 
+        public async Task<Model_Dao_Result<bool>> UpsertSystemShortcutAsync(string shortcutName, int defaultKeys, string description, string category)
+        {
+            var parameters = new Dictionary<string, object>
+            {
+                { "ShortcutName", shortcutName },
+                { "ShortcutKeys", defaultKeys },
+                { "Description", description },
+                { "Category", category }
+            };
+            var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
+                Model_Application_Variables.ConnectionString, "sys_shortcuts_Upsert", parameters);
+
+            if (result.IsSuccess)
+                return Model_Dao_Result<bool>.Success(true, result.StatusMessage);
+            else
+                return Model_Dao_Result<bool>.Failure(result.ErrorMessage);
+        }
+
         public async Task<Model_Dao_Result<bool>> UpsertUserShortcutAsync(string userName, string shortcutName, int customKeys)
         {
             var parameters = new Dictionary<string, object>

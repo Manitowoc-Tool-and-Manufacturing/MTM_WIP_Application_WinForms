@@ -1,0 +1,25 @@
+{
+  "CategoryId": "infor-visual-integration",
+  "Title": "Infor Visual Integration",
+  "Icon": "🔗",
+  "Description": "Details on integration with Infor Visual ERP.",
+  "Order": 7,
+  "Topics": [
+    {
+      "TopicId": "visual-connection",
+      "Title": "Visual Connection",
+      "Summary": "How the application connects to Infor Visual.",
+      "Content": "<h2>Infor Visual Connection</h2><p>The MTM WIP Application integrates directly with your Infor Visual ERP system to validate parts, locations, and operations in real-time.</p><h3>What is Validated</h3><ul><li><strong>Parts:</strong> Part numbers are validated against the Infor Visual part master to ensure they exist and are active.</li><li><strong>Locations:</strong> Locations are verified to exist in Visual's location master.</li><li><strong>Operations:</strong> Operation codes are validated for manufacturing routing.</li></ul><h3>Connection Status</h3><p>The status bar at the bottom of the application shows the connection status to Infor Visual. A green indicator means the connection is active.</p>",
+      "Keywords": ["erp", "visual", "connection", "validation"],
+      "LastUpdated": "2025-12-07T10:00:00"
+    },
+    {
+      "TopicId": "visual-dashboard",
+      "Title": "Visual Dashboard",
+      "Summary": "View Infor Visual data in real-time.",
+      "Content": "<h2>Visual Dashboard</h2><p>Access live data from Infor Visual through the integrated dashboard.</p><h3>Available Data</h3><ul><li>Current inventory levels from Visual</li><li>Open work orders</li><li>Job status information</li><li>Material requirements</li></ul><h3>Accessing the Dashboard</h3><ol><li>Navigate to <strong>Menu > Infor Visual > Dashboard</strong>.</li><li>The dashboard displays real-time data directly from Visual's database.</li><li>Use filters to narrow down the data view.</li></ol><p><em>Note: Dashboard data is read-only. To modify Visual data, use the appropriate Visual application.</em></p>",
+      "Keywords": ["dashboard", "live data", "visual", "erp"],
+      "LastUpdated": "2025-12-07T10:00:00"
+    }
+  ]
+}

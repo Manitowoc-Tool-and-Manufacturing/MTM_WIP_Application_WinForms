@@ -1,0 +1,25 @@
+{
+  "CategoryId": "admin-tools",
+  "Title": "Admin Tools",
+  "Icon": "🛡️",
+  "Description": "Tools for system administrators.",
+  "Order": 11,
+  "Topics": [
+    {
+      "TopicId": "user-permissions",
+      "Title": "User Permissions",
+      "Summary": "Managing user access levels.",
+      "Content": "<h2>User Permissions</h2><p>The application supports multiple user privilege levels.</p><h3>Access Levels</h3><ul><li><strong>Standard User:</strong> Can perform basic inventory operations (IN, OUT, TRANSFER).</li><li><strong>Admin:</strong> Can access all features, including transaction history for all users and advanced settings.</li><li><strong>Developer:</strong> Full system access including diagnostic tools and database configuration.</li></ul><h3>Managing Users</h3><p>User permissions are managed through the Infor Visual ERP system. Contact your IT department to request permission changes.</p>",
+      "Keywords": ["admin", "permissions", "access", "privileges"],
+      "LastUpdated": "2025-12-07T10:00:00"
+    },
+    {
+      "TopicId": "system-maintenance",
+      "Title": "System Maintenance",
+      "Summary": "Maintaining application health.",
+      "Content": "<h2>System Maintenance</h2><p>Administrators can perform maintenance tasks to keep the application running smoothly.</p><h3>Available Tasks</h3><ul><li><strong>Clear Cache:</strong> Reset cached data (parts, locations, operations).</li><li><strong>Rebuild Indexes:</strong> Optimize database performance.</li><li><strong>View Error Reports:</strong> Access detailed error logs for troubleshooting.</li></ul><h3>Scheduled Maintenance</h3><p>The application performs automatic maintenance tasks daily during off-peak hours, including log cleanup and database optimization.</p>",
+      "Keywords": ["maintenance", "optimization", "cache"],
+      "LastUpdated": "2025-12-07T10:00:00"
+    }
+  ]
+}

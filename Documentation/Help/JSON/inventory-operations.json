@@ -1,0 +1,33 @@
+{
+  "CategoryId": "inventory-operations",
+  "Title": "Inventory Operations",
+  "Icon": "📦",
+  "Description": "Manage inventory items, locations, and quantities.",
+  "Order": 2,
+  "Topics": [
+    {
+      "TopicId": "view-inventory",
+      "Title": "Viewing Inventory",
+      "Summary": "Search and filter current stock.",
+      "Content": "<h2>Viewing Inventory</h2><p>The Inventory tab provides a real-time view of all WIP items.</p><ul><li><strong>Search:</strong> Use the search bar to find items by Part Number, Job Number, or Location.</li><li><strong>Filtering:</strong> Use the column headers to sort and filter the grid.</li><li><strong>Right Panel:</strong> Toggle the Right Panel (Ctrl+Right Arrow) to see detailed information about the selected item.</li></ul>",
+      "Keywords": ["search", "find", "view", "stock"],
+      "LastUpdated": "2025-12-07T10:00:00"
+    },
+    {
+      "TopicId": "advanced-entry",
+      "Title": "Advanced Entry",
+      "Summary": "Use Advanced Inventory for complex transactions.",
+      "Content": "<h2>Advanced Inventory Entry</h2><p>For high-volume or complex data entry, use the Advanced Inventory mode (Ctrl+Shift+A).</p><h3>Modes</h3><ul><li><strong>Single Entry:</strong> Detailed form for adding one item at a time with full validation.</li><li><strong>Multi Entry:</strong> Rapidly add multiple items to the same location or job.</li><li><strong>Import:</strong> Import inventory data from Excel spreadsheets.</li></ul><p>Use the toggle buttons at the top of the Advanced Inventory screen to switch between these modes.</p>",
+      "Keywords": ["advanced", "multi", "import", "excel"],
+      "LastUpdated": "2025-12-07T10:00:00"
+    },
+    {
+      "TopicId": "add-item",
+      "Title": "Adding Inventory",
+      "Summary": "Create new inventory records.",
+      "Content": "<h2>Adding New Inventory</h2><p>To add a new item:</p><ol><li>Navigate to the Inventory tab.</li><li>Enter the <strong>Part Number</strong> (or scan a barcode).</li><li>Enter the <strong>Quantity</strong>.</li><li>Select or scan the <strong>Location</strong>.</li><li>Click <strong>Save</strong> (Ctrl+S).</li></ol><p>The system will validate the part number against the Infor Visual database before saving.</p>",
+      "Keywords": ["create", "new", "stock"],
+      "LastUpdated": "2025-12-07T10:00:00"
+    }
+  ]
+}

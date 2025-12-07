@@ -385,6 +385,91 @@ public class ThemedForm : Form
     }
 
     /// <summary>
+    /// Handles the HelpRequested event (F1 key).
+    /// </summary>
+    protected override void OnHelpRequested(HelpEventArgs hevent)
+    {
+        // Prevent default help behavior
+        hevent.Handled = true;
+
+        // Show help viewer
+        ShowHelp();
+
+        base.OnHelpRequested(hevent);
+    }
+
+    /// <summary>
+    /// Shows the help viewer for the current context.
+    /// </summary>
+    protected virtual void ShowHelp()
+    {
+        try
+        {
+            // Check if HelpViewerForm is already open
+            // We use reflection or dynamic to avoid circular dependency if HelpViewerForm inherits from ThemedForm
+            // But HelpViewerForm DOES inherit from ThemedForm.
+            // So we can just use the type if we have the namespace.
+            
+            var helpForm = Application.OpenForms.OfType<Form>().FirstOrDefault(f => f.Name == "HelpViewerForm");
+            
+            if (helpForm == null)
+            {
+                // We need to instantiate HelpViewerForm.
+                // Since we are in Shared, and HelpViewerForm is in Help, we might have a circular dependency if we reference it directly?
+                // No, Shared is usually lower level. But HelpViewerForm inherits ThemedForm.
+                // So ThemedForm -> HelpViewerForm -> ThemedForm.
+                // This is fine in C# as long as they are in the same assembly.
+                
+                // However, to be safe and clean, maybe we should use a service or event?
+                // For now, let's try to find the type by name to avoid direct reference if possible, 
+                // or just assume it's available in the assembly.
+                
+                var helpFormType = Type.GetType("MTM_WIP_Application_Winforms.Forms.Help.HelpViewerForm");
+                if (helpFormType != null)
+                {
+                    helpForm = Activator.CreateInstance(helpFormType) as Form;
+                    if (helpForm != null)
+                    {
+                        helpForm.Show();
+                    }
+                }
+            }
+            else
+            {
+                helpForm.BringToFront();
+                if (helpForm.WindowState == FormWindowState.Minimized)
+                {
+                    helpForm.WindowState = FormWindowState.Normal;
+                }
+            }
+
+            if (helpForm != null)
+            {
+                // Call ShowHelp method on the form
+                var method = helpForm.GetType().GetMethod("ShowHelp");
+                if (method != null)
+                {
+                    string categoryId = GetHelpContext();
+                    _ = method.Invoke(helpForm, new object?[] { categoryId, null });
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            LoggingUtility.LogApplicationError(ex);
+        }
+    }
+
+    /// <summary>
+    /// Gets the help context ID for this form.
+    /// Override in derived classes to provide specific context.
+    /// </summary>
+    protected virtual string GetHelpContext()
+    {
+        return string.Empty; // Default to index
+    }
+
+    /// <summary>
     /// Cleans up resources and unsubscribes from theme changes.
     /// </summary>
     protected override void Dispose(bool disposing)

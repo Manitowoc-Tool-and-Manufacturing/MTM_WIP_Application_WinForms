@@ -19,6 +19,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
         private GroupBox Control_InventoryTab_GroupBox_Main;
         private Button Control_InventoryTab_Button_Reset;
+        private Button Control_InventoryTab_Button_Help;
         private Button Control_InventoryTab_Button_Save;
         private Label Control_InventoryTab_Label_Version;
         private Button Control_InventoryTab_Button_AdvancedEntry;
@@ -68,6 +69,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_InventoryTab_Button_Toggle_RightPanel = new Button();
             Control_InventoryTab_Label_Version = new Label();
             Control_InventoryTab_Button_Save = new Button();
+            Control_InventoryTab_Button_Help = new Button();
             Control_InventoryTab_Button_AdvancedEntry = new Button();
             Control_InventoryTab_Button_Reset = new Button();
             Control_InventoryTab_Tooltip = new ToolTip(components);
@@ -296,13 +298,15 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             // 
             Control_InventoryTab_TableLayout_BottomGroup.AutoSize = true;
             Control_InventoryTab_TableLayout_BottomGroup.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            Control_InventoryTab_TableLayout_BottomGroup.ColumnCount = 5;
+            Control_InventoryTab_TableLayout_BottomGroup.ColumnCount = 6;
             Control_InventoryTab_TableLayout_BottomGroup.ColumnStyles.Add(new ColumnStyle());
             Control_InventoryTab_TableLayout_BottomGroup.ColumnStyles.Add(new ColumnStyle());
             Control_InventoryTab_TableLayout_BottomGroup.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             Control_InventoryTab_TableLayout_BottomGroup.ColumnStyles.Add(new ColumnStyle());
             Control_InventoryTab_TableLayout_BottomGroup.ColumnStyles.Add(new ColumnStyle());
-            Control_InventoryTab_TableLayout_BottomGroup.Controls.Add(Control_InventoryTab_Button_Toggle_RightPanel, 4, 0);
+            Control_InventoryTab_TableLayout_BottomGroup.ColumnStyles.Add(new ColumnStyle());
+            Control_InventoryTab_TableLayout_BottomGroup.Controls.Add(Control_InventoryTab_Button_Help, 4, 0);
+            Control_InventoryTab_TableLayout_BottomGroup.Controls.Add(Control_InventoryTab_Button_Toggle_RightPanel, 5, 0);
             Control_InventoryTab_TableLayout_BottomGroup.Controls.Add(Control_InventoryTab_Label_Version, 2, 0);
             Control_InventoryTab_TableLayout_BottomGroup.Controls.Add(Control_InventoryTab_Button_Save, 0, 0);
             Control_InventoryTab_TableLayout_BottomGroup.Controls.Add(Control_InventoryTab_Button_AdvancedEntry, 1, 0);
@@ -344,6 +348,23 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_InventoryTab_Label_Version.TabIndex = 8;
             Control_InventoryTab_Label_Version.Text = "Version: ";
             Control_InventoryTab_Label_Version.TextAlign = ContentAlignment.MiddleCenter;
+            // 
+            // Control_InventoryTab_Button_Help
+            // 
+            Control_InventoryTab_Button_Help.AutoSize = true;
+            Control_InventoryTab_Button_Help.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_InventoryTab_Button_Help.Dock = DockStyle.Fill;
+            Control_InventoryTab_Button_Help.Font = new Font("Segoe UI Emoji", 9F);
+            Control_InventoryTab_Button_Help.Location = new Point(446, 3);
+            Control_InventoryTab_Button_Help.MaximumSize = new Size(32, 32);
+            Control_InventoryTab_Button_Help.MinimumSize = new Size(32, 32);
+            Control_InventoryTab_Button_Help.Name = "Control_InventoryTab_Button_Help";
+            Control_InventoryTab_Button_Help.Size = new Size(32, 32);
+            Control_InventoryTab_Button_Help.TabIndex = 10;
+            Control_InventoryTab_Button_Help.TabStop = false;
+            Control_InventoryTab_Button_Help.Text = "?";
+            Control_InventoryTab_Button_Help.UseVisualStyleBackColor = true;
+            Control_InventoryTab_Button_Help.Click += Control_InventoryTab_Button_Help_Click;
             // 
             // Control_InventoryTab_Button_Save
             // 

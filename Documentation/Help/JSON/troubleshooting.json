@@ -1,0 +1,33 @@
+{
+  "CategoryId": "troubleshooting",
+  "Title": "Troubleshooting",
+  "Icon": "🔧",
+  "Description": "Common issues and solutions.",
+  "Order": 13,
+  "Topics": [
+    {
+      "TopicId": "database-connection",
+      "Title": "Database Connection Issues",
+      "Summary": "Resolving connection problems.",
+      "Content": "<h2>Database Connection Issues</h2><p>If you cannot connect to the database, try these steps:</p><ol><li>Check that you are connected to the network.</li><li>Verify that the MySQL server is running (contact IT if unsure).</li><li>Restart the application.</li><li>If the problem persists, check the application logs (<strong>Menu > View > Application Logs</strong>).</li></ol><h3>Connection Status</h3><p>The status bar at the bottom of the main window shows the database connection status. Look for a green indicator.</p>",
+      "Keywords": ["database", "connection", "network", "error"],
+      "LastUpdated": "2025-12-07T10:00:00"
+    },
+    {
+      "TopicId": "part-validation-errors",
+      "Title": "Part Validation Errors",
+      "Summary": "Why parts are not recognized.",
+      "Content": "<h2>Part Validation Errors</h2><p>If the system rejects a part number, it may be due to:</p><ul><li><strong>Invalid Part:</strong> Part does not exist in Infor Visual. Verify the part number in Visual.</li><li><strong>Inactive Part:</strong> Part is marked as inactive in Visual. Contact your supervisor.</li><li><strong>Typo:</strong> Double-check the part number for spelling errors.</li></ul><h3>Barcode Scanning</h3><p>If using a barcode scanner and parts are not recognized, ensure the scanner is configured correctly and the barcode format matches Visual's part master.</p>",
+      "Keywords": ["part", "validation", "error", "barcode"],
+      "LastUpdated": "2025-12-07T10:00:00"
+    },
+    {
+      "TopicId": "performance-slow",
+      "Title": "Slow Performance",
+      "Summary": "Improving application responsiveness.",
+      "Content": "<h2>Slow Performance</h2><p>If the application is running slowly:</p><ol><li><strong>Network:</strong> Check your network connection speed.</li><li><strong>Large Searches:</strong> Narrow down search criteria to reduce result set size.</li><li><strong>Close Unused Windows:</strong> Close dialogs and forms you are not using.</li><li><strong>Restart:</strong> Restart the application periodically during long shifts.</li></ol><h3>Database Load</h3><p>During peak hours, database queries may take longer due to heavy usage. Be patient or try again in a few minutes.</p>",
+      "Keywords": ["slow", "performance", "lag", "speed"],
+      "LastUpdated": "2025-12-07T10:00:00"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "CategoryId": "analytics-reporting",
+  "Title": "Analytics & Reporting",
+  "Icon": "📊",
+  "Description": "Generate reports and view analytics.",
+  "Order": 8,
+  "Topics": [
+    {
+      "TopicId": "user-analytics",
+      "Title": "User Analytics",
+      "Summary": "View material handler performance metrics.",
+      "Content": "<h2>User Analytics</h2><p>Access the User Analytics dashboard to view performance metrics for material handlers.</p><h3>Available Metrics</h3><ul><li><strong>Total Tx (Transactions):</strong> Total number of inventory movements within the date range.</li><li><strong>Total Qty (Quantity):</strong> Sum of all quantities moved.</li><li><strong>Unique Parts:</strong> Number of distinct Part IDs handled.</li><li><strong>Rapid Fire:</strong> Count of transactions occurring less than 10 seconds apart for the same part.</li><li><strong>Quality Score:</strong> Overall performance rating based on transaction accuracy and speed.</li></ul><h3>Accessing Analytics</h3><ol><li>Navigate to <strong>Menu > Analytics > User Analytics</strong>.</li><li>Select a date range using the date pickers.</li><li>Click <strong>Load Data</strong> to view metrics.</li></ol>",
+      "Keywords": ["analytics", "metrics", "performance", "user"],
+      "LastUpdated": "2025-12-07T10:00:00"
+    },
+    {
+      "TopicId": "export-print",
+      "Title": "Exporting and Printing",
+      "Summary": "Export data to Excel or print reports.",
+      "Content": "<h2>Exporting and Printing</h2><p>Most grids in the application support exporting to Excel and printing.</p><h3>Export to Excel</h3><ol><li>Right-click on any data grid.</li><li>Select <strong>Export to Excel</strong> from the context menu.</li><li>Choose a save location for the .xlsx file.</li><li>The export includes all visible columns with current filters applied.</li></ol><h3>Print</h3><ol><li>Right-click on a data grid.</li><li>Select <strong>Print</strong>.</li><li>Configure print settings (page range, orientation, etc.).</li><li>Click <strong>Print</strong> to send to printer.</li></ol><p><em>Note: Hidden columns are not included in exports or prints.</em></p>",
+      "Keywords": ["export", "excel", "print", "pdf"],
+      "LastUpdated": "2025-12-07T10:00:00"
+    }
+  ]
+}

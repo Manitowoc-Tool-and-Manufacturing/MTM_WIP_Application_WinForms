@@ -373,6 +373,21 @@ public partial class MyControl : ThemedUserControl  // NOT UserControl!
 }
 ```
 
+### Help System
+
+The application features a modern, JSON-driven help system that renders HTML content via WebView2.
+
+**Architecture**:
+- **Content**: Stored as JSON files in `Documentation/Help/JSON/`.
+- **Rendering**: `Service_HelpTemplateEngine` generates HTML from templates in `Documentation/Help/Templates/`.
+- **Viewer**: `HelpViewerForm` hosts a WebView2 control to display content.
+- **Search**: In-memory search implemented in `Service_HelpSystem`.
+
+**Adding Help Content**:
+1. Create a new JSON file in `Documentation/Help/JSON/`.
+2. Follow the schema defined in `Models/Help/Model_HelpCategory.cs`.
+3. Restart the application to see the new category.
+
 ## Pull Request Guidelines
 
 ### Title Format

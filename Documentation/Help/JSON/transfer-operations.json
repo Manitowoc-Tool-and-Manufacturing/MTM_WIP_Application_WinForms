@@ -1,0 +1,25 @@
+{
+  "CategoryId": "transfer-operations",
+  "Title": "Transfer Operations",
+  "Icon": "↔️",
+  "Description": "Learn how to transfer items between locations.",
+  "Order": 4,
+  "Topics": [
+    {
+      "TopicId": "transfer-basic",
+      "Title": "Transferring Inventory",
+      "Summary": "Move items from one location to another.",
+      "Content": "<h2>Transfer Operations</h2><p>The Transfer tab allows you to move inventory items from one location to another without changing the quantity.</p><h3>How to Transfer</h3><ol><li>Navigate to the <strong>Transfer</strong> tab (Ctrl+3).</li><li>Enter search criteria to find the items you want to transfer.</li><li>Click <strong>Search</strong> (Ctrl+S) to display matching inventory.</li><li>Select the items you want to transfer from the grid.</li><li>Enter the <strong>Destination Location</strong> in the 'To Location' field.</li><li>Click <strong>Transfer</strong> (Ctrl+T) to complete the operation.</li></ol><h3>Right Panel</h3><p>Use the Right Panel (toggle with Ctrl+Left/Right Arrow) to see detailed information about selected items before transferring.</p><h3>Reset</h3><p>Press <strong>Ctrl+R</strong> to clear all fields and start a new search.</p>",
+      "Keywords": ["move", "transfer", "location"],
+      "LastUpdated": "2025-12-07T10:00:00"
+    },
+    {
+      "TopicId": "transfer-validation",
+      "Title": "Transfer Validation",
+      "Summary": "Understanding transfer rules and validations.",
+      "Content": "<h2>Transfer Validation</h2><p>The system validates transfers to ensure data integrity.</p><ul><li><strong>Location Validation:</strong> Both source and destination locations must exist in the system.</li><li><strong>Quantity Check:</strong> Cannot transfer more than the available quantity at the source location.</li><li><strong>Part Validation:</strong> Part number must be valid and active in Infor Visual.</li></ul><p>If validation fails, the system will display an error message explaining the issue.</p>",
+      "Keywords": ["validation", "rules", "errors"],
+      "LastUpdated": "2025-12-07T10:00:00"
+    }
+  ]
+}
