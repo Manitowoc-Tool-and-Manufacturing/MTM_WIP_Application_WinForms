@@ -29,6 +29,14 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
         private ToolStripMenuItem MainForm_MenuStrip_Visual_Receiving;
         private ToolStripMenuItem MainForm_MenuStrip_Visual_DieTool;
         private ToolStripMenuItem MainForm_MenuStrip_Visual_Audit;
+        private ToolStripMenuItem MainForm_MenuStrip_Visual_Header_Inventory;
+        private ToolStripMenuItem MainForm_MenuStrip_Visual_Header_Departments;
+        private ToolStripMenuItem MainForm_MenuStrip_Visual_Header_Tools;
+        private ToolStripMenuItem MainForm_MenuStrip_Visual_Header_Analytics;
+        private ToolStripSeparator MainForm_MenuStrip_Visual_Separator1;
+        private ToolStripSeparator MainForm_MenuStrip_Visual_Separator2;
+        private ToolStripSeparator MainForm_MenuStrip_Visual_Separator3;
+        private ToolStripMenuItem MainForm_MenuStrip_Visual_UserAnalytics;
 
         private StatusStrip MainForm_StatusStrip;
         public ToolStripStatusLabel MainForm_StatusStrip_SavedStatus;
@@ -89,6 +97,14 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             MainForm_MenuStrip_Visual_Receiving = new ToolStripMenuItem();
             MainForm_MenuStrip_Visual_DieTool = new ToolStripMenuItem();
             MainForm_MenuStrip_Visual_Audit = new ToolStripMenuItem();
+            MainForm_MenuStrip_Visual_Header_Inventory = new ToolStripMenuItem();
+            MainForm_MenuStrip_Visual_Header_Departments = new ToolStripMenuItem();
+            MainForm_MenuStrip_Visual_Header_Tools = new ToolStripMenuItem();
+            MainForm_MenuStrip_Visual_Header_Analytics = new ToolStripMenuItem();
+            MainForm_MenuStrip_Visual_Separator1 = new ToolStripSeparator();
+            MainForm_MenuStrip_Visual_Separator2 = new ToolStripSeparator();
+            MainForm_MenuStrip_Visual_Separator3 = new ToolStripSeparator();
+            MainForm_MenuStrip_Visual_UserAnalytics = new ToolStripMenuItem();
             developmentToolStripMenuItem = new ToolStripMenuItem();
             viewErrorReportsToolStripMenuItem = new ToolStripMenuItem();
             viewApplicationLogsToolStripMenuItem = new ToolStripMenuItem();
@@ -192,38 +208,88 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             // 
             // MainForm_MenuStrip_Visual
             // 
-            MainForm_MenuStrip_Visual.DropDownItems.AddRange(new ToolStripItem[] { MainForm_MenuStrip_Visual_Inventory, MainForm_MenuStrip_Visual_Receiving, MainForm_MenuStrip_Visual_DieTool, MainForm_MenuStrip_Visual_Audit });
+            MainForm_MenuStrip_Visual.DropDownItems.AddRange(new ToolStripItem[] { MainForm_MenuStrip_Visual_Header_Inventory, MainForm_MenuStrip_Visual_Inventory, MainForm_MenuStrip_Visual_Audit, MainForm_MenuStrip_Visual_Separator1, MainForm_MenuStrip_Visual_Header_Departments, MainForm_MenuStrip_Visual_Receiving, MainForm_MenuStrip_Visual_Separator2, MainForm_MenuStrip_Visual_Header_Tools, MainForm_MenuStrip_Visual_DieTool, MainForm_MenuStrip_Visual_Separator3, MainForm_MenuStrip_Visual_Header_Analytics, MainForm_MenuStrip_Visual_UserAnalytics });
             MainForm_MenuStrip_Visual.Name = "MainForm_MenuStrip_Visual";
             MainForm_MenuStrip_Visual.Size = new Size(50, 24);
             MainForm_MenuStrip_Visual.Text = "Visual";
             // 
+            // MainForm_MenuStrip_Visual_Header_Inventory
+            // 
+            MainForm_MenuStrip_Visual_Header_Inventory.Enabled = false;
+            MainForm_MenuStrip_Visual_Header_Inventory.Name = "MainForm_MenuStrip_Visual_Header_Inventory";
+            MainForm_MenuStrip_Visual_Header_Inventory.Size = new Size(220, 22);
+            MainForm_MenuStrip_Visual_Header_Inventory.Text = "Inventory Management";
+            // 
             // MainForm_MenuStrip_Visual_Inventory
             // 
             MainForm_MenuStrip_Visual_Inventory.Name = "MainForm_MenuStrip_Visual_Inventory";
-            MainForm_MenuStrip_Visual_Inventory.Size = new Size(184, 22);
+            MainForm_MenuStrip_Visual_Inventory.Size = new Size(220, 22);
             MainForm_MenuStrip_Visual_Inventory.Text = "Visual Inventory";
             MainForm_MenuStrip_Visual_Inventory.Click += MainForm_MenuStrip_Visual_Inventory_Click;
-            // 
-            // MainForm_MenuStrip_Visual_Receiving
-            // 
-            MainForm_MenuStrip_Visual_Receiving.Name = "MainForm_MenuStrip_Visual_Receiving";
-            MainForm_MenuStrip_Visual_Receiving.Size = new Size(184, 22);
-            MainForm_MenuStrip_Visual_Receiving.Text = "Receiving Analytics";
-            MainForm_MenuStrip_Visual_Receiving.Click += MainForm_MenuStrip_Visual_Receiving_Click;
-            // 
-            // MainForm_MenuStrip_Visual_DieTool
-            // 
-            MainForm_MenuStrip_Visual_DieTool.Name = "MainForm_MenuStrip_Visual_DieTool";
-            MainForm_MenuStrip_Visual_DieTool.Size = new Size(184, 22);
-            MainForm_MenuStrip_Visual_DieTool.Text = "Die && Tool Discovery";
-            MainForm_MenuStrip_Visual_DieTool.Click += MainForm_MenuStrip_Visual_DieTool_Click;
             // 
             // MainForm_MenuStrip_Visual_Audit
             // 
             MainForm_MenuStrip_Visual_Audit.Name = "MainForm_MenuStrip_Visual_Audit";
-            MainForm_MenuStrip_Visual_Audit.Size = new Size(184, 22);
-            MainForm_MenuStrip_Visual_Audit.Text = "Inventory Audit";
+            MainForm_MenuStrip_Visual_Audit.Size = new Size(220, 22);
+            MainForm_MenuStrip_Visual_Audit.Text = "Visual Inventory History";
             MainForm_MenuStrip_Visual_Audit.Click += MainForm_MenuStrip_Visual_Audit_Click;
+            // 
+            // MainForm_MenuStrip_Visual_Separator1
+            // 
+            MainForm_MenuStrip_Visual_Separator1.Name = "MainForm_MenuStrip_Visual_Separator1";
+            MainForm_MenuStrip_Visual_Separator1.Size = new Size(217, 6);
+            // 
+            // MainForm_MenuStrip_Visual_Header_Departments
+            // 
+            MainForm_MenuStrip_Visual_Header_Departments.Enabled = false;
+            MainForm_MenuStrip_Visual_Header_Departments.Name = "MainForm_MenuStrip_Visual_Header_Departments";
+            MainForm_MenuStrip_Visual_Header_Departments.Size = new Size(220, 22);
+            MainForm_MenuStrip_Visual_Header_Departments.Text = "Departments";
+            // 
+            // MainForm_MenuStrip_Visual_Receiving
+            // 
+            MainForm_MenuStrip_Visual_Receiving.Name = "MainForm_MenuStrip_Visual_Receiving";
+            MainForm_MenuStrip_Visual_Receiving.Size = new Size(220, 22);
+            MainForm_MenuStrip_Visual_Receiving.Text = "Receiving Department";
+            MainForm_MenuStrip_Visual_Receiving.Click += MainForm_MenuStrip_Visual_Receiving_Click;
+            // 
+            // MainForm_MenuStrip_Visual_Separator2
+            // 
+            MainForm_MenuStrip_Visual_Separator2.Name = "MainForm_MenuStrip_Visual_Separator2";
+            MainForm_MenuStrip_Visual_Separator2.Size = new Size(217, 6);
+            // 
+            // MainForm_MenuStrip_Visual_Header_Tools
+            // 
+            MainForm_MenuStrip_Visual_Header_Tools.Enabled = false;
+            MainForm_MenuStrip_Visual_Header_Tools.Name = "MainForm_MenuStrip_Visual_Header_Tools";
+            MainForm_MenuStrip_Visual_Header_Tools.Size = new Size(220, 22);
+            MainForm_MenuStrip_Visual_Header_Tools.Text = "Tools";
+            // 
+            // MainForm_MenuStrip_Visual_DieTool
+            // 
+            MainForm_MenuStrip_Visual_DieTool.Name = "MainForm_MenuStrip_Visual_DieTool";
+            MainForm_MenuStrip_Visual_DieTool.Size = new Size(220, 22);
+            MainForm_MenuStrip_Visual_DieTool.Text = "Die && Part Information";
+            MainForm_MenuStrip_Visual_DieTool.Click += MainForm_MenuStrip_Visual_DieTool_Click;
+            // 
+            // MainForm_MenuStrip_Visual_Separator3
+            // 
+            MainForm_MenuStrip_Visual_Separator3.Name = "MainForm_MenuStrip_Visual_Separator3";
+            MainForm_MenuStrip_Visual_Separator3.Size = new Size(217, 6);
+            // 
+            // MainForm_MenuStrip_Visual_Header_Analytics
+            // 
+            MainForm_MenuStrip_Visual_Header_Analytics.Enabled = false;
+            MainForm_MenuStrip_Visual_Header_Analytics.Name = "MainForm_MenuStrip_Visual_Header_Analytics";
+            MainForm_MenuStrip_Visual_Header_Analytics.Size = new Size(220, 22);
+            MainForm_MenuStrip_Visual_Header_Analytics.Text = "Analytics";
+            // 
+            // MainForm_MenuStrip_Visual_UserAnalytics
+            // 
+            MainForm_MenuStrip_Visual_UserAnalytics.Name = "MainForm_MenuStrip_Visual_UserAnalytics";
+            MainForm_MenuStrip_Visual_UserAnalytics.Size = new Size(220, 22);
+            MainForm_MenuStrip_Visual_UserAnalytics.Text = "Visual User Analytics";
+            MainForm_MenuStrip_Visual_UserAnalytics.Click += MainForm_MenuStrip_Visual_UserAnalytics_Click;
             // 
             // developmentToolStripMenuItem
             // 

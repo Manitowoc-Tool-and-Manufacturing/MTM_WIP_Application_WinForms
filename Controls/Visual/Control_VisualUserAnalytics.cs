@@ -79,18 +79,8 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
 
         private void ApplyPrivileges()
         {
-            bool hasAccess = Model_Application_Variables.UserTypeAdmin || Model_Application_Variables.UserTypeDeveloper;
-            
-            if (!hasAccess)
-            {
-                Control_VisualUserAnalytics_TableLayout_Main.Visible = false;
-                // Optionally show a message or label saying "Access Denied"
-                // For now, just hiding the content as per plan "Hide/Disable main layout"
-            }
-            else
-            {
-                Control_VisualUserAnalytics_TableLayout_Main.Visible = true;
-            }
+            // Accessible to all users, but data loading is restricted for non-admins
+            Control_VisualUserAnalytics_TableLayout_Main.Visible = true;
         }
         #endregion
 
@@ -218,8 +208,41 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                 if (Control_VisualUserAnalytics_CheckBox_Shift3.Checked) selectedShifts.Add(3);
                 if (Control_VisualUserAnalytics_CheckBox_ShiftWeekend.Checked) selectedShifts.Add(4);
                 
+                bool hasFullAccess = Model_Application_Variables.UserTypeAdmin || Model_Application_Variables.UserTypeDeveloper;
+                string currentUser = Model_Application_Variables.User;
+
                 foreach (var userId in activeUsers)
                 {
+                    // If not admin/dev, only add if it matches current user
+                    if (!hasFullAccess)
+                    {
+                        // Check if this Visual User ID matches the current logged-in WIP User
+                        // We need to find the WIP user record for this Visual ID to be sure, 
+                        // or use the IsUserMatch heuristic.
+                        
+                        // Find matching WIP user first to be accurate
+                        var matchingWipUserForCheck = wipUsers.FirstOrDefault(r => IsUserMatch(userId, r["User"]?.ToString() ?? ""));
+                        
+                        // If we found a match, check if it's the current user
+                        if (matchingWipUserForCheck != null)
+                        {
+                            string wipUserName = matchingWipUserForCheck["User"]?.ToString() ?? "";
+                            if (!string.Equals(wipUserName, currentUser, StringComparison.OrdinalIgnoreCase))
+                            {
+                                continue; // Skip other users
+                            }
+                        }
+                        else
+                        {
+                            // If no WIP match found, we can't verify ownership, so skip to be safe
+                            // OR check if the Visual ID looks like the current user (heuristic)
+                            if (!IsUserMatch(userId, currentUser))
+                            {
+                                continue;
+                            }
+                        }
+                    }
+
                     int shift = 0;
 
                     // Try to find shift from WIP Users first

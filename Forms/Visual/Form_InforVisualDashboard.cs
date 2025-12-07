@@ -58,6 +58,12 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             InforVisualDashboard_Button_MaterialHandlerGeneral.Click += CategoryButton_Click;
         }
 
+        private void ApplyPrivileges()
+        {
+            // Currently all categories are accessible to all users with Visual credentials.
+            // This method is a placeholder for future granular permission logic.
+        }
+
         private async Task LoadCategoryDataAsync(Enum_VisualDashboardCategory category)
         {
             if (_visualService == null)
@@ -217,6 +223,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
                 }
                 else
                 {
+                    ApplyPrivileges();
                     // Load default category
                     await LoadCategoryDataAsync(Enum_VisualDashboardCategory.Inventory);
                 }

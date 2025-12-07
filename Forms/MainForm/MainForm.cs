@@ -263,6 +263,12 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             Service_DebugTracer.TraceMethodExit(null, nameof(InitializeStartupComponents), nameof(MainForm));
         }
 
+        private void ApplyPrivileges()
+        {
+            ConfigureDevelopmentMenuVisibility();
+            ConfigureVisualMenuVisibility();
+        }
+
         private void WireUpFormShownEvent()
         {
             try
@@ -279,11 +285,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
 
                         Debug.WriteLine("[DEBUG] [MainForm.ctor] User full name loaded.");
 
-                        // Configure Development Menu visibility based on username
-                        ConfigureDevelopmentMenuVisibility();
-
-                        // Configure Visual Menu visibility
-                        ConfigureVisualMenuVisibility();
+                        ApplyPrivileges();
 
                         await Task.Delay(500);
                         SetInitialFocusToInventoryTab();
@@ -457,6 +459,11 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
         private void MainForm_MenuStrip_Visual_Audit_Click(object? sender, EventArgs e)
         {
             OpenVisualDashboard(Enum_VisualDashboardCategory.InventoryAuditing);
+        }
+
+        private void MainForm_MenuStrip_Visual_UserAnalytics_Click(object? sender, EventArgs e)
+        {
+            OpenVisualDashboard(Enum_VisualDashboardCategory.MaterialHandlerAnalytics_General);
         }
 
         private void SetInitialFocusToInventoryTab()
