@@ -104,5 +104,5 @@
     "DB_CONNECTION_STRING": "Server=localhost; Port=3306; Database=mtm_wip_application_winforms_test; Uid=root;Pwd=root; SslMode=none"
   },
 
-  "forwardPorts": [3306, 5000, 5001]
+  "forwardPorts": [3307, 5000, 5001]
 }
