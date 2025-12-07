@@ -34,8 +34,8 @@ namespace MTM_WIP_Application_Winforms.Data
         /// Inserts a new feedback record.
         /// </summary>
         /// <param name="model">The feedback model containing data to insert.</param>
-        /// <returns>The new FeedbackID.</returns>
-        Task<Model_Dao_Result<int>> InsertAsync(Model_UserFeedback model);
+        /// <returns>The inserted model with generated ID and TrackingNumber.</returns>
+        Task<Model_Dao_Result<Model_UserFeedback>> InsertAsync(Model_UserFeedback model);
 
         /// <summary>
         /// Updates the status of a feedback record.

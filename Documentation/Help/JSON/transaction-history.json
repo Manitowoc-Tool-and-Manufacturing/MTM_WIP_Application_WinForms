@@ -6,7 +6,7 @@
   "Order": 6,
   "Topics": [
     {
-      "TopicId": "view-history",
+      "TopicId": "overview",
       "Title": "Viewing Transaction History",
       "Summary": "Search and review past inventory transactions.",
       "Content": "<h2>Transaction History</h2><p>Access the full transaction log to review all inventory movements.</p><h3>Accessing History</h3><ol><li>Navigate to <strong>Menu > View > Transactions</strong>.</li><li>The Transaction History window displays all recorded inventory movements.</li></ol><h3>Search Filters</h3><p>Use the search panel to filter transactions by:</p><ul><li><strong>Date Range:</strong> Specify start and end dates.</li><li><strong>Part Number:</strong> Filter by specific part.</li><li><strong>Location:</strong> Show transactions for a specific location.</li><li><strong>User:</strong> See transactions by a specific user (Admin only).</li><li><strong>Transaction Type:</strong> Filter by IN, OUT, or TRANSFER.</li></ul><h3>Pagination</h3><p>Large result sets are automatically paginated. Use the pagination controls at the bottom of the grid to navigate through pages.</p>",
@@ -14,7 +14,7 @@
       "LastUpdated": "2025-12-07T10:00:00"
     },
     {
-      "TopicId": "transaction-details",
+      "TopicId": "lifecycle-details",
       "Title": "Transaction Details",
       "Summary": "Understanding transaction information.",
       "Content": "<h2>Transaction Details</h2><p>Each transaction record includes comprehensive information about the inventory movement.</p><h3>Transaction Fields</h3><ul><li><strong>Transaction ID:</strong> Unique identifier for the transaction.</li><li><strong>Timestamp:</strong> Exact date and time the transaction was recorded.</li><li><strong>User:</strong> The user who performed the transaction.</li><li><strong>Part Number:</strong> The part that was moved.</li><li><strong>Quantity:</strong> Amount moved.</li><li><strong>From Location:</strong> Source location (for OUT and TRANSFER).</li><li><strong>To Location:</strong> Destination location (for IN and TRANSFER).</li><li><strong>Operation:</strong> Associated manufacturing operation (if applicable).</li></ul><h3>Exporting History</h3><p>Right-click on the grid and select <strong>Export to Excel</strong> to download transaction history for external analysis.</p>",

@@ -48,6 +48,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_About_Label_AppInfo_Title = new Label();
             Control_About_Label_AppInfo_Owner = new Label();
             Control_About_Label_AppInfo_Copyright = new Label();
+            SettingsForm_Button_Help_About = new Button();
             Control_About_TableLayout_Main.SuspendLayout();
             Control_About_Panel_AppInfo.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
@@ -82,12 +83,12 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_About_Panel_AppInfo.BorderStyle = BorderStyle.FixedSingle;
             Control_About_Panel_AppInfo.Controls.Add(tableLayoutPanel1);
             Control_About_Panel_AppInfo.Dock = DockStyle.Fill;
-            Control_About_Panel_AppInfo.Location = new Point(196, 20);
-            Control_About_Panel_AppInfo.Margin = new Padding(10);
+            Control_About_Panel_AppInfo.Location = new Point(184, 10);
+            Control_About_Panel_AppInfo.Margin = new Padding(0);
             Control_About_Panel_AppInfo.Name = "Control_About_Panel_AppInfo";
             Control_About_Panel_AppInfo.Padding = new Padding(20);
             Control_About_TableLayout_Main.SetRowSpan(Control_About_Panel_AppInfo, 2);
-            Control_About_Panel_AppInfo.Size = new Size(407, 560);
+            Control_About_Panel_AppInfo.Size = new Size(430, 580);
             Control_About_Panel_AppInfo.TabIndex = 0;
             // 
             // tableLayoutPanel1
@@ -113,7 +114,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            tableLayoutPanel1.Size = new Size(365, 518);
+            tableLayoutPanel1.Size = new Size(388, 538);
             tableLayoutPanel1.TabIndex = 4;
             // 
             // tableLayoutPanel2
@@ -129,7 +130,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             tableLayoutPanel2.Controls.Add(Control_About_Label_DevInfo_Name, 0, 1);
             tableLayoutPanel2.Controls.Add(Control_About_Label_ReleaseNotes_Title, 0, 3);
             tableLayoutPanel2.Dock = DockStyle.Fill;
-            tableLayoutPanel2.Location = new Point(3, 290);
+            tableLayoutPanel2.Location = new Point(3, 316);
             tableLayoutPanel2.Name = "tableLayoutPanel2";
             tableLayoutPanel2.RowCount = 7;
             tableLayoutPanel2.RowStyles.Add(new RowStyle());
@@ -139,25 +140,27 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             tableLayoutPanel2.RowStyles.Add(new RowStyle());
             tableLayoutPanel2.RowStyles.Add(new RowStyle());
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel2.Size = new Size(359, 225);
+            tableLayoutPanel2.Size = new Size(382, 219);
             tableLayoutPanel2.TabIndex = 3;
             // 
-            // Control_ReceivingAnalytics_TableLayoutPanel_ReceivingScopeHeader
+            // tableLayoutPanel3
             // 
             tableLayoutPanel3.AutoSize = true;
             tableLayoutPanel3.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            tableLayoutPanel3.ColumnCount = 3;
-            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel3.ColumnCount = 4;
+            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
             tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50.0000076F));
+            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.33334F));
+            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
             tableLayoutPanel3.Controls.Add(Control_About_Button_ViewReleaseNotes, 1, 0);
+            tableLayoutPanel3.Controls.Add(SettingsForm_Button_Help_About, 2, 0);
             tableLayoutPanel3.Dock = DockStyle.Fill;
-            tableLayoutPanel3.Location = new Point(6, 173);
+            tableLayoutPanel3.Location = new Point(6, 175);
             tableLayoutPanel3.Margin = new Padding(6);
-            tableLayoutPanel3.Name = "Control_ReceivingAnalytics_TableLayoutPanel_ReceivingScopeHeader";
+            tableLayoutPanel3.Name = "tableLayoutPanel3";
             tableLayoutPanel3.RowCount = 1;
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel3.Size = new Size(347, 46);
+            tableLayoutPanel3.Size = new Size(370, 38);
             tableLayoutPanel3.TabIndex = 3;
             // 
             // Control_About_Button_ViewReleaseNotes
@@ -166,9 +169,11 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_About_Button_ViewReleaseNotes.FlatStyle = FlatStyle.Flat;
             Control_About_Button_ViewReleaseNotes.Font = new Font("Segoe UI Emoji", 10F, FontStyle.Bold);
             Control_About_Button_ViewReleaseNotes.ForeColor = Color.White;
-            Control_About_Button_ViewReleaseNotes.Location = new Point(73, 3);
+            Control_About_Button_ViewReleaseNotes.Location = new Point(40, 3);
+            Control_About_Button_ViewReleaseNotes.MaximumSize = new Size(0, 32);
+            Control_About_Button_ViewReleaseNotes.MinimumSize = new Size(0, 32);
             Control_About_Button_ViewReleaseNotes.Name = "Control_About_Button_ViewReleaseNotes";
-            Control_About_Button_ViewReleaseNotes.Size = new Size(200, 40);
+            Control_About_Button_ViewReleaseNotes.Size = new Size(250, 32);
             Control_About_Button_ViewReleaseNotes.TabIndex = 2;
             Control_About_Button_ViewReleaseNotes.Text = "View Release Notes";
             Control_About_Button_ViewReleaseNotes.UseVisualStyleBackColor = false;
@@ -183,7 +188,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_About_Label_DevInfo_Title.Location = new Point(6, 6);
             Control_About_Label_DevInfo_Title.Margin = new Padding(6);
             Control_About_Label_DevInfo_Title.Name = "Control_About_Label_DevInfo_Title";
-            Control_About_Label_DevInfo_Title.Size = new Size(347, 25);
+            Control_About_Label_DevInfo_Title.Size = new Size(370, 26);
             Control_About_Label_DevInfo_Title.TabIndex = 0;
             Control_About_Label_DevInfo_Title.Text = "Developer Information";
             Control_About_Label_DevInfo_Title.TextAlign = ContentAlignment.MiddleLeft;
@@ -192,7 +197,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             Control_About_Label_ReleaseNotes_Desc.AutoSize = true;
             Control_About_Label_ReleaseNotes_Desc.Font = new Font("Segoe UI Emoji", 10F);
-            Control_About_Label_ReleaseNotes_Desc.Location = new Point(6, 142);
+            Control_About_Label_ReleaseNotes_Desc.Location = new Point(6, 144);
             Control_About_Label_ReleaseNotes_Desc.Margin = new Padding(6);
             Control_About_Label_ReleaseNotes_Desc.Name = "Control_About_Label_ReleaseNotes_Desc";
             Control_About_Label_ReleaseNotes_Desc.Size = new Size(347, 19);
@@ -204,10 +209,10 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_About_Label_DevInfo_Contact.AutoSize = true;
             Control_About_Label_DevInfo_Contact.Dock = DockStyle.Fill;
             Control_About_Label_DevInfo_Contact.Font = new Font("Segoe UI Emoji", 10F);
-            Control_About_Label_DevInfo_Contact.Location = new Point(6, 74);
+            Control_About_Label_DevInfo_Contact.Location = new Point(6, 75);
             Control_About_Label_DevInfo_Contact.Margin = new Padding(6);
             Control_About_Label_DevInfo_Contact.Name = "Control_About_Label_DevInfo_Contact";
-            Control_About_Label_DevInfo_Contact.Size = new Size(347, 19);
+            Control_About_Label_DevInfo_Contact.Size = new Size(370, 19);
             Control_About_Label_DevInfo_Contact.TabIndex = 2;
             Control_About_Label_DevInfo_Contact.Text = "Contact: jkoll@mantoolmfg.com";
             Control_About_Label_DevInfo_Contact.TextAlign = ContentAlignment.MiddleLeft;
@@ -217,10 +222,10 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_About_Label_DevInfo_Name.AutoSize = true;
             Control_About_Label_DevInfo_Name.Dock = DockStyle.Fill;
             Control_About_Label_DevInfo_Name.Font = new Font("Segoe UI Emoji", 10F);
-            Control_About_Label_DevInfo_Name.Location = new Point(6, 43);
+            Control_About_Label_DevInfo_Name.Location = new Point(6, 44);
             Control_About_Label_DevInfo_Name.Margin = new Padding(6);
             Control_About_Label_DevInfo_Name.Name = "Control_About_Label_DevInfo_Name";
-            Control_About_Label_DevInfo_Name.Size = new Size(347, 19);
+            Control_About_Label_DevInfo_Name.Size = new Size(370, 19);
             Control_About_Label_DevInfo_Name.TabIndex = 1;
             Control_About_Label_DevInfo_Name.Text = "Developer: John Koll";
             Control_About_Label_DevInfo_Name.TextAlign = ContentAlignment.MiddleLeft;
@@ -230,14 +235,14 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_About_Label_ReleaseNotes_Title.AutoSize = true;
             Control_About_Label_ReleaseNotes_Title.Font = new Font("Segoe UI Emoji", 14F, FontStyle.Bold);
             Control_About_Label_ReleaseNotes_Title.ForeColor = Color.FromArgb(0, 120, 212);
-            Control_About_Label_ReleaseNotes_Title.Location = new Point(6, 105);
+            Control_About_Label_ReleaseNotes_Title.Location = new Point(6, 106);
             Control_About_Label_ReleaseNotes_Title.Margin = new Padding(6);
             Control_About_Label_ReleaseNotes_Title.Name = "Control_About_Label_ReleaseNotes_Title";
-            Control_About_Label_ReleaseNotes_Title.Size = new Size(134, 25);
+            Control_About_Label_ReleaseNotes_Title.Size = new Size(143, 26);
             Control_About_Label_ReleaseNotes_Title.TabIndex = 0;
             Control_About_Label_ReleaseNotes_Title.Text = "Release Notes";
             // 
-            // Control_ReceivingAnalytics_TableLayoutPanel_ReceivingScopeContents
+            // tableLayoutPanel4
             // 
             tableLayoutPanel4.AutoSize = true;
             tableLayoutPanel4.AutoSizeMode = AutoSizeMode.GrowAndShrink;
@@ -247,13 +252,13 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50.0000076F));
             tableLayoutPanel4.Controls.Add(pictureBox1, 1, 1);
             tableLayoutPanel4.Dock = DockStyle.Fill;
-            tableLayoutPanel4.Location = new Point(3, 133);
-            tableLayoutPanel4.Name = "Control_ReceivingAnalytics_TableLayoutPanel_ReceivingScopeContents";
+            tableLayoutPanel4.Location = new Point(3, 134);
+            tableLayoutPanel4.Name = "tableLayoutPanel4";
             tableLayoutPanel4.RowCount = 3;
             tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 49.9999962F));
             tableLayoutPanel4.RowStyles.Add(new RowStyle());
             tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 50.0000076F));
-            tableLayoutPanel4.Size = new Size(359, 151);
+            tableLayoutPanel4.Size = new Size(382, 176);
             tableLayoutPanel4.TabIndex = 1;
             // 
             // pictureBox1
@@ -261,7 +266,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             pictureBox1.Dock = DockStyle.Fill;
             pictureBox1.Image = Properties.Resources.MTM;
             pictureBox1.InitialImage = Properties.Resources.MTM;
-            pictureBox1.Location = new Point(89, 25);
+            pictureBox1.Location = new Point(101, 37);
             pictureBox1.Name = "pictureBox1";
             pictureBox1.Size = new Size(179, 100);
             pictureBox1.SizeMode = PictureBoxSizeMode.AutoSize;
@@ -273,10 +278,10 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_About_Label_AppInfo_Version.AutoSize = true;
             Control_About_Label_AppInfo_Version.Dock = DockStyle.Fill;
             Control_About_Label_AppInfo_Version.Font = new Font("Segoe UI Emoji", 10F);
-            Control_About_Label_AppInfo_Version.Location = new Point(6, 43);
+            Control_About_Label_AppInfo_Version.Location = new Point(6, 44);
             Control_About_Label_AppInfo_Version.Margin = new Padding(6);
             Control_About_Label_AppInfo_Version.Name = "Control_About_Label_AppInfo_Version";
-            Control_About_Label_AppInfo_Version.Size = new Size(353, 19);
+            Control_About_Label_AppInfo_Version.Size = new Size(376, 19);
             Control_About_Label_AppInfo_Version.TabIndex = 1;
             Control_About_Label_AppInfo_Version.Text = "Version:";
             Control_About_Label_AppInfo_Version.TextAlign = ContentAlignment.MiddleLeft;
@@ -290,7 +295,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_About_Label_AppInfo_Title.Location = new Point(6, 6);
             Control_About_Label_AppInfo_Title.Margin = new Padding(6);
             Control_About_Label_AppInfo_Title.Name = "Control_About_Label_AppInfo_Title";
-            Control_About_Label_AppInfo_Title.Size = new Size(353, 25);
+            Control_About_Label_AppInfo_Title.Size = new Size(376, 26);
             Control_About_Label_AppInfo_Title.TabIndex = 0;
             Control_About_Label_AppInfo_Title.Text = "Application Information";
             Control_About_Label_AppInfo_Title.TextAlign = ContentAlignment.MiddleLeft;
@@ -300,10 +305,10 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_About_Label_AppInfo_Owner.AutoSize = true;
             Control_About_Label_AppInfo_Owner.Dock = DockStyle.Fill;
             Control_About_Label_AppInfo_Owner.Font = new Font("Segoe UI Emoji", 10F);
-            Control_About_Label_AppInfo_Owner.Location = new Point(6, 105);
+            Control_About_Label_AppInfo_Owner.Location = new Point(6, 106);
             Control_About_Label_AppInfo_Owner.Margin = new Padding(6);
             Control_About_Label_AppInfo_Owner.Name = "Control_About_Label_AppInfo_Owner";
-            Control_About_Label_AppInfo_Owner.Size = new Size(353, 19);
+            Control_About_Label_AppInfo_Owner.Size = new Size(376, 19);
             Control_About_Label_AppInfo_Owner.TabIndex = 3;
             Control_About_Label_AppInfo_Owner.Text = "Owner: Manitowoc Tool and Manufacturing";
             Control_About_Label_AppInfo_Owner.TextAlign = ContentAlignment.MiddleLeft;
@@ -313,13 +318,26 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_About_Label_AppInfo_Copyright.AutoSize = true;
             Control_About_Label_AppInfo_Copyright.Dock = DockStyle.Fill;
             Control_About_Label_AppInfo_Copyright.Font = new Font("Segoe UI Emoji", 10F);
-            Control_About_Label_AppInfo_Copyright.Location = new Point(6, 74);
+            Control_About_Label_AppInfo_Copyright.Location = new Point(6, 75);
             Control_About_Label_AppInfo_Copyright.Margin = new Padding(6);
             Control_About_Label_AppInfo_Copyright.Name = "Control_About_Label_AppInfo_Copyright";
-            Control_About_Label_AppInfo_Copyright.Size = new Size(353, 19);
+            Control_About_Label_AppInfo_Copyright.Size = new Size(376, 19);
             Control_About_Label_AppInfo_Copyright.TabIndex = 2;
             Control_About_Label_AppInfo_Copyright.Text = "Copyright:";
             Control_About_Label_AppInfo_Copyright.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // SettingsForm_Button_Help_About
+            // 
+            SettingsForm_Button_Help_About.AutoSize = true;
+            SettingsForm_Button_Help_About.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            SettingsForm_Button_Help_About.Location = new Point(296, 3);
+            SettingsForm_Button_Help_About.MaximumSize = new Size(32, 32);
+            SettingsForm_Button_Help_About.MinimumSize = new Size(32, 32);
+            SettingsForm_Button_Help_About.Name = "SettingsForm_Button_Help_About";
+            SettingsForm_Button_Help_About.Size = new Size(32, 32);
+            SettingsForm_Button_Help_About.TabIndex = 12;
+            SettingsForm_Button_Help_About.Text = "?";
+            SettingsForm_Button_Help_About.UseVisualStyleBackColor = true;
             // 
             // Control_About
             // 
@@ -337,6 +355,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             tableLayoutPanel2.ResumeLayout(false);
             tableLayoutPanel2.PerformLayout();
             tableLayoutPanel3.ResumeLayout(false);
+            tableLayoutPanel3.PerformLayout();
             tableLayoutPanel4.ResumeLayout(false);
             tableLayoutPanel4.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
@@ -363,5 +382,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         private TableLayoutPanel tableLayoutPanel3;
         private TableLayoutPanel tableLayoutPanel4;
         private PictureBox pictureBox1;
+        private Button SettingsForm_Button_Help_About;
     }
 }

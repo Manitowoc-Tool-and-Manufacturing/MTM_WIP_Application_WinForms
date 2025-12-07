@@ -63,6 +63,7 @@ namespace MTM_WIP_Application_Winforms.Services.Help
             contentSb.Append($"<h1>{currentTopic.Title}</h1>");
             contentSb.Append($"<div class='topic-meta'>Last Updated: {currentTopic.LastUpdated?.ToShortDateString() ?? "N/A"}</div>");
             contentSb.Append(currentTopic.Content);
+            contentSb.Append(GenerateFeedbackSection(currentTopic.TopicId, category.CategoryId));
 
             return WrapInBaseTemplate(currentTopic.Title, contentSb.ToString(), sidebarSb.ToString());
         }
@@ -356,6 +357,71 @@ namespace MTM_WIP_Application_Winforms.Services.Help
     </script>
 </body>
 </html>";
+        }
+        private string GenerateFeedbackSection(string topicId, string categoryId)
+        {
+            return $@"
+                <div class='feedback-section' style='margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee;'>
+                    <h3 style='font-size: 1.1em; margin-bottom: 10px;'>Was this article helpful?</h3>
+                    <div id='feedback-initial'>
+                        <button class='btn-feedback' onclick='submitFeedback(""{topicId}"", ""{categoryId}"", true)'>Yes</button>
+                        <button class='btn-feedback' onclick='submitFeedback(""{topicId}"", ""{categoryId}"", false)'>No</button>
+                    </div>
+                    <div id='feedback-followup' style='display:none; margin-top: 15px;'>
+                        <p id='feedback-message' style='color: green; font-weight: bold; margin-bottom: 10px;'>Thank you for your feedback!</p>
+                        <div id='comment-section'>
+                            <p style='margin-bottom: 5px;'>Additional comments (optional):</p>
+                            <textarea id='comment-text' rows='3' style='width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; font-family: inherit;'></textarea>
+                            <button class='btn-feedback' style='margin-top: 10px; background-color: #0078d4; color: white;' onclick='submitComment()'>Submit Comment</button>
+                        </div>
+                    </div>
+                </div>
+                <style>
+                    .btn-feedback {{
+                        padding: 6px 16px;
+                        margin-right: 10px;
+                        border: 1px solid #ccc;
+                        background-color: #f8f9fa;
+                        border-radius: 4px;
+                        cursor: pointer;
+                        font-size: 14px;
+                    }}
+                    .btn-feedback:hover {{
+                        background-color: #e9ecef;
+                    }}
+                </style>
+                <script>
+                    let currentFeedbackId = 0;
+                    
+                    function submitFeedback(topicId, categoryId, isHelpful) {{
+                        // Disable buttons
+                        const buttons = document.querySelectorAll('#feedback-initial button');
+                        buttons.forEach(b => b.disabled = true);
+                        
+                        window.chrome.webview.postMessage({{
+                            type: 'submitFeedback',
+                            data: {{ topicId: topicId, categoryId: categoryId, isHelpful: isHelpful }}
+                        }});
+                    }}
+
+                    function onFeedbackSubmitted(feedbackId) {{
+                        currentFeedbackId = feedbackId;
+                        document.getElementById('feedback-initial').style.display = 'none';
+                        document.getElementById('feedback-followup').style.display = 'block';
+                    }}
+
+                    function submitComment() {{
+                        const comment = document.getElementById('comment-text').value;
+                        if (!comment) return;
+                        
+                        window.chrome.webview.postMessage({{
+                            type: 'addComment',
+                            data: {{ feedbackId: currentFeedbackId, comment: comment }}
+                        }});
+                        
+                        document.getElementById('comment-section').innerHTML = '<p>Comment submitted. Thanks again!</p>';
+                    }}
+                </script>";
         }
     }
 }

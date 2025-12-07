@@ -56,7 +56,7 @@ namespace MTM_WIP_Application_Winforms.Data
         }
 
         /// <inheritdoc/>
-        public async Task<Model_Dao_Result<int>> InsertAsync(Model_UserFeedback model)
+        public async Task<Model_Dao_Result<Model_UserFeedback>> InsertAsync(Model_UserFeedback model)
         {
             var parameters = new Dictionary<string, object>
             {
@@ -95,15 +95,15 @@ namespace MTM_WIP_Application_Winforms.Data
             {
                 if (result.Data.TryGetValue("FeedbackID", out var idObj) && int.TryParse(idObj?.ToString(), out int id))
                 {
-                    // Also update the model with the new tracking number if possible
+                    model.FeedbackID = id;
                     if (result.Data.TryGetValue("TrackingNumber", out var trackObj))
                     {
                         model.TrackingNumber = trackObj?.ToString() ?? string.Empty;
                     }
-                    return Model_Dao_Result<int>.Success(id);
+                    return Model_Dao_Result<Model_UserFeedback>.Success(model);
                 }
             }
-            return Model_Dao_Result<int>.Failure(result.ErrorMessage ?? "Failed to insert feedback");
+            return Model_Dao_Result<Model_UserFeedback>.Failure(result.ErrorMessage ?? "Failed to insert feedback");
         }
 
         /// <inheritdoc/>

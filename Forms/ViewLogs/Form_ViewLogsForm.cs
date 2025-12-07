@@ -3,6 +3,7 @@ using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
+using MTM_WIP_Application_Winforms.Forms.Help;
 using System.Text;
 
 namespace MTM_WIP_Application_Winforms.Forms.ViewLogs;
@@ -56,6 +57,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
     public ViewApplicationLogsForm()
     {
         InitializeComponent();
+        InitializeHelpButton();
 
         // Performance optimization and DPI scaling now handled by ThemedForm.OnLoad
         SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint | ControlStyles.UserPaint, true);
@@ -1911,6 +1913,31 @@ public partial class ViewApplicationLogsForm : ThemedForm
 
         // Apply background color to txtLevel textbox
         txtLevel.BackColor = backgroundColor;
+    }
+
+    #endregion
+
+    #region Helpers
+
+    private Button? ViewApplicationLogsForm_Button_Help;
+
+    private void InitializeHelpButton()
+    {
+        ViewApplicationLogsForm_Button_Help = new Button();
+        ViewApplicationLogsForm_Button_Help.Name = "ViewApplicationLogsForm_Button_Help";
+        ViewApplicationLogsForm_Button_Help.Text = "?";
+        ViewApplicationLogsForm_Button_Help.Size = new Size(24, 24);
+        ViewApplicationLogsForm_Button_Help.Location = new Point(this.Width - 40, 5); 
+        ViewApplicationLogsForm_Button_Help.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+        ViewApplicationLogsForm_Button_Help.Click += (s, e) => 
+        {
+            var helpForm = new HelpViewerForm();
+            helpForm.Show();
+            helpForm.ShowHelp("admin-tools", "logs");
+        };
+        
+        this.Controls.Add(ViewApplicationLogsForm_Button_Help);
+        ViewApplicationLogsForm_Button_Help.BringToFront();
     }
 
     #endregion

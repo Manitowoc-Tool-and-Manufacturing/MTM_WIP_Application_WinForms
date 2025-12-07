@@ -4,6 +4,7 @@ using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services.Analytics;
 using MTM_WIP_Application_Winforms.Services;
 using MTM_WIP_Application_Winforms.Services.Logging;
+using MTM_WIP_Application_Winforms.Forms.Help;
 
 namespace MTM_WIP_Application_Winforms.Forms.WIPAppAnalytics
 {
@@ -14,6 +15,7 @@ namespace MTM_WIP_Application_Winforms.Forms.WIPAppAnalytics
         public Form_WIPUserAnalytics()
         {
             InitializeComponent();
+            InitializeHelpButton();
             _analyticsService = new Service_Analytics();
             
             // Set default dates
@@ -217,5 +219,30 @@ DATA REFRESH:
             
             UpdateStatus("Ready", 100);
         }
+    #region Helpers
+
+    private Button? Form_WIPUserAnalytics_Button_Help;
+
+    private void InitializeHelpButton()
+    {
+        Form_WIPUserAnalytics_Button_Help = new Button();
+        Form_WIPUserAnalytics_Button_Help.Name = "Form_WIPUserAnalytics_Button_Help";
+        Form_WIPUserAnalytics_Button_Help.Text = "?";
+        Form_WIPUserAnalytics_Button_Help.Size = new Size(24, 24);
+        Form_WIPUserAnalytics_Button_Help.Location = new Point(this.Width - 40, 5); 
+        Form_WIPUserAnalytics_Button_Help.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+        Form_WIPUserAnalytics_Button_Help.Click += (s, e) => 
+        {
+            var helpForm = new HelpViewerForm();
+            helpForm.Show();
+            helpForm.ShowHelp("analytics-reporting", "analytics-overview");
+        };
+        
+        this.Controls.Add(Form_WIPUserAnalytics_Button_Help);
+        Form_WIPUserAnalytics_Button_Help.BringToFront();
+    }
+
+    #endregion
+
     }
 }

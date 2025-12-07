@@ -6,11 +6,19 @@
   "Order": 8,
   "Topics": [
     {
-      "TopicId": "user-analytics",
+      "TopicId": "user-performance",
       "Title": "User Analytics",
       "Summary": "View material handler performance metrics.",
       "Content": "<h2>User Analytics</h2><p>Access the User Analytics dashboard to view performance metrics for material handlers.</p><h3>Available Metrics</h3><ul><li><strong>Total Tx (Transactions):</strong> Total number of inventory movements within the date range.</li><li><strong>Total Qty (Quantity):</strong> Sum of all quantities moved.</li><li><strong>Unique Parts:</strong> Number of distinct Part IDs handled.</li><li><strong>Rapid Fire:</strong> Count of transactions occurring less than 10 seconds apart for the same part.</li><li><strong>Quality Score:</strong> Overall performance rating based on transaction accuracy and speed.</li></ul><h3>Accessing Analytics</h3><ol><li>Navigate to <strong>Menu > Analytics > User Analytics</strong>.</li><li>Select a date range using the date pickers.</li><li>Click <strong>Load Data</strong> to view metrics.</li></ol>",
       "Keywords": ["analytics", "metrics", "performance", "user"],
+      "LastUpdated": "2025-12-07T10:00:00"
+    },
+    {
+      "TopicId": "data-visualization",
+      "Title": "Data Visualization",
+      "Summary": "Understanding charts and graphs.",
+      "Content": "<h2>Data Visualization</h2><p>The application uses various charts to visualize data trends.</p><h3>Chart Types</h3><ul><li><strong>Bar Charts:</strong> Compare quantities across different categories (e.g., transactions per user).</li><li><strong>Line Charts:</strong> Show trends over time (e.g., inventory levels over the last 30 days).</li><li><strong>Pie Charts:</strong> Display distribution of data (e.g., inventory by item type).</li></ul><h3>Interactivity</h3><p>Hover over chart elements to see exact values. Click on legend items to toggle data series visibility.</p>",
+      "Keywords": ["charts", "graphs", "visuals", "trends"],
       "LastUpdated": "2025-12-07T10:00:00"
     },
     {

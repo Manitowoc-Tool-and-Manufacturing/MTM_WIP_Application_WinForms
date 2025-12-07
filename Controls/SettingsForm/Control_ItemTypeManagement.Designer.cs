@@ -155,11 +155,12 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_ItemTypeManagement_Label_RemoveTitle = new Label();
             Control_ItemTypeManagement_TableLayout_BackButton = new TableLayoutPanel();
             Control_ItemTypeManagement_Button_Back = new Button();
+            Control_ItemTypeManagement_Button_Home = new Button();
             Control_ItemTypeManagement_Label_AddIssuedBy = new Label();
             Control_ItemTypeManagement_Label_AddIssuedByValue = new Label();
             Control_ItemTypeManagement_Label_EditIssuedBy = new Label();
             Control_ItemTypeManagement_Label_EditIssuedByValue = new Label();
-            Control_ItemTypeManagement_Button_Home = new Button();
+            SettingsForm_Button_Help_ItemTypes = new Button();
             Control_ItemTypeManagement_TableLayout_Main.SuspendLayout();
             Control_ItemTypeManagement_Panel_Container.SuspendLayout();
             Control_ItemTypeManagement_Panel_Home.SuspendLayout();
@@ -210,7 +211,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_ItemTypeManagement_TableLayout_Main.RowStyles.Add(new RowStyle());
             Control_ItemTypeManagement_TableLayout_Main.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             Control_ItemTypeManagement_TableLayout_Main.RowStyles.Add(new RowStyle());
-            Control_ItemTypeManagement_TableLayout_Main.Size = new Size(492, 389);
+            Control_ItemTypeManagement_TableLayout_Main.Size = new Size(492, 383);
             Control_ItemTypeManagement_TableLayout_Main.TabIndex = 0;
             // 
             // Control_ItemTypeManagement_Label_Header
@@ -222,7 +223,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_ItemTypeManagement_Label_Header.Location = new Point(23, 23);
             Control_ItemTypeManagement_Label_Header.Margin = new Padding(3);
             Control_ItemTypeManagement_Label_Header.Name = "Control_ItemTypeManagement_Label_Header";
-            Control_ItemTypeManagement_Label_Header.Size = new Size(446, 37);
+            Control_ItemTypeManagement_Label_Header.Size = new Size(446, 36);
             Control_ItemTypeManagement_Label_Header.TabIndex = 0;
             Control_ItemTypeManagement_Label_Header.Text = "Item Types";
             // 
@@ -232,7 +233,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_ItemTypeManagement_Label_Subtitle.Dock = DockStyle.Fill;
             Control_ItemTypeManagement_Label_Subtitle.Font = new Font("Segoe UI Emoji", 10F);
             Control_ItemTypeManagement_Label_Subtitle.ForeColor = Color.FromArgb(90, 90, 90);
-            Control_ItemTypeManagement_Label_Subtitle.Location = new Point(23, 66);
+            Control_ItemTypeManagement_Label_Subtitle.Location = new Point(23, 65);
             Control_ItemTypeManagement_Label_Subtitle.Margin = new Padding(3);
             Control_ItemTypeManagement_Label_Subtitle.Name = "Control_ItemTypeManagement_Label_Subtitle";
             Control_ItemTypeManagement_Label_Subtitle.Size = new Size(446, 19);
@@ -244,7 +245,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_ItemTypeManagement_Panel_Container.Controls.Add(Control_ItemTypeManagement_Panel_Home);
             Control_ItemTypeManagement_Panel_Container.Controls.Add(Control_ItemTypeManagement_TableLayout_Cards);
             Control_ItemTypeManagement_Panel_Container.Dock = DockStyle.Fill;
-            Control_ItemTypeManagement_Panel_Container.Location = new Point(23, 91);
+            Control_ItemTypeManagement_Panel_Container.Location = new Point(23, 90);
             Control_ItemTypeManagement_Panel_Container.Name = "Control_ItemTypeManagement_Panel_Container";
             Control_ItemTypeManagement_Panel_Container.Size = new Size(446, 226);
             Control_ItemTypeManagement_Panel_Container.TabIndex = 2;
@@ -335,7 +336,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_ItemTypeManagement_Label_HomeTile_AddTitle.Location = new Point(6, 97);
             Control_ItemTypeManagement_Label_HomeTile_AddTitle.Margin = new Padding(3);
             Control_ItemTypeManagement_Label_HomeTile_AddTitle.Name = "Control_ItemTypeManagement_Label_HomeTile_AddTitle";
-            Control_ItemTypeManagement_Label_HomeTile_AddTitle.Size = new Size(128, 50);
+            Control_ItemTypeManagement_Label_HomeTile_AddTitle.Size = new Size(128, 52);
             Control_ItemTypeManagement_Label_HomeTile_AddTitle.TabIndex = 1;
             Control_ItemTypeManagement_Label_HomeTile_AddTitle.Text = "Add\r\nType";
             Control_ItemTypeManagement_Label_HomeTile_AddTitle.TextAlign = ContentAlignment.MiddleCenter;
@@ -349,7 +350,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_ItemTypeManagement_Label_HomeTile_AddInstruction.Location = new Point(6, 167);
             Control_ItemTypeManagement_Label_HomeTile_AddInstruction.Margin = new Padding(3);
             Control_ItemTypeManagement_Label_HomeTile_AddInstruction.Name = "Control_ItemTypeManagement_Label_HomeTile_AddInstruction";
-            Control_ItemTypeManagement_Label_HomeTile_AddInstruction.Size = new Size(128, 30);
+            Control_ItemTypeManagement_Label_HomeTile_AddInstruction.Size = new Size(128, 32);
             Control_ItemTypeManagement_Label_HomeTile_AddInstruction.TabIndex = 2;
             Control_ItemTypeManagement_Label_HomeTile_AddInstruction.Text = "Click to add new item types";
             Control_ItemTypeManagement_Label_HomeTile_AddInstruction.TextAlign = ContentAlignment.MiddleCenter;
@@ -410,7 +411,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_ItemTypeManagement_Label_HomeTile_EditTitle.Location = new Point(6, 97);
             Control_ItemTypeManagement_Label_HomeTile_EditTitle.Margin = new Padding(3);
             Control_ItemTypeManagement_Label_HomeTile_EditTitle.Name = "Control_ItemTypeManagement_Label_HomeTile_EditTitle";
-            Control_ItemTypeManagement_Label_HomeTile_EditTitle.Size = new Size(128, 50);
+            Control_ItemTypeManagement_Label_HomeTile_EditTitle.Size = new Size(128, 52);
             Control_ItemTypeManagement_Label_HomeTile_EditTitle.TabIndex = 1;
             Control_ItemTypeManagement_Label_HomeTile_EditTitle.Text = "Edit\r\nType";
             Control_ItemTypeManagement_Label_HomeTile_EditTitle.TextAlign = ContentAlignment.MiddleCenter;
@@ -424,7 +425,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_ItemTypeManagement_Label_HomeTile_EditInstruction.Location = new Point(6, 167);
             Control_ItemTypeManagement_Label_HomeTile_EditInstruction.Margin = new Padding(3);
             Control_ItemTypeManagement_Label_HomeTile_EditInstruction.Name = "Control_ItemTypeManagement_Label_HomeTile_EditInstruction";
-            Control_ItemTypeManagement_Label_HomeTile_EditInstruction.Size = new Size(128, 30);
+            Control_ItemTypeManagement_Label_HomeTile_EditInstruction.Size = new Size(128, 32);
             Control_ItemTypeManagement_Label_HomeTile_EditInstruction.TabIndex = 2;
             Control_ItemTypeManagement_Label_HomeTile_EditInstruction.Text = "Click to edit existing item types";
             Control_ItemTypeManagement_Label_HomeTile_EditInstruction.TextAlign = ContentAlignment.MiddleCenter;
@@ -485,7 +486,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_ItemTypeManagement_Label_HomeTile_RemoveTitle.Location = new Point(6, 97);
             Control_ItemTypeManagement_Label_HomeTile_RemoveTitle.Margin = new Padding(3);
             Control_ItemTypeManagement_Label_HomeTile_RemoveTitle.Name = "Control_ItemTypeManagement_Label_HomeTile_RemoveTitle";
-            Control_ItemTypeManagement_Label_HomeTile_RemoveTitle.Size = new Size(130, 50);
+            Control_ItemTypeManagement_Label_HomeTile_RemoveTitle.Size = new Size(130, 52);
             Control_ItemTypeManagement_Label_HomeTile_RemoveTitle.TabIndex = 1;
             Control_ItemTypeManagement_Label_HomeTile_RemoveTitle.Text = "Remove\r\nType";
             Control_ItemTypeManagement_Label_HomeTile_RemoveTitle.TextAlign = ContentAlignment.MiddleCenter;
@@ -499,7 +500,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_ItemTypeManagement_Label_HomeTile_RemoveInstruction.Location = new Point(6, 167);
             Control_ItemTypeManagement_Label_HomeTile_RemoveInstruction.Margin = new Padding(3);
             Control_ItemTypeManagement_Label_HomeTile_RemoveInstruction.Name = "Control_ItemTypeManagement_Label_HomeTile_RemoveInstruction";
-            Control_ItemTypeManagement_Label_HomeTile_RemoveInstruction.Size = new Size(130, 30);
+            Control_ItemTypeManagement_Label_HomeTile_RemoveInstruction.Size = new Size(130, 32);
             Control_ItemTypeManagement_Label_HomeTile_RemoveInstruction.TabIndex = 2;
             Control_ItemTypeManagement_Label_HomeTile_RemoveInstruction.Text = "Click to remove item types";
             Control_ItemTypeManagement_Label_HomeTile_RemoveInstruction.TextAlign = ContentAlignment.MiddleCenter;
@@ -624,6 +625,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_ItemTypeManagement_TextBox_AddItemType.Dock = DockStyle.Fill;
             Control_ItemTypeManagement_TextBox_AddItemType.EnableSuggestions = false;
             Control_ItemTypeManagement_TextBox_AddItemType.Location = new Point(3, 3);
+            Control_ItemTypeManagement_TextBox_AddItemType.MaxLength = 130;
+            Control_ItemTypeManagement_TextBox_AddItemType.MinimumSize = new Size(0, 23);
+            Control_ItemTypeManagement_TextBox_AddItemType.MinLength = 130;
             Control_ItemTypeManagement_TextBox_AddItemType.Name = "Control_ItemTypeManagement_TextBox_AddItemType";
             Control_ItemTypeManagement_TextBox_AddItemType.Padding = new Padding(3);
             Control_ItemTypeManagement_TextBox_AddItemType.ShowF4Button = false;
@@ -764,6 +768,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_ItemTypeManagement_Suggestion_EditSelectItemType.LabelText = "Select Item Type";
             Control_ItemTypeManagement_Suggestion_EditSelectItemType.Location = new Point(3, 3);
             Control_ItemTypeManagement_Suggestion_EditSelectItemType.Margin = new Padding(3, 3, 3, 10);
+            Control_ItemTypeManagement_Suggestion_EditSelectItemType.MaxLength = 130;
+            Control_ItemTypeManagement_Suggestion_EditSelectItemType.MinimumSize = new Size(0, 23);
+            Control_ItemTypeManagement_Suggestion_EditSelectItemType.MinLength = 130;
             Control_ItemTypeManagement_Suggestion_EditSelectItemType.Name = "Control_ItemTypeManagement_Suggestion_EditSelectItemType";
             Control_ItemTypeManagement_Suggestion_EditSelectItemType.Padding = new Padding(3);
             Control_ItemTypeManagement_Suggestion_EditSelectItemType.PlaceholderText = "Search item types (F4)";
@@ -780,6 +787,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_ItemTypeManagement_TextBox_EditNewItemType.LabelText = "New Item Type";
             Control_ItemTypeManagement_TextBox_EditNewItemType.Location = new Point(3, 47);
             Control_ItemTypeManagement_TextBox_EditNewItemType.Margin = new Padding(3, 3, 3, 10);
+            Control_ItemTypeManagement_TextBox_EditNewItemType.MaxLength = 130;
+            Control_ItemTypeManagement_TextBox_EditNewItemType.MinimumSize = new Size(0, 23);
+            Control_ItemTypeManagement_TextBox_EditNewItemType.MinLength = 130;
             Control_ItemTypeManagement_TextBox_EditNewItemType.Name = "Control_ItemTypeManagement_TextBox_EditNewItemType";
             Control_ItemTypeManagement_TextBox_EditNewItemType.Padding = new Padding(3);
             Control_ItemTypeManagement_TextBox_EditNewItemType.PlaceholderText = "Enter new item type";
@@ -880,6 +890,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_ItemTypeManagement_Suggestion_RemoveSelectItemType.LabelText = "Select Item Type";
             Control_ItemTypeManagement_Suggestion_RemoveSelectItemType.Location = new Point(3, 3);
             Control_ItemTypeManagement_Suggestion_RemoveSelectItemType.Margin = new Padding(3, 3, 3, 10);
+            Control_ItemTypeManagement_Suggestion_RemoveSelectItemType.MaxLength = 130;
+            Control_ItemTypeManagement_Suggestion_RemoveSelectItemType.MinimumSize = new Size(0, 23);
+            Control_ItemTypeManagement_Suggestion_RemoveSelectItemType.MinLength = 130;
             Control_ItemTypeManagement_Suggestion_RemoveSelectItemType.Name = "Control_ItemTypeManagement_Suggestion_RemoveSelectItemType";
             Control_ItemTypeManagement_Suggestion_RemoveSelectItemType.Padding = new Padding(3);
             Control_ItemTypeManagement_Suggestion_RemoveSelectItemType.PlaceholderText = "Search item types (F4)";
@@ -1045,29 +1058,45 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             Control_ItemTypeManagement_TableLayout_BackButton.AutoSize = true;
             Control_ItemTypeManagement_TableLayout_BackButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            Control_ItemTypeManagement_TableLayout_BackButton.ColumnCount = 3;
+            Control_ItemTypeManagement_TableLayout_BackButton.ColumnCount = 4;
             Control_ItemTypeManagement_TableLayout_BackButton.ColumnStyles.Add(new ColumnStyle());
             Control_ItemTypeManagement_TableLayout_BackButton.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             Control_ItemTypeManagement_TableLayout_BackButton.ColumnStyles.Add(new ColumnStyle());
+            Control_ItemTypeManagement_TableLayout_BackButton.ColumnStyles.Add(new ColumnStyle());
             Control_ItemTypeManagement_TableLayout_BackButton.Controls.Add(Control_ItemTypeManagement_Button_Back, 0, 0);
             Control_ItemTypeManagement_TableLayout_BackButton.Controls.Add(Control_ItemTypeManagement_Button_Home, 2, 0);
+            Control_ItemTypeManagement_TableLayout_BackButton.Controls.Add(SettingsForm_Button_Help_ItemTypes, 3, 0);
             Control_ItemTypeManagement_TableLayout_BackButton.Dock = DockStyle.Fill;
-            Control_ItemTypeManagement_TableLayout_BackButton.Location = new Point(23, 323);
+            Control_ItemTypeManagement_TableLayout_BackButton.Location = new Point(23, 322);
             Control_ItemTypeManagement_TableLayout_BackButton.Name = "Control_ItemTypeManagement_TableLayout_BackButton";
             Control_ItemTypeManagement_TableLayout_BackButton.RowStyles.Add(new RowStyle());
-            Control_ItemTypeManagement_TableLayout_BackButton.Size = new Size(446, 43);
+            Control_ItemTypeManagement_TableLayout_BackButton.Size = new Size(446, 38);
             Control_ItemTypeManagement_TableLayout_BackButton.TabIndex = 2;
             // 
             // Control_ItemTypeManagement_Button_Back
             // 
             Control_ItemTypeManagement_Button_Back.AutoSize = true;
             Control_ItemTypeManagement_Button_Back.Location = new Point(3, 3);
+            Control_ItemTypeManagement_Button_Back.MaximumSize = new Size(0, 32);
+            Control_ItemTypeManagement_Button_Back.MinimumSize = new Size(0, 32);
             Control_ItemTypeManagement_Button_Back.Name = "Control_ItemTypeManagement_Button_Back";
             Control_ItemTypeManagement_Button_Back.Padding = new Padding(16, 6, 16, 6);
-            Control_ItemTypeManagement_Button_Back.Size = new Size(152, 37);
+            Control_ItemTypeManagement_Button_Back.Size = new Size(152, 32);
             Control_ItemTypeManagement_Button_Back.TabIndex = 0;
             Control_ItemTypeManagement_Button_Back.Text = "← Back to Selection";
             Control_ItemTypeManagement_Button_Back.Visible = false;
+            // 
+            // Control_ItemTypeManagement_Button_Home
+            // 
+            Control_ItemTypeManagement_Button_Home.AutoSize = true;
+            Control_ItemTypeManagement_Button_Home.Location = new Point(266, 3);
+            Control_ItemTypeManagement_Button_Home.MaximumSize = new Size(0, 32);
+            Control_ItemTypeManagement_Button_Home.MinimumSize = new Size(0, 32);
+            Control_ItemTypeManagement_Button_Home.Name = "Control_ItemTypeManagement_Button_Home";
+            Control_ItemTypeManagement_Button_Home.Padding = new Padding(16, 6, 16, 6);
+            Control_ItemTypeManagement_Button_Home.Size = new Size(139, 32);
+            Control_ItemTypeManagement_Button_Home.TabIndex = 1;
+            Control_ItemTypeManagement_Button_Home.Text = "🏠 Back to Home";
             // 
             // Control_ItemTypeManagement_Label_AddIssuedBy
             // 
@@ -1097,15 +1126,19 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_ItemTypeManagement_Label_EditIssuedByValue.Size = new Size(100, 23);
             Control_ItemTypeManagement_Label_EditIssuedByValue.TabIndex = 0;
             // 
-            // Control_ItemTypeManagement_Button_Home
+            // SettingsForm_Button_Help_ItemTypes
             // 
-            Control_ItemTypeManagement_Button_Home.AutoSize = true;
-            Control_ItemTypeManagement_Button_Home.Location = new Point(291, 3);
-            Control_ItemTypeManagement_Button_Home.Name = "Control_ItemTypeManagement_Button_Home";
-            Control_ItemTypeManagement_Button_Home.Padding = new Padding(16, 6, 16, 6);
-            Control_ItemTypeManagement_Button_Home.Size = new Size(152, 37);
-            Control_ItemTypeManagement_Button_Home.TabIndex = 1;
-            Control_ItemTypeManagement_Button_Home.Text = "🏠 Back to Home";
+            SettingsForm_Button_Help_ItemTypes.AutoSize = true;
+            SettingsForm_Button_Help_ItemTypes.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            SettingsForm_Button_Help_ItemTypes.Dock = DockStyle.Fill;
+            SettingsForm_Button_Help_ItemTypes.Location = new Point(411, 3);
+            SettingsForm_Button_Help_ItemTypes.MaximumSize = new Size(32, 32);
+            SettingsForm_Button_Help_ItemTypes.MinimumSize = new Size(32, 32);
+            SettingsForm_Button_Help_ItemTypes.Name = "SettingsForm_Button_Help_ItemTypes";
+            SettingsForm_Button_Help_ItemTypes.Size = new Size(32, 32);
+            SettingsForm_Button_Help_ItemTypes.TabIndex = 14;
+            SettingsForm_Button_Help_ItemTypes.Text = "?";
+            SettingsForm_Button_Help_ItemTypes.UseVisualStyleBackColor = true;
             // 
             // Control_ItemTypeManagement
             // 
@@ -1115,7 +1148,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Controls.Add(Control_ItemTypeManagement_TableLayout_Main);
             Name = "Control_ItemTypeManagement";
-            Size = new Size(492, 389);
+            Size = new Size(492, 383);
             Control_ItemTypeManagement_TableLayout_Main.ResumeLayout(false);
             Control_ItemTypeManagement_TableLayout_Main.PerformLayout();
             Control_ItemTypeManagement_Panel_Container.ResumeLayout(false);
@@ -1178,5 +1211,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         private TableLayoutPanel Control_ItemTypeManagement_TableLayout_RemoveHeader;
         private TableLayoutPanel Control_ItemTypeManagement_TableLayout_AddHeader;
         private Button Control_ItemTypeManagement_Button_Home;
+        private Button SettingsForm_Button_Help_ItemTypes;
     }
 }

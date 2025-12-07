@@ -36,6 +36,22 @@
       "Content": "<h2>Accessing Help</h2><p>You can access this help system at any time by pressing <strong>F1</strong>.</p><ul><li><strong>Search:</strong> Use the search bar at the top left to find specific topics.</li><li><strong>Browse:</strong> Navigate through categories using the sidebar.</li><li><strong>Context Help:</strong> Many screens have specific help shortcuts (e.g., Ctrl+F1 for Getting Started).</li></ul>",
       "Keywords": ["help", "support", "documentation", "manual"],
       "LastUpdated": "2025-12-07T10:00:00"
+    },
+    {
+      "TopicId": "about-application",
+      "Title": "About the Application",
+      "Summary": "Version and copyright information.",
+      "Content": "<h2>About MTM WIP Application</h2><p><strong>Version:</strong> 6.4.0.0</p><p><strong>Copyright:</strong> © 2025 Manitowoc Tool and Manufacturing</p><p>This application is designed to streamline WIP inventory tracking and management.</p>",
+      "Keywords": ["about", "version", "copyright"],
+      "LastUpdated": "2025-12-07T10:00:00"
+    },
+    {
+      "TopicId": "release-notes",
+      "Title": "Release Notes",
+      "Summary": "What's new in the latest version.",
+      "Content": "<h2>Release Notes</h2><p>Check the Release Notes section in the Help menu for detailed information about new features, bug fixes, and improvements in each version.</p>",
+      "Keywords": ["release notes", "updates", "new features"],
+      "LastUpdated": "2025-12-07T10:00:00"
     }
   ]
 }

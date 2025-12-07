@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using MTM_WIP_Application_Winforms.Models.Help;
+using MTM_WIP_Application_Winforms.Models.Entities;
+using MTM_WIP_Application_Winforms.Models;
 
 namespace MTM_WIP_Application_Winforms.Services.Help
 {
@@ -42,5 +44,19 @@ namespace MTM_WIP_Application_Winforms.Services.Help
         /// <param name="categoryId">Category ID</param>
         /// <param name="topicId">Topic ID (optional, defaults to first)</param>
         string GenerateTopicHtml(string categoryId, string? topicId = null);
+
+        /// <summary>
+        /// Submits user feedback for a help topic.
+        /// </summary>
+        /// <param name="feedback">The feedback model.</param>
+        /// <returns>Result indicating success or failure.</returns>
+        Task<Model_Dao_Result<Model_UserFeedback>> SubmitFeedbackAsync(Model_UserFeedback feedback);
+
+        /// <summary>
+        /// Adds a comment to a feedback submission.
+        /// </summary>
+        /// <param name="comment">The comment model.</param>
+        /// <returns>Result indicating success or failure.</returns>
+        Task<Model_Dao_Result<bool>> AddCommentAsync(Model_UserFeedbackComment comment);
     }
 }

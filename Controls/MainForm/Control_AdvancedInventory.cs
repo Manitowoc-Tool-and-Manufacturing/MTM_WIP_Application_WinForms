@@ -18,6 +18,7 @@ using Microsoft.Extensions.DependencyInjection;
 using MySql.Data.MySqlClient;
 
 using Color = System.Drawing.Color;
+using MTM_WIP_Application_Winforms.Forms.Help;
 
 namespace MTM_WIP_Application_Winforms.Controls.MainForm
 {
@@ -97,6 +98,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
 
                 InitializeComponent();
+                InitializeHelpButton();
                 
                 // Resolve shortcut service
                 _shortcutService = Program.ServiceProvider?.GetService<IShortcutService>();
@@ -2626,6 +2628,22 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         #endregion
 
         #region Helpers
+
+        private void InitializeHelpButton()
+        {
+            MainForm_Button_Help_AdvancedInventorySingle.Click += (s, e) => 
+            {
+                var helpForm = new HelpViewerForm();
+                helpForm.Show();
+                helpForm.ShowHelp("advanced-inventory-operations", "advanced-inventory-overview");
+            };
+            MainForm_Button_Help_AdvancedInventoryMulti.Click += (s, e) =>
+            {
+                var helpForm = new HelpViewerForm();
+                helpForm.Show();
+                helpForm.ShowHelp("advanced-inventory-operations", "advanced-inventory-overview");
+            };
+        }
 
         /// <summary>
         /// Checks if the part is "Dunnage" and adjusts the quantity field accordingly.

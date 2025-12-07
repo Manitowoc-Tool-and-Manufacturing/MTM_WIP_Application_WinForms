@@ -52,6 +52,22 @@
       "Content": "<h2>Quick Button Shortcuts</h2><p>Quick Buttons 1 through 10 are mapped to Function keys F1 through F10 (excluding system reserved keys).</p><table class='table table-striped'><thead><tr><th>Button</th><th>Default Key</th></tr></thead><tbody><tr><td>Quick Button 1</td><td>F1</td></tr><tr><td>Quick Button 2</td><td>F2</td></tr><tr><td>Quick Button 3</td><td>F3</td></tr><tr><td>Quick Button 4</td><td>F4</td></tr><tr><td>Quick Button 5</td><td>F5</td></tr><tr><td>Quick Button 6</td><td>F6</td></tr><tr><td>Quick Button 7</td><td>F7</td></tr><tr><td>Quick Button 8</td><td>F8</td></tr><tr><td>Quick Button 9</td><td>F9</td></tr><tr><td>Quick Button 10</td><td>F10</td></tr></tbody></table><p><em>Note: If F1 is reserved for Help, Quick Button 1 may be remapped or unavailable depending on configuration.</em></p>",
       "Keywords": ["quick buttons", "function keys", "f-keys"],
       "LastUpdated": "2025-12-07T10:00:00"
+    },
+    {
+      "TopicId": "customizing-shortcuts",
+      "Title": "Customizing Shortcuts",
+      "Summary": "How to change keyboard shortcuts.",
+      "Content": "<h2>Customizing Shortcuts</h2><p>You can customize keyboard shortcuts to suit your workflow.</p><ol><li>Go to <strong>Settings > Shortcuts</strong>.</li><li>Find the command you want to change.</li><li>Click the <strong>...</strong> button.</li><li>Press the new key combination.</li><li>Click <strong>Save</strong>.</li></ol><p>If the shortcut is already in use, you will be prompted to replace it.</p>",
+      "Keywords": ["customize", "edit", "change", "hotkeys"],
+      "LastUpdated": "2025-12-07T10:00:00"
+    },
+    {
+      "TopicId": "editing-shortcuts",
+      "Title": "Editing Shortcuts",
+      "Summary": "Advanced shortcut editing.",
+      "Content": "<h2>Editing Shortcuts</h2><p>For advanced users, you can edit shortcuts directly in the shortcut editor.</p><p>The editor allows you to see all assigned shortcuts and filter by category or key.</p>",
+      "Keywords": ["edit", "advanced", "shortcuts"],
+      "LastUpdated": "2025-12-07T10:00:00"
     }
   ]
 }

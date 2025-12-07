@@ -37,6 +37,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Shortcuts_Button_Home = new Button();
             Control_Shortcuts_Button_Reset = new Button();
             Control_Shortcuts_Panel_ScrollContainer = new FlowLayoutPanel();
+            Control_Shortcuts_TableLayout_ScrollContainer = new TableLayoutPanel();
             Control_Shortcuts_FlowLayoutPanel_Cards = new FlowLayoutPanel();
             Control_Shortcuts_Card_Inventory = new Control_SettingsCollapsibleCard();
             Control_Shortcuts_Card_Remove = new Control_SettingsCollapsibleCard();
@@ -47,13 +48,13 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Shortcuts_Card_General = new Control_SettingsCollapsibleCard();
             Control_Shortcuts_Card_Navigation = new Control_SettingsCollapsibleCard();
             Control_Shortcuts_Card_Transactions = new Control_SettingsCollapsibleCard();
-            Control_Shortcuts_TableLayout_ScrollContainer = new TableLayoutPanel();
+            SettingsForm_Button_Help_Shortcuts = new Button();
             Control_Shortcuts_GroupBox_Main.SuspendLayout();
             Control_Shortcuts_TableLayout_Main.SuspendLayout();
             Control_Shortcuts_TableLayout_Bottom.SuspendLayout();
             Control_Shortcuts_Panel_ScrollContainer.SuspendLayout();
-            Control_Shortcuts_FlowLayoutPanel_Cards.SuspendLayout();
             Control_Shortcuts_TableLayout_ScrollContainer.SuspendLayout();
+            Control_Shortcuts_FlowLayoutPanel_Cards.SuspendLayout();
             SuspendLayout();
             // 
             // Control_Shortcuts_GroupBox_Main
@@ -64,7 +65,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Shortcuts_GroupBox_Main.Dock = DockStyle.Fill;
             Control_Shortcuts_GroupBox_Main.Location = new Point(0, 0);
             Control_Shortcuts_GroupBox_Main.Name = "Control_Shortcuts_GroupBox_Main";
-            Control_Shortcuts_GroupBox_Main.Size = new Size(532, 705);
+            Control_Shortcuts_GroupBox_Main.Size = new Size(532, 714);
             Control_Shortcuts_GroupBox_Main.TabIndex = 0;
             Control_Shortcuts_GroupBox_Main.TabStop = false;
             Control_Shortcuts_GroupBox_Main.Text = "Edit Shortcuts";
@@ -83,41 +84,53 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Shortcuts_TableLayout_Main.RowCount = 2;
             Control_Shortcuts_TableLayout_Main.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             Control_Shortcuts_TableLayout_Main.RowStyles.Add(new RowStyle());
-            Control_Shortcuts_TableLayout_Main.Size = new Size(526, 683);
+            Control_Shortcuts_TableLayout_Main.Size = new Size(526, 692);
             Control_Shortcuts_TableLayout_Main.TabIndex = 0;
             // 
             // Control_Shortcuts_TableLayout_Bottom
             // 
             Control_Shortcuts_TableLayout_Bottom.AutoSize = true;
             Control_Shortcuts_TableLayout_Bottom.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            Control_Shortcuts_TableLayout_Bottom.ColumnCount = 3;
+            Control_Shortcuts_TableLayout_Bottom.ColumnCount = 4;
+            Control_Shortcuts_TableLayout_Bottom.ColumnStyles.Add(new ColumnStyle());
+            Control_Shortcuts_TableLayout_Bottom.ColumnStyles.Add(new ColumnStyle());
             Control_Shortcuts_TableLayout_Bottom.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             Control_Shortcuts_TableLayout_Bottom.ColumnStyles.Add(new ColumnStyle());
-            Control_Shortcuts_TableLayout_Bottom.ColumnStyles.Add(new ColumnStyle());
-            Control_Shortcuts_TableLayout_Bottom.Controls.Add(Control_Shortcuts_Button_Home, 1, 0);
-            Control_Shortcuts_TableLayout_Bottom.Controls.Add(Control_Shortcuts_Button_Reset, 2, 0);
+            Control_Shortcuts_TableLayout_Bottom.Controls.Add(Control_Shortcuts_Button_Home, 0, 0);
+            Control_Shortcuts_TableLayout_Bottom.Controls.Add(Control_Shortcuts_Button_Reset, 1, 0);
+            Control_Shortcuts_TableLayout_Bottom.Controls.Add(SettingsForm_Button_Help_Shortcuts, 3, 0);
             Control_Shortcuts_TableLayout_Bottom.Dock = DockStyle.Fill;
             Control_Shortcuts_TableLayout_Bottom.Location = new Point(3, 651);
             Control_Shortcuts_TableLayout_Bottom.Name = "Control_Shortcuts_TableLayout_Bottom";
             Control_Shortcuts_TableLayout_Bottom.RowCount = 1;
             Control_Shortcuts_TableLayout_Bottom.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            Control_Shortcuts_TableLayout_Bottom.Size = new Size(520, 29);
+            Control_Shortcuts_TableLayout_Bottom.Size = new Size(520, 38);
             Control_Shortcuts_TableLayout_Bottom.TabIndex = 2;
             // 
             // Control_Shortcuts_Button_Home
             // 
-            Control_Shortcuts_Button_Home.Location = new Point(361, 3);
+            Control_Shortcuts_Button_Home.AutoSize = true;
+            Control_Shortcuts_Button_Home.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_Shortcuts_Button_Home.Dock = DockStyle.Fill;
+            Control_Shortcuts_Button_Home.Location = new Point(3, 3);
+            Control_Shortcuts_Button_Home.MaximumSize = new Size(150, 32);
+            Control_Shortcuts_Button_Home.MinimumSize = new Size(150, 32);
             Control_Shortcuts_Button_Home.Name = "Control_Shortcuts_Button_Home";
-            Control_Shortcuts_Button_Home.Size = new Size(75, 23);
+            Control_Shortcuts_Button_Home.Size = new Size(150, 32);
             Control_Shortcuts_Button_Home.TabIndex = 1;
             Control_Shortcuts_Button_Home.Text = "Home";
             Control_Shortcuts_Button_Home.UseVisualStyleBackColor = true;
             // 
             // Control_Shortcuts_Button_Reset
             // 
-            Control_Shortcuts_Button_Reset.Location = new Point(442, 3);
+            Control_Shortcuts_Button_Reset.AutoSize = true;
+            Control_Shortcuts_Button_Reset.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_Shortcuts_Button_Reset.Dock = DockStyle.Fill;
+            Control_Shortcuts_Button_Reset.Location = new Point(159, 3);
+            Control_Shortcuts_Button_Reset.MaximumSize = new Size(150, 32);
+            Control_Shortcuts_Button_Reset.MinimumSize = new Size(150, 32);
             Control_Shortcuts_Button_Reset.Name = "Control_Shortcuts_Button_Reset";
-            Control_Shortcuts_Button_Reset.Size = new Size(75, 23);
+            Control_Shortcuts_Button_Reset.Size = new Size(150, 32);
             Control_Shortcuts_Button_Reset.TabIndex = 0;
             Control_Shortcuts_Button_Reset.Text = "Reset All";
             Control_Shortcuts_Button_Reset.UseVisualStyleBackColor = true;
@@ -133,6 +146,24 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Shortcuts_Panel_ScrollContainer.Name = "Control_Shortcuts_Panel_ScrollContainer";
             Control_Shortcuts_Panel_ScrollContainer.Size = new Size(520, 642);
             Control_Shortcuts_Panel_ScrollContainer.TabIndex = 3;
+            // 
+            // Control_Shortcuts_TableLayout_ScrollContainer
+            // 
+            Control_Shortcuts_TableLayout_ScrollContainer.AutoSize = true;
+            Control_Shortcuts_TableLayout_ScrollContainer.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_Shortcuts_TableLayout_ScrollContainer.ColumnCount = 3;
+            Control_Shortcuts_TableLayout_ScrollContainer.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 30F));
+            Control_Shortcuts_TableLayout_ScrollContainer.ColumnStyles.Add(new ColumnStyle());
+            Control_Shortcuts_TableLayout_ScrollContainer.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 30F));
+            Control_Shortcuts_TableLayout_ScrollContainer.Controls.Add(Control_Shortcuts_FlowLayoutPanel_Cards, 1, 0);
+            Control_Shortcuts_TableLayout_ScrollContainer.Dock = DockStyle.Fill;
+            Control_Shortcuts_TableLayout_ScrollContainer.Location = new Point(3, 3);
+            Control_Shortcuts_TableLayout_ScrollContainer.Name = "Control_Shortcuts_TableLayout_ScrollContainer";
+            Control_Shortcuts_TableLayout_ScrollContainer.RowCount = 1;
+            Control_Shortcuts_TableLayout_ScrollContainer.RowStyles.Add(new RowStyle());
+            Control_Shortcuts_TableLayout_ScrollContainer.Size = new Size(514, 636);
+            Control_Shortcuts_TableLayout_ScrollContainer.TabIndex = 1;
+            Control_Shortcuts_TableLayout_ScrollContainer.Paint += Control_Shortcuts_TableLayout_ScrollContainer_Paint;
             // 
             // Control_Shortcuts_FlowLayoutPanel_Cards
             // 
@@ -287,23 +318,19 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Shortcuts_Card_Transactions.Size = new Size(442, 64);
             Control_Shortcuts_Card_Transactions.TabIndex = 16;
             // 
-            // Control_Shortcuts_TableLayout_ScrollContainer
+            // SettingsForm_Button_Help_Shortcuts
             // 
-            Control_Shortcuts_TableLayout_ScrollContainer.AutoSize = true;
-            Control_Shortcuts_TableLayout_ScrollContainer.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            Control_Shortcuts_TableLayout_ScrollContainer.ColumnCount = 3;
-            Control_Shortcuts_TableLayout_ScrollContainer.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 30F));
-            Control_Shortcuts_TableLayout_ScrollContainer.ColumnStyles.Add(new ColumnStyle());
-            Control_Shortcuts_TableLayout_ScrollContainer.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 30F));
-            Control_Shortcuts_TableLayout_ScrollContainer.Controls.Add(Control_Shortcuts_FlowLayoutPanel_Cards, 1, 0);
-            Control_Shortcuts_TableLayout_ScrollContainer.Dock = DockStyle.Fill;
-            Control_Shortcuts_TableLayout_ScrollContainer.Location = new Point(3, 3);
-            Control_Shortcuts_TableLayout_ScrollContainer.Name = "Control_Shortcuts_TableLayout_ScrollContainer";
-            Control_Shortcuts_TableLayout_ScrollContainer.RowCount = 1;
-            Control_Shortcuts_TableLayout_ScrollContainer.RowStyles.Add(new RowStyle());
-            Control_Shortcuts_TableLayout_ScrollContainer.Size = new Size(514, 636);
-            Control_Shortcuts_TableLayout_ScrollContainer.TabIndex = 1;
-            Control_Shortcuts_TableLayout_ScrollContainer.Paint += Control_Shortcuts_TableLayout_ScrollContainer_Paint;
+            SettingsForm_Button_Help_Shortcuts.AutoSize = true;
+            SettingsForm_Button_Help_Shortcuts.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            SettingsForm_Button_Help_Shortcuts.Dock = DockStyle.Fill;
+            SettingsForm_Button_Help_Shortcuts.Location = new Point(485, 3);
+            SettingsForm_Button_Help_Shortcuts.MaximumSize = new Size(32, 32);
+            SettingsForm_Button_Help_Shortcuts.MinimumSize = new Size(32, 32);
+            SettingsForm_Button_Help_Shortcuts.Name = "SettingsForm_Button_Help_Shortcuts";
+            SettingsForm_Button_Help_Shortcuts.Size = new Size(32, 32);
+            SettingsForm_Button_Help_Shortcuts.TabIndex = 12;
+            SettingsForm_Button_Help_Shortcuts.Text = "?";
+            SettingsForm_Button_Help_Shortcuts.UseVisualStyleBackColor = true;
             // 
             // Control_Shortcuts
             // 
@@ -313,17 +340,18 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Controls.Add(Control_Shortcuts_GroupBox_Main);
             Name = "Control_Shortcuts";
-            Size = new Size(532, 705);
+            Size = new Size(532, 714);
             Control_Shortcuts_GroupBox_Main.ResumeLayout(false);
             Control_Shortcuts_GroupBox_Main.PerformLayout();
             Control_Shortcuts_TableLayout_Main.ResumeLayout(false);
             Control_Shortcuts_TableLayout_Main.PerformLayout();
             Control_Shortcuts_TableLayout_Bottom.ResumeLayout(false);
+            Control_Shortcuts_TableLayout_Bottom.PerformLayout();
             Control_Shortcuts_Panel_ScrollContainer.ResumeLayout(false);
             Control_Shortcuts_Panel_ScrollContainer.PerformLayout();
-            Control_Shortcuts_FlowLayoutPanel_Cards.ResumeLayout(false);
             Control_Shortcuts_TableLayout_ScrollContainer.ResumeLayout(false);
             Control_Shortcuts_TableLayout_ScrollContainer.PerformLayout();
+            Control_Shortcuts_FlowLayoutPanel_Cards.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -347,5 +375,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         private Control_SettingsCollapsibleCard Control_Shortcuts_Card_Remove;
         private Control_SettingsCollapsibleCard Control_Shortcuts_Card_Inventory;
         private TableLayoutPanel Control_Shortcuts_TableLayout_ScrollContainer;
+        private Button SettingsForm_Button_Help_Shortcuts;
     }
 }

@@ -158,6 +158,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_PartIDManagement_CheckBox_EditRequiresColorCode = new CheckBox();
             Control_PartIDManagement_Suggestion_EditNewPartNumber = new Component_SuggestionTextBoxWithLabel();
             Control_PartIDManagement_TableLayoutPanel_BackButton = new TableLayoutPanel();
+            Control_PartManagement_Button_Home = new Button();
             Control_PartIDManagement_Button_Back = new Button();
             Control_PartIDManagement_Label_Header = new Label();
             Control_PartIDManagement_Label_Subtitle = new Label();
@@ -165,7 +166,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_PartIDManagement_Label_AddIssuedByValue = new Label();
             Control_PartIDManagement_Label_EditIssuedBy = new Label();
             Control_PartIDManagement_Label_EditIssuedByValue = new Label();
-            Control_PartManagement_Button_Home = new Button();
+            SettingsForm_Button_Help_PartNumbers = new Button();
             Control_PartIDManagement_TableLayout_Main.SuspendLayout();
             Control_PartIDManagement_Panel_Container.SuspendLayout();
             Control_PartIDManagement_Panel_Home.SuspendLayout();
@@ -215,7 +216,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_PartIDManagement_TableLayout_Main.RowStyles.Add(new RowStyle());
             Control_PartIDManagement_TableLayout_Main.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             Control_PartIDManagement_TableLayout_Main.RowStyles.Add(new RowStyle());
-            Control_PartIDManagement_TableLayout_Main.Size = new Size(492, 389);
+            Control_PartIDManagement_TableLayout_Main.Size = new Size(492, 383);
             Control_PartIDManagement_TableLayout_Main.TabIndex = 0;
             // 
             // Control_PartIDManagement_Panel_Container
@@ -223,7 +224,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_PartIDManagement_Panel_Container.Controls.Add(Control_PartIDManagement_Panel_Home);
             Control_PartIDManagement_Panel_Container.Controls.Add(Control_PartIDManagement_TableLayout_Cards);
             Control_PartIDManagement_Panel_Container.Dock = DockStyle.Fill;
-            Control_PartIDManagement_Panel_Container.Location = new Point(23, 91);
+            Control_PartIDManagement_Panel_Container.Location = new Point(23, 90);
             Control_PartIDManagement_Panel_Container.Name = "Control_PartIDManagement_Panel_Container";
             Control_PartIDManagement_Panel_Container.Size = new Size(446, 226);
             Control_PartIDManagement_Panel_Container.TabIndex = 2;
@@ -301,7 +302,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_PartIDManagement_Label_HomeTile_AddInstruction.Location = new Point(6, 167);
             Control_PartIDManagement_Label_HomeTile_AddInstruction.Margin = new Padding(3);
             Control_PartIDManagement_Label_HomeTile_AddInstruction.Name = "Control_PartIDManagement_Label_HomeTile_AddInstruction";
-            Control_PartIDManagement_Label_HomeTile_AddInstruction.Size = new Size(128, 30);
+            Control_PartIDManagement_Label_HomeTile_AddInstruction.Size = new Size(128, 32);
             Control_PartIDManagement_Label_HomeTile_AddInstruction.TabIndex = 2;
             Control_PartIDManagement_Label_HomeTile_AddInstruction.Text = "Click to add new part numbers";
             Control_PartIDManagement_Label_HomeTile_AddInstruction.TextAlign = ContentAlignment.MiddleCenter;
@@ -314,7 +315,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_PartIDManagement_Label_HomeTile_AddTitle.Location = new Point(6, 97);
             Control_PartIDManagement_Label_HomeTile_AddTitle.Margin = new Padding(3);
             Control_PartIDManagement_Label_HomeTile_AddTitle.Name = "Control_PartIDManagement_Label_HomeTile_AddTitle";
-            Control_PartIDManagement_Label_HomeTile_AddTitle.Size = new Size(128, 50);
+            Control_PartIDManagement_Label_HomeTile_AddTitle.Size = new Size(128, 52);
             Control_PartIDManagement_Label_HomeTile_AddTitle.TabIndex = 1;
             Control_PartIDManagement_Label_HomeTile_AddTitle.Text = "Add\r\nPart";
             Control_PartIDManagement_Label_HomeTile_AddTitle.TextAlign = ContentAlignment.MiddleCenter;
@@ -388,7 +389,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_PartIDManagement_Label_HomeTile_EditTitle.Location = new Point(6, 97);
             Control_PartIDManagement_Label_HomeTile_EditTitle.Margin = new Padding(3);
             Control_PartIDManagement_Label_HomeTile_EditTitle.Name = "Control_PartIDManagement_Label_HomeTile_EditTitle";
-            Control_PartIDManagement_Label_HomeTile_EditTitle.Size = new Size(128, 50);
+            Control_PartIDManagement_Label_HomeTile_EditTitle.Size = new Size(128, 52);
             Control_PartIDManagement_Label_HomeTile_EditTitle.TabIndex = 1;
             Control_PartIDManagement_Label_HomeTile_EditTitle.Text = "Edit\r\nPart";
             Control_PartIDManagement_Label_HomeTile_EditTitle.TextAlign = ContentAlignment.MiddleCenter;
@@ -402,7 +403,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_PartIDManagement_Label_HomeTile_EditInstruction.Location = new Point(6, 167);
             Control_PartIDManagement_Label_HomeTile_EditInstruction.Margin = new Padding(3);
             Control_PartIDManagement_Label_HomeTile_EditInstruction.Name = "Control_PartIDManagement_Label_HomeTile_EditInstruction";
-            Control_PartIDManagement_Label_HomeTile_EditInstruction.Size = new Size(128, 30);
+            Control_PartIDManagement_Label_HomeTile_EditInstruction.Size = new Size(128, 32);
             Control_PartIDManagement_Label_HomeTile_EditInstruction.TabIndex = 2;
             Control_PartIDManagement_Label_HomeTile_EditInstruction.Text = "Click to edit existing parts";
             Control_PartIDManagement_Label_HomeTile_EditInstruction.TextAlign = ContentAlignment.MiddleCenter;
@@ -464,7 +465,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_PartIDManagement_Label_HomeTile_RemoveInstruction.Location = new Point(6, 167);
             Control_PartIDManagement_Label_HomeTile_RemoveInstruction.Margin = new Padding(3);
             Control_PartIDManagement_Label_HomeTile_RemoveInstruction.Name = "Control_PartIDManagement_Label_HomeTile_RemoveInstruction";
-            Control_PartIDManagement_Label_HomeTile_RemoveInstruction.Size = new Size(130, 30);
+            Control_PartIDManagement_Label_HomeTile_RemoveInstruction.Size = new Size(130, 32);
             Control_PartIDManagement_Label_HomeTile_RemoveInstruction.TabIndex = 2;
             Control_PartIDManagement_Label_HomeTile_RemoveInstruction.Text = "Click to remove part numbers";
             Control_PartIDManagement_Label_HomeTile_RemoveInstruction.TextAlign = ContentAlignment.MiddleCenter;
@@ -477,7 +478,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_PartIDManagement_Label_HomeTile_RemoveTitle.Location = new Point(6, 97);
             Control_PartIDManagement_Label_HomeTile_RemoveTitle.Margin = new Padding(3);
             Control_PartIDManagement_Label_HomeTile_RemoveTitle.Name = "Control_PartIDManagement_Label_HomeTile_RemoveTitle";
-            Control_PartIDManagement_Label_HomeTile_RemoveTitle.Size = new Size(130, 50);
+            Control_PartIDManagement_Label_HomeTile_RemoveTitle.Size = new Size(130, 52);
             Control_PartIDManagement_Label_HomeTile_RemoveTitle.TabIndex = 1;
             Control_PartIDManagement_Label_HomeTile_RemoveTitle.Text = "Remove\r\nPart";
             Control_PartIDManagement_Label_HomeTile_RemoveTitle.TextAlign = ContentAlignment.MiddleCenter;
@@ -512,7 +513,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_PartIDManagement_Panel_RemoveCard.Dock = DockStyle.Fill;
             Control_PartIDManagement_Panel_RemoveCard.Location = new Point(3, 534);
             Control_PartIDManagement_Panel_RemoveCard.Name = "Control_PartIDManagement_Panel_RemoveCard";
-            Control_PartIDManagement_Panel_RemoveCard.Size = new Size(440, 355);
+            Control_PartIDManagement_Panel_RemoveCard.Size = new Size(440, 295);
             Control_PartIDManagement_Panel_RemoveCard.TabIndex = 2;
             // 
             // Control_PartIDManagement_TableLayout_Remove
@@ -530,7 +531,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_PartIDManagement_TableLayout_Remove.RowCount = 2;
             Control_PartIDManagement_TableLayout_Remove.RowStyles.Add(new RowStyle());
             Control_PartIDManagement_TableLayout_Remove.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            Control_PartIDManagement_TableLayout_Remove.Size = new Size(438, 353);
+            Control_PartIDManagement_TableLayout_Remove.Size = new Size(438, 293);
             Control_PartIDManagement_TableLayout_Remove.TabIndex = 0;
             // 
             // Control_PartIDManagement_TableLayout_RemoveContent
@@ -553,7 +554,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_PartIDManagement_TableLayout_RemoveContent.RowStyles.Add(new RowStyle());
             Control_PartIDManagement_TableLayout_RemoveContent.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             Control_PartIDManagement_TableLayout_RemoveContent.RowStyles.Add(new RowStyle());
-            Control_PartIDManagement_TableLayout_RemoveContent.Size = new Size(400, 250);
+            Control_PartIDManagement_TableLayout_RemoveContent.Size = new Size(400, 190);
             Control_PartIDManagement_TableLayout_RemoveContent.TabIndex = 2;
             // 
             // Control_PartIDManagement_TableLayout_RemoveActions
@@ -567,7 +568,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_PartIDManagement_TableLayout_RemoveActions.Controls.Add(Control_PartIDManagement_Button_RemoveCancel, 2, 0);
             Control_PartIDManagement_TableLayout_RemoveActions.Controls.Add(Control_PartIDManagement_Button_RemoveConfirm, 0, 0);
             Control_PartIDManagement_TableLayout_RemoveActions.Dock = DockStyle.Fill;
-            Control_PartIDManagement_TableLayout_RemoveActions.Location = new Point(3, 218);
+            Control_PartIDManagement_TableLayout_RemoveActions.Location = new Point(3, 158);
             Control_PartIDManagement_TableLayout_RemoveActions.Name = "Control_PartIDManagement_TableLayout_RemoveActions";
             Control_PartIDManagement_TableLayout_RemoveActions.RowCount = 1;
             Control_PartIDManagement_TableLayout_RemoveActions.RowStyles.Add(new RowStyle());
@@ -595,6 +596,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_PartIDManagement_Suggestion_RemoveSelectPart.BorderStyle = BorderStyle.FixedSingle;
             Control_PartIDManagement_Suggestion_RemoveSelectPart.Dock = DockStyle.Fill;
             Control_PartIDManagement_Suggestion_RemoveSelectPart.Location = new Point(3, 3);
+            Control_PartIDManagement_Suggestion_RemoveSelectPart.MaxLength = 130;
+            Control_PartIDManagement_Suggestion_RemoveSelectPart.MinimumSize = new Size(0, 23);
+            Control_PartIDManagement_Suggestion_RemoveSelectPart.MinLength = 130;
             Control_PartIDManagement_Suggestion_RemoveSelectPart.Name = "Control_PartIDManagement_Suggestion_RemoveSelectPart";
             Control_PartIDManagement_Suggestion_RemoveSelectPart.Padding = new Padding(3);
             Control_PartIDManagement_Suggestion_RemoveSelectPart.Size = new Size(394, 31);
@@ -621,7 +625,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_PartIDManagement_TableLayout_RemoveDetails.RowStyles.Add(new RowStyle());
             Control_PartIDManagement_TableLayout_RemoveDetails.RowStyles.Add(new RowStyle());
             Control_PartIDManagement_TableLayout_RemoveDetails.RowStyles.Add(new RowStyle());
-            Control_PartIDManagement_TableLayout_RemoveDetails.Size = new Size(394, 151);
+            Control_PartIDManagement_TableLayout_RemoveDetails.Size = new Size(394, 91);
             Control_PartIDManagement_TableLayout_RemoveDetails.TabIndex = 1;
             // 
             // Control_PartIDManagement_Label_RemoveItemNumber
@@ -695,7 +699,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_PartIDManagement_Label_RemoveWarning.AutoSize = true;
             Control_PartIDManagement_Label_RemoveWarning.Dock = DockStyle.Fill;
             Control_PartIDManagement_Label_RemoveWarning.ForeColor = Color.FromArgb(192, 0, 0);
-            Control_PartIDManagement_Label_RemoveWarning.Location = new Point(3, 197);
+            Control_PartIDManagement_Label_RemoveWarning.Location = new Point(3, 137);
             Control_PartIDManagement_Label_RemoveWarning.Margin = new Padding(3);
             Control_PartIDManagement_Label_RemoveWarning.Name = "Control_PartIDManagement_Label_RemoveWarning";
             Control_PartIDManagement_Label_RemoveWarning.Size = new Size(394, 15);
@@ -807,6 +811,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_PartIDManagement_Suggestion_AddPartNumber.Dock = DockStyle.Fill;
             Control_PartIDManagement_Suggestion_AddPartNumber.EnableSuggestions = false;
             Control_PartIDManagement_Suggestion_AddPartNumber.Location = new Point(3, 3);
+            Control_PartIDManagement_Suggestion_AddPartNumber.MaxLength = 130;
+            Control_PartIDManagement_Suggestion_AddPartNumber.MinimumSize = new Size(0, 23);
+            Control_PartIDManagement_Suggestion_AddPartNumber.MinLength = 130;
             Control_PartIDManagement_Suggestion_AddPartNumber.Name = "Control_PartIDManagement_Suggestion_AddPartNumber";
             Control_PartIDManagement_Suggestion_AddPartNumber.Padding = new Padding(3);
             Control_PartIDManagement_Suggestion_AddPartNumber.ShowF4Button = false;
@@ -820,6 +827,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_PartIDManagement_Suggestion_AddItemType.BorderStyle = BorderStyle.FixedSingle;
             Control_PartIDManagement_Suggestion_AddItemType.Dock = DockStyle.Fill;
             Control_PartIDManagement_Suggestion_AddItemType.Location = new Point(3, 40);
+            Control_PartIDManagement_Suggestion_AddItemType.MaxLength = 130;
+            Control_PartIDManagement_Suggestion_AddItemType.MinimumSize = new Size(0, 23);
+            Control_PartIDManagement_Suggestion_AddItemType.MinLength = 130;
             Control_PartIDManagement_Suggestion_AddItemType.Name = "Control_PartIDManagement_Suggestion_AddItemType";
             Control_PartIDManagement_Suggestion_AddItemType.Padding = new Padding(3);
             Control_PartIDManagement_Suggestion_AddItemType.Size = new Size(394, 31);
@@ -1048,6 +1058,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_PartIDManagement_Suggestion_EditSelectPart.BorderStyle = BorderStyle.FixedSingle;
             Control_PartIDManagement_Suggestion_EditSelectPart.Dock = DockStyle.Fill;
             Control_PartIDManagement_Suggestion_EditSelectPart.Location = new Point(3, 3);
+            Control_PartIDManagement_Suggestion_EditSelectPart.MaxLength = 130;
+            Control_PartIDManagement_Suggestion_EditSelectPart.MinimumSize = new Size(0, 23);
+            Control_PartIDManagement_Suggestion_EditSelectPart.MinLength = 130;
             Control_PartIDManagement_Suggestion_EditSelectPart.Name = "Control_PartIDManagement_Suggestion_EditSelectPart";
             Control_PartIDManagement_Suggestion_EditSelectPart.Padding = new Padding(3);
             Control_PartIDManagement_Suggestion_EditSelectPart.Size = new Size(394, 31);
@@ -1060,6 +1073,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_PartIDManagement_Suggestion_EditItemType.BorderStyle = BorderStyle.FixedSingle;
             Control_PartIDManagement_Suggestion_EditItemType.Dock = DockStyle.Fill;
             Control_PartIDManagement_Suggestion_EditItemType.Location = new Point(3, 77);
+            Control_PartIDManagement_Suggestion_EditItemType.MaxLength = 130;
+            Control_PartIDManagement_Suggestion_EditItemType.MinimumSize = new Size(0, 23);
+            Control_PartIDManagement_Suggestion_EditItemType.MinLength = 130;
             Control_PartIDManagement_Suggestion_EditItemType.Name = "Control_PartIDManagement_Suggestion_EditItemType";
             Control_PartIDManagement_Suggestion_EditItemType.Padding = new Padding(3);
             Control_PartIDManagement_Suggestion_EditItemType.Size = new Size(394, 31);
@@ -1084,6 +1100,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_PartIDManagement_Suggestion_EditNewPartNumber.Dock = DockStyle.Fill;
             Control_PartIDManagement_Suggestion_EditNewPartNumber.EnableSuggestions = false;
             Control_PartIDManagement_Suggestion_EditNewPartNumber.Location = new Point(3, 40);
+            Control_PartIDManagement_Suggestion_EditNewPartNumber.MaxLength = 130;
+            Control_PartIDManagement_Suggestion_EditNewPartNumber.MinimumSize = new Size(0, 23);
+            Control_PartIDManagement_Suggestion_EditNewPartNumber.MinLength = 130;
             Control_PartIDManagement_Suggestion_EditNewPartNumber.Name = "Control_PartIDManagement_Suggestion_EditNewPartNumber";
             Control_PartIDManagement_Suggestion_EditNewPartNumber.Padding = new Padding(3);
             Control_PartIDManagement_Suggestion_EditNewPartNumber.ShowF4Button = false;
@@ -1094,27 +1113,43 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             Control_PartIDManagement_TableLayoutPanel_BackButton.AutoSize = true;
             Control_PartIDManagement_TableLayoutPanel_BackButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            Control_PartIDManagement_TableLayoutPanel_BackButton.ColumnCount = 3;
+            Control_PartIDManagement_TableLayoutPanel_BackButton.ColumnCount = 4;
             Control_PartIDManagement_TableLayoutPanel_BackButton.ColumnStyles.Add(new ColumnStyle());
             Control_PartIDManagement_TableLayoutPanel_BackButton.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             Control_PartIDManagement_TableLayoutPanel_BackButton.ColumnStyles.Add(new ColumnStyle());
+            Control_PartIDManagement_TableLayoutPanel_BackButton.ColumnStyles.Add(new ColumnStyle());
+            Control_PartIDManagement_TableLayoutPanel_BackButton.Controls.Add(SettingsForm_Button_Help_PartNumbers, 3, 0);
             Control_PartIDManagement_TableLayoutPanel_BackButton.Controls.Add(Control_PartManagement_Button_Home, 2, 0);
             Control_PartIDManagement_TableLayoutPanel_BackButton.Controls.Add(Control_PartIDManagement_Button_Back, 0, 0);
             Control_PartIDManagement_TableLayoutPanel_BackButton.Dock = DockStyle.Fill;
-            Control_PartIDManagement_TableLayoutPanel_BackButton.Location = new Point(23, 323);
+            Control_PartIDManagement_TableLayoutPanel_BackButton.Location = new Point(23, 322);
             Control_PartIDManagement_TableLayoutPanel_BackButton.Name = "Control_PartIDManagement_TableLayoutPanel_BackButton";
             Control_PartIDManagement_TableLayoutPanel_BackButton.RowCount = 1;
             Control_PartIDManagement_TableLayoutPanel_BackButton.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            Control_PartIDManagement_TableLayoutPanel_BackButton.Size = new Size(446, 43);
+            Control_PartIDManagement_TableLayoutPanel_BackButton.Size = new Size(446, 38);
             Control_PartIDManagement_TableLayoutPanel_BackButton.TabIndex = 3;
+            // 
+            // Control_PartManagement_Button_Home
+            // 
+            Control_PartManagement_Button_Home.AutoSize = true;
+            Control_PartManagement_Button_Home.Location = new Point(266, 3);
+            Control_PartManagement_Button_Home.MaximumSize = new Size(0, 32);
+            Control_PartManagement_Button_Home.MinimumSize = new Size(0, 32);
+            Control_PartManagement_Button_Home.Name = "Control_PartManagement_Button_Home";
+            Control_PartManagement_Button_Home.Padding = new Padding(16, 6, 16, 6);
+            Control_PartManagement_Button_Home.Size = new Size(139, 32);
+            Control_PartManagement_Button_Home.TabIndex = 2;
+            Control_PartManagement_Button_Home.Text = "🏠 Back to Home";
             // 
             // Control_PartIDManagement_Button_Back
             // 
             Control_PartIDManagement_Button_Back.AutoSize = true;
             Control_PartIDManagement_Button_Back.Location = new Point(3, 3);
+            Control_PartIDManagement_Button_Back.MaximumSize = new Size(0, 32);
+            Control_PartIDManagement_Button_Back.MinimumSize = new Size(0, 32);
             Control_PartIDManagement_Button_Back.Name = "Control_PartIDManagement_Button_Back";
             Control_PartIDManagement_Button_Back.Padding = new Padding(16, 6, 16, 6);
-            Control_PartIDManagement_Button_Back.Size = new Size(152, 37);
+            Control_PartIDManagement_Button_Back.Size = new Size(152, 32);
             Control_PartIDManagement_Button_Back.TabIndex = 0;
             Control_PartIDManagement_Button_Back.Text = "← Back to Selection";
             Control_PartIDManagement_Button_Back.Visible = false;
@@ -1128,7 +1163,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_PartIDManagement_Label_Header.Location = new Point(23, 23);
             Control_PartIDManagement_Label_Header.Margin = new Padding(3);
             Control_PartIDManagement_Label_Header.Name = "Control_PartIDManagement_Label_Header";
-            Control_PartIDManagement_Label_Header.Size = new Size(446, 37);
+            Control_PartIDManagement_Label_Header.Size = new Size(446, 36);
             Control_PartIDManagement_Label_Header.TabIndex = 0;
             Control_PartIDManagement_Label_Header.Text = "Part Numbers";
             Control_PartIDManagement_Label_Header.TextAlign = ContentAlignment.MiddleLeft;
@@ -1139,7 +1174,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_PartIDManagement_Label_Subtitle.Dock = DockStyle.Fill;
             Control_PartIDManagement_Label_Subtitle.Font = new Font("Segoe UI Emoji", 10F);
             Control_PartIDManagement_Label_Subtitle.ForeColor = Color.FromArgb(90, 90, 90);
-            Control_PartIDManagement_Label_Subtitle.Location = new Point(23, 66);
+            Control_PartIDManagement_Label_Subtitle.Location = new Point(23, 65);
             Control_PartIDManagement_Label_Subtitle.Margin = new Padding(3);
             Control_PartIDManagement_Label_Subtitle.Name = "Control_PartIDManagement_Label_Subtitle";
             Control_PartIDManagement_Label_Subtitle.Size = new Size(446, 19);
@@ -1175,15 +1210,19 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_PartIDManagement_Label_EditIssuedByValue.Size = new Size(100, 23);
             Control_PartIDManagement_Label_EditIssuedByValue.TabIndex = 0;
             // 
-            // Control_PartManagement_Button_Home
+            // SettingsForm_Button_Help_PartNumbers
             // 
-            Control_PartManagement_Button_Home.AutoSize = true;
-            Control_PartManagement_Button_Home.Location = new Point(291, 3);
-            Control_PartManagement_Button_Home.Name = "Control_PartManagement_Button_Home";
-            Control_PartManagement_Button_Home.Padding = new Padding(16, 6, 16, 6);
-            Control_PartManagement_Button_Home.Size = new Size(152, 37);
-            Control_PartManagement_Button_Home.TabIndex = 2;
-            Control_PartManagement_Button_Home.Text = "🏠 Back to Home";
+            SettingsForm_Button_Help_PartNumbers.AutoSize = true;
+            SettingsForm_Button_Help_PartNumbers.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            SettingsForm_Button_Help_PartNumbers.Dock = DockStyle.Fill;
+            SettingsForm_Button_Help_PartNumbers.Location = new Point(411, 3);
+            SettingsForm_Button_Help_PartNumbers.MaximumSize = new Size(32, 32);
+            SettingsForm_Button_Help_PartNumbers.MinimumSize = new Size(32, 32);
+            SettingsForm_Button_Help_PartNumbers.Name = "SettingsForm_Button_Help_PartNumbers";
+            SettingsForm_Button_Help_PartNumbers.Size = new Size(32, 32);
+            SettingsForm_Button_Help_PartNumbers.TabIndex = 17;
+            SettingsForm_Button_Help_PartNumbers.Text = "?";
+            SettingsForm_Button_Help_PartNumbers.UseVisualStyleBackColor = true;
             // 
             // Control_PartIDManagement
             // 
@@ -1193,7 +1232,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Controls.Add(Control_PartIDManagement_TableLayout_Main);
             Name = "Control_PartIDManagement";
-            Size = new Size(492, 389);
+            Size = new Size(492, 383);
             Control_PartIDManagement_TableLayout_Main.ResumeLayout(false);
             Control_PartIDManagement_TableLayout_Main.PerformLayout();
             Control_PartIDManagement_Panel_Container.ResumeLayout(false);
@@ -1260,5 +1299,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         private TableLayoutPanel Control_PartIDManagement_TableLayoutPanel_BackButton;
         private Button Control_PartIDManagement_Button_Back;
         private Button Control_PartManagement_Button_Home;
+        private Button SettingsForm_Button_Help_PartNumbers;
     }
 }

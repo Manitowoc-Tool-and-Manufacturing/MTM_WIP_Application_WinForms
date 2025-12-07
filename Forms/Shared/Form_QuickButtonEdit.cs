@@ -2,6 +2,7 @@ using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
+using MTM_WIP_Application_Winforms.Forms.Help;
 
 namespace MTM_WIP_Application_Winforms.Forms.Shared;
 
@@ -38,6 +39,7 @@ public partial class Form_QuickButtonEdit : ThemedForm
     public Form_QuickButtonEdit(string partId, string operation, int quantity)
     {
         InitializeComponent();
+        InitializeHelpButton();
 
         // DPI scaling and layout now handled by ThemedForm.OnLoad
         SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
@@ -375,6 +377,31 @@ public partial class Form_QuickButtonEdit : ThemedForm
         DialogResult = DialogResult.OK;
         Close();
     }
+
+    #region Helpers
+
+    private Button? Form_QuickButtonEdit_Button_Help;
+
+    private void InitializeHelpButton()
+    {
+        Form_QuickButtonEdit_Button_Help = new Button();
+        Form_QuickButtonEdit_Button_Help.Name = "Form_QuickButtonEdit_Button_Help";
+        Form_QuickButtonEdit_Button_Help.Text = "?";
+        Form_QuickButtonEdit_Button_Help.Size = new Size(24, 24);
+        Form_QuickButtonEdit_Button_Help.Location = new Point(this.Width - 40, 5); 
+        Form_QuickButtonEdit_Button_Help.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+        Form_QuickButtonEdit_Button_Help.Click += (s, e) => 
+        {
+            var helpForm = new HelpViewerForm();
+            helpForm.Show();
+            helpForm.ShowHelp("settings-management", "quick-buttons");
+        };
+        
+        this.Controls.Add(Form_QuickButtonEdit_Button_Help);
+        Form_QuickButtonEdit_Button_Help.BringToFront();
+    }
+
+    #endregion
 
     #endregion
 }

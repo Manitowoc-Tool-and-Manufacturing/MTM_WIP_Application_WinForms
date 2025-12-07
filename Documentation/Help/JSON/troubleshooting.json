@@ -6,6 +6,22 @@
   "Order": 13,
   "Topics": [
     {
+      "TopicId": "viewing-logs",
+      "Title": "Viewing Logs",
+      "Summary": "How to access and read application logs.",
+      "Content": "<h2>Viewing Logs</h2><p>Application logs provide a detailed history of system events and errors.</p><h3>Accessing Logs</h3><ol><li>Go to <strong>Menu > View > Application Logs</strong>.</li><li>The log viewer will open, displaying the most recent entries.</li></ol><h3>Filtering Logs</h3><p>You can filter logs by:</p><ul><li><strong>Level:</strong> Info, Warning, Error.</li><li><strong>Date:</strong> Specific day or range.</li><li><strong>Message:</strong> Text search within the log message.</li></ul>",
+      "Keywords": ["logs", "history", "events", "debug"],
+      "LastUpdated": "2025-12-07T10:00:00"
+    },
+    {
+      "TopicId": "error-reports",
+      "Title": "Error Reports",
+      "Summary": "Understanding and managing error reports.",
+      "Content": "<h2>Error Reports</h2><p>When the application encounters a critical error, it generates an error report.</p><h3>Viewing Reports</h3><ol><li>Go to <strong>Menu > View > Error Reports</strong>.</li><li>Select a report to view its details, including the stack trace and system state at the time of the error.</li></ol><h3>Submitting Reports</h3><p>You can export error reports to send to the development team for analysis.</p>",
+      "Keywords": ["error", "crash", "bug", "report"],
+      "LastUpdated": "2025-12-07T10:00:00"
+    },
+    {
       "TopicId": "database-connection",
       "Title": "Database Connection Issues",
       "Summary": "Resolving connection problems.",

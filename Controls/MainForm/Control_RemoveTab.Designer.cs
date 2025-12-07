@@ -61,6 +61,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_RemoveTab_TableLayout_Top = new TableLayoutPanel();
             Control_RemoveTab_TextBox_Part = new Component_SuggestionTextBoxWithLabel();
             Control_RemoveTab_TextBox_Operation = new Component_SuggestionTextBoxWithLabel();
+            MainForm_Button_Help_Remove = new Button();
             Control_RemoveTab_TableLayout_Bottom = new TableLayoutPanel();
             Control_RemoveTab_Button_ShowAll = new Button();
             Control_RemoveTab_Button_AdvancedItemRemoval = new Button();
@@ -194,9 +195,10 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             // Control_RemoveTab_TableLayout_Top
             // 
             Control_RemoveTab_TableLayout_Top.AutoSize = true;
-            Control_RemoveTab_TableLayout_Top.ColumnCount = 2;
+            Control_RemoveTab_TableLayout_Top.ColumnCount = 3;
             Control_RemoveTab_TableLayout_Top.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            Control_RemoveTab_TableLayout_Top.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            Control_RemoveTab_TableLayout_Top.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50.0000076F));
+            Control_RemoveTab_TableLayout_Top.ColumnStyles.Add(new ColumnStyle());
             Control_RemoveTab_TableLayout_Top.Controls.Add(Control_RemoveTab_TextBox_Part, 0, 0);
             Control_RemoveTab_TableLayout_Top.Controls.Add(Control_RemoveTab_TextBox_Operation, 1, 0);
             Control_RemoveTab_TableLayout_Top.Dock = DockStyle.Fill;
@@ -220,7 +222,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_RemoveTab_TextBox_Part.MinLength = 10;
             Control_RemoveTab_TextBox_Part.Name = "Control_RemoveTab_TextBox_Part";
             Control_RemoveTab_TextBox_Part.PlaceholderText = "Enter Part Number";
-            Control_RemoveTab_TextBox_Part.Size = new Size(373, 23);
+            Control_RemoveTab_TextBox_Part.Size = new Size(372, 23);
             Control_RemoveTab_TextBox_Part.TabIndex = 0;
             // 
             // Control_RemoveTab_TextBox_Operation
@@ -230,7 +232,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_RemoveTab_TextBox_Operation.Dock = DockStyle.Fill;
             Control_RemoveTab_TextBox_Operation.LabelText = "Operation";
             Control_RemoveTab_TextBox_Operation.LabelVisibility = Enum_LabelVisibility.Hidden;
-            Control_RemoveTab_TextBox_Operation.Location = new Point(382, 3);
+            Control_RemoveTab_TextBox_Operation.Location = new Point(381, 3);
             Control_RemoveTab_TextBox_Operation.MaxLength = 130;
             Control_RemoveTab_TextBox_Operation.MinimumSize = new Size(0, 23);
             Control_RemoveTab_TextBox_Operation.MinLength = 0;
@@ -239,11 +241,22 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_RemoveTab_TextBox_Operation.Size = new Size(373, 23);
             Control_RemoveTab_TextBox_Operation.TabIndex = 1;
             // 
+            // MainForm_Button_Help_Remove
+            // 
+            MainForm_Button_Help_Remove.Location = new Point(653, 3);
+            MainForm_Button_Help_Remove.MaximumSize = new Size(32, 32);
+            MainForm_Button_Help_Remove.MinimumSize = new Size(32, 32);
+            MainForm_Button_Help_Remove.Name = "MainForm_Button_Help_Remove";
+            MainForm_Button_Help_Remove.Size = new Size(32, 32);
+            MainForm_Button_Help_Remove.TabIndex = 2;
+            MainForm_Button_Help_Remove.Text = "?";
+            MainForm_Button_Help_Remove.UseVisualStyleBackColor = true;
+            // 
             // Control_RemoveTab_TableLayout_Bottom
             // 
             Control_RemoveTab_TableLayout_Bottom.AutoSize = true;
             Control_RemoveTab_TableLayout_Bottom.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            Control_RemoveTab_TableLayout_Bottom.ColumnCount = 9;
+            Control_RemoveTab_TableLayout_Bottom.ColumnCount = 10;
             Control_RemoveTab_TableLayout_Bottom.ColumnStyles.Add(new ColumnStyle());
             Control_RemoveTab_TableLayout_Bottom.ColumnStyles.Add(new ColumnStyle());
             Control_RemoveTab_TableLayout_Bottom.ColumnStyles.Add(new ColumnStyle());
@@ -253,11 +266,13 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_RemoveTab_TableLayout_Bottom.ColumnStyles.Add(new ColumnStyle());
             Control_RemoveTab_TableLayout_Bottom.ColumnStyles.Add(new ColumnStyle());
             Control_RemoveTab_TableLayout_Bottom.ColumnStyles.Add(new ColumnStyle());
+            Control_RemoveTab_TableLayout_Bottom.ColumnStyles.Add(new ColumnStyle());
             Control_RemoveTab_TableLayout_Bottom.Controls.Add(Control_RemoveTab_Button_ShowAll, 3, 0);
             Control_RemoveTab_TableLayout_Bottom.Controls.Add(Control_RemoveTab_Button_AdvancedItemRemoval, 2, 0);
+            Control_RemoveTab_TableLayout_Bottom.Controls.Add(MainForm_Button_Help_Remove, 8, 0);
             Control_RemoveTab_TableLayout_Bottom.Controls.Add(Control_RemoveTab_Button_Delete, 1, 0);
             Control_RemoveTab_TableLayout_Bottom.Controls.Add(Control_RemoveTab_Button_Search, 0, 0);
-            Control_RemoveTab_TableLayout_Bottom.Controls.Add(Control_RemoveTab_Button_Toggle_RightPanel, 8, 0);
+            Control_RemoveTab_TableLayout_Bottom.Controls.Add(Control_RemoveTab_Button_Toggle_RightPanel, 9, 0);
             Control_RemoveTab_TableLayout_Bottom.Controls.Add(Control_RemoveTab_Button_Reset, 7, 0);
             Control_RemoveTab_TableLayout_Bottom.Controls.Add(Control_RemoveTab_Button_Print, 6, 0);
             Control_RemoveTab_TableLayout_Bottom.Controls.Add(Control_RemoveTab_Button_Undo, 5, 0);
@@ -354,7 +369,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_RemoveTab_Button_Reset.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_RemoveTab_Button_Reset.Dock = DockStyle.Fill;
             Control_RemoveTab_Button_Reset.Font = new Font("Segoe UI Emoji", 9F);
-            Control_RemoveTab_Button_Reset.Location = new Point(640, 3);
+            Control_RemoveTab_Button_Reset.Location = new Point(602, 3);
             Control_RemoveTab_Button_Reset.MaximumSize = new Size(0, 32);
             Control_RemoveTab_Button_Reset.MinimumSize = new Size(0, 32);
             Control_RemoveTab_Button_Reset.Name = "Control_RemoveTab_Button_Reset";
@@ -371,7 +386,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_RemoveTab_Button_Print.Dock = DockStyle.Fill;
             Control_RemoveTab_Button_Print.Enabled = false;
             Control_RemoveTab_Button_Print.Font = new Font("Segoe UI Emoji", 9F);
-            Control_RemoveTab_Button_Print.Location = new Point(592, 3);
+            Control_RemoveTab_Button_Print.Location = new Point(554, 3);
             Control_RemoveTab_Button_Print.MaximumSize = new Size(0, 32);
             Control_RemoveTab_Button_Print.MinimumSize = new Size(0, 32);
             Control_RemoveTab_Button_Print.Name = "Control_RemoveTab_Button_Print";
@@ -387,7 +402,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_RemoveTab_Button_Undo.Dock = DockStyle.Fill;
             Control_RemoveTab_Button_Undo.Enabled = false;
             Control_RemoveTab_Button_Undo.Font = new Font("Segoe UI Emoji", 9F);
-            Control_RemoveTab_Button_Undo.Location = new Point(540, 3);
+            Control_RemoveTab_Button_Undo.Location = new Point(502, 3);
             Control_RemoveTab_Button_Undo.MaximumSize = new Size(0, 32);
             Control_RemoveTab_Button_Undo.MinimumSize = new Size(0, 32);
             Control_RemoveTab_Button_Undo.Name = "Control_RemoveTab_Button_Undo";
@@ -418,7 +433,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_RemoveTab_TableLayout_SearchToggle.Name = "Control_RemoveTab_TableLayout_SearchToggle";
             Control_RemoveTab_TableLayout_SearchToggle.RowCount = 1;
             Control_RemoveTab_TableLayout_SearchToggle.RowStyles.Add(new RowStyle());
-            Control_RemoveTab_TableLayout_SearchToggle.Size = new Size(278, 38);
+            Control_RemoveTab_TableLayout_SearchToggle.Size = new Size(240, 38);
             Control_RemoveTab_TableLayout_SearchToggle.TabIndex = 11;
             // 
             // Control_RemoveTab_Button_SearchVisual
@@ -428,7 +443,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_RemoveTab_Button_SearchVisual.Dock = DockStyle.Fill;
             Control_RemoveTab_Button_SearchVisual.Enabled = false;
             Control_RemoveTab_Button_SearchVisual.Font = new Font("Segoe UI Emoji", 9F);
-            Control_RemoveTab_Button_SearchVisual.Location = new Point(41, 3);
+            Control_RemoveTab_Button_SearchVisual.Location = new Point(29, 3);
             Control_RemoveTab_Button_SearchVisual.MaximumSize = new Size(0, 32);
             Control_RemoveTab_Button_SearchVisual.MinimumSize = new Size(0, 32);
             Control_RemoveTab_Button_SearchVisual.Name = "Control_RemoveTab_Button_SearchVisual";
@@ -440,7 +455,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             // 
             Control_RemoveTab_Button_Toggle_InputPanel.Dock = DockStyle.Fill;
             Control_RemoveTab_Button_Toggle_InputPanel.Font = new Font("Segoe UI Emoji", 9F);
-            Control_RemoveTab_Button_Toggle_InputPanel.Location = new Point(171, 3);
+            Control_RemoveTab_Button_Toggle_InputPanel.Location = new Point(147, 3);
             Control_RemoveTab_Button_Toggle_InputPanel.MaximumSize = new Size(64, 32);
             Control_RemoveTab_Button_Toggle_InputPanel.MinimumSize = new Size(64, 32);
             Control_RemoveTab_Button_Toggle_InputPanel.Name = "Control_RemoveTab_Button_Toggle_InputPanel";
@@ -480,5 +495,6 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         private TableLayoutPanel Control_RemoveTab_TableLayout_SearchToggle;
         private Button Control_RemoveTab_Button_Toggle_InputPanel;
         private Button Control_RemoveTab_Button_SearchVisual;
+        private Button MainForm_Button_Help_Remove;
     }
 }

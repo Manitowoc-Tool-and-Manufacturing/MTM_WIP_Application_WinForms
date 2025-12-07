@@ -72,18 +72,19 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_User_Management_Label_HomeTile_RemoveIcon = new Label();
             Control_User_Management_Label_HomeTile_RemoveTitle = new Label();
             Control_User_Management_Label_HomeTile_RemoveInstruction = new Label();
+            Control_User_Management_Panel_Edit = new Panel();
+            Control_User_Management_TableLayout_EditCard = new TableLayoutPanel();
+            Control_User_Management_Control_EditUser = new Control_Edit_User();
+            Control_User_Management_Panel_Add = new Panel();
+            Control_User_Management_TableLayout_AddCard = new TableLayoutPanel();
+            Control_User_Management_Control_AddUser = new Control_Add_User();
+            Control_User_Management_Panel_Remove = new Panel();
+            Control_User_Management_TableLayout_RemoveCard = new TableLayoutPanel();
+            Control_User_Management_Control_RemoveUser = new Control_Remove_User();
             Control_User_Management_TableLayout_BackButton = new TableLayoutPanel();
             Control_User_Management_Button_Back = new Button();
             Control_User_Management_Button_Home = new Button();
-            Control_User_Management_Panel_Add = new Panel();
-            Control_User_Management_Panel_Edit = new Panel();
-            Control_User_Management_Panel_Remove = new Panel();
-            Control_User_Management_TableLayout_EditCard = new TableLayoutPanel();
-            Control_User_Management_Control_EditUser = new Control_Edit_User();
-            Control_User_Management_TableLayout_RemoveCard = new TableLayoutPanel();
-            Control_User_Management_Control_RemoveUser = new Control_Remove_User();
-            Control_User_Management_TableLayout_AddCard = new TableLayoutPanel();
-            Control_User_Management_Control_AddUser = new Control_Add_User();
+            SettingsForm_Button_Help_Users = new Button();
             Control_User_Management_TableLayout_Main.SuspendLayout();
             Control_User_Management_Panel_Container.SuspendLayout();
             Control_User_Management_Panel_Home.SuspendLayout();
@@ -94,13 +95,13 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_User_Management_TableLayout_HomeTile_Edit.SuspendLayout();
             Control_User_Management_Panel_HomeTile_Remove.SuspendLayout();
             Control_User_Management_TableLayout_HomeTile_Remove.SuspendLayout();
-            Control_User_Management_TableLayout_BackButton.SuspendLayout();
-            Control_User_Management_Panel_Add.SuspendLayout();
             Control_User_Management_Panel_Edit.SuspendLayout();
-            Control_User_Management_Panel_Remove.SuspendLayout();
             Control_User_Management_TableLayout_EditCard.SuspendLayout();
-            Control_User_Management_TableLayout_RemoveCard.SuspendLayout();
+            Control_User_Management_Panel_Add.SuspendLayout();
             Control_User_Management_TableLayout_AddCard.SuspendLayout();
+            Control_User_Management_Panel_Remove.SuspendLayout();
+            Control_User_Management_TableLayout_RemoveCard.SuspendLayout();
+            Control_User_Management_TableLayout_BackButton.SuspendLayout();
             SuspendLayout();
             // 
             // Control_User_Management_TableLayout_Main
@@ -119,7 +120,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_User_Management_TableLayout_Main.RowStyles.Add(new RowStyle());
             Control_User_Management_TableLayout_Main.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             Control_User_Management_TableLayout_Main.RowStyles.Add(new RowStyle());
-            Control_User_Management_TableLayout_Main.Size = new Size(530, 493);
+            Control_User_Management_TableLayout_Main.Size = new Size(530, 494);
             Control_User_Management_TableLayout_Main.TabIndex = 0;
             // 
             // Control_User_Management_Panel_Container
@@ -230,10 +231,10 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_User_Management_Label_HomeTile_AddInstruction.Dock = DockStyle.Fill;
             Control_User_Management_Label_HomeTile_AddInstruction.Font = new Font("Segoe UI Emoji", 9F);
             Control_User_Management_Label_HomeTile_AddInstruction.ForeColor = Color.Gray;
-            Control_User_Management_Label_HomeTile_AddInstruction.Location = new Point(6, 281);
+            Control_User_Management_Label_HomeTile_AddInstruction.Location = new Point(6, 280);
             Control_User_Management_Label_HomeTile_AddInstruction.Margin = new Padding(3);
             Control_User_Management_Label_HomeTile_AddInstruction.Name = "Control_User_Management_Label_HomeTile_AddInstruction";
-            Control_User_Management_Label_HomeTile_AddInstruction.Size = new Size(154, 30);
+            Control_User_Management_Label_HomeTile_AddInstruction.Size = new Size(154, 32);
             Control_User_Management_Label_HomeTile_AddInstruction.TabIndex = 2;
             Control_User_Management_Label_HomeTile_AddInstruction.Text = "Create a new user account with specific permissions.";
             Control_User_Management_Label_HomeTile_AddInstruction.TextAlign = ContentAlignment.MiddleCenter;
@@ -304,10 +305,10 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_User_Management_Label_HomeTile_EditInstruction.Dock = DockStyle.Fill;
             Control_User_Management_Label_HomeTile_EditInstruction.Font = new Font("Segoe UI Emoji", 9F);
             Control_User_Management_Label_HomeTile_EditInstruction.ForeColor = Color.Gray;
-            Control_User_Management_Label_HomeTile_EditInstruction.Location = new Point(6, 281);
+            Control_User_Management_Label_HomeTile_EditInstruction.Location = new Point(6, 280);
             Control_User_Management_Label_HomeTile_EditInstruction.Margin = new Padding(3);
             Control_User_Management_Label_HomeTile_EditInstruction.Name = "Control_User_Management_Label_HomeTile_EditInstruction";
-            Control_User_Management_Label_HomeTile_EditInstruction.Size = new Size(154, 30);
+            Control_User_Management_Label_HomeTile_EditInstruction.Size = new Size(154, 32);
             Control_User_Management_Label_HomeTile_EditInstruction.TabIndex = 2;
             Control_User_Management_Label_HomeTile_EditInstruction.Text = "Modify details of an existing user account.";
             Control_User_Management_Label_HomeTile_EditInstruction.TextAlign = ContentAlignment.MiddleCenter;
@@ -378,67 +379,13 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_User_Management_Label_HomeTile_RemoveInstruction.Dock = DockStyle.Fill;
             Control_User_Management_Label_HomeTile_RemoveInstruction.Font = new Font("Segoe UI Emoji", 9F);
             Control_User_Management_Label_HomeTile_RemoveInstruction.ForeColor = Color.Gray;
-            Control_User_Management_Label_HomeTile_RemoveInstruction.Location = new Point(6, 281);
+            Control_User_Management_Label_HomeTile_RemoveInstruction.Location = new Point(6, 280);
             Control_User_Management_Label_HomeTile_RemoveInstruction.Margin = new Padding(3);
             Control_User_Management_Label_HomeTile_RemoveInstruction.Name = "Control_User_Management_Label_HomeTile_RemoveInstruction";
-            Control_User_Management_Label_HomeTile_RemoveInstruction.Size = new Size(156, 30);
+            Control_User_Management_Label_HomeTile_RemoveInstruction.Size = new Size(156, 32);
             Control_User_Management_Label_HomeTile_RemoveInstruction.TabIndex = 2;
             Control_User_Management_Label_HomeTile_RemoveInstruction.Text = "Permanently delete a user account.";
             Control_User_Management_Label_HomeTile_RemoveInstruction.TextAlign = ContentAlignment.MiddleCenter;
-            // 
-            // Control_User_Management_TableLayout_BackButton
-            // 
-            Control_User_Management_TableLayout_BackButton.AutoSize = true;
-            Control_User_Management_TableLayout_BackButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            Control_User_Management_TableLayout_BackButton.ColumnCount = 3;
-            Control_User_Management_TableLayout_BackButton.ColumnStyles.Add(new ColumnStyle());
-            Control_User_Management_TableLayout_BackButton.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            Control_User_Management_TableLayout_BackButton.ColumnStyles.Add(new ColumnStyle());
-            Control_User_Management_TableLayout_BackButton.Controls.Add(Control_User_Management_Button_Back, 0, 0);
-            Control_User_Management_TableLayout_BackButton.Controls.Add(Control_User_Management_Button_Home, 2, 0);
-            Control_User_Management_TableLayout_BackButton.Dock = DockStyle.Fill;
-            Control_User_Management_TableLayout_BackButton.Location = new Point(3, 453);
-            Control_User_Management_TableLayout_BackButton.Name = "Control_User_Management_TableLayout_BackButton";
-            Control_User_Management_TableLayout_BackButton.RowCount = 1;
-            Control_User_Management_TableLayout_BackButton.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            Control_User_Management_TableLayout_BackButton.Size = new Size(524, 37);
-            Control_User_Management_TableLayout_BackButton.TabIndex = 3;
-            // 
-            // Control_User_Management_Button_Back
-            // 
-            Control_User_Management_Button_Back.AutoSize = true;
-            Control_User_Management_Button_Back.FlatStyle = FlatStyle.Flat;
-            Control_User_Management_Button_Back.Font = new Font("Segoe UI Emoji", 10F);
-            Control_User_Management_Button_Back.Location = new Point(3, 3);
-            Control_User_Management_Button_Back.Name = "Control_User_Management_Button_Back";
-            Control_User_Management_Button_Back.Size = new Size(65, 31);
-            Control_User_Management_Button_Back.TabIndex = 0;
-            Control_User_Management_Button_Back.Text = "← Back";
-            Control_User_Management_Button_Back.UseVisualStyleBackColor = true;
-            Control_User_Management_Button_Back.Visible = false;
-            // 
-            // Control_User_Management_Button_Home
-            // 
-            Control_User_Management_Button_Home.AutoSize = true;
-            Control_User_Management_Button_Home.FlatStyle = FlatStyle.Flat;
-            Control_User_Management_Button_Home.Font = new Font("Segoe UI Emoji", 10F);
-            Control_User_Management_Button_Home.Location = new Point(456, 3);
-            Control_User_Management_Button_Home.Name = "Control_User_Management_Button_Home";
-            Control_User_Management_Button_Home.Size = new Size(65, 31);
-            Control_User_Management_Button_Home.TabIndex = 1;
-            Control_User_Management_Button_Home.Text = "🏠 Home";
-            Control_User_Management_Button_Home.UseVisualStyleBackColor = true;
-            // 
-            // Control_User_Management_Panel_Add
-            // 
-            Control_User_Management_Panel_Add.AutoSize = true;
-            Control_User_Management_Panel_Add.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            Control_User_Management_Panel_Add.Controls.Add(Control_User_Management_TableLayout_AddCard);
-            Control_User_Management_Panel_Add.Dock = DockStyle.Fill;
-            Control_User_Management_Panel_Add.Location = new Point(0, 0);
-            Control_User_Management_Panel_Add.Name = "Control_User_Management_Panel_Add";
-            Control_User_Management_Panel_Add.Size = new Size(524, 444);
-            Control_User_Management_Panel_Add.TabIndex = 1;
             // 
             // Control_User_Management_Panel_Edit
             // 
@@ -450,17 +397,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_User_Management_Panel_Edit.Name = "Control_User_Management_Panel_Edit";
             Control_User_Management_Panel_Edit.Size = new Size(524, 444);
             Control_User_Management_Panel_Edit.TabIndex = 2;
-            // 
-            // Control_User_Management_Panel_Remove
-            // 
-            Control_User_Management_Panel_Remove.AutoSize = true;
-            Control_User_Management_Panel_Remove.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            Control_User_Management_Panel_Remove.Controls.Add(Control_User_Management_TableLayout_RemoveCard);
-            Control_User_Management_Panel_Remove.Dock = DockStyle.Fill;
-            Control_User_Management_Panel_Remove.Location = new Point(0, 0);
-            Control_User_Management_Panel_Remove.Name = "Control_User_Management_Panel_Remove";
-            Control_User_Management_Panel_Remove.Size = new Size(524, 444);
-            Control_User_Management_Panel_Remove.TabIndex = 3;
             // 
             // Control_User_Management_TableLayout_EditCard
             // 
@@ -485,6 +421,53 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_User_Management_Control_EditUser.Name = "Control_User_Management_Control_EditUser";
             Control_User_Management_Control_EditUser.Size = new Size(518, 438);
             Control_User_Management_Control_EditUser.TabIndex = 5;
+            // 
+            // Control_User_Management_Panel_Add
+            // 
+            Control_User_Management_Panel_Add.AutoSize = true;
+            Control_User_Management_Panel_Add.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_User_Management_Panel_Add.Controls.Add(Control_User_Management_TableLayout_AddCard);
+            Control_User_Management_Panel_Add.Dock = DockStyle.Fill;
+            Control_User_Management_Panel_Add.Location = new Point(0, 0);
+            Control_User_Management_Panel_Add.Name = "Control_User_Management_Panel_Add";
+            Control_User_Management_Panel_Add.Size = new Size(524, 444);
+            Control_User_Management_Panel_Add.TabIndex = 1;
+            // 
+            // Control_User_Management_TableLayout_AddCard
+            // 
+            Control_User_Management_TableLayout_AddCard.AutoSize = true;
+            Control_User_Management_TableLayout_AddCard.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_User_Management_TableLayout_AddCard.ColumnCount = 1;
+            Control_User_Management_TableLayout_AddCard.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            Control_User_Management_TableLayout_AddCard.Controls.Add(Control_User_Management_Control_AddUser, 0, 0);
+            Control_User_Management_TableLayout_AddCard.Dock = DockStyle.Fill;
+            Control_User_Management_TableLayout_AddCard.Location = new Point(0, 0);
+            Control_User_Management_TableLayout_AddCard.Name = "Control_User_Management_TableLayout_AddCard";
+            Control_User_Management_TableLayout_AddCard.RowCount = 1;
+            Control_User_Management_TableLayout_AddCard.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            Control_User_Management_TableLayout_AddCard.Size = new Size(524, 444);
+            Control_User_Management_TableLayout_AddCard.TabIndex = 9;
+            // 
+            // Control_User_Management_Control_AddUser
+            // 
+            Control_User_Management_Control_AddUser.AutoSize = true;
+            Control_User_Management_Control_AddUser.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_User_Management_Control_AddUser.Dock = DockStyle.Fill;
+            Control_User_Management_Control_AddUser.Location = new Point(3, 3);
+            Control_User_Management_Control_AddUser.Name = "Control_User_Management_Control_AddUser";
+            Control_User_Management_Control_AddUser.Size = new Size(518, 438);
+            Control_User_Management_Control_AddUser.TabIndex = 4;
+            // 
+            // Control_User_Management_Panel_Remove
+            // 
+            Control_User_Management_Panel_Remove.AutoSize = true;
+            Control_User_Management_Panel_Remove.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_User_Management_Panel_Remove.Controls.Add(Control_User_Management_TableLayout_RemoveCard);
+            Control_User_Management_Panel_Remove.Dock = DockStyle.Fill;
+            Control_User_Management_Panel_Remove.Location = new Point(0, 0);
+            Control_User_Management_Panel_Remove.Name = "Control_User_Management_Panel_Remove";
+            Control_User_Management_Panel_Remove.Size = new Size(524, 444);
+            Control_User_Management_Panel_Remove.TabIndex = 3;
             // 
             // Control_User_Management_TableLayout_RemoveCard
             // 
@@ -511,38 +494,73 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_User_Management_Control_RemoveUser.Size = new Size(518, 438);
             Control_User_Management_Control_RemoveUser.TabIndex = 6;
             // 
-            // Control_User_Management_TableLayout_AddCard
+            // Control_User_Management_TableLayout_BackButton
             // 
-            Control_User_Management_TableLayout_AddCard.AutoSize = true;
-            Control_User_Management_TableLayout_AddCard.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            Control_User_Management_TableLayout_AddCard.ColumnCount = 1;
-            Control_User_Management_TableLayout_AddCard.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            Control_User_Management_TableLayout_AddCard.Controls.Add(Control_User_Management_Control_AddUser, 0, 0);
-            Control_User_Management_TableLayout_AddCard.Dock = DockStyle.Fill;
-            Control_User_Management_TableLayout_AddCard.Location = new Point(0, 0);
-            Control_User_Management_TableLayout_AddCard.Name = "Control_User_Management_TableLayout_AddCard";
-            Control_User_Management_TableLayout_AddCard.RowCount = 1;
-            Control_User_Management_TableLayout_AddCard.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            Control_User_Management_TableLayout_AddCard.Size = new Size(524, 444);
-            Control_User_Management_TableLayout_AddCard.TabIndex = 9;
+            Control_User_Management_TableLayout_BackButton.AutoSize = true;
+            Control_User_Management_TableLayout_BackButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_User_Management_TableLayout_BackButton.ColumnCount = 4;
+            Control_User_Management_TableLayout_BackButton.ColumnStyles.Add(new ColumnStyle());
+            Control_User_Management_TableLayout_BackButton.ColumnStyles.Add(new ColumnStyle());
+            Control_User_Management_TableLayout_BackButton.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            Control_User_Management_TableLayout_BackButton.ColumnStyles.Add(new ColumnStyle());
+            Control_User_Management_TableLayout_BackButton.Controls.Add(Control_User_Management_Button_Back, 0, 0);
+            Control_User_Management_TableLayout_BackButton.Controls.Add(Control_User_Management_Button_Home, 1, 0);
+            Control_User_Management_TableLayout_BackButton.Controls.Add(SettingsForm_Button_Help_Users, 3, 0);
+            Control_User_Management_TableLayout_BackButton.Dock = DockStyle.Fill;
+            Control_User_Management_TableLayout_BackButton.Location = new Point(3, 453);
+            Control_User_Management_TableLayout_BackButton.Name = "Control_User_Management_TableLayout_BackButton";
+            Control_User_Management_TableLayout_BackButton.RowCount = 1;
+            Control_User_Management_TableLayout_BackButton.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            Control_User_Management_TableLayout_BackButton.Size = new Size(524, 38);
+            Control_User_Management_TableLayout_BackButton.TabIndex = 3;
             // 
-            // Control_User_Management_Control_AddUser
+            // Control_User_Management_Button_Back
             // 
-            Control_User_Management_Control_AddUser.Dock = DockStyle.Fill;
-            Control_User_Management_Control_AddUser.Location = new Point(3, 3);
-            Control_User_Management_Control_AddUser.Name = "Control_User_Management_Control_AddUser";
-            Control_User_Management_Control_AddUser.Size = new Size(518, 438);
-            Control_User_Management_Control_AddUser.TabIndex = 4;
+            Control_User_Management_Button_Back.AutoSize = true;
+            Control_User_Management_Button_Back.FlatStyle = FlatStyle.Flat;
+            Control_User_Management_Button_Back.Font = new Font("Segoe UI Emoji", 10F);
+            Control_User_Management_Button_Back.Location = new Point(3, 3);
+            Control_User_Management_Button_Back.Name = "Control_User_Management_Button_Back";
+            Control_User_Management_Button_Back.Size = new Size(65, 31);
+            Control_User_Management_Button_Back.TabIndex = 0;
+            Control_User_Management_Button_Back.Text = "← Back";
+            Control_User_Management_Button_Back.UseVisualStyleBackColor = true;
+            Control_User_Management_Button_Back.Visible = false;
+            // 
+            // Control_User_Management_Button_Home
+            // 
+            Control_User_Management_Button_Home.AutoSize = true;
+            Control_User_Management_Button_Home.FlatStyle = FlatStyle.Flat;
+            Control_User_Management_Button_Home.Font = new Font("Segoe UI Emoji", 10F);
+            Control_User_Management_Button_Home.Location = new Point(74, 3);
+            Control_User_Management_Button_Home.Name = "Control_User_Management_Button_Home";
+            Control_User_Management_Button_Home.Size = new Size(81, 31);
+            Control_User_Management_Button_Home.TabIndex = 1;
+            Control_User_Management_Button_Home.Text = "🏠 Home";
+            Control_User_Management_Button_Home.UseVisualStyleBackColor = true;
+            // 
+            // SettingsForm_Button_Help_Users
+            // 
+            SettingsForm_Button_Help_Users.AutoSize = true;
+            SettingsForm_Button_Help_Users.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            SettingsForm_Button_Help_Users.Location = new Point(489, 3);
+            SettingsForm_Button_Help_Users.MaximumSize = new Size(32, 32);
+            SettingsForm_Button_Help_Users.MinimumSize = new Size(32, 32);
+            SettingsForm_Button_Help_Users.Name = "SettingsForm_Button_Help_Users";
+            SettingsForm_Button_Help_Users.Size = new Size(32, 32);
+            SettingsForm_Button_Help_Users.TabIndex = 13;
+            SettingsForm_Button_Help_Users.Text = "?";
+            SettingsForm_Button_Help_Users.UseVisualStyleBackColor = true;
             // 
             // Control_User_Management
             // 
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
             AutoSize = true;
             AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Controls.Add(Control_User_Management_TableLayout_Main);
             Name = "Control_User_Management";
-            Size = new Size(530, 493);
-            AutoScaleDimensions = new SizeF(96F, 96F);
-            AutoScaleMode = AutoScaleMode.Dpi;
+            Size = new Size(530, 494);
             Control_User_Management_TableLayout_Main.ResumeLayout(false);
             Control_User_Management_TableLayout_Main.PerformLayout();
             Control_User_Management_Panel_Container.ResumeLayout(false);
@@ -562,18 +580,19 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_User_Management_Panel_HomeTile_Remove.PerformLayout();
             Control_User_Management_TableLayout_HomeTile_Remove.ResumeLayout(false);
             Control_User_Management_TableLayout_HomeTile_Remove.PerformLayout();
-            Control_User_Management_TableLayout_BackButton.ResumeLayout(false);
-            Control_User_Management_TableLayout_BackButton.PerformLayout();
-            Control_User_Management_Panel_Add.ResumeLayout(false);
-            Control_User_Management_Panel_Add.PerformLayout();
             Control_User_Management_Panel_Edit.ResumeLayout(false);
             Control_User_Management_Panel_Edit.PerformLayout();
+            Control_User_Management_TableLayout_EditCard.ResumeLayout(false);
+            Control_User_Management_Panel_Add.ResumeLayout(false);
+            Control_User_Management_Panel_Add.PerformLayout();
+            Control_User_Management_TableLayout_AddCard.ResumeLayout(false);
+            Control_User_Management_TableLayout_AddCard.PerformLayout();
             Control_User_Management_Panel_Remove.ResumeLayout(false);
             Control_User_Management_Panel_Remove.PerformLayout();
-            Control_User_Management_TableLayout_EditCard.ResumeLayout(false);
             Control_User_Management_TableLayout_RemoveCard.ResumeLayout(false);
             Control_User_Management_TableLayout_RemoveCard.PerformLayout();
-            Control_User_Management_TableLayout_AddCard.ResumeLayout(false);
+            Control_User_Management_TableLayout_BackButton.ResumeLayout(false);
+            Control_User_Management_TableLayout_BackButton.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -589,5 +608,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         private Control_Edit_User Control_User_Management_Control_EditUser;
         private TableLayoutPanel Control_User_Management_TableLayout_AddCard;
         private Control_Add_User Control_User_Management_Control_AddUser;
+        private Button SettingsForm_Button_Help_Users;
     }
 }

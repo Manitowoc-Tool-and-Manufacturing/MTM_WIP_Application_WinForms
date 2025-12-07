@@ -5,6 +5,7 @@ using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
 using MTM_WIP_Application_Winforms.Helpers;
+using MTM_WIP_Application_Winforms.Forms.Help;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace MTM_WIP_Application_Winforms.Forms.Transactions;
@@ -31,6 +32,7 @@ internal partial class Transactions : ThemedForm
     public Transactions(string connectionString, string currentUser)
     {
         InitializeComponent();
+        InitializeHelpButton();
 
         
         // DPI scaling and layout now handled by ThemedForm.OnLoad
@@ -699,6 +701,31 @@ internal partial class Transactions : ThemedForm
                 controlName: nameof(Transactions));
         }
     }
+
+    #region Helpers
+
+    private Button? Transactions_Button_Help;
+
+    private void InitializeHelpButton()
+    {
+        Transactions_Button_Help = new Button();
+        Transactions_Button_Help.Name = "Transactions_Button_Help";
+        Transactions_Button_Help.Text = "?";
+        Transactions_Button_Help.Size = new Size(24, 24);
+        Transactions_Button_Help.Location = new Point(Transactions_Panel_Main.Width - 30, 5); 
+        Transactions_Button_Help.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+        Transactions_Button_Help.Click += (s, e) => 
+        {
+            var helpForm = new HelpViewerForm();
+            helpForm.Show();
+            helpForm.ShowHelp("transaction-history", "transaction-overview");
+        };
+        
+        Transactions_Panel_Main.Controls.Add(Transactions_Button_Help);
+        Transactions_Button_Help.BringToFront();
+    }
+
+    #endregion
 
     #endregion
 }

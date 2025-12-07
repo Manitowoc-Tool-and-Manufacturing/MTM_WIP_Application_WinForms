@@ -60,6 +60,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_AdvancedRemove_GroupBox_Main = new GroupBox();
             Control_AdvancedRemove_TableLayout_Main = new TableLayoutPanel();
             Control_AdvancedRemove_TableLayout_Bottom_Buttons = new TableLayoutPanel();
+            MainForm_Button_Help_AdvancedRemove = new Button();
             Control_AdvancedRemove_Button_SidePanel = new Button();
             Control_AdvancedRemove_Button_Normal = new Button();
             Control_AdvancedRemove_Button_Print = new Button();
@@ -148,18 +149,20 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             // 
             Control_AdvancedRemove_TableLayout_Bottom_Buttons.AutoSize = true;
             Control_AdvancedRemove_TableLayout_Bottom_Buttons.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            Control_AdvancedRemove_TableLayout_Bottom_Buttons.ColumnCount = 6;
+            Control_AdvancedRemove_TableLayout_Bottom_Buttons.ColumnCount = 7;
             Control_AdvancedRemove_TableLayout_Bottom_Buttons.ColumnStyles.Add(new ColumnStyle());
             Control_AdvancedRemove_TableLayout_Bottom_Buttons.ColumnStyles.Add(new ColumnStyle());
             Control_AdvancedRemove_TableLayout_Bottom_Buttons.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             Control_AdvancedRemove_TableLayout_Bottom_Buttons.ColumnStyles.Add(new ColumnStyle());
             Control_AdvancedRemove_TableLayout_Bottom_Buttons.ColumnStyles.Add(new ColumnStyle());
             Control_AdvancedRemove_TableLayout_Bottom_Buttons.ColumnStyles.Add(new ColumnStyle());
+            Control_AdvancedRemove_TableLayout_Bottom_Buttons.ColumnStyles.Add(new ColumnStyle());
+            Control_AdvancedRemove_TableLayout_Bottom_Buttons.Controls.Add(MainForm_Button_Help_AdvancedRemove, 5, 0);
             Control_AdvancedRemove_TableLayout_Bottom_Buttons.Controls.Add(Control_AdvancedRemove_Button_SidePanel, 0, 0);
             Control_AdvancedRemove_TableLayout_Bottom_Buttons.Controls.Add(Control_AdvancedRemove_Button_Normal, 4, 0);
             Control_AdvancedRemove_TableLayout_Bottom_Buttons.Controls.Add(Control_AdvancedRemove_Button_Print, 3, 0);
             Control_AdvancedRemove_TableLayout_Bottom_Buttons.Controls.Add(Control_AdvancedRemove_Button_Reset, 1, 0);
-            Control_AdvancedRemove_TableLayout_Bottom_Buttons.Controls.Add(Control_AdvancedRemove_Button_QuickButtonToggle, 5, 0);
+            Control_AdvancedRemove_TableLayout_Bottom_Buttons.Controls.Add(Control_AdvancedRemove_Button_QuickButtonToggle, 6, 0);
             Control_AdvancedRemove_TableLayout_Bottom_Buttons.Dock = DockStyle.Fill;
             Control_AdvancedRemove_TableLayout_Bottom_Buttons.Location = new Point(3, 371);
             Control_AdvancedRemove_TableLayout_Bottom_Buttons.Name = "Control_AdvancedRemove_TableLayout_Bottom_Buttons";
@@ -167,6 +170,17 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_AdvancedRemove_TableLayout_Bottom_Buttons.RowStyles.Add(new RowStyle());
             Control_AdvancedRemove_TableLayout_Bottom_Buttons.Size = new Size(788, 38);
             Control_AdvancedRemove_TableLayout_Bottom_Buttons.TabIndex = 0;
+            // 
+            // MainForm_Button_Help_AdvancedRemove
+            // 
+            MainForm_Button_Help_AdvancedRemove.Location = new Point(683, 3);
+            MainForm_Button_Help_AdvancedRemove.MaximumSize = new Size(32, 32);
+            MainForm_Button_Help_AdvancedRemove.MinimumSize = new Size(32, 32);
+            MainForm_Button_Help_AdvancedRemove.Name = "MainForm_Button_Help_AdvancedRemove";
+            MainForm_Button_Help_AdvancedRemove.Size = new Size(32, 32);
+            MainForm_Button_Help_AdvancedRemove.TabIndex = 1004;
+            MainForm_Button_Help_AdvancedRemove.Text = "?";
+            MainForm_Button_Help_AdvancedRemove.UseVisualStyleBackColor = true;
             // 
             // Control_AdvancedRemove_Button_SidePanel
             // 
@@ -191,7 +205,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_AdvancedRemove_Button_Normal.Dock = DockStyle.Fill;
             Control_AdvancedRemove_Button_Normal.Font = new Font("Segoe UI Emoji", 9F);
             Control_AdvancedRemove_Button_Normal.ForeColor = Color.DarkRed;
-            Control_AdvancedRemove_Button_Normal.Location = new Point(595, 3);
+            Control_AdvancedRemove_Button_Normal.Location = new Point(557, 3);
             Control_AdvancedRemove_Button_Normal.MaximumSize = new Size(120, 32);
             Control_AdvancedRemove_Button_Normal.MinimumSize = new Size(120, 32);
             Control_AdvancedRemove_Button_Normal.Name = "Control_AdvancedRemove_Button_Normal";
@@ -207,7 +221,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_AdvancedRemove_Button_Print.Dock = DockStyle.Fill;
             Control_AdvancedRemove_Button_Print.Enabled = false;
             Control_AdvancedRemove_Button_Print.Font = new Font("Segoe UI Emoji", 9F);
-            Control_AdvancedRemove_Button_Print.Location = new Point(489, 3);
+            Control_AdvancedRemove_Button_Print.Location = new Point(451, 3);
             Control_AdvancedRemove_Button_Print.MaximumSize = new Size(100, 32);
             Control_AdvancedRemove_Button_Print.MinimumSize = new Size(100, 32);
             Control_AdvancedRemove_Button_Print.Name = "Control_AdvancedRemove_Button_Print";
@@ -841,6 +855,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         private RadioButton Control_AdvancedRemove_RadioButton_Everything;
         private Button Control_AdvancedRemove_Button_QuickButtonToggle;
         private Button Control_AdvancedRemove_Button_SearchVisual;
+        private Button MainForm_Button_Help_AdvancedRemove;
     }
 
 

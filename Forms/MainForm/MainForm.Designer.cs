@@ -105,14 +105,14 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             MainForm_MenuStrip_Visual_Separator2 = new ToolStripSeparator();
             MainForm_MenuStrip_Visual_Separator3 = new ToolStripSeparator();
             MainForm_MenuStrip_Visual_UserAnalytics = new ToolStripMenuItem();
-            developmentToolStripMenuItem = new ToolStripMenuItem();
-            viewErrorReportsToolStripMenuItem = new ToolStripMenuItem();
-            viewApplicationLogsToolStripMenuItem = new ToolStripMenuItem();
-            syncPendingReportsToolStripMenuItem = new ToolStripMenuItem();
-            helpToolStripMenuItem = new ToolStripMenuItem();
-            gettingStartedToolStripMenuItem = new ToolStripMenuItem();
-            userGuideToolStripMenuItem = new ToolStripMenuItem();
-            keyboardShortcutsToolStripMenuItem = new ToolStripMenuItem();
+            MainForm_MenuStrip_Development = new ToolStripMenuItem();
+            MainForm_MenuStrip_Development_ViewErrorReports = new ToolStripMenuItem();
+            MainForm_MenuStrip_Development_ViewApplicationLogs = new ToolStripMenuItem();
+            MainForm_MenuStrip_Development_SyncReports = new ToolStripMenuItem();
+            MainForm_MenuStrip_Help = new ToolStripMenuItem();
+            MainForm_MenuStrip_Help_ViewHelp = new ToolStripMenuItem();
+            MainForm_MenuStrip_Help_ViewReleaseNotes = new ToolStripMenuItem();
+            MainForm_MenuStrip_Help_About = new ToolStripMenuItem();
             MainForm_StatusStrip = new StatusStrip();
             MainForm_ProgressBar = new ToolStripProgressBar();
             MainForm_StatusText = new ToolStripStatusLabel();
@@ -154,7 +154,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             // 
             MainForm_MenuStrip.Dock = DockStyle.Fill;
             MainForm_MenuStrip.ImageScalingSize = new Size(24, 24);
-            MainForm_MenuStrip.Items.AddRange(new ToolStripItem[] { MainForm_MenuStrip_File, MainForm_MenuStrip_View, MainForm_MenuStrip_Visual, developmentToolStripMenuItem, helpToolStripMenuItem });
+            MainForm_MenuStrip.Items.AddRange(new ToolStripItem[] { MainForm_MenuStrip_File, MainForm_MenuStrip_View, MainForm_MenuStrip_Visual, MainForm_MenuStrip_Development, MainForm_MenuStrip_Help });
             MainForm_MenuStrip.Location = new Point(0, 0);
             MainForm_MenuStrip.Name = "MainForm_MenuStrip";
             MainForm_MenuStrip.Padding = new Padding(0);
@@ -289,63 +289,64 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             MainForm_MenuStrip_Visual_UserAnalytics.Text = "Visual User Analytics";
             MainForm_MenuStrip_Visual_UserAnalytics.Click += MainForm_MenuStrip_Visual_UserAnalytics_Click;
             // 
-            // developmentToolStripMenuItem
+            // MainForm_MenuStrip_Development
             // 
-            developmentToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { viewErrorReportsToolStripMenuItem, viewApplicationLogsToolStripMenuItem, syncPendingReportsToolStripMenuItem });
-            developmentToolStripMenuItem.Name = "developmentToolStripMenuItem";
-            developmentToolStripMenuItem.Size = new Size(90, 24);
-            developmentToolStripMenuItem.Text = "Development";
+            MainForm_MenuStrip_Development.DropDownItems.AddRange(new ToolStripItem[] { MainForm_MenuStrip_Development_ViewErrorReports, MainForm_MenuStrip_Development_ViewApplicationLogs, MainForm_MenuStrip_Development_SyncReports });
+            MainForm_MenuStrip_Development.Name = "MainForm_MenuStrip_Development";
+            MainForm_MenuStrip_Development.Size = new Size(90, 24);
+            MainForm_MenuStrip_Development.Text = "Development";
             // 
-            // viewErrorReportsToolStripMenuItem
+            // MainForm_MenuStrip_Development_ViewErrorReports
             // 
-            viewErrorReportsToolStripMenuItem.Name = "viewErrorReportsToolStripMenuItem";
-            viewErrorReportsToolStripMenuItem.Size = new Size(278, 22);
-            viewErrorReportsToolStripMenuItem.Text = "📋 View Error Reports";
-            viewErrorReportsToolStripMenuItem.Click += MainForm_MenuStrip_Development_ViewErrorReports_Click;
+            MainForm_MenuStrip_Development_ViewErrorReports.Name = "MainForm_MenuStrip_Development_ViewErrorReports";
+            MainForm_MenuStrip_Development_ViewErrorReports.Size = new Size(278, 22);
+            MainForm_MenuStrip_Development_ViewErrorReports.Text = "📋 View Error Reports";
+            MainForm_MenuStrip_Development_ViewErrorReports.Click += MainForm_MenuStrip_Development_ViewErrorReports_Click;
             // 
-            // viewApplicationLogsToolStripMenuItem
+            // MainForm_MenuStrip_Development_ViewApplicationLogs
             // 
-            viewApplicationLogsToolStripMenuItem.Name = "viewApplicationLogsToolStripMenuItem";
-            viewApplicationLogsToolStripMenuItem.ShortcutKeys = Keys.Control | Keys.Shift | Keys.L;
-            viewApplicationLogsToolStripMenuItem.Size = new Size(278, 22);
-            viewApplicationLogsToolStripMenuItem.Text = "📄 View Application Logs";
-            viewApplicationLogsToolStripMenuItem.Click += MainForm_MenuStrip_Development_ViewApplicationLogs_Click;
+            MainForm_MenuStrip_Development_ViewApplicationLogs.Name = "MainForm_MenuStrip_Development_ViewApplicationLogs";
+            MainForm_MenuStrip_Development_ViewApplicationLogs.ShortcutKeys = Keys.Control | Keys.Shift | Keys.L;
+            MainForm_MenuStrip_Development_ViewApplicationLogs.Size = new Size(278, 22);
+            MainForm_MenuStrip_Development_ViewApplicationLogs.Text = "📄 View Application Logs";
+            MainForm_MenuStrip_Development_ViewApplicationLogs.Click += MainForm_MenuStrip_Development_ViewApplicationLogs_Click;
             // 
-            // syncPendingReportsToolStripMenuItem
+            // MainForm_MenuStrip_Development_SyncReports
             // 
-            syncPendingReportsToolStripMenuItem.Name = "syncPendingReportsToolStripMenuItem";
-            syncPendingReportsToolStripMenuItem.Size = new Size(278, 22);
-            syncPendingReportsToolStripMenuItem.Text = "🔄 Sync Pending Error Reports";
-            syncPendingReportsToolStripMenuItem.Click += MainForm_MenuStrip_Development_SyncReports_Click;
+            MainForm_MenuStrip_Development_SyncReports.Name = "MainForm_MenuStrip_Development_SyncReports";
+            MainForm_MenuStrip_Development_SyncReports.Size = new Size(278, 22);
+            MainForm_MenuStrip_Development_SyncReports.Text = "🔄 Sync Pending Error Reports";
+            MainForm_MenuStrip_Development_SyncReports.Click += MainForm_MenuStrip_Development_SyncReports_Click;
             // 
-            // helpToolStripMenuItem
+            // MainForm_MenuStrip_Help
             // 
-            helpToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { gettingStartedToolStripMenuItem, userGuideToolStripMenuItem, keyboardShortcutsToolStripMenuItem });
-            helpToolStripMenuItem.Name = "helpToolStripMenuItem";
-            helpToolStripMenuItem.Size = new Size(44, 24);
-            helpToolStripMenuItem.Text = "Help";
-            helpToolStripMenuItem.Visible = true;
+            MainForm_MenuStrip_Help.DropDownItems.AddRange(new ToolStripItem[] { MainForm_MenuStrip_Help_ViewHelp, MainForm_MenuStrip_Help_ViewReleaseNotes, MainForm_MenuStrip_Help_About });
+            MainForm_MenuStrip_Help.Name = "MainForm_MenuStrip_Help";
+            MainForm_MenuStrip_Help.Size = new Size(44, 24);
+            MainForm_MenuStrip_Help.Text = "Help";
+            MainForm_MenuStrip_Help.Visible = true;
             // 
-            // gettingStartedToolStripMenuItem
+            // MainForm_MenuStrip_Help_ViewHelp
             // 
-            gettingStartedToolStripMenuItem.Name = "gettingStartedToolStripMenuItem";
-            gettingStartedToolStripMenuItem.Size = new Size(257, 22);
-            gettingStartedToolStripMenuItem.Text = "Getting Started";
-            gettingStartedToolStripMenuItem.Click += MainForm_MenuStrip_Help_GettingStarted_Click;
+            MainForm_MenuStrip_Help_ViewHelp.Name = "MainForm_MenuStrip_Help_ViewHelp";
+            MainForm_MenuStrip_Help_ViewHelp.ShortcutKeys = Keys.F1;
+            MainForm_MenuStrip_Help_ViewHelp.Size = new Size(257, 22);
+            MainForm_MenuStrip_Help_ViewHelp.Text = "View Help";
+            MainForm_MenuStrip_Help_ViewHelp.Click += MainForm_MenuStrip_Help_ViewHelp_Click;
             // 
-            // userGuideToolStripMenuItem
+            // MainForm_MenuStrip_Help_ViewReleaseNotes
             // 
-            userGuideToolStripMenuItem.Name = "userGuideToolStripMenuItem";
-            userGuideToolStripMenuItem.Size = new Size(257, 22);
-            userGuideToolStripMenuItem.Text = "User Guide";
-            userGuideToolStripMenuItem.Click += MainForm_MenuStrip_Help_UserGuide_Click;
+            MainForm_MenuStrip_Help_ViewReleaseNotes.Name = "MainForm_MenuStrip_Help_ViewReleaseNotes";
+            MainForm_MenuStrip_Help_ViewReleaseNotes.Size = new Size(257, 22);
+            MainForm_MenuStrip_Help_ViewReleaseNotes.Text = "Release Notes";
+            MainForm_MenuStrip_Help_ViewReleaseNotes.Click += MainForm_MenuStrip_Help_ReleaseNotes_Click;
             // 
-            // keyboardShortcutsToolStripMenuItem
+            // MainForm_MenuStrip_Help_About
             // 
-            keyboardShortcutsToolStripMenuItem.Name = "keyboardShortcutsToolStripMenuItem";
-            keyboardShortcutsToolStripMenuItem.Size = new Size(257, 22);
-            keyboardShortcutsToolStripMenuItem.Text = "Keyboard Shortcuts";
-            keyboardShortcutsToolStripMenuItem.Click += MainForm_MenuStrip_Help_KeyboardShortcuts_Click;
+            MainForm_MenuStrip_Help_About.Name = "MainForm_MenuStrip_Help_About";
+            MainForm_MenuStrip_Help_About.Size = new Size(257, 22);
+            MainForm_MenuStrip_Help_About.Text = "About";
+            MainForm_MenuStrip_Help_About.Click += MainForm_MenuStrip_Help_About_Click;
             // 
             // MainForm_StatusStrip
             // 
@@ -629,18 +630,14 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
         }
         private TableLayoutPanel tableLayoutPanel1;
         internal ToolTip MainForm_ToolTip;
-    private ToolStripMenuItem developmentToolStripMenuItem;
-    private ToolStripMenuItem viewErrorReportsToolStripMenuItem;
-    private ToolStripMenuItem viewApplicationLogsToolStripMenuItem;
-        private ToolStripMenuItem syncPendingReportsToolStripMenuItem;
-
-        // COMMENTED OUT - Help Menu Items (to be reimplemented later)
-        private ToolStripMenuItem helpToolStripMenuItem;
-        private ToolStripMenuItem gettingStartedToolStripMenuItem;
-        private ToolStripMenuItem userGuideToolStripMenuItem;
-        private ToolStripMenuItem keyboardShortcutsToolStripMenuItem;
-        // private ToolStripSeparator helpSeparator1;
-        // private ToolStripMenuItem aboutMTMInventoryToolStripMenuItem;
+        private ToolStripMenuItem MainForm_MenuStrip_Development;
+        private ToolStripMenuItem MainForm_MenuStrip_Development_ViewErrorReports;
+        private ToolStripMenuItem MainForm_MenuStrip_Development_ViewApplicationLogs;
+        private ToolStripMenuItem MainForm_MenuStrip_Development_SyncReports;
+        private ToolStripMenuItem MainForm_MenuStrip_Help;
+        private ToolStripMenuItem MainForm_MenuStrip_Help_ViewHelp;
+        private ToolStripMenuItem MainForm_MenuStrip_Help_ViewReleaseNotes;
+        private ToolStripMenuItem MainForm_MenuStrip_Help_About;
 
     }
 

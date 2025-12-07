@@ -28,6 +28,46 @@
       "Content": "<h2>Adding New Inventory</h2><p>To add a new item:</p><ol><li>Navigate to the Inventory tab.</li><li>Enter the <strong>Part Number</strong> (or scan a barcode).</li><li>Enter the <strong>Quantity</strong>.</li><li>Select or scan the <strong>Location</strong>.</li><li>Click <strong>Save</strong> (Ctrl+S).</li></ol><p>The system will validate the part number against the Infor Visual database before saving.</p>",
       "Keywords": ["create", "new", "stock"],
       "LastUpdated": "2025-12-07T10:00:00"
+    },
+    {
+      "TopicId": "transfer-material",
+      "Title": "Transferring Material",
+      "Summary": "Move inventory between locations.",
+      "Content": "<h2>Transferring Material</h2><p>To move material from one location to another:</p><ol><li>Navigate to the <strong>Transfer</strong> tab (Ctrl+3).</li><li>Select the item you wish to move from the grid.</li><li>Enter the <strong>Quantity</strong> to transfer.</li><li>Select the <strong>Destination Location</strong>.</li><li>Click <strong>Transfer</strong> (Ctrl+T).</li></ol><p>The system will automatically deduct the quantity from the source location and add it to the destination location.</p>",
+      "Keywords": ["transfer", "move", "relocate"],
+      "LastUpdated": "2025-12-07T10:00:00"
+    },
+    {
+      "TopicId": "part-management",
+      "Title": "Part Management",
+      "Summary": "Managing part numbers and details.",
+      "Content": "<h2>Part Management</h2><p>Parts are the core of the inventory system.</p><h3>Part Validation</h3><p>All part numbers are validated against the Infor Visual ERP system. You cannot add inventory for a part that does not exist in Visual.</p><h3>Part Details</h3><p>Right-click on any part in the grid and select <strong>View Details</strong> to see extended information, including description, standard cost, and total quantity on hand across all locations.</p>",
+      "Keywords": ["part", "item", "sku", "validation"],
+      "LastUpdated": "2025-12-07T10:00:00"
+    },
+    {
+      "TopicId": "operation-codes",
+      "Title": "Operation Codes",
+      "Summary": "Understanding operation codes.",
+      "Content": "<h2>Operation Codes</h2><p>Operation codes define the manufacturing step associated with the inventory.</p><h3>Usage</h3><p>When adding or moving inventory, you may be required to specify an Operation Code. This helps track the progress of WIP through the manufacturing process.</p><h3>Validation</h3><p>Like parts, operation codes are validated against the Infor Visual database.</p>",
+      "Keywords": ["operation", "op code", "routing", "step"],
+      "LastUpdated": "2025-12-07T10:00:00"
+    },
+    {
+      "TopicId": "location-management",
+      "Title": "Location Management",
+      "Summary": "Managing inventory locations.",
+      "Content": "<h2>Location Management</h2><p>Locations define where inventory is physically stored.</p><h3>Location Types</h3><ul><li><strong>Stock:</strong> Standard warehouse locations.</li><li><strong>WIP:</strong> Work-in-progress locations on the shop floor.</li><li><strong>Shipping:</strong> Staging areas for outbound shipments.</li></ul><h3>Adding Locations</h3><p>New locations must be added in Infor Visual first. Once added, they will be available in the WIP Application.</p>",
+      "Keywords": ["location", "bin", "warehouse", "storage"],
+      "LastUpdated": "2025-12-07T10:00:00"
+    },
+    {
+      "TopicId": "item-types",
+      "Title": "Item Types",
+      "Summary": "Categorizing inventory items.",
+      "Content": "<h2>Item Types</h2><p>Item types categorize inventory for reporting and filtering purposes.</p><h3>Common Types</h3><ul><li><strong>Raw Material:</strong> Unprocessed material.</li><li><strong>WIP:</strong> Partially finished goods.</li><li><strong>Finished Goods:</strong> Completed products ready for shipment.</li></ul><p>Item types are typically assigned automatically based on the part number and operation code.</p>",
+      "Keywords": ["type", "category", "class"],
+      "LastUpdated": "2025-12-07T10:00:00"
     }
   ]
 }

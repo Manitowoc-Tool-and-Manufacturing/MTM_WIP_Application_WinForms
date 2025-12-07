@@ -1,0 +1,17 @@
+{
+  "CategoryId": "advanced-inventory-operations",
+  "Title": "Advanced Inventory Operations",
+  "Icon": "📦",
+  "Description": "Advanced features for inventory management.",
+  "Order": 2,
+  "Topics": [
+    {
+      "TopicId": "advanced-inventory-overview",
+      "Title": "Advanced Inventory Overview",
+      "Summary": "Overview of advanced inventory features.",
+      "Content": "<h2>Advanced Inventory Overview</h2><p>This section covers advanced inventory operations such as bulk entry, batch processing, and specialized inventory adjustments.</p><h3>Key Features</h3><ul><li><strong>Bulk Entry:</strong> Enter multiple inventory items at once.</li><li><strong>Batch Processing:</strong> Process large batches of inventory updates.</li><li><strong>Adjustments:</strong> Make corrections to inventory counts.</li></ul><p>Use these features with caution as they can significantly impact inventory records.</p>",
+      "Keywords": ["advanced", "inventory", "bulk", "batch"],
+      "LastUpdated": "2025-12-07T10:00:00"
+    }
+  ]
+}

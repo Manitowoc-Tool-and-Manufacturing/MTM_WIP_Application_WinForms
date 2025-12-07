@@ -5,6 +5,7 @@ using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Services.Visual;
 using Microsoft.Extensions.DependencyInjection;
 using System.Data;
+using MTM_WIP_Application_Winforms.Forms.Help;
 
 namespace MTM_WIP_Application_Winforms.Forms.Visual
 {
@@ -33,6 +34,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             _visualService = Program.ServiceProvider?.GetService<IService_VisualDatabase>();
 
             InitializeComponent();
+            InitializeHelpButton();
             Text = $"PO Details: {_poNumber}";
             
             Load += Form_PODetails_Load;
@@ -151,5 +153,30 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
         #region Cleanup / Dispose
         // Dispose is now handled in Designer file for components.
         #endregion
+    #region Helpers
+
+    private Button? Form_PODetails_Button_Help;
+
+    private void InitializeHelpButton()
+    {
+        Form_PODetails_Button_Help = new Button();
+        Form_PODetails_Button_Help.Name = "Form_PODetails_Button_Help";
+        Form_PODetails_Button_Help.Text = "?";
+        Form_PODetails_Button_Help.Size = new Size(24, 24);
+        Form_PODetails_Button_Help.Location = new Point(this.Width - 40, 5); 
+        Form_PODetails_Button_Help.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+        Form_PODetails_Button_Help.Click += (s, e) => 
+        {
+            var helpForm = new HelpViewerForm();
+            helpForm.Show();
+            helpForm.ShowHelp("infor-visual-integration", "po-details");
+        };
+        
+        this.Controls.Add(Form_PODetails_Button_Help);
+        Form_PODetails_Button_Help.BringToFront();
+    }
+
+    #endregion
+
     }
 }

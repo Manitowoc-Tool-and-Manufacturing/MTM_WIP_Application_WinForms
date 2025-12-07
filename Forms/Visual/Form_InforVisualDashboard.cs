@@ -5,6 +5,7 @@ using MTM_WIP_Application_Winforms.Services;
 using Microsoft.Extensions.DependencyInjection;
 using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Controls.Visual;
+using MTM_WIP_Application_Winforms.Forms.Help;
 
 namespace MTM_WIP_Application_Winforms.Forms.Visual
 {
@@ -33,6 +34,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
         public Form_InforVisualDashboard()
         {
             InitializeComponent();
+            InitializeHelpButton();
             
             // Prevent accessing DI container at design time
             if (!DesignMode && System.ComponentModel.LicenseManager.UsageMode != System.ComponentModel.LicenseUsageMode.Designtime)
@@ -465,5 +467,30 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
         // are automatically disposed when the Form is disposed.
         // Manual disposal is only needed for resources NOT added to the UI tree.
         #endregion
+    #region Helpers
+
+    private Button? Form_InforVisualDashboard_Button_Help;
+
+    private void InitializeHelpButton()
+    {
+        Form_InforVisualDashboard_Button_Help = new Button();
+        Form_InforVisualDashboard_Button_Help.Name = "Form_InforVisualDashboard_Button_Help";
+        Form_InforVisualDashboard_Button_Help.Text = "?";
+        Form_InforVisualDashboard_Button_Help.Size = new Size(24, 24);
+        Form_InforVisualDashboard_Button_Help.Location = new Point(this.Width - 40, 5); 
+        Form_InforVisualDashboard_Button_Help.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+        Form_InforVisualDashboard_Button_Help.Click += (s, e) => 
+        {
+            var helpForm = new HelpViewerForm();
+            helpForm.Show();
+            helpForm.ShowHelp("infor-visual-integration", "visual-dashboard-overview");
+        };
+        
+        this.Controls.Add(Form_InforVisualDashboard_Button_Help);
+        Form_InforVisualDashboard_Button_Help.BringToFront();
+    }
+
+    #endregion
+
     }
 }

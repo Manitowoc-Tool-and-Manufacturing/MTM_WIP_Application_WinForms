@@ -2,6 +2,7 @@ using Microsoft.Web.WebView2.Core;
 using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Services;
+using MTM_WIP_Application_Winforms.Forms.Help;
 
 namespace MTM_WIP_Application_Winforms.Forms.Settings
 {
@@ -13,6 +14,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
         public SettingsForm_ViewReleaseNotesHTML(string jsonContent)
         {
             InitializeComponent();
+            InitializeHelpButton();
             _jsonContent = jsonContent;
             InitializeWebView();
         }
@@ -128,5 +130,30 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
 
             return null;
         }
+    #region Helpers
+
+    private Button? Form_ReleaseNotes_Button_Help;
+
+    private void InitializeHelpButton()
+    {
+        Form_ReleaseNotes_Button_Help = new Button();
+        Form_ReleaseNotes_Button_Help.Name = "Form_ReleaseNotes_Button_Help";
+        Form_ReleaseNotes_Button_Help.Text = "?";
+        Form_ReleaseNotes_Button_Help.Size = new Size(24, 24);
+        Form_ReleaseNotes_Button_Help.Location = new Point(panelTop.Width - 30, 8); 
+        Form_ReleaseNotes_Button_Help.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+        Form_ReleaseNotes_Button_Help.Click += (s, e) => 
+        {
+            var helpForm = new HelpViewerForm();
+            helpForm.Show();
+            helpForm.ShowHelp("getting-started", "release-notes");
+        };
+        
+        panelTop.Controls.Add(Form_ReleaseNotes_Button_Help);
+        Form_ReleaseNotes_Button_Help.BringToFront();
+    }
+
+    #endregion
+
     }
 }

@@ -1,4 +1,5 @@
 using MTM_WIP_Application_Winforms.Forms.Shared;
+using MTM_WIP_Application_Winforms.Forms.Help;
 
 namespace MTM_WIP_Application_Winforms.Forms.Shared
 {
@@ -27,6 +28,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
         public Form_ShortcutEdit(string shortcutName, Keys currentKeys)
         {
             InitializeComponent();
+            InitializeHelpButton();
             
             this.Text = $"Edit Shortcut: {shortcutName}";
             _capturedKeys = currentKeys;
@@ -87,5 +89,30 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
         }
 
         #endregion
+    #region Helpers
+
+    private Button? Form_ShortcutEdit_Button_Help;
+
+    private void InitializeHelpButton()
+    {
+        Form_ShortcutEdit_Button_Help = new Button();
+        Form_ShortcutEdit_Button_Help.Name = "Form_ShortcutEdit_Button_Help";
+        Form_ShortcutEdit_Button_Help.Text = "?";
+        Form_ShortcutEdit_Button_Help.Size = new Size(24, 24);
+        Form_ShortcutEdit_Button_Help.Location = new Point(this.Width - 40, 5); 
+        Form_ShortcutEdit_Button_Help.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+        Form_ShortcutEdit_Button_Help.Click += (s, e) => 
+        {
+            var helpForm = new HelpViewerForm();
+            helpForm.Show();
+            helpForm.ShowHelp("settings-management", "shortcuts");
+        };
+        
+        this.Controls.Add(Form_ShortcutEdit_Button_Help);
+        Form_ShortcutEdit_Button_Help.BringToFront();
+    }
+
+    #endregion
+
     }
 }

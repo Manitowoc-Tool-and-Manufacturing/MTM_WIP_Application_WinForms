@@ -4,6 +4,7 @@ using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Services;
+using MTM_WIP_Application_Winforms.Forms.Help;
 
 namespace MTM_WIP_Application_Winforms.Forms.Settings
 {
@@ -35,6 +36,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
                 });
 
             InitializeComponent();
+            InitializeHelpButtons();
             SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
             AutoScaleMode = AutoScaleMode.Dpi;
             Service_DebugTracer.TraceUIAction("THEME_APPLICATION", nameof(SettingsForm),
@@ -571,5 +573,38 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
         }
 
         #endregion
+        #region Helpers
+
+        private void InitializeHelpButtons()
+        {
+            ApplyHelpButton(SettingsForm_Panel_Home, "SettingsForm_Button_Help_General", "settings-general", "general-overview");
+            ApplyHelpButton(SettingsForm_Panel_Database, "SettingsForm_Button_Help_Database", "settings-database", "database-overview");
+            ApplyHelpButton(SettingsForm_Panel_Theme, "SettingsForm_Button_Help_Theme", "settings-theme", "theme-overview");
+            ApplyHelpButton(SettingsForm_Panel_AddUser, "SettingsForm_Button_Help_Users", "settings-users", "users-overview");
+            ApplyHelpButton(SettingsForm_Panel_Shortcuts, "SettingsForm_Button_Help_Shortcuts", "settings-shortcuts", "shortcuts-overview");
+            ApplyHelpButton(SettingsForm_Panel_About, "SettingsForm_Button_Help_About", "settings-about", "about-overview");
+            
+            ApplyHelpButton(SettingsForm_Panel_PartNumbers, "SettingsForm_Button_Help_PartNumbers", "settings-management", "part-number-overview");
+            ApplyHelpButton(SettingsForm_Panel_AddOperation, "SettingsForm_Button_Help_Operations", "settings-management", "operation-overview");
+            ApplyHelpButton(SettingsForm_Panel_AddLocation, "SettingsForm_Button_Help_Locations", "settings-management", "location-overview");
+            ApplyHelpButton(SettingsForm_Panel_AddItemType, "SettingsForm_Button_Help_ItemTypes", "settings-management", "item-type-overview");
+        }
+
+        private void ApplyHelpButton(Panel panel, string buttonName, string category, string topic)
+        {
+            var helpButton = Controls.Find(buttonName, true).FirstOrDefault() as Button;
+            if (helpButton != null)
+            {
+                helpButton.Click += (s, e) =>
+                {
+                    var helpForm = new HelpViewerForm();
+                    helpForm.Show();
+                    helpForm.ShowHelp(category, topic);
+                };
+            }
+        }
+
+        #endregion
+
     }
 }

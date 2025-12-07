@@ -10,6 +10,7 @@ using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
 using MTM_WIP_Application_Winforms.Forms.Shared;
+using MTM_WIP_Application_Winforms.Forms.Help;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace MTM_WIP_Application_Winforms.Controls.MainForm
@@ -76,6 +77,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 });
 
             InitializeComponent();
+            InitializeHelpButton();
             
             // Resolve shortcut service
             _shortcutService = Program.ServiceProvider?.GetService<IShortcutService>();
@@ -1734,6 +1736,20 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             SetInputPanelCollapsed(collapse);
         }
 
+        #region Helpers
+
+
+        private void InitializeHelpButton()
+        {
+            MainForm_Button_Help_Transfer.Click += (s, e) => 
+            {
+                var helpForm = new HelpViewerForm();
+                helpForm.Show();
+                helpForm.ShowHelp("transfer-operations", "transfer-overview");
+            };
+        }
+
+        #endregion
 
     }
 

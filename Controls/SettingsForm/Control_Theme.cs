@@ -17,23 +17,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         public Control_Theme()
         {
             InitializeComponent();
-            this.AutoScaleDimensions = new SizeF(96F, 96F);
-            this.AutoScaleMode = AutoScaleMode.Dpi;
-            // Initialize new checkbox programmatically since we can't edit designer
-            Control_Themes_CheckBox_ShowTotalSummaryPanel = new CheckBox();
-            Control_Themes_CheckBox_ShowTotalSummaryPanel.AutoSize = true;
-            Control_Themes_CheckBox_ShowTotalSummaryPanel.Location = new Point(Control_Themes_CheckBox_AutoExpandPanels.Location.X, Control_Themes_CheckBox_AutoExpandPanels.Location.Y + 30);
-            Control_Themes_CheckBox_ShowTotalSummaryPanel.Name = "Control_Themes_CheckBox_ShowTotalSummaryPanel";
-            Control_Themes_CheckBox_ShowTotalSummaryPanel.Size = new Size(180, 24);
-            Control_Themes_CheckBox_ShowTotalSummaryPanel.TabIndex = 10;
-            Control_Themes_CheckBox_ShowTotalSummaryPanel.Text = "Show Total Summary Panel";
-            Control_Themes_CheckBox_ShowTotalSummaryPanel.UseVisualStyleBackColor = true;
-            
-            // Add to the same parent as other checkboxes
-            if (Control_Themes_CheckBox_AutoExpandPanels.Parent != null)
-            {
-                Control_Themes_CheckBox_AutoExpandPanels.Parent.Controls.Add(Control_Themes_CheckBox_ShowTotalSummaryPanel);
-            }
 
             Control_Themes_Button_Save.Click += SaveButton_Click;
             Control_Themes_Button_Preview.Click += PreviewButton_Click;

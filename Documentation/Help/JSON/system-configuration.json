@@ -6,7 +6,7 @@
   "Order": 10,
   "Topics": [
     {
-      "TopicId": "database-settings",
+      "TopicId": "database-connection",
       "Title": "Database Settings",
       "Summary": "Configure database connection parameters.",
       "Content": "<h2>Database Configuration</h2><p>Database connection settings are configured in the Settings panel.</p><h3>Connection Parameters</h3><ul><li><strong>Server Address:</strong> The MySQL server hostname or IP address.</li><li><strong>Port:</strong> MySQL server port (default: 3306).</li><li><strong>Database Name:</strong> The name of the WIP application database.</li></ul><p><em>Note: Changing these settings requires administrative privileges. Contact your IT department if you need assistance.</em></p>",

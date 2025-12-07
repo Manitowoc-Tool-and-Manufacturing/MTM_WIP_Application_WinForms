@@ -5,6 +5,7 @@ using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
+using MTM_WIP_Application_Winforms.Forms.Help;
 
 namespace MTM_WIP_Application_Winforms.Forms.Transactions;
 
@@ -40,6 +41,7 @@ internal partial class TransactionLifecycleForm : ThemedForm
     public TransactionLifecycleForm(string partId, string batchNumber)
     {
         InitializeComponent();
+        InitializeHelpButton();
 
         
 
@@ -478,6 +480,31 @@ internal partial class TransactionLifecycleForm : ThemedForm
             this.Close();
         }
     }
+
+    #region Helpers
+
+    private Button? TransactionLifecycleForm_Button_Help;
+
+    private void InitializeHelpButton()
+    {
+        TransactionLifecycleForm_Button_Help = new Button();
+        TransactionLifecycleForm_Button_Help.Name = "TransactionLifecycleForm_Button_Help";
+        TransactionLifecycleForm_Button_Help.Text = "?";
+        TransactionLifecycleForm_Button_Help.Size = new Size(24, 24);
+        TransactionLifecycleForm_Button_Help.Location = new Point(this.Width - 40, 5); 
+        TransactionLifecycleForm_Button_Help.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+        TransactionLifecycleForm_Button_Help.Click += (s, e) => 
+        {
+            var helpForm = new HelpViewerForm();
+            helpForm.Show();
+            helpForm.ShowHelp("transaction-history", "lifecycle");
+        };
+        
+        this.Controls.Add(TransactionLifecycleForm_Button_Help);
+        TransactionLifecycleForm_Button_Help.BringToFront();
+    }
+
+    #endregion
 
     #endregion
 }

@@ -315,7 +315,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
             {
                 ["CurrentUser"] = Model_Application_Variables.User ?? "Unknown",
-                ["DevelopmentMenuExists"] = developmentToolStripMenuItem != null
+                ["DevelopmentMenuExists"] = MainForm_MenuStrip_Development != null
             }, nameof(ConfigureDevelopmentMenuVisibility), nameof(MainForm));
 
             try
@@ -325,9 +325,9 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                 // Check both the database role flag and the hardcoded legacy users
                 bool isDeveloper = Model_Application_Variables.UserTypeDeveloper;
 
-                if (developmentToolStripMenuItem != null)
+                if (MainForm_MenuStrip_Development != null)
                 {
-                    developmentToolStripMenuItem.Visible = isDeveloper;
+                    MainForm_MenuStrip_Development.Visible = isDeveloper;
 
                     Service_DebugTracer.TraceBusinessLogic("DEVELOPMENT_MENU_VISIBILITY",
                         inputData: new {
@@ -1049,6 +1049,28 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
         {
             try
             {
+                // Help Shortcuts (Prioritize F1)
+                Keys helpKey = _shortcutService?.GetShortcutKey("Shortcut_Help") ?? Keys.F1;
+                if (keyData == helpKey)
+                {
+                    ShowHelp();
+                    return true;
+                }
+
+                Keys gettingStartedKey = _shortcutService?.GetShortcutKey("Shortcut_Help_GettingStarted") ?? (Keys.Control | Keys.F1);
+                if (keyData == gettingStartedKey)
+                {
+                    ShowHelp("getting-started");
+                    return true;
+                }
+
+                Keys keyboardShortcutsKey = _shortcutService?.GetShortcutKey("Shortcut_Help_KeyboardShortcuts") ?? (Keys.Control | Keys.Shift | Keys.K);
+                if (keyData == keyboardShortcutsKey)
+                {
+                    ShowHelp("keyboard-shortcuts");
+                    return true;
+                }
+
                 // Ctrl+P - Print active grid
                 if (keyData == (Keys.Control | Keys.P))
                 {
@@ -1063,6 +1085,10 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                     Keys defaultKey = (Keys)(Keys.F1 + i);
                     Keys quickButtonKey = _shortcutService?.GetShortcutKey(shortcutName) ?? defaultKey;
 
+                    // If Help is F1, and QuickButton 1 is F1, Help already handled it.
+                    // But if Help is remapped to F12, and QuickButton 1 is F1, we want QuickButton 1 to work.
+                    // The previous check handles the collision if keys are identical.
+                    
                     if (keyData == quickButtonKey)
                     {
                         // Trigger QuickButton click
@@ -1093,27 +1119,6 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                 if (keyData == tab3Key)
                 {
                     MainForm_TabControl.SelectedIndex = 2;
-                    return true;
-                }
-
-                Keys helpKey = _shortcutService?.GetShortcutKey("Shortcut_Help") ?? Keys.F1;
-                if (keyData == helpKey)
-                {
-                    ShowHelp();
-                    return true;
-                }
-
-                Keys gettingStartedKey = _shortcutService?.GetShortcutKey("Shortcut_Help_GettingStarted") ?? (Keys.Control | Keys.F1);
-                if (keyData == gettingStartedKey)
-                {
-                    ShowHelp("getting-started");
-                    return true;
-                }
-
-                Keys keyboardShortcutsKey = _shortcutService?.GetShortcutKey("Shortcut_Help_KeyboardShortcuts") ?? (Keys.Control | Keys.Shift | Keys.K);
-                if (keyData == keyboardShortcutsKey)
-                {
-                    ShowHelp("keyboard-shortcuts");
                     return true;
                 }
 
@@ -1527,21 +1532,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
         #region Help Menu Event Handlers
 
 
-        private void MainForm_MenuStrip_Help_GettingStarted_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                ShowHelp("getting-started");
-            }
-            catch (Exception ex)
-            {
-                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
-                    controlName: nameof(MainForm),
-                    contextData: new Dictionary<string, object> { ["HelpCategory"] = "getting-started" });
-            }
-        }
-
-        private void MainForm_MenuStrip_Help_UserGuide_Click(object sender, EventArgs e)
+        private void MainForm_MenuStrip_Help_ViewHelp_Click(object sender, EventArgs e)
         {
             try
             {
@@ -1554,17 +1545,31 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             }
         }
 
-        private void MainForm_MenuStrip_Help_KeyboardShortcuts_Click(object sender, EventArgs e)
+        private void MainForm_MenuStrip_Help_ReleaseNotes_Click(object sender, EventArgs e)
         {
             try
             {
-                ShowHelp("keyboard-shortcuts");
+                ShowHelp("getting-started", "release-notes");
             }
             catch (Exception ex)
             {
                 Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
                     controlName: nameof(MainForm),
-                    contextData: new Dictionary<string, object> { ["HelpCategory"] = "keyboard-shortcuts" });
+                    contextData: new Dictionary<string, object> { ["HelpCategory"] = "getting-started", ["HelpTopic"] = "release-notes" });
+            }
+        }
+
+        private void MainForm_MenuStrip_Help_About_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                ShowHelp("getting-started", "about-application");
+            }
+            catch (Exception ex)
+            {
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
+                    controlName: nameof(MainForm),
+                    contextData: new Dictionary<string, object> { ["HelpCategory"] = "getting-started", ["HelpTopic"] = "about-application" });
             }
         }
 
@@ -1627,11 +1632,11 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
 
         private void InitializeDevelopmentMenuItems()
         {
-            if (developmentToolStripMenuItem == null) return;
+            if (MainForm_MenuStrip_Development == null) return;
 
             // Database Maintenance
             bool hasDbMenu = false;
-            foreach (ToolStripItem item in developmentToolStripMenuItem.DropDownItems)
+            foreach (ToolStripItem item in MainForm_MenuStrip_Development.DropDownItems)
             {
                 if (item.Text == "Database Maintenance") hasDbMenu = true;
             }
@@ -1640,7 +1645,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             {
                 var dbMenu = new ToolStripMenuItem("Database Maintenance");
                 dbMenu.Click += MainForm_MenuStrip_Development_DatabaseMaintenance_Click;
-                developmentToolStripMenuItem.DropDownItems.Add(dbMenu);
+                MainForm_MenuStrip_Development.DropDownItems.Add(dbMenu);
             }
         }
 

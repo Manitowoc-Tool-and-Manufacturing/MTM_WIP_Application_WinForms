@@ -51,94 +51,94 @@
   - [X] T007.2 Create `seed_user_control_mapping.sql` with INSERT statements for all controls from FR-001 table mapped to their parent forms (Control_InventoryTab, Control_AdvancedInventory, Control_RemoveTab, Control_AdvancedRemove, Control_TransferTab, Control_About, Control_Database, Control_PartIDManagement, Control_OperationManagement, Control_LocationManagement, Control_ItemTypeManagement, Control_User_Management, Control_Shortcuts, Control_Theme)
   - [X] T007.3 Create `seed_email_notification_config.sql` with fallback category 'All' and any team-specific categories (e.g., 'Integration Issue (Infor Visual)')
   - [X] T007.4 Run seed scripts and verify data via SELECT queries
-- [ ] T008 Add Dao_UserFeedback and Dao_UserFeedbackComments (interface + implementation) in Data/
-  - [ ] T008.1 Create `IDao_UserFeedback.cs` interface with methods: GetAllAsync(filters), GetByUserIdAsync(userId), GetByIdAsync(feedbackId), InsertAsync(model), UpdateStatusAsync(feedbackId, newStatus, assignedDeveloperId, notes, modifiedByUserId), MarkAsDuplicateAsync(feedbackId, duplicateOfId, modifiedByUserId), ExportToCsvAsync(filters)
-  - [ ] T008.2 Create `Dao_UserFeedback.cs` implementation using Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync and ExecuteNonQueryWithStatusAsync; return Model_Dao_Result<T> for all methods; implement #region structure per coding standards
-  - [ ] T008.3 Create `IDao_UserFeedbackComments.cs` interface with methods: InsertAsync(feedbackId, userId, commentText, isInternalNote), GetByFeedbackIdAsync(feedbackId)
-  - [ ] T008.4 Create `Dao_UserFeedbackComments.cs` implementation using Helper_Database_StoredProcedure; return Model_Dao_Result<T>
-  - [ ] T008.5 Add XML documentation to all public methods per FR-045
-  - [ ] T008.6 Add nullable annotations per FR-046
-- [ ] T009 [P] Add Dao_WindowFormMapping and Dao_UserControlMapping (interface + impl) in Data/
-  - [ ] T009.1 Create `IDao_WindowFormMapping.cs` interface with methods: GetAllAsync(includeInactive), UpsertAsync(codebaseName, userFriendlyName, isActive)
-  - [ ] T009.2 Create `Dao_WindowFormMapping.cs` implementation using Helper_Database_StoredProcedure
-  - [ ] T009.3 Create `IDao_UserControlMapping.cs` interface with methods: GetByWindowAsync(windowFormMappingId, includeInactive), UpsertAsync(windowFormMappingId, codebaseName, userFriendlyName, isActive)
-  - [ ] T009.4 Create `Dao_UserControlMapping.cs` implementation using Helper_Database_StoredProcedure
-  - [ ] T009.5 Add XML documentation and nullable annotations
-- [ ] T010 [P] Add Service_FeedbackManager skeleton in Services/
-  - [ ] T010.1 Create `Service_FeedbackManager.cs` with constructor accepting IDao_UserFeedback, IDao_UserFeedbackComments, IDao_WindowFormMapping, IDao_UserControlMapping (DI-ready)
-  - [ ] T010.2 Add method stubs: SubmitFeedbackAsync, GetUserSubmissionsAsync, GetSubmissionAsync, AddCommentAsync, UpdateStatusAsync, MarkDuplicateAsync, ExportToCsvAsync, GetTrackingNumberAsync, GetWindowMappingsAsync, GetControlMappingsAsync
-  - [ ] T010.3 Add #region structure (Fields, Properties, Constructors, Methods, Helpers)
-  - [ ] T010.4 Add XML documentation for all public methods
-  - [ ] T010.5 Register in DI container (Program.cs or Startup.cs if exists)
-- [ ] T011 Add HtmlSanitizer dependency and wire validation utility method
-  - [ ] T011.1 Add `HtmlSanitizer` NuGet package to MTM_WIP_Application_Winforms.csproj
-  - [ ] T011.2 Create `Helper_HtmlSanitizer.cs` in Helpers/ with static method SanitizeHtml(string input) returning sanitized string
-  - [ ] T011.3 Integrate with Service_Validation or create new validation method ValidateAndSanitizeHtmlAsync
-  - [ ] T011.4 Add XML documentation
-- [ ] T012 Add WebView2 JS bridge handler scaffolding in Forms/Help/HelpViewerForm.cs
-  - [ ] T012.1 Add WebMessageReceived event handler in HelpViewerForm constructor or InitializeComponent
-  - [ ] T012.2 Implement secure message parsing (JSON deserialization with validation)
-  - [ ] T012.3 Add handler for message types: 'submitFeedback', 'viewSubmissions', 'addComment', 'getWindowMappings', 'getControlMappings'
-  - [ ] T012.4 Enforce local-only template loading: set CoreWebView2.Settings.IsScriptEnabled = true, CoreWebView2.Settings.AreRemoteJavaScriptObjectsAllowed = false
-  - [ ] T012.5 Add CSP headers via NavigateToString or local HTML meta tags: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'
-  - [ ] T012.6 Add error handling via Service_ErrorHandler for malformed messages
-  - [ ] T012.7 Add logging via LoggingUtility for all bridge interactions
+- [X] T008 Add Dao_UserFeedback and Dao_UserFeedbackComments (interface + implementation) in Data/
+  - [X] T008.1 Create `IDao_UserFeedback.cs` interface with methods: GetAllAsync(filters), GetByUserIdAsync(userId), GetByIdAsync(feedbackId), InsertAsync(model), UpdateStatusAsync(feedbackId, newStatus, assignedDeveloperId, notes, modifiedByUserId), MarkAsDuplicateAsync(feedbackId, duplicateOfId, modifiedByUserId), ExportToCsvAsync(filters)
+  - [X] T008.2 Create `Dao_UserFeedback.cs` implementation using Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync and ExecuteNonQueryWithStatusAsync; return Model_Dao_Result<T> for all methods; implement #region structure per coding standards
+  - [X] T008.3 Create `IDao_UserFeedbackComments.cs` interface with methods: InsertAsync(feedbackId, userId, commentText, isInternalNote), GetByFeedbackIdAsync(feedbackId)
+  - [X] T008.4 Create `Dao_UserFeedbackComments.cs` implementation using Helper_Database_StoredProcedure; return Model_Dao_Result<T>
+  - [X] T008.5 Add XML documentation to all public methods per FR-045
+  - [X] T008.6 Add nullable annotations per FR-046
+- [X] T009 [P] Add Dao_WindowFormMapping and Dao_UserControlMapping (interface + impl) in Data/
+  - [X] T009.1 Create `IDao_WindowFormMapping.cs` interface with methods: GetAllAsync(includeInactive), UpsertAsync(codebaseName, userFriendlyName, isActive)
+  - [X] T009.2 Create `Dao_WindowFormMapping.cs` implementation using Helper_Database_StoredProcedure
+  - [X] T009.3 Create `IDao_UserControlMapping.cs` interface with methods: GetByWindowAsync(windowFormMappingId, includeInactive), UpsertAsync(windowFormMappingId, codebaseName, userFriendlyName, isActive)
+  - [X] T009.4 Create `Dao_UserControlMapping.cs` implementation using Helper_Database_StoredProcedure
+  - [X] T009.5 Add XML documentation and nullable annotations
+- [X] T010 [P] Add Service_FeedbackManager skeleton in Services/
+  - [X] T010.1 Create `Service_FeedbackManager.cs` with constructor accepting IDao_UserFeedback, IDao_UserFeedbackComments, IDao_WindowFormMapping, IDao_UserControlMapping (DI-ready)
+  - [X] T010.2 Add method stubs: SubmitFeedbackAsync, GetUserSubmissionsAsync, GetSubmissionAsync, AddCommentAsync, UpdateStatusAsync, MarkDuplicateAsync, ExportToCsvAsync, GetTrackingNumberAsync, GetWindowMappingsAsync, GetControlMappingsAsync
+  - [X] T010.3 Add #region structure (Fields, Properties, Constructors, Methods, Helpers)
+  - [X] T010.4 Add XML documentation for all public methods
+  - [X] T010.5 Register in DI container (Program.cs or Startup.cs if exists)
+- [X] T011 Add HtmlSanitizer dependency and wire validation utility method
+  - [X] T011.1 Add `HtmlSanitizer` NuGet package to MTM_WIP_Application_Winforms.csproj
+  - [X] T011.2 Create `Helper_HtmlSanitizer.cs` in Helpers/ with static method SanitizeHtml(string input) returning sanitized string
+  - [X] T011.3 Integrate with Service_Validation or create new validation method ValidateAndSanitizeHtmlAsync
+  - [X] T011.4 Add XML documentation
+- [X] T012 Add WebView2 JS bridge handler scaffolding in Forms/Help/HelpViewerForm.cs
+  - [X] T012.1 Add WebMessageReceived event handler in HelpViewerForm constructor or InitializeComponent
+  - [X] T012.2 Implement secure message parsing (JSON deserialization with validation)
+  - [X] T012.3 Add handler for message types: 'submitFeedback', 'viewSubmissions', 'addComment', 'getWindowMappings', 'getControlMappings'
+  - [X] T012.4 Enforce local-only template loading: set CoreWebView2.Settings.IsScriptEnabled = true, CoreWebView2.Settings.AreRemoteJavaScriptObjectsAllowed = false
+  - [X] T012.5 Add CSP headers via NavigateToString or local HTML meta tags: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'
+  - [X] T012.6 Add error handling via Service_ErrorHandler for malformed messages
+  - [X] T012.7 Add logging via LoggingUtility for all bridge interactions
 
 ### Phase 3 – User Story 1 (Context-Sensitive Help Buttons, P1)
-- [ ] T013 [US1] Wire missing help buttons for MainForm tabs
-  - [ ] T013.1 In `Controls/MainForm/Control_AdvancedInventory.cs`: Add help button with ID `MainForm_Button_Help_AdvancedInventory`; wire Click event to open HelpViewer with category='advanced-inventory-operations', topic='advanced-inventory-overview'
-  - [ ] T013.2 In `Controls/MainForm/Control_RemoveTab.cs`: Add help button with ID `MainForm_Button_Help_Remove`; wire to category='remove-operations', topic='remove-overview'
-  - [ ] T013.3 In `Controls/MainForm/Control_AdvancedRemove.cs`: Add help button with ID `MainForm_Button_Help_AdvancedRemove`; wire to category='advanced-remove-operations', topic='advanced-remove-overview'
-  - [ ] T013.4 In `Controls/MainForm/Control_TransferTab.cs`: Add help button with ID `MainForm_Button_Help_Transfer`; wire to category='transfer-operations', topic='transfer-overview'
-  - [ ] T013.5 Ensure all buttons inherit ThemedButton styling and position in top-right per FR-001 table
-  - [ ] T013.6 Test each button opens correct help topic
-- [ ] T014 [US1] Wire SettingsForm help buttons for panels
-  - [ ] T014.1 In `Controls/SettingsForm/Control_SettingsHome.cs`: Add help button `SettingsForm_Button_Help_Home`; wire to category='settings-management', topic='home'
-  - [ ] T014.2 In `Controls/SettingsForm/Control_About.cs`: Add help button `SettingsForm_Button_Help_About`; wire to category='settings-management', topic='about'
-  - [ ] T014.3 In `Controls/SettingsForm/Control_Database.cs`: Add help button `SettingsForm_Button_Help_Database`; wire to category='settings-management', topic='database-config'
-  - [ ] T014.4 In `Controls/SettingsForm/Control_PartIDManagement.cs`: Add help button `SettingsForm_Button_Help_PartNumbers`; wire to category='settings-management', topic='part-number-overview'
-  - [ ] T014.5 In `Controls/SettingsForm/Control_OperationManagement.cs`: Add help button `SettingsForm_Button_Help_Operations`; wire to category='settings-management', topic='operation-overview'
-  - [ ] T014.6 In `Controls/SettingsForm/Control_LocationManagement.cs`: Add help button `SettingsForm_Button_Help_Locations`; wire to category='settings-management', topic='location-overview'
-  - [ ] T014.7 In `Controls/SettingsForm/Control_ItemTypeManagement.cs`: Add help button `SettingsForm_Button_Help_ItemTypes`; wire to category='settings-management', topic='inventory-type-overview'
-  - [ ] T014.8 In `Controls/SettingsForm/Control_User_Management.cs`: Add help button `SettingsForm_Button_Help_Users`; wire to category='settings-management', topic='user-overview'
-  - [ ] T014.9 In `Controls/SettingsForm/Control_Shortcuts.cs`: Add help button `SettingsForm_Button_Help_Shortcuts`; wire to category='settings-management', topic='shortcuts'
-  - [ ] T014.10 In `Controls/SettingsForm/Control_Theme.cs`: Add help button `SettingsForm_Button_Help_Theme`; wire to category='settings-management', topic='themes'
-  - [ ] T014.11 Position all buttons consistently in top-right panel area per FR-001 table
-- [ ] T015 [US1] Wire specialized forms/dialogs help buttons
-  - [ ] T015.1 In `Forms/Shared/PrintForm.cs`: Add help button `PrintForm_Button_Help`; wire to category='print-operations', topic='print-overview'
-  - [ ] T015.2 In `Forms/Transactions/Transactions.cs`: Add help button `Transactions_Button_Help`; wire to category='transaction-history', topic='transaction-overview'
-  - [ ] T015.3 In `Forms/Transactions/TransactionLifecycleForm.cs`: Add help button `TransactionLifecycleForm_Button_Help`; wire to category='transaction-history', topic='lifecycle'
-  - [ ] T015.4 In `Forms/Visual/Form_InforVisualDashboard.cs`: Add help button `Form_InforVisualDashboard_Button_Help`; wire to category='infor-visual-integration', topic='visual-dashboard-overview'
-  - [ ] T015.5 In `Forms/WIPAppAnalytics/Form_WIPUserAnalytics.cs`: Add help button `Form_WIPUserAnalytics_Button_Help`; wire to category='analytics-reporting', topic='analytics-overview'
-  - [ ] T015.6 In `Forms/Visual/Form_AnalyticsViewer.cs`: Add help button `Form_AnalyticsViewer_Button_Help`; wire to category='analytics-reporting', topic='analytics-data'
-  - [ ] T015.7 In `Forms/ViewLogs/Form_ViewLogsForm.cs`: Add help button `Form_ViewLogsForm_Button_Help`; wire to category='admin-tools', topic='logs'
-  - [ ] T015.8 In `Forms/ErrorReports/Form_ViewErrorReports.cs`: Add help button `Form_ViewErrorReports_Button_Help`; wire to category='admin-tools', topic='error-reports'
-  - [ ] T015.9 In `Forms/Settings/SettingsForm_ViewReleaseNotesHTML.cs`: Add help button `Form_ReleaseNotes_Button_Help`; wire to category='getting-started', topic='release-notes'
-  - [ ] T015.10 In `Forms/Shared/Form_QuickButtonEdit.cs`: Add help button `Form_QuickButtonEdit_Button_Help`; wire to category='settings-management', topic='quick-buttons'
-  - [ ] T015.11 In `Forms/Shared/Form_ShortcutEdit.cs`: Add help button `Form_ShortcutEdit_Button_Help`; wire to category='settings-management', topic='shortcuts'
-  - [ ] T015.12 In `Forms/Visual/Form_PODetails.cs`: Add help button `Form_PODetails_Button_Help`; wire to category='infor-visual-integration', topic='po-details'
-- [ ] T016 [US1] Update HelpViewer routing map to include all categories/topics referenced by FR-001 table
-  - [ ] T016.1 Verify JSON help content files exist for all categories: inventory-operations, advanced-inventory-operations, remove-operations, advanced-remove-operations, transfer-operations, settings-management, print-operations, transaction-history, infor-visual-integration, analytics-reporting, admin-tools, getting-started
-  - [ ] T016.2 Verify each category has required topics per FR-001 table
-  - [ ] T016.3 Update HelpViewerForm.NavigateToCategory() method to handle all category/topic combinations
-  - [ ] T016.4 Test singleton reuse: open help from one form, click help from another, verify same window navigates
+- [X] T013 [US1] Wire missing help buttons for MainForm tabs
+  - [X] T013.1 In `Controls/MainForm/Control_AdvancedInventory.cs`: Add help button with ID `MainForm_Button_Help_AdvancedInventory`; wire Click event to open HelpViewer with category='advanced-inventory-operations', topic='advanced-inventory-overview'
+  - [X] T013.2 In `Controls/MainForm/Control_RemoveTab.cs`: Add help button with ID `MainForm_Button_Help_Remove`; wire to category='remove-operations', topic='remove-overview'
+  - [X] T013.3 In `Controls/MainForm/Control_AdvancedRemove.cs`: Add help button with ID `MainForm_Button_Help_AdvancedRemove`; wire to category='advanced-remove-operations', topic='advanced-remove-overview'
+  - [X] T013.4 In `Controls/MainForm/Control_TransferTab.cs`: Add help button with ID `MainForm_Button_Help_Transfer`; wire to category='transfer-operations', topic='transfer-overview'
+  - [X] T013.5 Ensure all buttons inherit ThemedButton styling and position in top-right per FR-001 table
+  - [X] T013.6 Test each button opens correct help topic
+- [X] T014 [US1] Wire SettingsForm help buttons for panels
+  - [X] T014.1 In `Controls/SettingsForm/Control_SettingsHome.cs`: Add help button `SettingsForm_Button_Help_Home`; wire to category='settings-management', topic='home'
+  - [X] T014.2 In `Controls/SettingsForm/Control_About.cs`: Add help button `SettingsForm_Button_Help_About`; wire to category='settings-management', topic='about'
+  - [X] T014.3 In `Controls/SettingsForm/Control_Database.cs`: Add help button `SettingsForm_Button_Help_Database`; wire to category='settings-management', topic='database-config'
+  - [X] T014.4 In `Controls/SettingsForm/Control_PartIDManagement.cs`: Add help button `SettingsForm_Button_Help_PartNumbers`; wire to category='settings-management', topic='part-number-overview'
+  - [X] T014.5 In `Controls/SettingsForm/Control_OperationManagement.cs`: Add help button `SettingsForm_Button_Help_Operations`; wire to category='settings-management', topic='operation-overview'
+  - [X] T014.6 In `Controls/SettingsForm/Control_LocationManagement.cs`: Add help button `SettingsForm_Button_Help_Locations`; wire to category='settings-management', topic='location-overview'
+  - [X] T014.7 In `Controls/SettingsForm/Control_ItemTypeManagement.cs`: Add help button `SettingsForm_Button_Help_ItemTypes`; wire to category='settings-management', topic='inventory-type-overview'
+  - [X] T014.8 In `Controls/SettingsForm/Control_User_Management.cs`: Add help button `SettingsForm_Button_Help_Users`; wire to category='settings-management', topic='user-overview'
+  - [X] T014.9 In `Controls/SettingsForm/Control_Shortcuts.cs`: Add help button `SettingsForm_Button_Help_Shortcuts`; wire to category='settings-management', topic='shortcuts'
+  - [X] T014.10 In `Controls/SettingsForm/Control_Theme.cs`: Add help button `SettingsForm_Button_Help_Theme`; wire to category='settings-management', topic='themes'
+  - [X] T014.11 Position all buttons consistently in top-right panel area per FR-001 table
+- [X] T015 [US1] Wire specialized forms/dialogs help buttons
+  - [X] T015.1 In `Forms/Shared/PrintForm.cs`: Add help button `PrintForm_Button_Help`; wire to category='print-operations', topic='print-overview'
+  - [X] T015.2 In `Forms/Transactions/Transactions.cs`: Add help button `Transactions_Button_Help`; wire to category='transaction-history', topic='transaction-overview'
+  - [X] T015.3 In `Forms/Transactions/TransactionLifecycleForm.cs`: Add help button `TransactionLifecycleForm_Button_Help`; wire to category='transaction-history', topic='lifecycle'
+  - [X] T015.4 In `Forms/Visual/Form_InforVisualDashboard.cs`: Add help button `Form_InforVisualDashboard_Button_Help`; wire to category='infor-visual-integration', topic='visual-dashboard-overview'
+  - [X] T015.5 In `Forms/WIPAppAnalytics/Form_WIPUserAnalytics.cs`: Add help button `Form_WIPUserAnalytics_Button_Help`; wire to category='analytics-reporting', topic='analytics-overview'
+  - [X] T015.6 In `Forms/Visual/Form_AnalyticsViewer.cs`: Add help button `Form_AnalyticsViewer_Button_Help`; wire to category='analytics-reporting', topic='analytics-data'
+  - [X] T015.7 In `Forms/ViewLogs/Form_ViewLogsForm.cs`: Add help button `Form_ViewLogsForm_Button_Help`; wire to category='admin-tools', topic='logs'
+  - [X] T015.8 In `Forms/ErrorReports/Form_ViewErrorReports.cs`: Add help button `Form_ViewErrorReports_Button_Help`; wire to category='admin-tools', topic='error-reports'
+  - [X] T015.9 In `Forms/Settings/SettingsForm_ViewReleaseNotesHTML.cs`: Add help button `Form_ReleaseNotes_Button_Help`; wire to category='getting-started', topic='release-notes'
+  - [X] T015.10 In `Forms/Shared/Form_QuickButtonEdit.cs`: Add help button `Form_QuickButtonEdit_Button_Help`; wire to category='settings-management', topic='quick-buttons'
+  - [X] T015.11 In `Forms/Shared/Form_ShortcutEdit.cs`: Add help button `Form_ShortcutEdit_Button_Help`; wire to category='settings-management', topic='shortcuts'
+  - [X] T015.12 In `Forms/Visual/Form_PODetails.cs`: Add help button `Form_PODetails_Button_Help`; wire to category='infor-visual-integration', topic='po-details'
+- [X] T016 [US1] Update HelpViewer routing map to include all categories/topics referenced by FR-001 table
+  - [X] T016.1 Verify JSON help content files exist for all categories: inventory-operations, advanced-inventory-operations, remove-operations, advanced-remove-operations, transfer-operations, settings-management, print-operations, transaction-history, infor-visual-integration, analytics-reporting, admin-tools, getting-started
+  - [X] T016.2 Verify each category has required topics per FR-001 table
+  - [X] T016.3 Update HelpViewerForm.NavigateToCategory() method to handle all category/topic combinations
+  - [X] T016.4 Test singleton reuse: open help from one form, click help from another, verify same window navigates
 
 ### Phase 4 – User Story 2 (Help Menu Integration, P1)
-- [ ] T017 [US2] Update MainForm menu to include Help menu items
-  - [ ] T017.1 Add "Help" top-level menu item in MainForm.Designer.cs or MainForm menu strip
-  - [ ] T017.2 Add "Help Index" menu item with shortcut F1; wire Click to HelpViewer.NavigateToIndex()
-  - [ ] T017.3 Add "Getting Started" menu item with shortcut Ctrl+F1; wire Click to HelpViewer.NavigateToCategory('getting-started')
-  - [ ] T017.4 Add "Keyboard Shortcuts" menu item with shortcut Ctrl+Shift+K; wire Click to HelpViewer.NavigateToCategory('keyboard-shortcuts')
-  - [ ] T017.5 Add ToolStripSeparator
-  - [ ] T017.6 Add "About" menu item; wire Click to show About dialog or navigate to About help topic
-  - [ ] T017.7 Ensure menu items use ThemedMenuStrip styling if available
-- [ ] T018 [US2] Ensure keyboard accelerators registered and do not conflict
-  - [ ] T018.1 Review existing shortcuts in sys_shortcuts table and Control_Shortcuts.cs
-  - [ ] T018.2 Verify F1 not already assigned to conflicting action
-  - [ ] T018.3 Verify Ctrl+F1 not already assigned
-  - [ ] T018.4 Verify Ctrl+Shift+K not already assigned
-  - [ ] T018.5 Register accelerators in MainForm.KeyPreview and ProcessCmdKey override if needed
-  - [ ] T018.6 Test all three shortcuts open correct help content
+- [X] T017 [US2] Update MainForm menu to include Help menu items
+  - [X] T017.1 Add "Help" top-level menu item in MainForm.Designer.cs or MainForm menu strip
+  - [X] T017.2 Add "Help Index" menu item with shortcut F1; wire Click to HelpViewer.NavigateToIndex()
+  - [X] T017.3 Add "Getting Started" menu item with shortcut Ctrl+F1; wire Click to HelpViewer.NavigateToCategory('getting-started')
+  - [X] T017.4 Add "Keyboard Shortcuts" menu item with shortcut Ctrl+Shift+K; wire Click to HelpViewer.NavigateToCategory('keyboard-shortcuts')
+  - [X] T017.5 Add ToolStripSeparator
+  - [X] T017.6 Add "About" menu item; wire Click to show About dialog or navigate to About help topic
+  - [X] T017.7 Ensure menu items use ThemedMenuStrip styling if available
+- [X] T018 [US2] Ensure keyboard accelerators registered and do not conflict
+  - [X] T018.1 Review existing shortcuts in sys_shortcuts table and Control_Shortcuts.cs
+  - [X] T018.2 Verify F1 not already assigned to conflicting action
+  - [X] T018.3 Verify Ctrl+F1 not already assigned
+  - [X] T018.4 Verify Ctrl+Shift+K not already assigned
+  - [X] T018.5 Register accelerators in MainForm.KeyPreview and ProcessCmdKey override if needed
+  - [X] T018.6 Test all three shortcuts open correct help content
 
 ### Phase 5 – User Story 3 (Singleton Help Viewer, P1)
 - [ ] T019 [US3] Enforce single-instance HelpViewer
@@ -163,39 +163,39 @@
   - [ ] T021.6 Create `help-view-submissions.html` with sortable/filterable table: Type, Title/Summary, Status, Priority/Severity, Submitted Date, Last Updated Date; include column header click-to-sort, filter dropdowns; add "Add Comment" button per row for In Progress items; display threaded comments with developer notes styled distinctly
   - [ ] T021.7 Add JavaScript postMessage handlers in each form template: `window.chrome.webview.postMessage(JSON.stringify({type: 'submitFeedback', data: {...}}))`
   - [ ] T021.8 Add CSS styling consistent with existing help templates; respect theme colors if applicable
-- [ ] T022 [P] [US4] Implement WebView2 JS bridge handlers in HelpViewerForm.cs
-  - [ ] T022.1 Parse incoming messages by type: 'submitFeedback' → call Service_FeedbackManager.SubmitFeedbackAsync
-  - [ ] T022.2 Handle 'viewSubmissions' → call Service_FeedbackManager.GetUserSubmissionsAsync, return JSON to WebView2
-  - [ ] T022.3 Handle 'addComment' → call Service_FeedbackManager.AddCommentAsync
-  - [ ] T022.4 Handle 'getWindowMappings' → call Service_FeedbackManager.GetWindowMappingsAsync, return JSON for dropdown population
-  - [ ] T022.5 Handle 'getControlMappings' → call Service_FeedbackManager.GetControlMappingsAsync with windowFormMappingId, return JSON
-  - [ ] T022.6 Add async/await throughout; marshal results back to WebView2 via ExecuteScriptAsync or PostWebMessageAsJson
-  - [ ] T022.7 Wrap all handlers in try-catch; log errors via LoggingUtility; show errors via Service_ErrorHandler
-  - [ ] T022.8 Sanitize all incoming data via Helper_HtmlSanitizer before processing
+- [X] T022 [P] [US4] Implement WebView2 JS bridge handlers in HelpViewerForm.cs
+  - [X] T022.1 Parse incoming messages by type: 'submitFeedback' → call Service_FeedbackManager.SubmitFeedbackAsync
+  - [X] T022.2 Handle 'viewSubmissions' → call Service_FeedbackManager.GetUserSubmissionsAsync, return JSON to WebView2
+  - [X] T022.3 Handle 'addComment' → call Service_FeedbackManager.AddCommentAsync
+  - [X] T022.4 Handle 'getWindowMappings' → call Service_FeedbackManager.GetWindowMappingsAsync, return JSON for dropdown population
+  - [X] T022.5 Handle 'getControlMappings' → call Service_FeedbackManager.GetControlMappingsAsync with windowFormMappingId, return JSON
+  - [X] T022.6 Add async/await throughout; marshal results back to WebView2 via ExecuteScriptAsync or PostWebMessageAsJson
+  - [X] T022.7 Wrap all handlers in try-catch; log errors via LoggingUtility; show errors via Service_ErrorHandler
+  - [X] T022.8 Sanitize all incoming data via Helper_HtmlSanitizer before processing
 - [ ] T023 [P] [US4] Implement Service_FeedbackManager methods
-  - [ ] T023.1 Implement SubmitFeedbackAsync: validate all inputs via Service_Validation; sanitize HTML; call Dao_UserFeedback.InsertAsync; log submission via LoggingUtility (FR-036); return tracking number; trigger email notification if Critical/High bug
+  - [X] T023.1 Implement SubmitFeedbackAsync: validate all inputs via Service_Validation; sanitize HTML; call Dao_UserFeedback.InsertAsync; log submission via LoggingUtility (FR-036); return tracking number; trigger email notification if Critical/High bug
   - [ ] T023.2 Implement GetUserSubmissionsAsync: get current UserID from Model_Application_Variables.User; call Dao_UserFeedback.GetByUserIdAsync; return list
   - [ ] T023.3 Implement GetSubmissionAsync: call Dao_UserFeedback.GetByIdAsync; include comments via Dao_UserFeedbackComments.GetByFeedbackIdAsync
-  - [ ] T023.4 Implement AddCommentAsync: validate CommentText; call Dao_UserFeedbackComments.InsertAsync; update parent LastUpdatedDateTime
+  - [X] T023.4 Implement AddCommentAsync: validate CommentText; call Dao_UserFeedbackComments.InsertAsync; update parent LastUpdatedDateTime
   - [ ] T023.5 Implement UpdateStatusAsync: validate status transition; validate developer role if assigning; call Dao_UserFeedback.UpdateStatusAsync; log via LoggingUtility (FR-037)
   - [ ] T023.6 Implement MarkDuplicateAsync: validate both IDs exist; call Dao_UserFeedback.MarkAsDuplicateAsync
   - [ ] T023.7 Implement ExportToCsvAsync: call Dao_UserFeedback.ExportToCsvAsync; use ClosedXML or manual CSV generation; return file path or byte array
   - [ ] T023.8 Implement GetTrackingNumberAsync: call sys_tracking_number_GetNext SP via DAO; implement retry on collision (up to 3 attempts)
   - [ ] T023.9 Implement GetWindowMappingsAsync: call Dao_WindowFormMapping.GetAllAsync; filter active only
   - [ ] T023.10 Implement GetControlMappingsAsync: call Dao_UserControlMapping.GetByWindowAsync; filter active only
-- [ ] T024 [P] [US4] Implement Dao_UserFeedback methods
-  - [ ] T024.1 Implement GetAllAsync with filter parameter dictionary; call md_feedback_GetAll SP
-  - [ ] T024.2 Implement GetByUserIdAsync; call md_feedback_GetByUser SP
-  - [ ] T024.3 Implement GetByIdAsync; call md_feedback_GetById SP
-  - [ ] T024.4 Implement InsertAsync with Model_UserFeedback parameter; build parameter dictionary; call md_feedback_Insert SP; extract p_FeedbackID and p_TrackingNumber from output
-  - [ ] T024.5 Implement UpdateStatusAsync; call md_feedback_UpdateStatus SP
-  - [ ] T024.6 Implement MarkAsDuplicateAsync; call md_feedback_MarkDuplicate SP
-  - [ ] T024.7 Implement ExportToCsvAsync; call md_feedback_ExportToCsv SP
-  - [ ] T024.8 Ensure all methods return Model_Dao_Result<T>; handle p_Status non-zero as IsSuccess=false
-- [ ] T025 [P] [US4] Implement Dao_UserFeedbackComments methods
-  - [ ] T025.1 Implement InsertAsync; call md_feedback_comment_Insert SP; extract p_CommentID
-  - [ ] T025.2 Implement GetByFeedbackIdAsync; call md_feedback_comment_GetByFeedbackId SP
-  - [ ] T025.3 Ensure all methods return Model_Dao_Result<T>
+- [X] T024 [P] [US4] Implement Dao_UserFeedback methods
+  - [X] T024.1 Implement GetAllAsync with filter parameter dictionary; call md_feedback_GetAll SP
+  - [X] T024.2 Implement GetByUserIdAsync; call md_feedback_GetByUser SP
+  - [X] T024.3 Implement GetByIdAsync; call md_feedback_GetById SP
+  - [X] T024.4 Implement InsertAsync with Model_UserFeedback parameter; build parameter dictionary; call md_feedback_Insert SP; extract p_FeedbackID and p_TrackingNumber from output
+  - [X] T024.5 Implement UpdateStatusAsync; call md_feedback_UpdateStatus SP
+  - [X] T024.6 Implement MarkAsDuplicateAsync; call md_feedback_MarkDuplicate SP
+  - [X] T024.7 Implement ExportToCsvAsync; call md_feedback_ExportToCsv SP
+  - [X] T024.8 Ensure all methods return Model_Dao_Result<T>; handle p_Status non-zero as IsSuccess=false
+- [X] T025 [P] [US4] Implement Dao_UserFeedbackComments methods
+  - [X] T025.1 Implement InsertAsync; call md_feedback_comment_Insert SP; extract p_CommentID
+  - [X] T025.2 Implement GetByFeedbackIdAsync; call md_feedback_comment_GetByFeedbackId SP
+  - [X] T025.3 Ensure all methods return Model_Dao_Result<T>
 - [ ] T026 [P] [US4] Implement Dao_WindowFormMapping/Dao_UserControlMapping
   - [ ] T026.1 Implement Dao_WindowFormMapping.GetAllAsync; call sys_windowform_mapping_GetAll SP
   - [ ] T026.2 Implement Dao_WindowFormMapping.UpsertAsync; call sys_windowform_mapping_Upsert SP

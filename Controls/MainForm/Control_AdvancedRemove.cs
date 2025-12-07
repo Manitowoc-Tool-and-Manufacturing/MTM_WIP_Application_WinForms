@@ -12,6 +12,7 @@ using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
 using Microsoft.Extensions.DependencyInjection;
 using MTM_WIP_Application_Winforms.Services.Visual;
+using MTM_WIP_Application_Winforms.Forms.Help;
 
 namespace MTM_WIP_Application_Winforms.Controls.MainForm
 {
@@ -63,6 +64,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 });
 
             InitializeComponent();
+            InitializeHelpButton();
             
             // Resolve shortcut service
             _shortcutService = Program.ServiceProvider?.GetService<IShortcutService>();
@@ -1129,6 +1131,20 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 Control_AdvancedRemove_Button_QuickButtonToggle,
                 collapsed);
         }
+
+        #region Helpers
+
+        private void InitializeHelpButton()
+        {
+            MainForm_Button_Help_AdvancedRemove.Click += (s, e) => 
+            {
+                var helpForm = new HelpViewerForm();
+                helpForm.Show();
+                helpForm.ShowHelp("advanced-remove-operations", "advanced-remove-overview");
+            };
+        }
+
+        #endregion
         #endregion
 
     }

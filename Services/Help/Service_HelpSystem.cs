@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using MTM_WIP_Application_Winforms.Models.Help;
 using MTM_WIP_Application_Winforms.Models;
+using MTM_WIP_Application_Winforms.Data;
+using MTM_WIP_Application_Winforms.Models.Entities;
 
 namespace MTM_WIP_Application_Winforms.Services.Help
 {
@@ -15,6 +17,14 @@ namespace MTM_WIP_Application_Winforms.Services.Help
         private List<Model_HelpCategory> _categories = new List<Model_HelpCategory>();
         private bool _isInitialized = false;
         private readonly Service_HelpTemplateEngine _templateEngine = new Service_HelpTemplateEngine();
+        private readonly IDao_UserFeedback _feedbackDao;
+        private readonly IDao_UserFeedbackComments _commentsDao;
+
+        public Service_HelpSystem()
+        {
+            _feedbackDao = new Dao_UserFeedback();
+            _commentsDao = new Dao_UserFeedbackComments();
+        }
 
         /// <summary>
         /// Loads all help content from JSON files asynchronously.
@@ -134,6 +144,48 @@ namespace MTM_WIP_Application_Winforms.Services.Help
             if (topic == null) return "<html><body><h1>Topic Not Found</h1></body></html>";
 
             return _templateEngine.GenerateTopicHtml(category, topic);
+        }
+
+        /// <summary>
+        /// Submits user feedback for a help topic.
+        /// </summary>
+        public async Task<Model_Dao_Result<Model_UserFeedback>> SubmitFeedbackAsync(Model_UserFeedback feedback)
+        {
+            try
+            {
+                var result = await _feedbackDao.InsertAsync(feedback);
+                if (result.IsSuccess && result.Data != null)
+                {
+                    return Model_Dao_Result<Model_UserFeedback>.Success(result.Data);
+                }
+                return Model_Dao_Result<Model_UserFeedback>.Failure(result.ErrorMessage ?? "Unknown error during feedback submission");
+            }
+            catch (Exception ex)
+            {
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: nameof(SubmitFeedbackAsync));
+                return Model_Dao_Result<Model_UserFeedback>.Failure(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Adds a comment to a feedback submission.
+        /// </summary>
+        public async Task<Model_Dao_Result<bool>> AddCommentAsync(Model_UserFeedbackComment comment)
+        {
+            try
+            {
+                var result = await _commentsDao.InsertAsync(comment.FeedbackID, comment.UserID, comment.CommentText, comment.IsInternalNote);
+                if (result.IsSuccess)
+                {
+                    return Model_Dao_Result<bool>.Success(true);
+                }
+                return Model_Dao_Result<bool>.Failure(result.ErrorMessage);
+            }
+            catch (Exception ex)
+            {
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: nameof(AddCommentAsync));
+                return Model_Dao_Result<bool>.Failure(ex.Message);
+            }
         }
     }
 }

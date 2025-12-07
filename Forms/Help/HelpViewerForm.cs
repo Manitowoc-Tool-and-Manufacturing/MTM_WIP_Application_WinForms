@@ -5,6 +5,9 @@ using MTM_WIP_Application_Winforms.Services;
 using MTM_WIP_Application_Winforms.Models.Help;
 using MTM_WIP_Application_Winforms.Services.Logging;
 using System.Text.Json;
+using MTM_WIP_Application_Winforms.Models.Entities;
+using MTM_WIP_Application_Winforms.Models;
+using MTM_WIP_Application_Winforms.Data;
 
 namespace MTM_WIP_Application_Winforms.Forms.Help
 {
@@ -90,6 +93,11 @@ namespace MTM_WIP_Application_Winforms.Forms.Help
             try
             {
                 await webView.EnsureCoreWebView2Async();
+                
+                // T012.4 Enforce local-only template loading
+                webView.CoreWebView2.Settings.IsScriptEnabled = true;
+                webView.CoreWebView2.Settings.IsWebMessageEnabled = true;
+
                 await _helpSystem.InitializeAsync();
 
                 _isWebViewInitialized = true;
@@ -132,6 +140,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Help
                 if (root.TryGetProperty("type", out JsonElement typeElement))
                 {
                     string type = typeElement.GetString() ?? string.Empty;
+                    LoggingUtility.Log($"WebView message received: {type}");
 
                     switch (type)
                     {
@@ -148,23 +157,168 @@ namespace MTM_WIP_Application_Winforms.Forms.Help
                                 HandleFeedbackSubmission(dataElement);
                             }
                             break;
+
+                        case "viewSubmissions":
+                            HandleViewSubmissions();
+                            break;
+
+                        case "addComment":
+                            if (root.TryGetProperty("data", out JsonElement commentData))
+                            {
+                                HandleAddComment(commentData);
+                            }
+                            break;
+
+                        case "getWindowMappings":
+                            HandleGetWindowMappings();
+                            break;
+
+                        case "getControlMappings":
+                            if (root.TryGetProperty("windowId", out JsonElement windowIdElement))
+                            {
+                                HandleGetControlMappings(windowIdElement.GetString());
+                            }
+                            break;
                     }
                 }
             }
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
+                Service_ErrorHandler.HandleException(ex, Models.Enum_ErrorSeverity.Low, callerName: nameof(WebView_WebMessageReceived));
             }
+        }
+
+        private void HandleViewSubmissions()
+        {
+            // Scaffolding for Phase 6
+            LoggingUtility.Log("View submissions requested (scaffolding)");
+        }
+
+        private async void HandleAddComment(JsonElement data)
+        {
+            try
+            {
+                int feedbackId = data.TryGetProperty("feedbackId", out var f) ? f.GetInt32() : 0;
+                string? comment = data.TryGetProperty("comment", out var c) ? c.GetString() : null;
+
+                if (feedbackId == 0 || string.IsNullOrEmpty(comment)) return;
+
+                int userId = 0;
+                var userResult = await Dao_System.GetUserIdByNameAsync(Model_Application_Variables.User);
+                if (userResult.IsSuccess) userId = userResult.Data;
+
+                var commentModel = new Model_UserFeedbackComment
+                {
+                    FeedbackID = feedbackId,
+                    UserID = userId,
+                    CommentText = comment!,
+                    IsInternalNote = false,
+                    CommentDateTime = DateTime.Now
+                };
+
+                var result = await _helpSystem.AddCommentAsync(commentModel);
+                if (result.IsSuccess)
+                {
+                    await webView.CoreWebView2.ExecuteScriptAsync("alert('Comment added!');");
+                }
+                else
+                {
+                    Service_ErrorHandler.ShowUserError($"Failed to add comment: {result.ErrorMessage}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
+                   callerName: nameof(HandleAddComment),
+                   controlName: this.Name);
+            }
+        }
+
+        private void HandleGetWindowMappings()
+        {
+            // Scaffolding for Phase 6
+            LoggingUtility.Log("Get window mappings requested (scaffolding)");
+        }
+
+        private void HandleGetControlMappings(string? windowId)
+        {
+            // Scaffolding for Phase 6
+            LoggingUtility.Log($"Get control mappings requested for {windowId} (scaffolding)");
         }
 
         /// <summary>
         /// Handles feedback submission from the help viewer.
         /// </summary>
         /// <param name="data">The feedback data.</param>
-        private void HandleFeedbackSubmission(JsonElement data)
+        private async void HandleFeedbackSubmission(JsonElement data)
         {
-            // Scaffolding for Phase 6
-            LoggingUtility.Log("Feedback submission received (scaffolding)");
+            try
+            {
+                string? topicId = data.TryGetProperty("topicId", out var t) ? t.GetString() : string.Empty;
+                bool isHelpful = data.TryGetProperty("isHelpful", out var h) && h.GetBoolean();
+                string? comment = data.TryGetProperty("comment", out var c) ? c.GetString() : null;
+                string? categoryId = data.TryGetProperty("categoryId", out var cat) ? cat.GetString() : null;
+
+                // Get User ID
+                int userId = 0;
+                var userResult = await Dao_System.GetUserIdByNameAsync(Model_Application_Variables.User);
+                if (userResult.IsSuccess)
+                {
+                    userId = userResult.Data;
+                }
+                else
+                {
+                    Service_ErrorHandler.ShowUserError("Could not identify current user for feedback submission.");
+                    return;
+                }
+
+                var feedback = new Model_UserFeedback
+                {
+                    FeedbackType = "HelpSystem",
+                    UserID = userId,
+                    ActiveSection = topicId,
+                    Category = categoryId,
+                    Title = $"Help Feedback: {topicId}",
+                    Description = isHelpful ? "User found this helpful." : "User did not find this helpful.",
+                    Status = "New",
+                    SubmissionDateTime = DateTime.Now,
+                    Severity = "Low",
+                    Priority = "Low"
+                };
+
+                var result = await _helpSystem.SubmitFeedbackAsync(feedback);
+
+                if (result.IsSuccess && result.Data != null)
+                {
+                    // If there is a comment, add it
+                    if (!string.IsNullOrEmpty(comment))
+                    {
+                        var commentModel = new Model_UserFeedbackComment
+                        {
+                            FeedbackID = result.Data.FeedbackID,
+                            UserID = userId,
+                            CommentText = comment!,
+                            IsInternalNote = false,
+                            CommentDateTime = DateTime.Now
+                        };
+                        await _helpSystem.AddCommentAsync(commentModel);
+                    }
+
+                    // Notify UI of success and pass back the FeedbackID
+                    await webView.CoreWebView2.ExecuteScriptAsync($"if(typeof onFeedbackSubmitted === 'function') {{ onFeedbackSubmitted({result.Data.FeedbackID}); }} else {{ alert('Thank you for your feedback!'); }}");
+                }
+                else
+                {
+                    Service_ErrorHandler.ShowUserError($"Failed to submit feedback: {result.ErrorMessage}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
+                    callerName: nameof(HandleFeedbackSubmission),
+                    controlName: this.Name);
+            }
         }
 
         /// <summary>

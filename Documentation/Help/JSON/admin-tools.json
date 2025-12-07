@@ -6,7 +6,7 @@
   "Order": 11,
   "Topics": [
     {
-      "TopicId": "user-permissions",
+      "TopicId": "user-management",
       "Title": "User Permissions",
       "Summary": "Managing user access levels.",
       "Content": "<h2>User Permissions</h2><p>The application supports multiple user privilege levels.</p><h3>Access Levels</h3><ul><li><strong>Standard User:</strong> Can perform basic inventory operations (IN, OUT, TRANSFER).</li><li><strong>Admin:</strong> Can access all features, including transaction history for all users and advanced settings.</li><li><strong>Developer:</strong> Full system access including diagnostic tools and database configuration.</li></ul><h3>Managing Users</h3><p>User permissions are managed through the Infor Visual ERP system. Contact your IT department to request permission changes.</p>",

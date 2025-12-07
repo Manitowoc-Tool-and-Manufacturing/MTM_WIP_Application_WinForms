@@ -8,6 +8,7 @@ using Microsoft.Web.WebView2.Core;
 using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Services;
 using MTM_WIP_Application_Winforms.Services.Logging;
+using MTM_WIP_Application_Winforms.Forms.Help;
 using Newtonsoft.Json;
 
 namespace MTM_WIP_Application_Winforms.Forms.Visual
@@ -23,6 +24,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
         public Form_AnalyticsViewer(object data, string htmlTemplateName = "VisualUserAnalytics_Enhanced.html")
         {
             InitializeComponent();
+            InitializeHelpButton();
             _analyticsData = data;
             _htmlTemplateName = htmlTemplateName;
             InitializeWebView();
@@ -104,5 +106,30 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
                 Service_ErrorHandler.HandleException(ex, Models.Enum_ErrorSeverity.Medium, callerName: nameof(CoreWebView2_DOMContentLoaded), controlName: this.Name);
             }
         }
+    #region Helpers
+
+    private Button? Form_AnalyticsViewer_Button_Help;
+
+    private void InitializeHelpButton()
+    {
+        Form_AnalyticsViewer_Button_Help = new Button();
+        Form_AnalyticsViewer_Button_Help.Name = "Form_AnalyticsViewer_Button_Help";
+        Form_AnalyticsViewer_Button_Help.Text = "?";
+        Form_AnalyticsViewer_Button_Help.Size = new Size(24, 24);
+        Form_AnalyticsViewer_Button_Help.Location = new Point(this.Width - 40, 5); 
+        Form_AnalyticsViewer_Button_Help.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+        Form_AnalyticsViewer_Button_Help.Click += (s, e) => 
+        {
+            var helpForm = new HelpViewerForm();
+            helpForm.Show();
+            helpForm.ShowHelp("analytics-reporting", "analytics-data");
+        };
+        
+        this.Controls.Add(Form_AnalyticsViewer_Button_Help);
+        Form_AnalyticsViewer_Button_Help.BringToFront();
+    }
+
+    #endregion
+
     }
 }

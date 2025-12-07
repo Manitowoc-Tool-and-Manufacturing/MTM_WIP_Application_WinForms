@@ -24,7 +24,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         private Label Control_Database_Label_DatabaseIcon = null!;
         private Label Control_Database_Label_DatabaseTitle = null!;
         private TextBox Control_Database_TextBox_Database = null!;
-        private FlowLayoutPanel Control_Database_FlowPanel_Actions = null!;
         private Button Control_Database_Button_Save = null!;
         private Button Control_Database_Button_Reset = null!;
         private Button Control_Database_Button_TestConnection = null!;
@@ -63,10 +62,11 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Database_TextBox_Port = new TextBox();
             Control_Database_Label_PortTitle = new Label();
             Control_Database_Label_PortIcon = new Label();
-            Control_Database_FlowPanel_Actions = new FlowLayoutPanel();
             Control_Database_Button_TestConnection = new Button();
             Control_Database_Button_Reset = new Button();
             Control_Database_Button_Save = new Button();
+            tableLayoutPanel5 = new TableLayoutPanel();
+            SettingsForm_Button_Help_Database = new Button();
             Control_Database_TableLayout_Main.SuspendLayout();
             Control_Database_Panel_Content.SuspendLayout();
             tableLayoutPanel4.SuspendLayout();
@@ -76,7 +76,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             tableLayoutPanel3.SuspendLayout();
             Control_Database_Panel_PortCard.SuspendLayout();
             tableLayoutPanel2.SuspendLayout();
-            Control_Database_FlowPanel_Actions.SuspendLayout();
+            tableLayoutPanel5.SuspendLayout();
             SuspendLayout();
             // 
             // Control_Database_TableLayout_Main
@@ -87,7 +87,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Database_TableLayout_Main.ColumnStyles.Add(new ColumnStyle());
             Control_Database_TableLayout_Main.Controls.Add(Control_Database_Label_Header, 0, 0);
             Control_Database_TableLayout_Main.Controls.Add(Control_Database_Panel_Content, 0, 1);
-            Control_Database_TableLayout_Main.Controls.Add(Control_Database_FlowPanel_Actions, 0, 3);
+            Control_Database_TableLayout_Main.Controls.Add(tableLayoutPanel5, 0, 3);
             Control_Database_TableLayout_Main.Dock = DockStyle.Fill;
             Control_Database_TableLayout_Main.Location = new Point(0, 0);
             Control_Database_TableLayout_Main.Name = "Control_Database_TableLayout_Main";
@@ -97,7 +97,8 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Database_TableLayout_Main.RowStyles.Add(new RowStyle());
             Control_Database_TableLayout_Main.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             Control_Database_TableLayout_Main.RowStyles.Add(new RowStyle());
-            Control_Database_TableLayout_Main.Size = new Size(479, 371);
+            Control_Database_TableLayout_Main.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            Control_Database_TableLayout_Main.Size = new Size(479, 634);
             Control_Database_TableLayout_Main.TabIndex = 0;
             // 
             // Control_Database_Label_Header
@@ -373,29 +374,17 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Database_Label_PortIcon.Text = "🔌";
             Control_Database_Label_PortIcon.TextAlign = ContentAlignment.MiddleCenter;
             // 
-            // Control_Database_FlowPanel_Actions
-            // 
-            Control_Database_FlowPanel_Actions.AutoSize = true;
-            Control_Database_FlowPanel_Actions.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            Control_Database_FlowPanel_Actions.Controls.Add(Control_Database_Button_TestConnection);
-            Control_Database_FlowPanel_Actions.Controls.Add(Control_Database_Button_Reset);
-            Control_Database_FlowPanel_Actions.Controls.Add(Control_Database_Button_Save);
-            Control_Database_FlowPanel_Actions.Dock = DockStyle.Fill;
-            Control_Database_FlowPanel_Actions.FlowDirection = FlowDirection.RightToLeft;
-            Control_Database_FlowPanel_Actions.Location = new Point(23, 307);
-            Control_Database_FlowPanel_Actions.Name = "Control_Database_FlowPanel_Actions";
-            Control_Database_FlowPanel_Actions.Size = new Size(433, 41);
-            Control_Database_FlowPanel_Actions.TabIndex = 2;
-            // 
             // Control_Database_Button_TestConnection
             // 
             Control_Database_Button_TestConnection.BackColor = Color.FromArgb(0, 120, 215);
             Control_Database_Button_TestConnection.FlatStyle = FlatStyle.Flat;
             Control_Database_Button_TestConnection.Font = new Font("Segoe UI Semibold", 10F, FontStyle.Bold);
             Control_Database_Button_TestConnection.ForeColor = Color.White;
-            Control_Database_Button_TestConnection.Location = new Point(253, 3);
+            Control_Database_Button_TestConnection.Location = new Point(165, 3);
+            Control_Database_Button_TestConnection.MaximumSize = new Size(175, 32);
+            Control_Database_Button_TestConnection.MinimumSize = new Size(175, 32);
             Control_Database_Button_TestConnection.Name = "Control_Database_Button_TestConnection";
-            Control_Database_Button_TestConnection.Size = new Size(177, 35);
+            Control_Database_Button_TestConnection.Size = new Size(175, 32);
             Control_Database_Button_TestConnection.TabIndex = 2;
             Control_Database_Button_TestConnection.Text = "🔍 Test Connection";
             Control_Database_Button_TestConnection.UseVisualStyleBackColor = false;
@@ -407,9 +396,11 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Database_Button_Reset.FlatStyle = FlatStyle.Flat;
             Control_Database_Button_Reset.Font = new Font("Segoe UI Semibold", 10F, FontStyle.Bold);
             Control_Database_Button_Reset.ForeColor = Color.White;
-            Control_Database_Button_Reset.Location = new Point(147, 3);
+            Control_Database_Button_Reset.Location = new Point(84, 3);
+            Control_Database_Button_Reset.MaximumSize = new Size(75, 32);
+            Control_Database_Button_Reset.MinimumSize = new Size(50, 32);
             Control_Database_Button_Reset.Name = "Control_Database_Button_Reset";
-            Control_Database_Button_Reset.Size = new Size(100, 35);
+            Control_Database_Button_Reset.Size = new Size(75, 32);
             Control_Database_Button_Reset.TabIndex = 1;
             Control_Database_Button_Reset.Text = "Reset";
             Control_Database_Button_Reset.UseVisualStyleBackColor = false;
@@ -421,24 +412,61 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Database_Button_Save.FlatStyle = FlatStyle.Flat;
             Control_Database_Button_Save.Font = new Font("Segoe UI Semibold", 10F, FontStyle.Bold);
             Control_Database_Button_Save.ForeColor = Color.White;
-            Control_Database_Button_Save.Location = new Point(41, 3);
+            Control_Database_Button_Save.Location = new Point(3, 3);
+            Control_Database_Button_Save.MaximumSize = new Size(75, 32);
+            Control_Database_Button_Save.MinimumSize = new Size(50, 32);
             Control_Database_Button_Save.Name = "Control_Database_Button_Save";
-            Control_Database_Button_Save.Size = new Size(100, 35);
+            Control_Database_Button_Save.Size = new Size(75, 32);
             Control_Database_Button_Save.TabIndex = 0;
             Control_Database_Button_Save.Text = "💾 Save";
             Control_Database_Button_Save.UseVisualStyleBackColor = false;
             Control_Database_Button_Save.Click += Control_Database_Button_Save_Click;
             // 
+            // tableLayoutPanel5
+            // 
+            tableLayoutPanel5.AutoSize = true;
+            tableLayoutPanel5.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            tableLayoutPanel5.ColumnCount = 5;
+            tableLayoutPanel5.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel5.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel5.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel5.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel5.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel5.Controls.Add(Control_Database_Button_Save, 0, 0);
+            tableLayoutPanel5.Controls.Add(Control_Database_Button_Reset, 1, 0);
+            tableLayoutPanel5.Controls.Add(Control_Database_Button_TestConnection, 2, 0);
+            tableLayoutPanel5.Controls.Add(SettingsForm_Button_Help_Database, 4, 0);
+            tableLayoutPanel5.Dock = DockStyle.Fill;
+            tableLayoutPanel5.Location = new Point(23, 573);
+            tableLayoutPanel5.Name = "tableLayoutPanel5";
+            tableLayoutPanel5.RowCount = 1;
+            tableLayoutPanel5.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel5.Size = new Size(433, 38);
+            tableLayoutPanel5.TabIndex = 3;
+            // 
+            // SettingsForm_Button_Help_Database
+            // 
+            SettingsForm_Button_Help_Database.AutoSize = true;
+            SettingsForm_Button_Help_Database.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            SettingsForm_Button_Help_Database.Dock = DockStyle.Fill;
+            SettingsForm_Button_Help_Database.Location = new Point(398, 3);
+            SettingsForm_Button_Help_Database.MaximumSize = new Size(32, 32);
+            SettingsForm_Button_Help_Database.MinimumSize = new Size(32, 32);
+            SettingsForm_Button_Help_Database.Name = "SettingsForm_Button_Help_Database";
+            SettingsForm_Button_Help_Database.Size = new Size(32, 32);
+            SettingsForm_Button_Help_Database.TabIndex = 14;
+            SettingsForm_Button_Help_Database.Text = "?";
+            SettingsForm_Button_Help_Database.UseVisualStyleBackColor = true;
+            // 
             // Control_Database
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
-            AutoSize = true;
             AutoSizeMode = AutoSizeMode.GrowAndShrink;
             BackColor = SystemColors.Control;
             Controls.Add(Control_Database_TableLayout_Main);
             Name = "Control_Database";
-            Size = new Size(479, 371);
+            Size = new Size(479, 634);
             Control_Database_TableLayout_Main.ResumeLayout(false);
             Control_Database_TableLayout_Main.PerformLayout();
             Control_Database_Panel_Content.ResumeLayout(false);
@@ -457,7 +485,8 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Database_Panel_PortCard.PerformLayout();
             tableLayoutPanel2.ResumeLayout(false);
             tableLayoutPanel2.PerformLayout();
-            Control_Database_FlowPanel_Actions.ResumeLayout(false);
+            tableLayoutPanel5.ResumeLayout(false);
+            tableLayoutPanel5.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -468,5 +497,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         private TableLayoutPanel tableLayoutPanel2;
         private TableLayoutPanel tableLayoutPanel3;
         private TableLayoutPanel tableLayoutPanel4;
+        private TableLayoutPanel tableLayoutPanel5;
+        private Button SettingsForm_Button_Help_Database;
     }
 }

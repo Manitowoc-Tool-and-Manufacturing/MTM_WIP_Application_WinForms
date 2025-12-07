@@ -5,6 +5,7 @@ using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
+using MTM_WIP_Application_Winforms.Forms.Help;
 
 namespace MTM_WIP_Application_Winforms.Forms.Shared;
 
@@ -111,6 +112,7 @@ public partial class PrintForm : ThemedForm
 
 
         InitializeComponent();
+        InitializeHelpButton();
         // DPI scaling and layout now handled by ThemedForm.OnLoad
         ApplyThemeColors();
 
@@ -1690,6 +1692,31 @@ public partial class PrintForm : ThemedForm
             PrintForm_Button_Print.Enabled = canPrint;
             PrintForm_Button_Export.Enabled = canExport;
         }
+    }
+
+    #endregion
+
+    #region Helpers
+
+    private Button? PrintForm_Button_Help;
+
+    private void InitializeHelpButton()
+    {
+        PrintForm_Button_Help = new Button();
+        PrintForm_Button_Help.Name = "PrintForm_Button_Help";
+        PrintForm_Button_Help.Text = "?";
+        PrintForm_Button_Help.Size = new Size(24, 24);
+        PrintForm_Button_Help.Location = new Point(PrintForm_Panel_Main.Width - 30, 10); 
+        PrintForm_Button_Help.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+        PrintForm_Button_Help.Click += (s, e) => 
+        {
+            var helpForm = new HelpViewerForm();
+            helpForm.Show();
+            helpForm.ShowHelp("print-operations", "print-overview");
+        };
+        
+        PrintForm_Panel_Main.Controls.Add(PrintForm_Button_Help);
+        PrintForm_Button_Help.BringToFront();
     }
 
     #endregion

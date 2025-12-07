@@ -14,11 +14,19 @@
       "LastUpdated": "2025-12-07T10:00:00"
     },
     {
-      "TopicId": "visual-dashboard",
+      "TopicId": "dashboard-overview",
       "Title": "Visual Dashboard",
       "Summary": "View Infor Visual data in real-time.",
       "Content": "<h2>Visual Dashboard</h2><p>Access live data from Infor Visual through the integrated dashboard.</p><h3>Available Data</h3><ul><li>Current inventory levels from Visual</li><li>Open work orders</li><li>Job status information</li><li>Material requirements</li></ul><h3>Accessing the Dashboard</h3><ol><li>Navigate to <strong>Menu > Infor Visual > Dashboard</strong>.</li><li>The dashboard displays real-time data directly from Visual's database.</li><li>Use filters to narrow down the data view.</li></ol><p><em>Note: Dashboard data is read-only. To modify Visual data, use the appropriate Visual application.</em></p>",
       "Keywords": ["dashboard", "live data", "visual", "erp"],
+      "LastUpdated": "2025-12-07T10:00:00"
+    },
+    {
+      "TopicId": "po-details",
+      "Title": "Purchase Order Details",
+      "Summary": "Viewing Purchase Order information.",
+      "Content": "<h2>Purchase Order Details</h2><p>View detailed information about Purchase Orders from Infor Visual.</p><h3>Information Displayed</h3><ul><li><strong>PO Number:</strong> The unique purchase order identifier.</li><li><strong>Vendor:</strong> The supplier associated with the PO.</li><li><strong>Line Items:</strong> List of items, quantities, and due dates.</li><li><strong>Status:</strong> Current status of the PO (Open, Closed, Received).</li></ul>",
+      "Keywords": ["po", "purchase order", "vendor", "receiving"],
       "LastUpdated": "2025-12-07T10:00:00"
     }
   ]

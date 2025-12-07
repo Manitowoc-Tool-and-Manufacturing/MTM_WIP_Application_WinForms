@@ -98,6 +98,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_OperationManagement_Label_Header = new Label();
             Control_OperationManagement_Label_Subtitle = new Label();
             Control_OperationManagement_TableLayout_BackButton = new TableLayoutPanel();
+            Control_OperationManagement_Button_Home = new Button();
             Control_OperationManagement_Button_Back = new Button();
             Control_OperationManagement_Panel_Container = new Panel();
             Control_OperationManagement_Panel_Home = new Panel();
@@ -159,7 +160,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_OperationManagement_Label_AddIssuedByValue = new Label();
             Control_OperationManagement_Label_EditIssuedBy = new Label();
             Control_OperationManagement_Label_EditIssuedByValue = new Label();
-            Control_OperationManagement_Button_Home = new Button();
+            SettingsForm_Button_Help_Operations = new Button();
             Control_OperationManagement_TableLayout_Main.SuspendLayout();
             Control_OperationManagement_TableLayout_BackButton.SuspendLayout();
             Control_OperationManagement_Panel_Container.SuspendLayout();
@@ -210,7 +211,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_OperationManagement_TableLayout_Main.RowStyles.Add(new RowStyle());
             Control_OperationManagement_TableLayout_Main.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             Control_OperationManagement_TableLayout_Main.RowStyles.Add(new RowStyle());
-            Control_OperationManagement_TableLayout_Main.Size = new Size(492, 389);
+            Control_OperationManagement_TableLayout_Main.Size = new Size(492, 383);
             Control_OperationManagement_TableLayout_Main.TabIndex = 0;
             // 
             // Control_OperationManagement_Label_Header
@@ -222,7 +223,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_OperationManagement_Label_Header.Location = new Point(23, 23);
             Control_OperationManagement_Label_Header.Margin = new Padding(3);
             Control_OperationManagement_Label_Header.Name = "Control_OperationManagement_Label_Header";
-            Control_OperationManagement_Label_Header.Size = new Size(446, 37);
+            Control_OperationManagement_Label_Header.Size = new Size(446, 36);
             Control_OperationManagement_Label_Header.TabIndex = 0;
             Control_OperationManagement_Label_Header.Text = "Operation Codes";
             // 
@@ -232,7 +233,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_OperationManagement_Label_Subtitle.Dock = DockStyle.Fill;
             Control_OperationManagement_Label_Subtitle.Font = new Font("Segoe UI Emoji", 10F);
             Control_OperationManagement_Label_Subtitle.ForeColor = Color.FromArgb(90, 90, 90);
-            Control_OperationManagement_Label_Subtitle.Location = new Point(23, 66);
+            Control_OperationManagement_Label_Subtitle.Location = new Point(23, 65);
             Control_OperationManagement_Label_Subtitle.Margin = new Padding(3);
             Control_OperationManagement_Label_Subtitle.Name = "Control_OperationManagement_Label_Subtitle";
             Control_OperationManagement_Label_Subtitle.Size = new Size(446, 19);
@@ -243,26 +244,42 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             Control_OperationManagement_TableLayout_BackButton.AutoSize = true;
             Control_OperationManagement_TableLayout_BackButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            Control_OperationManagement_TableLayout_BackButton.ColumnCount = 3;
+            Control_OperationManagement_TableLayout_BackButton.ColumnCount = 4;
             Control_OperationManagement_TableLayout_BackButton.ColumnStyles.Add(new ColumnStyle());
             Control_OperationManagement_TableLayout_BackButton.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             Control_OperationManagement_TableLayout_BackButton.ColumnStyles.Add(new ColumnStyle());
+            Control_OperationManagement_TableLayout_BackButton.ColumnStyles.Add(new ColumnStyle());
+            Control_OperationManagement_TableLayout_BackButton.Controls.Add(SettingsForm_Button_Help_Operations, 3, 0);
             Control_OperationManagement_TableLayout_BackButton.Controls.Add(Control_OperationManagement_Button_Home, 2, 0);
             Control_OperationManagement_TableLayout_BackButton.Controls.Add(Control_OperationManagement_Button_Back, 0, 0);
             Control_OperationManagement_TableLayout_BackButton.Dock = DockStyle.Fill;
-            Control_OperationManagement_TableLayout_BackButton.Location = new Point(23, 323);
+            Control_OperationManagement_TableLayout_BackButton.Location = new Point(23, 322);
             Control_OperationManagement_TableLayout_BackButton.Name = "Control_OperationManagement_TableLayout_BackButton";
             Control_OperationManagement_TableLayout_BackButton.RowStyles.Add(new RowStyle());
-            Control_OperationManagement_TableLayout_BackButton.Size = new Size(446, 43);
+            Control_OperationManagement_TableLayout_BackButton.Size = new Size(446, 38);
             Control_OperationManagement_TableLayout_BackButton.TabIndex = 2;
+            // 
+            // Control_OperationManagement_Button_Home
+            // 
+            Control_OperationManagement_Button_Home.AutoSize = true;
+            Control_OperationManagement_Button_Home.Location = new Point(266, 3);
+            Control_OperationManagement_Button_Home.MaximumSize = new Size(0, 32);
+            Control_OperationManagement_Button_Home.MinimumSize = new Size(0, 32);
+            Control_OperationManagement_Button_Home.Name = "Control_OperationManagement_Button_Home";
+            Control_OperationManagement_Button_Home.Padding = new Padding(16, 6, 16, 6);
+            Control_OperationManagement_Button_Home.Size = new Size(139, 32);
+            Control_OperationManagement_Button_Home.TabIndex = 2;
+            Control_OperationManagement_Button_Home.Text = "🏠 Back to Home";
             // 
             // Control_OperationManagement_Button_Back
             // 
             Control_OperationManagement_Button_Back.AutoSize = true;
             Control_OperationManagement_Button_Back.Location = new Point(3, 3);
+            Control_OperationManagement_Button_Back.MaximumSize = new Size(0, 32);
+            Control_OperationManagement_Button_Back.MinimumSize = new Size(0, 32);
             Control_OperationManagement_Button_Back.Name = "Control_OperationManagement_Button_Back";
             Control_OperationManagement_Button_Back.Padding = new Padding(16, 6, 16, 6);
-            Control_OperationManagement_Button_Back.Size = new Size(152, 37);
+            Control_OperationManagement_Button_Back.Size = new Size(152, 32);
             Control_OperationManagement_Button_Back.TabIndex = 0;
             Control_OperationManagement_Button_Back.Text = "← Back to Selection";
             Control_OperationManagement_Button_Back.Visible = false;
@@ -272,7 +289,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_OperationManagement_Panel_Container.Controls.Add(Control_OperationManagement_Panel_Home);
             Control_OperationManagement_Panel_Container.Controls.Add(Control_OperationManagement_TableLayout_Cards);
             Control_OperationManagement_Panel_Container.Dock = DockStyle.Fill;
-            Control_OperationManagement_Panel_Container.Location = new Point(23, 91);
+            Control_OperationManagement_Panel_Container.Location = new Point(23, 90);
             Control_OperationManagement_Panel_Container.Name = "Control_OperationManagement_Panel_Container";
             Control_OperationManagement_Panel_Container.Size = new Size(446, 226);
             Control_OperationManagement_Panel_Container.TabIndex = 2;
@@ -360,7 +377,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_OperationManagement_Label_HomeTile_AddTitle.Location = new Point(6, 97);
             Control_OperationManagement_Label_HomeTile_AddTitle.Margin = new Padding(3);
             Control_OperationManagement_Label_HomeTile_AddTitle.Name = "Control_OperationManagement_Label_HomeTile_AddTitle";
-            Control_OperationManagement_Label_HomeTile_AddTitle.Size = new Size(128, 50);
+            Control_OperationManagement_Label_HomeTile_AddTitle.Size = new Size(128, 52);
             Control_OperationManagement_Label_HomeTile_AddTitle.TabIndex = 1;
             Control_OperationManagement_Label_HomeTile_AddTitle.Text = "Add\r\nOperation";
             Control_OperationManagement_Label_HomeTile_AddTitle.TextAlign = ContentAlignment.MiddleCenter;
@@ -374,7 +391,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_OperationManagement_Label_HomeTile_AddInstruction.Location = new Point(6, 167);
             Control_OperationManagement_Label_HomeTile_AddInstruction.Margin = new Padding(3);
             Control_OperationManagement_Label_HomeTile_AddInstruction.Name = "Control_OperationManagement_Label_HomeTile_AddInstruction";
-            Control_OperationManagement_Label_HomeTile_AddInstruction.Size = new Size(128, 30);
+            Control_OperationManagement_Label_HomeTile_AddInstruction.Size = new Size(128, 32);
             Control_OperationManagement_Label_HomeTile_AddInstruction.TabIndex = 2;
             Control_OperationManagement_Label_HomeTile_AddInstruction.Text = "Click to add new operation codes";
             Control_OperationManagement_Label_HomeTile_AddInstruction.TextAlign = ContentAlignment.MiddleCenter;
@@ -435,7 +452,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_OperationManagement_Label_HomeTile_EditTitle.Location = new Point(6, 97);
             Control_OperationManagement_Label_HomeTile_EditTitle.Margin = new Padding(3);
             Control_OperationManagement_Label_HomeTile_EditTitle.Name = "Control_OperationManagement_Label_HomeTile_EditTitle";
-            Control_OperationManagement_Label_HomeTile_EditTitle.Size = new Size(128, 50);
+            Control_OperationManagement_Label_HomeTile_EditTitle.Size = new Size(128, 52);
             Control_OperationManagement_Label_HomeTile_EditTitle.TabIndex = 1;
             Control_OperationManagement_Label_HomeTile_EditTitle.Text = "Edit\r\nOperation";
             Control_OperationManagement_Label_HomeTile_EditTitle.TextAlign = ContentAlignment.MiddleCenter;
@@ -449,7 +466,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_OperationManagement_Label_HomeTile_EditInstruction.Location = new Point(6, 167);
             Control_OperationManagement_Label_HomeTile_EditInstruction.Margin = new Padding(3);
             Control_OperationManagement_Label_HomeTile_EditInstruction.Name = "Control_OperationManagement_Label_HomeTile_EditInstruction";
-            Control_OperationManagement_Label_HomeTile_EditInstruction.Size = new Size(128, 30);
+            Control_OperationManagement_Label_HomeTile_EditInstruction.Size = new Size(128, 32);
             Control_OperationManagement_Label_HomeTile_EditInstruction.TabIndex = 2;
             Control_OperationManagement_Label_HomeTile_EditInstruction.Text = "Click to edit existing operations";
             Control_OperationManagement_Label_HomeTile_EditInstruction.TextAlign = ContentAlignment.MiddleCenter;
@@ -510,7 +527,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_OperationManagement_Label_HomeTile_RemoveTitle.Location = new Point(6, 97);
             Control_OperationManagement_Label_HomeTile_RemoveTitle.Margin = new Padding(3);
             Control_OperationManagement_Label_HomeTile_RemoveTitle.Name = "Control_OperationManagement_Label_HomeTile_RemoveTitle";
-            Control_OperationManagement_Label_HomeTile_RemoveTitle.Size = new Size(130, 50);
+            Control_OperationManagement_Label_HomeTile_RemoveTitle.Size = new Size(130, 52);
             Control_OperationManagement_Label_HomeTile_RemoveTitle.TabIndex = 1;
             Control_OperationManagement_Label_HomeTile_RemoveTitle.Text = "Remove\r\nOperation";
             Control_OperationManagement_Label_HomeTile_RemoveTitle.TextAlign = ContentAlignment.MiddleCenter;
@@ -524,7 +541,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_OperationManagement_Label_HomeTile_RemoveInstruction.Location = new Point(6, 167);
             Control_OperationManagement_Label_HomeTile_RemoveInstruction.Margin = new Padding(3);
             Control_OperationManagement_Label_HomeTile_RemoveInstruction.Name = "Control_OperationManagement_Label_HomeTile_RemoveInstruction";
-            Control_OperationManagement_Label_HomeTile_RemoveInstruction.Size = new Size(130, 30);
+            Control_OperationManagement_Label_HomeTile_RemoveInstruction.Size = new Size(130, 32);
             Control_OperationManagement_Label_HomeTile_RemoveInstruction.TabIndex = 2;
             Control_OperationManagement_Label_HomeTile_RemoveInstruction.Text = "Click to remove operation codes";
             Control_OperationManagement_Label_HomeTile_RemoveInstruction.TextAlign = ContentAlignment.MiddleCenter;
@@ -648,6 +665,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_OperationManagement_TextBox_AddOperation.Dock = DockStyle.Fill;
             Control_OperationManagement_TextBox_AddOperation.EnableSuggestions = false;
             Control_OperationManagement_TextBox_AddOperation.Location = new Point(3, 3);
+            Control_OperationManagement_TextBox_AddOperation.MaxLength = 130;
+            Control_OperationManagement_TextBox_AddOperation.MinimumSize = new Size(0, 23);
+            Control_OperationManagement_TextBox_AddOperation.MinLength = 130;
             Control_OperationManagement_TextBox_AddOperation.Name = "Control_OperationManagement_TextBox_AddOperation";
             Control_OperationManagement_TextBox_AddOperation.Padding = new Padding(3);
             Control_OperationManagement_TextBox_AddOperation.ShowF4Button = false;
@@ -787,6 +807,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_OperationManagement_Suggestion_EditSelectOperation.LabelText = "Select Operation";
             Control_OperationManagement_Suggestion_EditSelectOperation.Location = new Point(3, 3);
             Control_OperationManagement_Suggestion_EditSelectOperation.Margin = new Padding(3, 3, 3, 10);
+            Control_OperationManagement_Suggestion_EditSelectOperation.MaxLength = 130;
+            Control_OperationManagement_Suggestion_EditSelectOperation.MinimumSize = new Size(0, 23);
+            Control_OperationManagement_Suggestion_EditSelectOperation.MinLength = 130;
             Control_OperationManagement_Suggestion_EditSelectOperation.Name = "Control_OperationManagement_Suggestion_EditSelectOperation";
             Control_OperationManagement_Suggestion_EditSelectOperation.Padding = new Padding(3);
             Control_OperationManagement_Suggestion_EditSelectOperation.PlaceholderText = "Search operations (F4)";
@@ -803,6 +826,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_OperationManagement_TextBox_EditNewOperation.LabelText = "New Operation Code";
             Control_OperationManagement_TextBox_EditNewOperation.Location = new Point(3, 47);
             Control_OperationManagement_TextBox_EditNewOperation.Margin = new Padding(3, 3, 3, 10);
+            Control_OperationManagement_TextBox_EditNewOperation.MaxLength = 130;
+            Control_OperationManagement_TextBox_EditNewOperation.MinimumSize = new Size(0, 23);
+            Control_OperationManagement_TextBox_EditNewOperation.MinLength = 130;
             Control_OperationManagement_TextBox_EditNewOperation.Name = "Control_OperationManagement_TextBox_EditNewOperation";
             Control_OperationManagement_TextBox_EditNewOperation.Padding = new Padding(3);
             Control_OperationManagement_TextBox_EditNewOperation.PlaceholderText = "Enter new operation code";
@@ -946,6 +972,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_OperationManagement_Suggestion_RemoveSelectOperation.LabelText = "Select Operation";
             Control_OperationManagement_Suggestion_RemoveSelectOperation.Location = new Point(3, 3);
             Control_OperationManagement_Suggestion_RemoveSelectOperation.Margin = new Padding(3, 3, 3, 10);
+            Control_OperationManagement_Suggestion_RemoveSelectOperation.MaxLength = 130;
+            Control_OperationManagement_Suggestion_RemoveSelectOperation.MinimumSize = new Size(0, 23);
+            Control_OperationManagement_Suggestion_RemoveSelectOperation.MinLength = 130;
             Control_OperationManagement_Suggestion_RemoveSelectOperation.Name = "Control_OperationManagement_Suggestion_RemoveSelectOperation";
             Control_OperationManagement_Suggestion_RemoveSelectOperation.Padding = new Padding(3);
             Control_OperationManagement_Suggestion_RemoveSelectOperation.PlaceholderText = "Search operations (F4)";
@@ -1092,15 +1121,19 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_OperationManagement_Label_EditIssuedByValue.Size = new Size(100, 23);
             Control_OperationManagement_Label_EditIssuedByValue.TabIndex = 0;
             // 
-            // Control_OperationManagement_Button_Home
+            // SettingsForm_Button_Help_Operations
             // 
-            Control_OperationManagement_Button_Home.AutoSize = true;
-            Control_OperationManagement_Button_Home.Location = new Point(304, 3);
-            Control_OperationManagement_Button_Home.Name = "Control_OperationManagement_Button_Home";
-            Control_OperationManagement_Button_Home.Padding = new Padding(16, 6, 16, 6);
-            Control_OperationManagement_Button_Home.Size = new Size(139, 37);
-            Control_OperationManagement_Button_Home.TabIndex = 2;
-            Control_OperationManagement_Button_Home.Text = "🏠 Back to Home";
+            SettingsForm_Button_Help_Operations.AutoSize = true;
+            SettingsForm_Button_Help_Operations.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            SettingsForm_Button_Help_Operations.Dock = DockStyle.Fill;
+            SettingsForm_Button_Help_Operations.Location = new Point(411, 3);
+            SettingsForm_Button_Help_Operations.MaximumSize = new Size(32, 32);
+            SettingsForm_Button_Help_Operations.MinimumSize = new Size(32, 32);
+            SettingsForm_Button_Help_Operations.Name = "SettingsForm_Button_Help_Operations";
+            SettingsForm_Button_Help_Operations.Size = new Size(32, 32);
+            SettingsForm_Button_Help_Operations.TabIndex = 16;
+            SettingsForm_Button_Help_Operations.Text = "?";
+            SettingsForm_Button_Help_Operations.UseVisualStyleBackColor = true;
             // 
             // Control_OperationManagement
             // 
@@ -1110,7 +1143,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Controls.Add(Control_OperationManagement_TableLayout_Main);
             Name = "Control_OperationManagement";
-            Size = new Size(492, 389);
+            Size = new Size(492, 383);
             Control_OperationManagement_TableLayout_Main.ResumeLayout(false);
             Control_OperationManagement_TableLayout_Main.PerformLayout();
             Control_OperationManagement_TableLayout_BackButton.ResumeLayout(false);
@@ -1244,5 +1277,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         private TableLayoutPanel Control_OperationManagement_TableLayout_EditHeader;
         private TableLayoutPanel Control_OperationManagement_TableLayout_RemoveHeader;
         private Button Control_OperationManagement_Button_Home;
+        private Button SettingsForm_Button_Help_Operations;
     }
 }

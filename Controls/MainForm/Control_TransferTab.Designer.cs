@@ -56,6 +56,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             Control_TransferTab_Button_Print = new Button();
             Control_TransferTab_NumericUpDown_Quantity = new NumericUpDown();
             tableLayoutPanel3 = new TableLayoutPanel();
+            MainForm_Button_Help_Transfer = new Button();
             Control_TransferTab_Button_Toggle_Split = new Button();
             Control_TransferTab_Button_Reset = new Button();
             Control_TransferTab_Button_Toggle_RightPanel = new Button();
@@ -408,16 +409,17 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             // 
             tableLayoutPanel3.AutoSize = true;
             tableLayoutPanel3.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            tableLayoutPanel3.ColumnCount = 4;
+            tableLayoutPanel3.ColumnCount = 5;
             Control_TransferTab_Panel_Main.SetColumnSpan(tableLayoutPanel3, 2);
             tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle());
             tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle());
             tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
+            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel3.Controls.Add(MainForm_Button_Help_Transfer, 3, 0);
             tableLayoutPanel3.Controls.Add(Control_TransferTab_Button_Toggle_Split, 0, 0);
             tableLayoutPanel3.Controls.Add(Control_TransferTab_Button_Reset, 1, 0);
-            tableLayoutPanel3.Controls.Add(Control_TransferTab_Button_Toggle_RightPanel, 3, 0);
+            tableLayoutPanel3.Controls.Add(Control_TransferTab_Button_Toggle_RightPanel, 4, 0);
             tableLayoutPanel3.Dock = DockStyle.Fill;
             tableLayoutPanel3.Location = new Point(3, 312);
             tableLayoutPanel3.Name = "tableLayoutPanel3";
@@ -425,6 +427,17 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             tableLayoutPanel3.RowStyles.Add(new RowStyle());
             tableLayoutPanel3.Size = new Size(824, 38);
             tableLayoutPanel3.TabIndex = 12;
+            // 
+            // MainForm_Button_Help_Transfer
+            // 
+            MainForm_Button_Help_Transfer.Location = new Point(719, 3);
+            MainForm_Button_Help_Transfer.MaximumSize = new Size(32, 32);
+            MainForm_Button_Help_Transfer.MinimumSize = new Size(32, 32);
+            MainForm_Button_Help_Transfer.Name = "MainForm_Button_Help_Transfer";
+            MainForm_Button_Help_Transfer.Size = new Size(32, 32);
+            MainForm_Button_Help_Transfer.TabIndex = 1001;
+            MainForm_Button_Help_Transfer.Text = "?";
+            MainForm_Button_Help_Transfer.UseVisualStyleBackColor = true;
             // 
             // Control_TransferTab_Button_Toggle_Split
             // 
@@ -524,6 +537,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         private Panel Control_TransferTab_Panel_Inputs;
         private TableLayoutPanel Control_TransferTab_TableLayout_Main;
         private NumericUpDown Control_TransferTab_NumericUpDown_Quantity;
+        private Button MainForm_Button_Help_Transfer;
     }
 
 

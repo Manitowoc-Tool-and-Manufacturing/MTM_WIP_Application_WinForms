@@ -25,9 +25,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
         #region Component Designer generated code
 
-        private CheckBox Control_Themes_CheckBox_EnableAnimations;
-        private CheckBox Control_Themes_CheckBox_AutoExpandPanels;
-
         /// <summary>
         /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
@@ -36,133 +33,232 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         {
             Control_Themes_GroupBox_Main = new GroupBox();
             Control_Themes_TableLayout_Main = new TableLayoutPanel();
-            Control_Themes_CheckBox_EnableTheming = new CheckBox();
-            Control_Themes_CheckBox_EnableAnimations = new CheckBox();
-            Control_Themes_CheckBox_AutoExpandPanels = new CheckBox();
-            Control_Themes_Button_Preview = new Button();
             Control_Themes_ComboBox_Theme = new ComboBox();
+            Control_Themes_Button_Preview = new Button();
+            Control_Themes_CheckBox_ShowTotalSummaryPanel = new CheckBox();
             Control_Themes_Button_Save = new Button();
+            groupBox1 = new GroupBox();
+            tableLayoutPanel1 = new TableLayoutPanel();
+            Control_Themes_CheckBox_AutoExpandPanels = new CheckBox();
+            Control_Themes_CheckBox_EnableAnimations = new CheckBox();
+            Control_Themes_CheckBox_EnableTheming = new CheckBox();
+            tableLayoutPanel2 = new TableLayoutPanel();
+            SettingsForm_Button_Help_Theme = new Button();
+            tableLayoutPanel3 = new TableLayoutPanel();
             Control_Themes_GroupBox_Main.SuspendLayout();
             Control_Themes_TableLayout_Main.SuspendLayout();
+            groupBox1.SuspendLayout();
+            tableLayoutPanel1.SuspendLayout();
+            tableLayoutPanel2.SuspendLayout();
+            tableLayoutPanel3.SuspendLayout();
             SuspendLayout();
-            //
+            // 
             // Control_Themes_GroupBox_Main
-            //
+            // 
             Control_Themes_GroupBox_Main.AutoSize = true;
             Control_Themes_GroupBox_Main.Controls.Add(Control_Themes_TableLayout_Main);
             Control_Themes_GroupBox_Main.Dock = DockStyle.Fill;
-            Control_Themes_GroupBox_Main.Location = new Point(0, 0);
+            Control_Themes_GroupBox_Main.Location = new Point(3, 3);
             Control_Themes_GroupBox_Main.Name = "Control_Themes_GroupBox_Main";
-            Control_Themes_GroupBox_Main.Size = new Size(277, 135);
+            Control_Themes_GroupBox_Main.Size = new Size(594, 51);
             Control_Themes_GroupBox_Main.TabIndex = 3;
             Control_Themes_GroupBox_Main.TabStop = false;
             Control_Themes_GroupBox_Main.Text = "Select A Theme";
-            //
+            // 
             // Control_Themes_TableLayout_Main
-            //
+            // 
             Control_Themes_TableLayout_Main.AutoSize = true;
             Control_Themes_TableLayout_Main.ColumnCount = 2;
             Control_Themes_TableLayout_Main.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             Control_Themes_TableLayout_Main.ColumnStyles.Add(new ColumnStyle());
-            Control_Themes_TableLayout_Main.Controls.Add(Control_Themes_Button_Preview, 1, 1);
-            Control_Themes_TableLayout_Main.Controls.Add(Control_Themes_ComboBox_Theme, 0, 1);
-            Control_Themes_TableLayout_Main.Controls.Add(Control_Themes_CheckBox_EnableAnimations, 0, 2);
-            Control_Themes_TableLayout_Main.Controls.Add(Control_Themes_CheckBox_AutoExpandPanels, 0, 3);            Control_Themes_TableLayout_Main.Controls.Add(Control_Themes_CheckBox_AutoExpandPanels, 0, 3);            Control_Themes_TableLayout_Main.Controls.Add(Control_Themes_Button_Save, 1, 5);
+            Control_Themes_TableLayout_Main.Controls.Add(Control_Themes_ComboBox_Theme, 0, 0);
+            Control_Themes_TableLayout_Main.Controls.Add(Control_Themes_Button_Preview, 1, 0);
             Control_Themes_TableLayout_Main.Dock = DockStyle.Fill;
             Control_Themes_TableLayout_Main.Location = new Point(3, 19);
             Control_Themes_TableLayout_Main.Name = "Control_Themes_TableLayout_Main";
-            Control_Themes_TableLayout_Main.RowCount = 6;
-            Control_Themes_TableLayout_Main.RowStyles.Add(new RowStyle());
-            Control_Themes_TableLayout_Main.RowStyles.Add(new RowStyle());
-            Control_Themes_TableLayout_Main.RowStyles.Add(new RowStyle());
-            Control_Themes_TableLayout_Main.RowStyles.Add(new RowStyle());
+            Control_Themes_TableLayout_Main.RowCount = 1;
             Control_Themes_TableLayout_Main.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            Control_Themes_TableLayout_Main.RowStyles.Add(new RowStyle());
-            Control_Themes_TableLayout_Main.Size = new Size(271, 145);
+            Control_Themes_TableLayout_Main.Size = new Size(588, 29);
             Control_Themes_TableLayout_Main.TabIndex = 3;
-            //
-            // Control_Themes_CheckBox_EnableTheming
-            //
-            Control_Themes_CheckBox_EnableTheming.AutoSize = true;
-            Control_Themes_TableLayout_Main.SetColumnSpan(Control_Themes_CheckBox_EnableTheming, 2);
-            Control_Themes_CheckBox_EnableTheming.Checked = true;
-            Control_Themes_CheckBox_EnableTheming.CheckState = CheckState.Checked;
-            Control_Themes_CheckBox_EnableTheming.Dock = DockStyle.Fill;
-            Control_Themes_CheckBox_EnableTheming.Location = new Point(3, 3);
-            Control_Themes_CheckBox_EnableTheming.Name = "Control_Themes_CheckBox_EnableTheming";
-            Control_Themes_CheckBox_EnableTheming.Size = new Size(265, 19);
-            Control_Themes_CheckBox_EnableTheming.TabIndex = 0;
-            Control_Themes_CheckBox_EnableTheming.Text = "Enable Theme System (colors only, DPI scaling always on)";
-            Control_Themes_CheckBox_EnableTheming.UseVisualStyleBackColor = true;
-            Control_Themes_CheckBox_EnableTheming.Visible = false;
-            //
-            // Control_Themes_CheckBox_EnableAnimations
-            //
-            Control_Themes_CheckBox_EnableAnimations.AutoSize = true;
-            Control_Themes_TableLayout_Main.SetColumnSpan(Control_Themes_CheckBox_EnableAnimations, 2);
-            Control_Themes_CheckBox_EnableAnimations.Checked = true;
-            Control_Themes_CheckBox_EnableAnimations.CheckState = CheckState.Checked;
-            Control_Themes_CheckBox_EnableAnimations.Dock = DockStyle.Fill;
-            Control_Themes_CheckBox_EnableAnimations.Location = new Point(3, 57);
-            Control_Themes_CheckBox_EnableAnimations.Name = "Control_Themes_CheckBox_EnableAnimations";
-            Control_Themes_CheckBox_EnableAnimations.Size = new Size(265, 19);
-            Control_Themes_CheckBox_EnableAnimations.TabIndex = 4;
-            Control_Themes_CheckBox_EnableAnimations.Text = "Enable UI Animations";
-            Control_Themes_CheckBox_EnableAnimations.UseVisualStyleBackColor = true;
-            //
-            // Control_Themes_CheckBox_AutoExpandPanels
-            //
-            Control_Themes_CheckBox_AutoExpandPanels.AutoSize = true;
-            Control_Themes_TableLayout_Main.SetColumnSpan(Control_Themes_CheckBox_AutoExpandPanels, 2);
-            Control_Themes_CheckBox_AutoExpandPanels.Checked = true;
-            Control_Themes_CheckBox_AutoExpandPanels.CheckState = CheckState.Checked;
-            Control_Themes_CheckBox_AutoExpandPanels.Dock = DockStyle.Fill;
-            Control_Themes_CheckBox_AutoExpandPanels.Location = new Point(3, 82);
-            Control_Themes_CheckBox_AutoExpandPanels.Name = "Control_Themes_CheckBox_AutoExpandPanels";
-            Control_Themes_CheckBox_AutoExpandPanels.Size = new Size(265, 19);
-            Control_Themes_CheckBox_AutoExpandPanels.TabIndex = 5;
-            Control_Themes_CheckBox_AutoExpandPanels.Text = "Auto-Expand Panels on Reset/Search";
-            Control_Themes_CheckBox_AutoExpandPanels.UseVisualStyleBackColor = true;
-            //
+            // 
+            // Control_Themes_ComboBox_Theme
+            // 
+            Control_Themes_ComboBox_Theme.Dock = DockStyle.Fill;
+            Control_Themes_ComboBox_Theme.DropDownStyle = ComboBoxStyle.DropDownList;
+            Control_Themes_ComboBox_Theme.FormattingEnabled = true;
+            Control_Themes_ComboBox_Theme.Location = new Point(3, 3);
+            Control_Themes_ComboBox_Theme.Name = "Control_Themes_ComboBox_Theme";
+            Control_Themes_ComboBox_Theme.Size = new Size(501, 23);
+            Control_Themes_ComboBox_Theme.TabIndex = 1;
+            // 
             // Control_Themes_Button_Preview
-            //
-            Control_Themes_Button_Preview.Location = new Point(193, 28);
+            // 
+            Control_Themes_Button_Preview.Location = new Point(510, 3);
             Control_Themes_Button_Preview.Name = "Control_Themes_Button_Preview";
             Control_Themes_Button_Preview.Size = new Size(75, 23);
             Control_Themes_Button_Preview.TabIndex = 2;
             Control_Themes_Button_Preview.Text = "Preview";
             Control_Themes_Button_Preview.UseVisualStyleBackColor = true;
-            //
-            // Control_Themes_ComboBox_Theme
-            //
-            Control_Themes_ComboBox_Theme.DropDownStyle = ComboBoxStyle.DropDownList;
-            Control_Themes_ComboBox_Theme.FormattingEnabled = true;
-            Control_Themes_ComboBox_Theme.Location = new Point(3, 28);
-            Control_Themes_ComboBox_Theme.Name = "Control_Themes_ComboBox_Theme";
-            Control_Themes_ComboBox_Theme.Size = new Size(184, 23);
-            Control_Themes_ComboBox_Theme.TabIndex = 1;
-            //
+            // 
+            // Control_Themes_CheckBox_ShowTotalSummaryPanel
+            // 
+            Control_Themes_CheckBox_ShowTotalSummaryPanel.AutoSize = true;
+            Control_Themes_CheckBox_ShowTotalSummaryPanel.Location = new Point(3, 57);
+            Control_Themes_CheckBox_ShowTotalSummaryPanel.Name = "Control_Themes_CheckBox_ShowTotalSummaryPanel";
+            Control_Themes_CheckBox_ShowTotalSummaryPanel.Size = new Size(180, 24);
+            Control_Themes_CheckBox_ShowTotalSummaryPanel.TabIndex = 10;
+            Control_Themes_CheckBox_ShowTotalSummaryPanel.Text = "Show Total Summary Panel";
+            Control_Themes_CheckBox_ShowTotalSummaryPanel.UseVisualStyleBackColor = true;
+            // 
             // Control_Themes_Button_Save
-            //
-            Control_Themes_Button_Save.Location = new Point(193, 94);
+            // 
+            Control_Themes_Button_Save.Location = new Point(3, 3);
+            Control_Themes_Button_Save.MaximumSize = new Size(100, 32);
+            Control_Themes_Button_Save.MinimumSize = new Size(100, 32);
             Control_Themes_Button_Save.Name = "Control_Themes_Button_Save";
-            Control_Themes_Button_Save.Size = new Size(75, 23);
+            Control_Themes_Button_Save.Size = new Size(100, 32);
             Control_Themes_Button_Save.TabIndex = 3;
             Control_Themes_Button_Save.Text = "Save";
             Control_Themes_Button_Save.UseVisualStyleBackColor = true;
-            //
+            // 
+            // groupBox1
+            // 
+            groupBox1.AutoSize = true;
+            groupBox1.Controls.Add(tableLayoutPanel1);
+            groupBox1.Dock = DockStyle.Fill;
+            groupBox1.Location = new Point(3, 60);
+            groupBox1.Name = "groupBox1";
+            groupBox1.Size = new Size(594, 97);
+            groupBox1.TabIndex = 7;
+            groupBox1.TabStop = false;
+            groupBox1.Text = "UI Settings";
+            // 
+            // tableLayoutPanel1
+            // 
+            tableLayoutPanel1.AutoSize = true;
+            tableLayoutPanel1.ColumnCount = 1;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel1.Controls.Add(Control_Themes_CheckBox_AutoExpandPanels, 0, 2);
+            tableLayoutPanel1.Controls.Add(Control_Themes_CheckBox_EnableAnimations, 0, 1);
+            tableLayoutPanel1.Controls.Add(Control_Themes_CheckBox_EnableTheming, 0, 0);
+            tableLayoutPanel1.Dock = DockStyle.Fill;
+            tableLayoutPanel1.Location = new Point(3, 19);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 3;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.Size = new Size(588, 75);
+            tableLayoutPanel1.TabIndex = 0;
+            // 
+            // Control_Themes_CheckBox_AutoExpandPanels
+            // 
+            Control_Themes_CheckBox_AutoExpandPanels.AutoSize = true;
+            Control_Themes_CheckBox_AutoExpandPanels.Checked = true;
+            Control_Themes_CheckBox_AutoExpandPanels.CheckState = CheckState.Checked;
+            Control_Themes_CheckBox_AutoExpandPanels.Dock = DockStyle.Fill;
+            Control_Themes_CheckBox_AutoExpandPanels.Location = new Point(3, 53);
+            Control_Themes_CheckBox_AutoExpandPanels.Name = "Control_Themes_CheckBox_AutoExpandPanels";
+            Control_Themes_CheckBox_AutoExpandPanels.Size = new Size(582, 19);
+            Control_Themes_CheckBox_AutoExpandPanels.TabIndex = 5;
+            Control_Themes_CheckBox_AutoExpandPanels.Text = "Auto-Expand Panels on Reset/Search";
+            Control_Themes_CheckBox_AutoExpandPanels.UseVisualStyleBackColor = true;
+            // 
+            // Control_Themes_CheckBox_EnableAnimations
+            // 
+            Control_Themes_CheckBox_EnableAnimations.AutoSize = true;
+            Control_Themes_CheckBox_EnableAnimations.Checked = true;
+            Control_Themes_CheckBox_EnableAnimations.CheckState = CheckState.Checked;
+            Control_Themes_CheckBox_EnableAnimations.Dock = DockStyle.Fill;
+            Control_Themes_CheckBox_EnableAnimations.Location = new Point(3, 28);
+            Control_Themes_CheckBox_EnableAnimations.Name = "Control_Themes_CheckBox_EnableAnimations";
+            Control_Themes_CheckBox_EnableAnimations.Size = new Size(582, 19);
+            Control_Themes_CheckBox_EnableAnimations.TabIndex = 4;
+            Control_Themes_CheckBox_EnableAnimations.Text = "Enable UI Animations";
+            Control_Themes_CheckBox_EnableAnimations.UseVisualStyleBackColor = true;
+            // 
+            // Control_Themes_CheckBox_EnableTheming
+            // 
+            Control_Themes_CheckBox_EnableTheming.AutoSize = true;
+            Control_Themes_CheckBox_EnableTheming.Checked = true;
+            Control_Themes_CheckBox_EnableTheming.CheckState = CheckState.Checked;
+            Control_Themes_CheckBox_EnableTheming.Dock = DockStyle.Fill;
+            Control_Themes_CheckBox_EnableTheming.Location = new Point(3, 3);
+            Control_Themes_CheckBox_EnableTheming.Name = "Control_Themes_CheckBox_EnableTheming";
+            Control_Themes_CheckBox_EnableTheming.Size = new Size(582, 19);
+            Control_Themes_CheckBox_EnableTheming.TabIndex = 0;
+            Control_Themes_CheckBox_EnableTheming.Text = "Enable Theme System (colors only, DPI scaling always on)";
+            Control_Themes_CheckBox_EnableTheming.UseVisualStyleBackColor = true;
+            Control_Themes_CheckBox_EnableTheming.Visible = false;
+            // 
+            // tableLayoutPanel2
+            // 
+            tableLayoutPanel2.AutoSize = true;
+            tableLayoutPanel2.ColumnCount = 3;
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel2.Controls.Add(Control_Themes_Button_Save, 0, 0);
+            tableLayoutPanel2.Controls.Add(SettingsForm_Button_Help_Theme, 2, 0);
+            tableLayoutPanel2.Dock = DockStyle.Fill;
+            tableLayoutPanel2.Location = new Point(3, 163);
+            tableLayoutPanel2.Name = "tableLayoutPanel2";
+            tableLayoutPanel2.RowCount = 1;
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel2.Size = new Size(594, 38);
+            tableLayoutPanel2.TabIndex = 8;
+            // 
+            // SettingsForm_Button_Help_Theme
+            // 
+            SettingsForm_Button_Help_Theme.AutoSize = true;
+            SettingsForm_Button_Help_Theme.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            SettingsForm_Button_Help_Theme.Location = new Point(559, 3);
+            SettingsForm_Button_Help_Theme.MaximumSize = new Size(32, 32);
+            SettingsForm_Button_Help_Theme.MinimumSize = new Size(32, 32);
+            SettingsForm_Button_Help_Theme.Name = "SettingsForm_Button_Help_Theme";
+            SettingsForm_Button_Help_Theme.Size = new Size(32, 32);
+            SettingsForm_Button_Help_Theme.TabIndex = 13;
+            SettingsForm_Button_Help_Theme.Text = "?";
+            SettingsForm_Button_Help_Theme.UseVisualStyleBackColor = true;
+            // 
+            // tableLayoutPanel3
+            // 
+            tableLayoutPanel3.AutoSize = true;
+            tableLayoutPanel3.ColumnCount = 1;
+            tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel3.Controls.Add(tableLayoutPanel2, 0, 3);
+            tableLayoutPanel3.Controls.Add(Control_Themes_GroupBox_Main, 0, 0);
+            tableLayoutPanel3.Controls.Add(groupBox1, 0, 1);
+            tableLayoutPanel3.Dock = DockStyle.Fill;
+            tableLayoutPanel3.Location = new Point(0, 0);
+            tableLayoutPanel3.Name = "tableLayoutPanel3";
+            tableLayoutPanel3.RowCount = 4;
+            tableLayoutPanel3.RowStyles.Add(new RowStyle());
+            tableLayoutPanel3.RowStyles.Add(new RowStyle());
+            tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel3.RowStyles.Add(new RowStyle());
+            tableLayoutPanel3.Size = new Size(600, 204);
+            tableLayoutPanel3.TabIndex = 9;
+            // 
             // Control_Theme
-            //
+            // 
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
             AutoSize = true;
-            AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            Controls.Add(Control_Themes_GroupBox_Main);
+            Controls.Add(tableLayoutPanel3);
             Name = "Control_Theme";
-            Size = new Size(277, 80);
+            Size = new Size(600, 204);
             Control_Themes_GroupBox_Main.ResumeLayout(false);
             Control_Themes_GroupBox_Main.PerformLayout();
             Control_Themes_TableLayout_Main.ResumeLayout(false);
+            groupBox1.ResumeLayout(false);
+            groupBox1.PerformLayout();
+            tableLayoutPanel1.ResumeLayout(false);
+            tableLayoutPanel1.PerformLayout();
+            tableLayoutPanel2.ResumeLayout(false);
+            tableLayoutPanel2.PerformLayout();
+            tableLayoutPanel3.ResumeLayout(false);
+            tableLayoutPanel3.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -171,9 +267,16 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
         private GroupBox Control_Themes_GroupBox_Main;
         private TableLayoutPanel Control_Themes_TableLayout_Main;
-        private CheckBox Control_Themes_CheckBox_EnableTheming;
         private Button Control_Themes_Button_Preview;
         private ComboBox Control_Themes_ComboBox_Theme;
         private Button Control_Themes_Button_Save;
+        private GroupBox groupBox1;
+        private TableLayoutPanel tableLayoutPanel1;
+        private CheckBox Control_Themes_CheckBox_AutoExpandPanels;
+        private CheckBox Control_Themes_CheckBox_EnableAnimations;
+        private CheckBox Control_Themes_CheckBox_EnableTheming;
+        private TableLayoutPanel tableLayoutPanel2;
+        private Button SettingsForm_Button_Help_Theme;
+        private TableLayoutPanel tableLayoutPanel3;
     }
 }
