@@ -28,574 +28,538 @@ namespace MTM_WIP_Application_Winforms.Forms.WIPAppAnalytics
         /// </summary>
         private void InitializeComponent()
         {
-            this.Form_Analytics_TableLayout_Main = new System.Windows.Forms.TableLayoutPanel();
-            this.Form_Analytics_TabControl_Main = new System.Windows.Forms.TabControl();
-            this.tabPerformance = new System.Windows.Forms.TabPage();
-            this.Form_Analytics_TableLayout_Performance = new System.Windows.Forms.TableLayoutPanel();
-            this.grpPerformanceFilters = new System.Windows.Forms.GroupBox();
-            this.Form_Analytics_TableLayout_PerfFilters = new System.Windows.Forms.TableLayoutPanel();
-            this.lblDateFrom = new System.Windows.Forms.Label();
-            this.dtpDateFrom = new System.Windows.Forms.DateTimePicker();
-            this.lblDateTo = new System.Windows.Forms.Label();
-            this.dtpDateTo = new System.Windows.Forms.DateTimePicker();
-            this.btnRefreshPerformance = new System.Windows.Forms.Button();
-            this.grpPerformanceInfo = new System.Windows.Forms.GroupBox();
-            this.txtPerformanceInfo = new System.Windows.Forms.RichTextBox();
-            this.gridPerformance = new System.Windows.Forms.DataGridView();
-            this.tabQuality = new System.Windows.Forms.TabPage();
-            this.Form_Analytics_TableLayout_Quality = new System.Windows.Forms.TableLayoutPanel();
-            this.grpQualityFilters = new System.Windows.Forms.GroupBox();
-            this.Form_Analytics_TableLayout_QualityFilters = new System.Windows.Forms.TableLayoutPanel();
-            this.btnRefreshQuality = new System.Windows.Forms.Button();
-            this.grpQualityInfo = new System.Windows.Forms.GroupBox();
-            this.txtQualityInfo = new System.Windows.Forms.RichTextBox();
-            this.gridQuality = new System.Windows.Forms.DataGridView();
-            this.tabUserDetail = new System.Windows.Forms.TabPage();
-            this.Form_Analytics_TableLayout_UserDetail = new System.Windows.Forms.TableLayoutPanel();
-            this.grpUserSelection = new System.Windows.Forms.GroupBox();
-            this.Form_Analytics_TableLayout_UserSelect = new System.Windows.Forms.TableLayoutPanel();
-            this.lblUser = new System.Windows.Forms.Label();
-            this.comboUsers = new System.Windows.Forms.ComboBox();
-            this.btnLoadUser = new System.Windows.Forms.Button();
-            this.grpUserDetailInfo = new System.Windows.Forms.GroupBox();
-            this.txtUserDetailInfo = new System.Windows.Forms.RichTextBox();
-            this.gridUserHistory = new System.Windows.Forms.DataGridView();
-            this.tabGlossary = new System.Windows.Forms.TabPage();
-            this.txtGlossary = new System.Windows.Forms.RichTextBox();
-            this.progressBar = new System.Windows.Forms.ProgressBar();
-            this.lblStatus = new System.Windows.Forms.Label();
-
-            this.Form_Analytics_TableLayout_Main.SuspendLayout();
-            this.Form_Analytics_TabControl_Main.SuspendLayout();
-            this.tabPerformance.SuspendLayout();
-            this.Form_Analytics_TableLayout_Performance.SuspendLayout();
-            this.grpPerformanceFilters.SuspendLayout();
-            this.Form_Analytics_TableLayout_PerfFilters.SuspendLayout();
-            this.grpPerformanceInfo.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.gridPerformance)).BeginInit();
-            this.tabQuality.SuspendLayout();
-            this.Form_Analytics_TableLayout_Quality.SuspendLayout();
-            this.grpQualityFilters.SuspendLayout();
-            this.Form_Analytics_TableLayout_QualityFilters.SuspendLayout();
-            this.grpQualityInfo.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.gridQuality)).BeginInit();
-            this.tabUserDetail.SuspendLayout();
-            this.Form_Analytics_TableLayout_UserDetail.SuspendLayout();
-            this.grpUserSelection.SuspendLayout();
-            this.Form_Analytics_TableLayout_UserSelect.SuspendLayout();
-            this.grpUserDetailInfo.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.gridUserHistory)).BeginInit();
-            this.SuspendLayout();
-
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form_WIPUserAnalytics));
+            Form_Analytics_TableLayout_Main = new TableLayoutPanel();
+            Form_Analytics_TabControl_Main = new TabControl();
+            tabPerformance = new TabPage();
+            Form_Analytics_TableLayout_Performance = new TableLayoutPanel();
+            grpPerformanceFilters = new GroupBox();
+            Form_Analytics_TableLayout_PerfFilters = new TableLayoutPanel();
+            lblDateFrom = new Label();
+            dtpDateFrom = new DateTimePicker();
+            lblDateTo = new Label();
+            dtpDateTo = new DateTimePicker();
+            btnRefreshPerformance = new Button();
+            grpPerformanceInfo = new GroupBox();
+            txtPerformanceInfo = new RichTextBox();
+            gridPerformance = new DataGridView();
+            tabQuality = new TabPage();
+            Form_Analytics_TableLayout_Quality = new TableLayoutPanel();
+            grpQualityFilters = new GroupBox();
+            Form_Analytics_TableLayout_QualityFilters = new TableLayoutPanel();
+            btnRefreshQuality = new Button();
+            grpQualityInfo = new GroupBox();
+            txtQualityInfo = new RichTextBox();
+            gridQuality = new DataGridView();
+            tabUserDetail = new TabPage();
+            Form_Analytics_TableLayout_UserDetail = new TableLayoutPanel();
+            grpUserSelection = new GroupBox();
+            Form_Analytics_TableLayout_UserSelect = new TableLayoutPanel();
+            lblUser = new Label();
+            comboUsers = new ComboBox();
+            btnLoadUser = new Button();
+            grpUserDetailInfo = new GroupBox();
+            txtUserDetailInfo = new RichTextBox();
+            gridUserHistory = new DataGridView();
+            tabGlossary = new TabPage();
+            txtGlossary = new RichTextBox();
+            lblStatus = new Label();
+            progressBar = new ProgressBar();
+            Form_Analytics_TableLayout_Main.SuspendLayout();
+            Form_Analytics_TabControl_Main.SuspendLayout();
+            tabPerformance.SuspendLayout();
+            Form_Analytics_TableLayout_Performance.SuspendLayout();
+            grpPerformanceFilters.SuspendLayout();
+            Form_Analytics_TableLayout_PerfFilters.SuspendLayout();
+            grpPerformanceInfo.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)gridPerformance).BeginInit();
+            tabQuality.SuspendLayout();
+            Form_Analytics_TableLayout_Quality.SuspendLayout();
+            grpQualityFilters.SuspendLayout();
+            Form_Analytics_TableLayout_QualityFilters.SuspendLayout();
+            grpQualityInfo.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)gridQuality).BeginInit();
+            tabUserDetail.SuspendLayout();
+            Form_Analytics_TableLayout_UserDetail.SuspendLayout();
+            grpUserSelection.SuspendLayout();
+            Form_Analytics_TableLayout_UserSelect.SuspendLayout();
+            grpUserDetailInfo.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)gridUserHistory).BeginInit();
+            tabGlossary.SuspendLayout();
+            SuspendLayout();
             // 
             // Form_Analytics_TableLayout_Main
             // 
-            this.Form_Analytics_TableLayout_Main.ColumnCount = 1;
-            this.Form_Analytics_TableLayout_Main.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.Form_Analytics_TableLayout_Main.Controls.Add(this.Form_Analytics_TabControl_Main, 0, 0);
-            this.Form_Analytics_TableLayout_Main.Controls.Add(this.lblStatus, 0, 1);
-            this.Form_Analytics_TableLayout_Main.Controls.Add(this.progressBar, 0, 2);
-            this.Form_Analytics_TableLayout_Main.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Form_Analytics_TableLayout_Main.Location = new System.Drawing.Point(0, 0);
-            this.Form_Analytics_TableLayout_Main.Name = "Form_Analytics_TableLayout_Main";
-            this.Form_Analytics_TableLayout_Main.RowCount = 3;
-            this.Form_Analytics_TableLayout_Main.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.Form_Analytics_TableLayout_Main.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-            this.Form_Analytics_TableLayout_Main.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 10F));
-            this.Form_Analytics_TableLayout_Main.Size = new System.Drawing.Size(1000, 600);
-            this.Form_Analytics_TableLayout_Main.TabIndex = 0;
-
+            Form_Analytics_TableLayout_Main.ColumnCount = 1;
+            Form_Analytics_TableLayout_Main.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            Form_Analytics_TableLayout_Main.Controls.Add(Form_Analytics_TabControl_Main, 0, 0);
+            Form_Analytics_TableLayout_Main.Controls.Add(lblStatus, 0, 1);
+            Form_Analytics_TableLayout_Main.Controls.Add(progressBar, 0, 2);
+            Form_Analytics_TableLayout_Main.Dock = DockStyle.Fill;
+            Form_Analytics_TableLayout_Main.Location = new Point(0, 0);
+            Form_Analytics_TableLayout_Main.Name = "Form_Analytics_TableLayout_Main";
+            Form_Analytics_TableLayout_Main.RowCount = 3;
+            Form_Analytics_TableLayout_Main.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            Form_Analytics_TableLayout_Main.RowStyles.Add(new RowStyle(SizeType.Absolute, 25F));
+            Form_Analytics_TableLayout_Main.RowStyles.Add(new RowStyle(SizeType.Absolute, 10F));
+            Form_Analytics_TableLayout_Main.Size = new Size(1000, 600);
+            Form_Analytics_TableLayout_Main.TabIndex = 0;
             // 
             // Form_Analytics_TabControl_Main
             // 
-            this.Form_Analytics_TabControl_Main.Controls.Add(this.tabPerformance);
-            this.Form_Analytics_TabControl_Main.Controls.Add(this.tabQuality);
-            this.Form_Analytics_TabControl_Main.Controls.Add(this.tabUserDetail);
-            this.Form_Analytics_TabControl_Main.Controls.Add(this.tabGlossary);
-            this.Form_Analytics_TabControl_Main.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Form_Analytics_TabControl_Main.Location = new System.Drawing.Point(3, 3);
-            this.Form_Analytics_TabControl_Main.Name = "Form_Analytics_TabControl_Main";
-            this.Form_Analytics_TabControl_Main.SelectedIndex = 0;
-            this.Form_Analytics_TabControl_Main.Size = new System.Drawing.Size(994, 559);
-            this.Form_Analytics_TabControl_Main.TabIndex = 0;
-
+            Form_Analytics_TabControl_Main.Controls.Add(tabPerformance);
+            Form_Analytics_TabControl_Main.Controls.Add(tabQuality);
+            Form_Analytics_TabControl_Main.Controls.Add(tabUserDetail);
+            Form_Analytics_TabControl_Main.Controls.Add(tabGlossary);
+            Form_Analytics_TabControl_Main.Dock = DockStyle.Fill;
+            Form_Analytics_TabControl_Main.Location = new Point(3, 3);
+            Form_Analytics_TabControl_Main.Name = "Form_Analytics_TabControl_Main";
+            Form_Analytics_TabControl_Main.SelectedIndex = 0;
+            Form_Analytics_TabControl_Main.Size = new Size(994, 559);
+            Form_Analytics_TabControl_Main.TabIndex = 0;
             // 
             // tabPerformance
             // 
-            this.tabPerformance.Controls.Add(this.Form_Analytics_TableLayout_Performance);
-            this.tabPerformance.Location = new System.Drawing.Point(4, 24);
-            this.tabPerformance.Name = "tabPerformance";
-            this.tabPerformance.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPerformance.Size = new System.Drawing.Size(986, 531);
-            this.tabPerformance.TabIndex = 0;
-            this.tabPerformance.Text = "Team Performance";
-            this.tabPerformance.UseVisualStyleBackColor = true;
-
-            // ...existing code...
-
-            // 
-            // tabGlossary
-            // 
-            this.tabGlossary.Controls.Add(this.txtGlossary);
-            this.tabGlossary.Location = new System.Drawing.Point(4, 24);
-            this.tabGlossary.Name = "tabGlossary";
-            this.tabGlossary.Padding = new System.Windows.Forms.Padding(3);
-            this.tabGlossary.Size = new System.Drawing.Size(986, 531);
-            this.tabGlossary.TabIndex = 3;
-            this.tabGlossary.Text = "Glossary & Metrics";
-            this.tabGlossary.UseVisualStyleBackColor = true;
-
-            // 
-            // txtGlossary
-            // 
-            this.txtGlossary.BackColor = System.Drawing.SystemColors.Window;
-            this.txtGlossary.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtGlossary.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtGlossary.Font = new System.Drawing.Font("Segoe UI Emoji", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.txtGlossary.Location = new System.Drawing.Point(3, 3);
-            this.txtGlossary.Name = "txtGlossary";
-            this.txtGlossary.ReadOnly = true;
-            this.txtGlossary.Size = new System.Drawing.Size(980, 525);
-            this.txtGlossary.TabIndex = 0;
-            this.txtGlossary.Text = "";
-
+            tabPerformance.Controls.Add(Form_Analytics_TableLayout_Performance);
+            tabPerformance.Location = new Point(4, 24);
+            tabPerformance.Name = "tabPerformance";
+            tabPerformance.Padding = new Padding(3);
+            tabPerformance.Size = new Size(986, 531);
+            tabPerformance.TabIndex = 0;
+            tabPerformance.Text = "Team Performance";
+            tabPerformance.UseVisualStyleBackColor = true;
             // 
             // Form_Analytics_TableLayout_Performance
             // 
-            this.Form_Analytics_TableLayout_Performance.ColumnCount = 1;
-            this.Form_Analytics_TableLayout_Performance.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.Form_Analytics_TableLayout_Performance.Controls.Add(this.grpPerformanceFilters, 0, 0);
-            this.Form_Analytics_TableLayout_Performance.Controls.Add(this.grpPerformanceInfo, 0, 1);
-            this.Form_Analytics_TableLayout_Performance.Controls.Add(this.gridPerformance, 0, 2);
-            this.Form_Analytics_TableLayout_Performance.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Form_Analytics_TableLayout_Performance.Location = new System.Drawing.Point(3, 3);
-            this.Form_Analytics_TableLayout_Performance.Name = "Form_Analytics_TableLayout_Performance";
-            this.Form_Analytics_TableLayout_Performance.RowCount = 3;
-            this.Form_Analytics_TableLayout_Performance.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 80F));
-            this.Form_Analytics_TableLayout_Performance.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 100F));
-            this.Form_Analytics_TableLayout_Performance.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.Form_Analytics_TableLayout_Performance.Size = new System.Drawing.Size(980, 525);
-            this.Form_Analytics_TableLayout_Performance.TabIndex = 0;
-
-            // 
-            // grpPerformanceInfo
-            // 
-            this.grpPerformanceInfo.Controls.Add(this.txtPerformanceInfo);
-            this.grpPerformanceInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.grpPerformanceInfo.Location = new System.Drawing.Point(3, 83);
-            this.grpPerformanceInfo.Name = "grpPerformanceInfo";
-            this.grpPerformanceInfo.Size = new System.Drawing.Size(974, 94);
-            this.grpPerformanceInfo.TabIndex = 2;
-            this.grpPerformanceInfo.TabStop = false;
-            this.grpPerformanceInfo.Text = "Legend & Information";
-
-            // 
-            // txtPerformanceInfo
-            // 
-            this.txtPerformanceInfo.BackColor = System.Drawing.SystemColors.Control;
-            this.txtPerformanceInfo.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtPerformanceInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtPerformanceInfo.Location = new System.Drawing.Point(3, 19);
-            this.txtPerformanceInfo.Name = "txtPerformanceInfo";
-            this.txtPerformanceInfo.ReadOnly = true;
-            this.txtPerformanceInfo.Size = new System.Drawing.Size(968, 72);
-            this.txtPerformanceInfo.TabIndex = 0;
-            this.txtPerformanceInfo.Text = "Total Tx: Total transactions performed.\nTotal Qty: Sum of quantities moved.\nUnique Parts: Number of distinct part numbers handled.\nQuality Score: Calculated score (0-100) based on efficiency and accuracy. Deductions for Rapid Fire, Ping Pong, and Off-Shift transactions.";
-
+            Form_Analytics_TableLayout_Performance.ColumnCount = 1;
+            Form_Analytics_TableLayout_Performance.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            Form_Analytics_TableLayout_Performance.Controls.Add(grpPerformanceFilters, 0, 0);
+            Form_Analytics_TableLayout_Performance.Controls.Add(grpPerformanceInfo, 0, 1);
+            Form_Analytics_TableLayout_Performance.Controls.Add(gridPerformance, 0, 2);
+            Form_Analytics_TableLayout_Performance.Dock = DockStyle.Fill;
+            Form_Analytics_TableLayout_Performance.Location = new Point(3, 3);
+            Form_Analytics_TableLayout_Performance.Name = "Form_Analytics_TableLayout_Performance";
+            Form_Analytics_TableLayout_Performance.RowCount = 3;
+            Form_Analytics_TableLayout_Performance.RowStyles.Add(new RowStyle(SizeType.Absolute, 80F));
+            Form_Analytics_TableLayout_Performance.RowStyles.Add(new RowStyle(SizeType.Absolute, 100F));
+            Form_Analytics_TableLayout_Performance.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            Form_Analytics_TableLayout_Performance.Size = new Size(980, 525);
+            Form_Analytics_TableLayout_Performance.TabIndex = 0;
             // 
             // grpPerformanceFilters
             // 
-            this.grpPerformanceFilters.Controls.Add(this.Form_Analytics_TableLayout_PerfFilters);
-            this.grpPerformanceFilters.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.grpPerformanceFilters.Location = new System.Drawing.Point(3, 3);
-            this.grpPerformanceFilters.Name = "grpPerformanceFilters";
-            this.grpPerformanceFilters.Size = new System.Drawing.Size(974, 74);
-            this.grpPerformanceFilters.TabIndex = 0;
-            this.grpPerformanceFilters.TabStop = false;
-            this.grpPerformanceFilters.Text = "Filters";
-
+            grpPerformanceFilters.Controls.Add(Form_Analytics_TableLayout_PerfFilters);
+            grpPerformanceFilters.Dock = DockStyle.Fill;
+            grpPerformanceFilters.Location = new Point(3, 3);
+            grpPerformanceFilters.Name = "grpPerformanceFilters";
+            grpPerformanceFilters.Size = new Size(974, 74);
+            grpPerformanceFilters.TabIndex = 0;
+            grpPerformanceFilters.TabStop = false;
+            grpPerformanceFilters.Text = "Filters";
             // 
             // Form_Analytics_TableLayout_PerfFilters
             // 
-            this.Form_Analytics_TableLayout_PerfFilters.ColumnCount = 5;
-            this.Form_Analytics_TableLayout_PerfFilters.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 80F));
-            this.Form_Analytics_TableLayout_PerfFilters.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 150F));
-            this.Form_Analytics_TableLayout_PerfFilters.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 80F));
-            this.Form_Analytics_TableLayout_PerfFilters.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 150F));
-            this.Form_Analytics_TableLayout_PerfFilters.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.Form_Analytics_TableLayout_PerfFilters.Controls.Add(this.lblDateFrom, 0, 0);
-            this.Form_Analytics_TableLayout_PerfFilters.Controls.Add(this.dtpDateFrom, 1, 0);
-            this.Form_Analytics_TableLayout_PerfFilters.Controls.Add(this.lblDateTo, 2, 0);
-            this.Form_Analytics_TableLayout_PerfFilters.Controls.Add(this.dtpDateTo, 3, 0);
-            this.Form_Analytics_TableLayout_PerfFilters.Controls.Add(this.btnRefreshPerformance, 4, 0);
-            this.Form_Analytics_TableLayout_PerfFilters.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Form_Analytics_TableLayout_PerfFilters.Location = new System.Drawing.Point(3, 19);
-            this.Form_Analytics_TableLayout_PerfFilters.Name = "Form_Analytics_TableLayout_PerfFilters";
-            this.Form_Analytics_TableLayout_PerfFilters.RowCount = 1;
-            this.Form_Analytics_TableLayout_PerfFilters.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.Form_Analytics_TableLayout_PerfFilters.Size = new System.Drawing.Size(968, 52);
-            this.Form_Analytics_TableLayout_PerfFilters.TabIndex = 0;
-
+            Form_Analytics_TableLayout_PerfFilters.ColumnCount = 5;
+            Form_Analytics_TableLayout_PerfFilters.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 80F));
+            Form_Analytics_TableLayout_PerfFilters.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 150F));
+            Form_Analytics_TableLayout_PerfFilters.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 80F));
+            Form_Analytics_TableLayout_PerfFilters.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 150F));
+            Form_Analytics_TableLayout_PerfFilters.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            Form_Analytics_TableLayout_PerfFilters.Controls.Add(lblDateFrom, 0, 0);
+            Form_Analytics_TableLayout_PerfFilters.Controls.Add(dtpDateFrom, 1, 0);
+            Form_Analytics_TableLayout_PerfFilters.Controls.Add(lblDateTo, 2, 0);
+            Form_Analytics_TableLayout_PerfFilters.Controls.Add(dtpDateTo, 3, 0);
+            Form_Analytics_TableLayout_PerfFilters.Controls.Add(btnRefreshPerformance, 4, 0);
+            Form_Analytics_TableLayout_PerfFilters.Dock = DockStyle.Fill;
+            Form_Analytics_TableLayout_PerfFilters.Location = new Point(3, 19);
+            Form_Analytics_TableLayout_PerfFilters.Name = "Form_Analytics_TableLayout_PerfFilters";
+            Form_Analytics_TableLayout_PerfFilters.RowCount = 1;
+            Form_Analytics_TableLayout_PerfFilters.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            Form_Analytics_TableLayout_PerfFilters.Size = new Size(968, 52);
+            Form_Analytics_TableLayout_PerfFilters.TabIndex = 0;
             // 
             // lblDateFrom
             // 
-            this.lblDateFrom.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lblDateFrom.AutoSize = true;
-            this.lblDateFrom.Location = new System.Drawing.Point(13, 18);
-            this.lblDateFrom.Name = "lblDateFrom";
-            this.lblDateFrom.Size = new System.Drawing.Size(64, 15);
-            this.lblDateFrom.TabIndex = 0;
-            this.lblDateFrom.Text = "Date From:";
-
+            lblDateFrom.Anchor = AnchorStyles.Right;
+            lblDateFrom.AutoSize = true;
+            lblDateFrom.Location = new Point(12, 18);
+            lblDateFrom.Name = "lblDateFrom";
+            lblDateFrom.Size = new Size(65, 15);
+            lblDateFrom.TabIndex = 0;
+            lblDateFrom.Text = "Date From:";
             // 
             // dtpDateFrom
             // 
-            this.dtpDateFrom.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.dtpDateFrom.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpDateFrom.Location = new System.Drawing.Point(83, 14);
-            this.dtpDateFrom.Name = "dtpDateFrom";
-            this.dtpDateFrom.Size = new System.Drawing.Size(120, 23);
-            this.dtpDateFrom.TabIndex = 1;
-
+            dtpDateFrom.Anchor = AnchorStyles.Left;
+            dtpDateFrom.Format = DateTimePickerFormat.Short;
+            dtpDateFrom.Location = new Point(83, 14);
+            dtpDateFrom.Name = "dtpDateFrom";
+            dtpDateFrom.Size = new Size(120, 23);
+            dtpDateFrom.TabIndex = 1;
             // 
             // lblDateTo
             // 
-            this.lblDateTo.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lblDateTo.AutoSize = true;
-            this.lblDateTo.Location = new System.Drawing.Point(249, 18);
-            this.lblDateTo.Name = "lblDateTo";
-            this.lblDateTo.Size = new System.Drawing.Size(48, 15);
-            this.lblDateTo.TabIndex = 2;
-            this.lblDateTo.Text = "Date To:";
-
+            lblDateTo.Anchor = AnchorStyles.Right;
+            lblDateTo.AutoSize = true;
+            lblDateTo.Location = new Point(257, 18);
+            lblDateTo.Name = "lblDateTo";
+            lblDateTo.Size = new Size(50, 15);
+            lblDateTo.TabIndex = 2;
+            lblDateTo.Text = "Date To:";
             // 
             // dtpDateTo
             // 
-            this.dtpDateTo.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.dtpDateTo.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpDateTo.Location = new System.Drawing.Point(313, 14);
-            this.dtpDateTo.Name = "dtpDateTo";
-            this.dtpDateTo.Size = new System.Drawing.Size(120, 23);
-            this.dtpDateTo.TabIndex = 3;
-
+            dtpDateTo.Anchor = AnchorStyles.Left;
+            dtpDateTo.Format = DateTimePickerFormat.Short;
+            dtpDateTo.Location = new Point(313, 14);
+            dtpDateTo.Name = "dtpDateTo";
+            dtpDateTo.Size = new Size(120, 23);
+            dtpDateTo.TabIndex = 3;
             // 
             // btnRefreshPerformance
             // 
-            this.btnRefreshPerformance.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.btnRefreshPerformance.Location = new System.Drawing.Point(463, 11);
-            this.btnRefreshPerformance.Name = "btnRefreshPerformance";
-            this.btnRefreshPerformance.Size = new System.Drawing.Size(100, 30);
-            this.btnRefreshPerformance.TabIndex = 4;
-            this.btnRefreshPerformance.Text = "Refresh";
-            this.btnRefreshPerformance.UseVisualStyleBackColor = true;
-            this.btnRefreshPerformance.Click += new System.EventHandler(this.btnRefreshPerformance_Click);
-
+            btnRefreshPerformance.Anchor = AnchorStyles.Left;
+            btnRefreshPerformance.Location = new Point(463, 11);
+            btnRefreshPerformance.Name = "btnRefreshPerformance";
+            btnRefreshPerformance.Size = new Size(100, 30);
+            btnRefreshPerformance.TabIndex = 4;
+            btnRefreshPerformance.Text = "Refresh";
+            btnRefreshPerformance.UseVisualStyleBackColor = true;
+            btnRefreshPerformance.Click += btnRefreshPerformance_Click;
+            // 
+            // grpPerformanceInfo
+            // 
+            grpPerformanceInfo.Controls.Add(txtPerformanceInfo);
+            grpPerformanceInfo.Dock = DockStyle.Fill;
+            grpPerformanceInfo.Location = new Point(3, 83);
+            grpPerformanceInfo.Name = "grpPerformanceInfo";
+            grpPerformanceInfo.Size = new Size(974, 94);
+            grpPerformanceInfo.TabIndex = 2;
+            grpPerformanceInfo.TabStop = false;
+            grpPerformanceInfo.Text = "Legend & Information";
+            // 
+            // txtPerformanceInfo
+            // 
+            txtPerformanceInfo.BackColor = SystemColors.Control;
+            txtPerformanceInfo.BorderStyle = BorderStyle.None;
+            txtPerformanceInfo.Dock = DockStyle.Fill;
+            txtPerformanceInfo.Location = new Point(3, 19);
+            txtPerformanceInfo.Name = "txtPerformanceInfo";
+            txtPerformanceInfo.ReadOnly = true;
+            txtPerformanceInfo.Size = new Size(968, 72);
+            txtPerformanceInfo.TabIndex = 0;
+            txtPerformanceInfo.Text = resources.GetString("txtPerformanceInfo.Text");
             // 
             // gridPerformance
             // 
-            this.gridPerformance.AllowUserToAddRows = false;
-            this.gridPerformance.AllowUserToDeleteRows = false;
-            this.gridPerformance.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.gridPerformance.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gridPerformance.Location = new System.Drawing.Point(3, 83);
-            this.gridPerformance.Name = "gridPerformance";
-            this.gridPerformance.ReadOnly = true;
-            this.gridPerformance.RowTemplate.Height = 25;
-            this.gridPerformance.Size = new System.Drawing.Size(974, 439);
-            this.gridPerformance.TabIndex = 1;
-
+            gridPerformance.AllowUserToAddRows = false;
+            gridPerformance.AllowUserToDeleteRows = false;
+            gridPerformance.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            gridPerformance.Dock = DockStyle.Fill;
+            gridPerformance.Location = new Point(3, 183);
+            gridPerformance.Name = "gridPerformance";
+            gridPerformance.ReadOnly = true;
+            gridPerformance.Size = new Size(974, 339);
+            gridPerformance.TabIndex = 1;
             // 
             // tabQuality
             // 
-            this.tabQuality.Controls.Add(this.Form_Analytics_TableLayout_Quality);
-            this.tabQuality.Location = new System.Drawing.Point(4, 24);
-            this.tabQuality.Name = "tabQuality";
-            this.tabQuality.Padding = new System.Windows.Forms.Padding(3);
-            this.tabQuality.Size = new System.Drawing.Size(986, 531);
-            this.tabQuality.TabIndex = 1;
-            this.tabQuality.Text = "Quality & Anomalies";
-            this.tabQuality.UseVisualStyleBackColor = true;
-
+            tabQuality.Controls.Add(Form_Analytics_TableLayout_Quality);
+            tabQuality.Location = new Point(4, 24);
+            tabQuality.Name = "tabQuality";
+            tabQuality.Padding = new Padding(3);
+            tabQuality.Size = new Size(986, 531);
+            tabQuality.TabIndex = 1;
+            tabQuality.Text = "Quality & Anomalies";
+            tabQuality.UseVisualStyleBackColor = true;
             // 
             // Form_Analytics_TableLayout_Quality
             // 
-            this.Form_Analytics_TableLayout_Quality.ColumnCount = 1;
-            this.Form_Analytics_TableLayout_Quality.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.Form_Analytics_TableLayout_Quality.Controls.Add(this.grpQualityFilters, 0, 0);
-            this.Form_Analytics_TableLayout_Quality.Controls.Add(this.grpQualityInfo, 0, 1);
-            this.Form_Analytics_TableLayout_Quality.Controls.Add(this.gridQuality, 0, 2);
-            this.Form_Analytics_TableLayout_Quality.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Form_Analytics_TableLayout_Quality.Location = new System.Drawing.Point(3, 3);
-            this.Form_Analytics_TableLayout_Quality.Name = "Form_Analytics_TableLayout_Quality";
-            this.Form_Analytics_TableLayout_Quality.RowCount = 3;
-            this.Form_Analytics_TableLayout_Quality.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 80F));
-            this.Form_Analytics_TableLayout_Quality.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 100F));
-            this.Form_Analytics_TableLayout_Quality.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.Form_Analytics_TableLayout_Quality.Size = new System.Drawing.Size(980, 525);
-            this.Form_Analytics_TableLayout_Quality.TabIndex = 0;
-
-            // 
-            // grpQualityInfo
-            // 
-            this.grpQualityInfo.Controls.Add(this.txtQualityInfo);
-            this.grpQualityInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.grpQualityInfo.Location = new System.Drawing.Point(3, 83);
-            this.grpQualityInfo.Name = "grpQualityInfo";
-            this.grpQualityInfo.Size = new System.Drawing.Size(974, 94);
-            this.grpQualityInfo.TabIndex = 2;
-            this.grpQualityInfo.TabStop = false;
-            this.grpQualityInfo.Text = "Legend & Information";
-
-            // 
-            // txtQualityInfo
-            // 
-            this.txtQualityInfo.BackColor = System.Drawing.SystemColors.Control;
-            this.txtQualityInfo.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtQualityInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtQualityInfo.Location = new System.Drawing.Point(3, 19);
-            this.txtQualityInfo.Name = "txtQualityInfo";
-            this.txtQualityInfo.ReadOnly = true;
-            this.txtQualityInfo.Size = new System.Drawing.Size(968, 72);
-            this.txtQualityInfo.TabIndex = 0;
-            this.txtQualityInfo.Text = "Rapid Fire: Transactions occurring less than 10 seconds apart. May indicate blind scanning.\nPing Pong: Moving a part from A to B, then back to A within 20 minutes.\nOff Shift: Transactions performed outside assigned shift hours.\nQuality Score: 100 - ((RapidFire * 0.5 + PingPong * 5 + OffShift * 2) / TotalTx * 100)";
-
+            Form_Analytics_TableLayout_Quality.ColumnCount = 1;
+            Form_Analytics_TableLayout_Quality.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            Form_Analytics_TableLayout_Quality.Controls.Add(grpQualityFilters, 0, 0);
+            Form_Analytics_TableLayout_Quality.Controls.Add(grpQualityInfo, 0, 1);
+            Form_Analytics_TableLayout_Quality.Controls.Add(gridQuality, 0, 2);
+            Form_Analytics_TableLayout_Quality.Dock = DockStyle.Fill;
+            Form_Analytics_TableLayout_Quality.Location = new Point(3, 3);
+            Form_Analytics_TableLayout_Quality.Name = "Form_Analytics_TableLayout_Quality";
+            Form_Analytics_TableLayout_Quality.RowCount = 3;
+            Form_Analytics_TableLayout_Quality.RowStyles.Add(new RowStyle(SizeType.Absolute, 80F));
+            Form_Analytics_TableLayout_Quality.RowStyles.Add(new RowStyle(SizeType.Absolute, 100F));
+            Form_Analytics_TableLayout_Quality.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            Form_Analytics_TableLayout_Quality.Size = new Size(980, 525);
+            Form_Analytics_TableLayout_Quality.TabIndex = 0;
             // 
             // grpQualityFilters
             // 
-            this.grpQualityFilters.Controls.Add(this.Form_Analytics_TableLayout_QualityFilters);
-            this.grpQualityFilters.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.grpQualityFilters.Location = new System.Drawing.Point(3, 3);
-            this.grpQualityFilters.Name = "grpQualityFilters";
-            this.grpQualityFilters.Size = new System.Drawing.Size(974, 74);
-            this.grpQualityFilters.TabIndex = 0;
-            this.grpQualityFilters.TabStop = false;
-            this.grpQualityFilters.Text = "Filters";
-
+            grpQualityFilters.Controls.Add(Form_Analytics_TableLayout_QualityFilters);
+            grpQualityFilters.Dock = DockStyle.Fill;
+            grpQualityFilters.Location = new Point(3, 3);
+            grpQualityFilters.Name = "grpQualityFilters";
+            grpQualityFilters.Size = new Size(974, 74);
+            grpQualityFilters.TabIndex = 0;
+            grpQualityFilters.TabStop = false;
+            grpQualityFilters.Text = "Filters";
             // 
             // Form_Analytics_TableLayout_QualityFilters
             // 
-            this.Form_Analytics_TableLayout_QualityFilters.ColumnCount = 2;
-            this.Form_Analytics_TableLayout_QualityFilters.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.Form_Analytics_TableLayout_QualityFilters.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 120F));
-            this.Form_Analytics_TableLayout_QualityFilters.Controls.Add(this.btnRefreshQuality, 1, 0);
-            this.Form_Analytics_TableLayout_QualityFilters.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Form_Analytics_TableLayout_QualityFilters.Location = new System.Drawing.Point(3, 19);
-            this.Form_Analytics_TableLayout_QualityFilters.Name = "Form_Analytics_TableLayout_QualityFilters";
-            this.Form_Analytics_TableLayout_QualityFilters.RowCount = 1;
-            this.Form_Analytics_TableLayout_QualityFilters.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.Form_Analytics_TableLayout_QualityFilters.Size = new System.Drawing.Size(968, 52);
-            this.Form_Analytics_TableLayout_QualityFilters.TabIndex = 0;
-
+            Form_Analytics_TableLayout_QualityFilters.ColumnCount = 2;
+            Form_Analytics_TableLayout_QualityFilters.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            Form_Analytics_TableLayout_QualityFilters.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 120F));
+            Form_Analytics_TableLayout_QualityFilters.Controls.Add(btnRefreshQuality, 1, 0);
+            Form_Analytics_TableLayout_QualityFilters.Dock = DockStyle.Fill;
+            Form_Analytics_TableLayout_QualityFilters.Location = new Point(3, 19);
+            Form_Analytics_TableLayout_QualityFilters.Name = "Form_Analytics_TableLayout_QualityFilters";
+            Form_Analytics_TableLayout_QualityFilters.RowCount = 1;
+            Form_Analytics_TableLayout_QualityFilters.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            Form_Analytics_TableLayout_QualityFilters.Size = new Size(968, 52);
+            Form_Analytics_TableLayout_QualityFilters.TabIndex = 0;
             // 
             // btnRefreshQuality
             // 
-            this.btnRefreshQuality.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.btnRefreshQuality.Location = new System.Drawing.Point(865, 11);
-            this.btnRefreshQuality.Name = "btnRefreshQuality";
-            this.btnRefreshQuality.Size = new System.Drawing.Size(100, 30);
-            this.btnRefreshQuality.TabIndex = 0;
-            this.btnRefreshQuality.Text = "Refresh";
-            this.btnRefreshQuality.UseVisualStyleBackColor = true;
-            this.btnRefreshQuality.Click += new System.EventHandler(this.btnRefreshQuality_Click);
-
+            btnRefreshQuality.Anchor = AnchorStyles.Right;
+            btnRefreshQuality.Location = new Point(865, 11);
+            btnRefreshQuality.Name = "btnRefreshQuality";
+            btnRefreshQuality.Size = new Size(100, 30);
+            btnRefreshQuality.TabIndex = 0;
+            btnRefreshQuality.Text = "Refresh";
+            btnRefreshQuality.UseVisualStyleBackColor = true;
+            btnRefreshQuality.Click += btnRefreshQuality_Click;
+            // 
+            // grpQualityInfo
+            // 
+            grpQualityInfo.Controls.Add(txtQualityInfo);
+            grpQualityInfo.Dock = DockStyle.Fill;
+            grpQualityInfo.Location = new Point(3, 83);
+            grpQualityInfo.Name = "grpQualityInfo";
+            grpQualityInfo.Size = new Size(974, 94);
+            grpQualityInfo.TabIndex = 2;
+            grpQualityInfo.TabStop = false;
+            grpQualityInfo.Text = "Legend & Information";
+            // 
+            // txtQualityInfo
+            // 
+            txtQualityInfo.BackColor = SystemColors.Control;
+            txtQualityInfo.BorderStyle = BorderStyle.None;
+            txtQualityInfo.Dock = DockStyle.Fill;
+            txtQualityInfo.Location = new Point(3, 19);
+            txtQualityInfo.Name = "txtQualityInfo";
+            txtQualityInfo.ReadOnly = true;
+            txtQualityInfo.Size = new Size(968, 72);
+            txtQualityInfo.TabIndex = 0;
+            txtQualityInfo.Text = resources.GetString("txtQualityInfo.Text");
             // 
             // gridQuality
             // 
-            this.gridQuality.AllowUserToAddRows = false;
-            this.gridQuality.AllowUserToDeleteRows = false;
-            this.gridQuality.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.gridQuality.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gridQuality.Location = new System.Drawing.Point(3, 83);
-            this.gridQuality.Name = "gridQuality";
-            this.gridQuality.ReadOnly = true;
-            this.gridQuality.RowTemplate.Height = 25;
-            this.gridQuality.Size = new System.Drawing.Size(974, 439);
-            this.gridQuality.TabIndex = 1;
-
+            gridQuality.AllowUserToAddRows = false;
+            gridQuality.AllowUserToDeleteRows = false;
+            gridQuality.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            gridQuality.Dock = DockStyle.Fill;
+            gridQuality.Location = new Point(3, 183);
+            gridQuality.Name = "gridQuality";
+            gridQuality.ReadOnly = true;
+            gridQuality.Size = new Size(974, 339);
+            gridQuality.TabIndex = 1;
             // 
             // tabUserDetail
             // 
-            this.tabUserDetail.Controls.Add(this.Form_Analytics_TableLayout_UserDetail);
-            this.tabUserDetail.Location = new System.Drawing.Point(4, 24);
-            this.tabUserDetail.Name = "tabUserDetail";
-            this.tabUserDetail.Padding = new System.Windows.Forms.Padding(3);
-            this.tabUserDetail.Size = new System.Drawing.Size(986, 531);
-            this.tabUserDetail.TabIndex = 2;
-            this.tabUserDetail.Text = "User Detail";
-            this.tabUserDetail.UseVisualStyleBackColor = true;
-
+            tabUserDetail.Controls.Add(Form_Analytics_TableLayout_UserDetail);
+            tabUserDetail.Location = new Point(4, 24);
+            tabUserDetail.Name = "tabUserDetail";
+            tabUserDetail.Padding = new Padding(3);
+            tabUserDetail.Size = new Size(986, 531);
+            tabUserDetail.TabIndex = 2;
+            tabUserDetail.Text = "User Detail";
+            tabUserDetail.UseVisualStyleBackColor = true;
             // 
             // Form_Analytics_TableLayout_UserDetail
             // 
-            this.Form_Analytics_TableLayout_UserDetail.ColumnCount = 1;
-            this.Form_Analytics_TableLayout_UserDetail.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.Form_Analytics_TableLayout_UserDetail.Controls.Add(this.grpUserSelection, 0, 0);
-            this.Form_Analytics_TableLayout_UserDetail.Controls.Add(this.grpUserDetailInfo, 0, 1);
-            this.Form_Analytics_TableLayout_UserDetail.Controls.Add(this.gridUserHistory, 0, 2);
-            this.Form_Analytics_TableLayout_UserDetail.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Form_Analytics_TableLayout_UserDetail.Location = new System.Drawing.Point(3, 3);
-            this.Form_Analytics_TableLayout_UserDetail.Name = "Form_Analytics_TableLayout_UserDetail";
-            this.Form_Analytics_TableLayout_UserDetail.RowCount = 3;
-            this.Form_Analytics_TableLayout_UserDetail.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 80F));
-            this.Form_Analytics_TableLayout_UserDetail.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 100F));
-            this.Form_Analytics_TableLayout_UserDetail.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.Form_Analytics_TableLayout_UserDetail.Size = new System.Drawing.Size(980, 525);
-            this.Form_Analytics_TableLayout_UserDetail.TabIndex = 0;
-
-            // 
-            // grpUserDetailInfo
-            // 
-            this.grpUserDetailInfo.Controls.Add(this.txtUserDetailInfo);
-            this.grpUserDetailInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.grpUserDetailInfo.Location = new System.Drawing.Point(3, 83);
-            this.grpUserDetailInfo.Name = "grpUserDetailInfo";
-            this.grpUserDetailInfo.Size = new System.Drawing.Size(974, 94);
-            this.grpUserDetailInfo.TabIndex = 2;
-            this.grpUserDetailInfo.TabStop = false;
-            this.grpUserDetailInfo.Text = "Legend & Information";
-
-            // 
-            // txtUserDetailInfo
-            // 
-            this.txtUserDetailInfo.BackColor = System.Drawing.SystemColors.Control;
-            this.txtUserDetailInfo.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.txtUserDetailInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtUserDetailInfo.Location = new System.Drawing.Point(3, 19);
-            this.txtUserDetailInfo.Name = "txtUserDetailInfo";
-            this.txtUserDetailInfo.ReadOnly = true;
-            this.txtUserDetailInfo.Size = new System.Drawing.Size(968, 72);
-            this.txtUserDetailInfo.TabIndex = 0;
-            this.txtUserDetailInfo.Text = "Select a user to view their detailed transaction history for the selected date range.\nUse this view to investigate specific 'Rapid Fire' or 'Ping Pong' events identified in the other tabs.";
-
+            Form_Analytics_TableLayout_UserDetail.ColumnCount = 1;
+            Form_Analytics_TableLayout_UserDetail.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            Form_Analytics_TableLayout_UserDetail.Controls.Add(grpUserSelection, 0, 0);
+            Form_Analytics_TableLayout_UserDetail.Controls.Add(grpUserDetailInfo, 0, 1);
+            Form_Analytics_TableLayout_UserDetail.Controls.Add(gridUserHistory, 0, 2);
+            Form_Analytics_TableLayout_UserDetail.Dock = DockStyle.Fill;
+            Form_Analytics_TableLayout_UserDetail.Location = new Point(3, 3);
+            Form_Analytics_TableLayout_UserDetail.Name = "Form_Analytics_TableLayout_UserDetail";
+            Form_Analytics_TableLayout_UserDetail.RowCount = 3;
+            Form_Analytics_TableLayout_UserDetail.RowStyles.Add(new RowStyle(SizeType.Absolute, 80F));
+            Form_Analytics_TableLayout_UserDetail.RowStyles.Add(new RowStyle(SizeType.Absolute, 100F));
+            Form_Analytics_TableLayout_UserDetail.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            Form_Analytics_TableLayout_UserDetail.Size = new Size(980, 525);
+            Form_Analytics_TableLayout_UserDetail.TabIndex = 0;
             // 
             // grpUserSelection
             // 
-            this.grpUserSelection.Controls.Add(this.Form_Analytics_TableLayout_UserSelect);
-            this.grpUserSelection.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.grpUserSelection.Location = new System.Drawing.Point(3, 3);
-            this.grpUserSelection.Name = "grpUserSelection";
-            this.grpUserSelection.Size = new System.Drawing.Size(974, 74);
-            this.grpUserSelection.TabIndex = 0;
-            this.grpUserSelection.TabStop = false;
-            this.grpUserSelection.Text = "Select User";
-
+            grpUserSelection.Controls.Add(Form_Analytics_TableLayout_UserSelect);
+            grpUserSelection.Dock = DockStyle.Fill;
+            grpUserSelection.Location = new Point(3, 3);
+            grpUserSelection.Name = "grpUserSelection";
+            grpUserSelection.Size = new Size(974, 74);
+            grpUserSelection.TabIndex = 0;
+            grpUserSelection.TabStop = false;
+            grpUserSelection.Text = "Select User";
             // 
             // Form_Analytics_TableLayout_UserSelect
             // 
-            this.Form_Analytics_TableLayout_UserSelect.ColumnCount = 3;
-            this.Form_Analytics_TableLayout_UserSelect.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 80F));
-            this.Form_Analytics_TableLayout_UserSelect.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 200F));
-            this.Form_Analytics_TableLayout_UserSelect.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.Form_Analytics_TableLayout_UserSelect.Controls.Add(this.lblUser, 0, 0);
-            this.Form_Analytics_TableLayout_UserSelect.Controls.Add(this.comboUsers, 1, 0);
-            this.Form_Analytics_TableLayout_UserSelect.Controls.Add(this.btnLoadUser, 2, 0);
-            this.Form_Analytics_TableLayout_UserSelect.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Form_Analytics_TableLayout_UserSelect.Location = new System.Drawing.Point(3, 19);
-            this.Form_Analytics_TableLayout_UserSelect.Name = "Form_Analytics_TableLayout_UserSelect";
-            this.Form_Analytics_TableLayout_UserSelect.RowCount = 1;
-            this.Form_Analytics_TableLayout_UserSelect.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.Form_Analytics_TableLayout_UserSelect.Size = new System.Drawing.Size(968, 52);
-            this.Form_Analytics_TableLayout_UserSelect.TabIndex = 0;
-
+            Form_Analytics_TableLayout_UserSelect.ColumnCount = 3;
+            Form_Analytics_TableLayout_UserSelect.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 80F));
+            Form_Analytics_TableLayout_UserSelect.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 200F));
+            Form_Analytics_TableLayout_UserSelect.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            Form_Analytics_TableLayout_UserSelect.Controls.Add(lblUser, 0, 0);
+            Form_Analytics_TableLayout_UserSelect.Controls.Add(comboUsers, 1, 0);
+            Form_Analytics_TableLayout_UserSelect.Controls.Add(btnLoadUser, 2, 0);
+            Form_Analytics_TableLayout_UserSelect.Dock = DockStyle.Fill;
+            Form_Analytics_TableLayout_UserSelect.Location = new Point(3, 19);
+            Form_Analytics_TableLayout_UserSelect.Name = "Form_Analytics_TableLayout_UserSelect";
+            Form_Analytics_TableLayout_UserSelect.RowCount = 1;
+            Form_Analytics_TableLayout_UserSelect.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            Form_Analytics_TableLayout_UserSelect.Size = new Size(968, 52);
+            Form_Analytics_TableLayout_UserSelect.TabIndex = 0;
             // 
             // lblUser
             // 
-            this.lblUser.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.lblUser.AutoSize = true;
-            this.lblUser.Location = new System.Drawing.Point(44, 18);
-            this.lblUser.Name = "lblUser";
-            this.lblUser.Size = new System.Drawing.Size(33, 15);
-            this.lblUser.TabIndex = 0;
-            this.lblUser.Text = "User:";
-
+            lblUser.Anchor = AnchorStyles.Right;
+            lblUser.AutoSize = true;
+            lblUser.Location = new Point(44, 18);
+            lblUser.Name = "lblUser";
+            lblUser.Size = new Size(33, 15);
+            lblUser.TabIndex = 0;
+            lblUser.Text = "User:";
             // 
             // comboUsers
             // 
-            this.comboUsers.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.comboUsers.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboUsers.FormattingEnabled = true;
-            this.comboUsers.Location = new System.Drawing.Point(83, 14);
-            this.comboUsers.Name = "comboUsers";
-            this.comboUsers.Size = new System.Drawing.Size(194, 23);
-            this.comboUsers.TabIndex = 1;
-
+            comboUsers.Anchor = AnchorStyles.Left;
+            comboUsers.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboUsers.FormattingEnabled = true;
+            comboUsers.Location = new Point(83, 14);
+            comboUsers.Name = "comboUsers";
+            comboUsers.Size = new Size(194, 23);
+            comboUsers.TabIndex = 1;
             // 
             // btnLoadUser
             // 
-            this.btnLoadUser.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.btnLoadUser.Location = new System.Drawing.Point(283, 11);
-            this.btnLoadUser.Name = "btnLoadUser";
-            this.btnLoadUser.Size = new System.Drawing.Size(100, 30);
-            this.btnLoadUser.TabIndex = 2;
-            this.btnLoadUser.Text = "Load History";
-            this.btnLoadUser.UseVisualStyleBackColor = true;
-            this.btnLoadUser.Click += new System.EventHandler(this.btnLoadUser_Click);
-
+            btnLoadUser.Anchor = AnchorStyles.Left;
+            btnLoadUser.Location = new Point(283, 11);
+            btnLoadUser.Name = "btnLoadUser";
+            btnLoadUser.Size = new Size(100, 30);
+            btnLoadUser.TabIndex = 2;
+            btnLoadUser.Text = "Load History";
+            btnLoadUser.UseVisualStyleBackColor = true;
+            btnLoadUser.Click += btnLoadUser_Click;
+            // 
+            // grpUserDetailInfo
+            // 
+            grpUserDetailInfo.Controls.Add(txtUserDetailInfo);
+            grpUserDetailInfo.Dock = DockStyle.Fill;
+            grpUserDetailInfo.Location = new Point(3, 83);
+            grpUserDetailInfo.Name = "grpUserDetailInfo";
+            grpUserDetailInfo.Size = new Size(974, 94);
+            grpUserDetailInfo.TabIndex = 2;
+            grpUserDetailInfo.TabStop = false;
+            grpUserDetailInfo.Text = "Legend & Information";
+            // 
+            // txtUserDetailInfo
+            // 
+            txtUserDetailInfo.BackColor = SystemColors.Control;
+            txtUserDetailInfo.BorderStyle = BorderStyle.None;
+            txtUserDetailInfo.Dock = DockStyle.Fill;
+            txtUserDetailInfo.Location = new Point(3, 19);
+            txtUserDetailInfo.Name = "txtUserDetailInfo";
+            txtUserDetailInfo.ReadOnly = true;
+            txtUserDetailInfo.Size = new Size(968, 72);
+            txtUserDetailInfo.TabIndex = 0;
+            txtUserDetailInfo.Text = "Select a user to view their detailed transaction history for the selected date range.\nUse this view to investigate specific 'Rapid Fire' or 'Ping Pong' events identified in the other tabs.";
             // 
             // gridUserHistory
             // 
-            this.gridUserHistory.AllowUserToAddRows = false;
-            this.gridUserHistory.AllowUserToDeleteRows = false;
-            this.gridUserHistory.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.gridUserHistory.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gridUserHistory.Location = new System.Drawing.Point(3, 83);
-            this.gridUserHistory.Name = "gridUserHistory";
-            this.gridUserHistory.ReadOnly = true;
-            this.gridUserHistory.RowTemplate.Height = 25;
-            this.gridUserHistory.Size = new System.Drawing.Size(974, 439);
-            this.gridUserHistory.TabIndex = 1;
-
+            gridUserHistory.AllowUserToAddRows = false;
+            gridUserHistory.AllowUserToDeleteRows = false;
+            gridUserHistory.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            gridUserHistory.Dock = DockStyle.Fill;
+            gridUserHistory.Location = new Point(3, 183);
+            gridUserHistory.Name = "gridUserHistory";
+            gridUserHistory.ReadOnly = true;
+            gridUserHistory.Size = new Size(974, 339);
+            gridUserHistory.TabIndex = 1;
             // 
-            // progressBar
+            // tabGlossary
             // 
-            this.progressBar.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.progressBar.Location = new System.Drawing.Point(3, 593);
-            this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(994, 4);
-            this.progressBar.TabIndex = 1;
-
+            tabGlossary.Controls.Add(txtGlossary);
+            tabGlossary.Location = new Point(4, 24);
+            tabGlossary.Name = "tabGlossary";
+            tabGlossary.Padding = new Padding(3);
+            tabGlossary.Size = new Size(986, 531);
+            tabGlossary.TabIndex = 3;
+            tabGlossary.Text = "Glossary & Metrics";
+            tabGlossary.UseVisualStyleBackColor = true;
+            // 
+            // txtGlossary
+            // 
+            txtGlossary.BackColor = SystemColors.Window;
+            txtGlossary.BorderStyle = BorderStyle.None;
+            txtGlossary.Dock = DockStyle.Fill;
+            txtGlossary.Font = new Font("Segoe UI Emoji", 10F);
+            txtGlossary.Location = new Point(3, 3);
+            txtGlossary.Name = "txtGlossary";
+            txtGlossary.ReadOnly = true;
+            txtGlossary.Size = new Size(980, 525);
+            txtGlossary.TabIndex = 0;
+            txtGlossary.Text = "";
             // 
             // lblStatus
             // 
-            this.lblStatus.AutoSize = true;
-            this.lblStatus.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblStatus.Location = new System.Drawing.Point(3, 565);
-            this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(994, 25);
-            this.lblStatus.TabIndex = 2;
-            this.lblStatus.Text = "Ready";
-            this.lblStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-
+            lblStatus.AutoSize = true;
+            lblStatus.Dock = DockStyle.Fill;
+            lblStatus.Location = new Point(3, 565);
+            lblStatus.Name = "lblStatus";
+            lblStatus.Size = new Size(994, 25);
+            lblStatus.TabIndex = 2;
+            lblStatus.Text = "Ready";
+            lblStatus.TextAlign = ContentAlignment.MiddleLeft;
             // 
-            // Form_Analytics
+            // progressBar
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(1000, 600);
-            this.Controls.Add(this.Form_Analytics_TableLayout_Main);
-            this.Name = "Form_Analytics";
-            this.Text = "Material Handler Analytics";
-            this.Form_Analytics_TableLayout_Main.ResumeLayout(false);
-            this.Form_Analytics_TableLayout_Main.PerformLayout();
-            this.Form_Analytics_TabControl_Main.ResumeLayout(false);
-            this.tabPerformance.ResumeLayout(false);
-            this.Form_Analytics_TableLayout_Performance.ResumeLayout(false);
-            this.grpPerformanceFilters.ResumeLayout(false);
-            this.Form_Analytics_TableLayout_PerfFilters.ResumeLayout(false);
-            this.Form_Analytics_TableLayout_PerfFilters.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.gridPerformance)).EndInit();
-            this.tabQuality.ResumeLayout(false);
-            this.Form_Analytics_TableLayout_Quality.ResumeLayout(false);
-            this.grpQualityFilters.ResumeLayout(false);
-            this.Form_Analytics_TableLayout_QualityFilters.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.gridQuality)).EndInit();
-            this.tabUserDetail.ResumeLayout(false);
-            this.Form_Analytics_TableLayout_UserDetail.ResumeLayout(false);
-            this.grpUserSelection.ResumeLayout(false);
-            this.Form_Analytics_TableLayout_UserSelect.ResumeLayout(false);
-            this.Form_Analytics_TableLayout_UserSelect.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.gridUserHistory)).EndInit();
-            this.ResumeLayout(false);
+            progressBar.Dock = DockStyle.Fill;
+            progressBar.Location = new Point(3, 593);
+            progressBar.Name = "progressBar";
+            progressBar.Size = new Size(994, 4);
+            progressBar.TabIndex = 1;
+            // 
+            // Form_WIPUserAnalytics
+            // 
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            ClientSize = new Size(1000, 600);
+            Controls.Add(Form_Analytics_TableLayout_Main);
+            Icon = (Icon)resources.GetObject("$this.Icon");
+            Name = "Form_WIPUserAnalytics";
+            Text = "Material Handler Analytics";
+            Form_Analytics_TableLayout_Main.ResumeLayout(false);
+            Form_Analytics_TableLayout_Main.PerformLayout();
+            Form_Analytics_TabControl_Main.ResumeLayout(false);
+            tabPerformance.ResumeLayout(false);
+            Form_Analytics_TableLayout_Performance.ResumeLayout(false);
+            grpPerformanceFilters.ResumeLayout(false);
+            Form_Analytics_TableLayout_PerfFilters.ResumeLayout(false);
+            Form_Analytics_TableLayout_PerfFilters.PerformLayout();
+            grpPerformanceInfo.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)gridPerformance).EndInit();
+            tabQuality.ResumeLayout(false);
+            Form_Analytics_TableLayout_Quality.ResumeLayout(false);
+            grpQualityFilters.ResumeLayout(false);
+            Form_Analytics_TableLayout_QualityFilters.ResumeLayout(false);
+            grpQualityInfo.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)gridQuality).EndInit();
+            tabUserDetail.ResumeLayout(false);
+            Form_Analytics_TableLayout_UserDetail.ResumeLayout(false);
+            grpUserSelection.ResumeLayout(false);
+            Form_Analytics_TableLayout_UserSelect.ResumeLayout(false);
+            Form_Analytics_TableLayout_UserSelect.PerformLayout();
+            grpUserDetailInfo.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)gridUserHistory).EndInit();
+            tabGlossary.ResumeLayout(false);
+            ResumeLayout(false);
 
         }
 

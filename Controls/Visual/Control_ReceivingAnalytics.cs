@@ -24,7 +24,6 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         private readonly Component_TextAnimationSequence _poStatesAnimation;
         private readonly Component_TextAnimationSequence _deliveryStatesAnimation;
         private readonly Component_TextAnimationSequence _receivingScopeAnimation;
-        private readonly Component_TextAnimationSequence _outsideScopeAnimation;
         private readonly Component_TextAnimationSequence _searchPanelAnimation;
         
         // Expanded state tracking
@@ -33,7 +32,6 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         private bool _isPOStatesExpanded = true;
         private bool _isDeliveryStatesExpanded = true;
         private bool _isReceivingScopeExpanded = true;
-        private bool _isOutsideScopeExpanded = true;
         private bool _isSearchPanelExpanded = true;
         #endregion
 
@@ -49,39 +47,28 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             // Initialize Animation Controls
             _dateRangeAnimation = new Component_TextAnimationSequence();
             _dateRangeAnimation.TargetButton = Control_ReceivingAnalytics_Button_DateRangeHeader;
-            _dateRangeAnimation.UsePreset(TextAnimationPreset.Up);
-            _dateRangeAnimation.StartAnimation();
+            UpdateSectionState(_dateRangeAnimation, Control_ReceivingAnalytics_Button_DateRangeHeader, _isDateRangeExpanded);
 
             _filtersAnimation = new Component_TextAnimationSequence();
             _filtersAnimation.TargetButton = Control_ReceivingAnalytics_Button_FiltersHeader;
-            _filtersAnimation.UsePreset(TextAnimationPreset.Up);
-            _filtersAnimation.StartAnimation();
+            UpdateSectionState(_filtersAnimation, Control_ReceivingAnalytics_Button_FiltersHeader, _isFiltersExpanded);
 
             _poStatesAnimation = new Component_TextAnimationSequence();
             _poStatesAnimation.TargetButton = Control_ReceivingAnalytics_Button_POStatesHeader;
-            _poStatesAnimation.UsePreset(TextAnimationPreset.Up);
-            _poStatesAnimation.StartAnimation();
+            UpdateSectionState(_poStatesAnimation, Control_ReceivingAnalytics_Button_POStatesHeader, _isPOStatesExpanded);
 
             _deliveryStatesAnimation = new Component_TextAnimationSequence();
             _deliveryStatesAnimation.TargetButton = Control_ReceivingAnalytics_Button_DeliveryStatesHeader;
-            _deliveryStatesAnimation.UsePreset(TextAnimationPreset.Up);
-            _deliveryStatesAnimation.StartAnimation();
+            UpdateSectionState(_deliveryStatesAnimation, Control_ReceivingAnalytics_Button_DeliveryStatesHeader, _isDeliveryStatesExpanded);
 
             _receivingScopeAnimation = new Component_TextAnimationSequence();
             _receivingScopeAnimation.TargetButton = Control_ReceivingAnalytics_Button_ReceivingScopeHeader;
-            _receivingScopeAnimation.UsePreset(TextAnimationPreset.Up);
-            _receivingScopeAnimation.StartAnimation();
-
-            _outsideScopeAnimation = new Component_TextAnimationSequence();
-            _outsideScopeAnimation.TargetButton = Control_ReceivingAnalytics_Button_OutsideScopeHeader;
-            _outsideScopeAnimation.UsePreset(TextAnimationPreset.Up);
-            _outsideScopeAnimation.StartAnimation();
+            UpdateSectionState(_receivingScopeAnimation, Control_ReceivingAnalytics_Button_ReceivingScopeHeader, _isReceivingScopeExpanded);
 
             _searchPanelAnimation = new Component_TextAnimationSequence();
             _searchPanelAnimation.TargetButton = button1;
             _searchPanelAnimation.SuffixText = " All";
-            _searchPanelAnimation.UsePreset(TextAnimationPreset.Up);
-            _searchPanelAnimation.StartAnimation();
+            UpdateSectionState(_searchPanelAnimation, button1, _isSearchPanelExpanded);
 
             // Initialize Suggestion Boxes
             InitializeSuggestionBoxes();
@@ -91,8 +78,6 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
 
             // Set default checkboxes
             Control_ReceivingAnalytics_CheckBox_ShowClosed.Checked = false;
-            Control_ReceivingAnalytics_CheckBox_ShowConsignment.Checked = false;
-            Control_ReceivingAnalytics_CheckBox_ShowInternal.Checked = false;
             Control_ReceivingAnalytics_CheckBox_ShowOutsideService.Checked = false;
             Control_ReceivingAnalytics_CheckBox_ShowLate.Checked = true;
             Control_ReceivingAnalytics_CheckBox_ShowPartial.Checked = true;
@@ -151,8 +136,6 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             
             // Mutually Exclusive / Interaction Filters
             Control_ReceivingAnalytics_CheckBox_ShowOutsideService.CheckedChanged += async (s, e) => { HandleFilterLogic(Control_ReceivingAnalytics_CheckBox_ShowOutsideService); await FetchDataAsync(); };
-            Control_ReceivingAnalytics_CheckBox_ShowConsignment.CheckedChanged += async (s, e) => { HandleFilterLogic(Control_ReceivingAnalytics_CheckBox_ShowConsignment); await FetchDataAsync(); };
-            Control_ReceivingAnalytics_CheckBox_ShowInternal.CheckedChanged += async (s, e) => { HandleFilterLogic(Control_ReceivingAnalytics_CheckBox_ShowInternal); await FetchDataAsync(); };
             Control_ReceivingAnalytics_CheckBox_ShowWithPartID.CheckedChanged += async (s, e) => { HandleFilterLogic(Control_ReceivingAnalytics_CheckBox_ShowWithPartID); await FetchDataAsync(); };
 
             // Client-side filters (apply to cached data)
@@ -188,7 +171,6 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_ReceivingAnalytics_Button_POStatesHeader.Click += TogglePOStatesSection;
             Control_ReceivingAnalytics_Button_DeliveryStatesHeader.Click += ToggleDeliveryStatesSection;
             Control_ReceivingAnalytics_Button_ReceivingScopeHeader.Click += ToggleReceivingScopeSection;
-            Control_ReceivingAnalytics_Button_OutsideScopeHeader.Click += ToggleOutsideScopeSection;
             button1.Click += ToggleSearchPanel;
         }
 
@@ -284,8 +266,8 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                     Control_ReceivingAnalytics_DateTimePicker_EndDate.Value,
                     Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_DateType.Text ?? "Any of the Above",
                     Control_ReceivingAnalytics_CheckBox_ShowClosed.Checked,
-                    Control_ReceivingAnalytics_CheckBox_ShowConsignment.Checked,
-                    Control_ReceivingAnalytics_CheckBox_ShowInternal.Checked,
+                    false,
+                    false,
                     Control_ReceivingAnalytics_CheckBox_ShowOutsideService.Checked,
                     Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Supplier.Text?.Trim() ?? "",
                     Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PONumber.Text?.Trim() ?? "",
@@ -528,14 +510,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             _isDateRangeExpanded = !_isDateRangeExpanded;
             Control_ReceivingAnalytics_Panel_DateRangeContents.Visible = _isDateRangeExpanded;
             
-            if (_isDateRangeExpanded)
-            {
-                _dateRangeAnimation.UsePreset(TextAnimationPreset.Up);
-            }
-            else
-            {
-                _dateRangeAnimation.UsePreset(TextAnimationPreset.Down);
-            }
+            UpdateSectionState(_dateRangeAnimation, Control_ReceivingAnalytics_Button_DateRangeHeader, _isDateRangeExpanded);
         }
 
         private void ToggleFiltersSection(object? sender, EventArgs e)
@@ -543,14 +518,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             _isFiltersExpanded = !_isFiltersExpanded;
             Control_ReceivingAnalytics_Panel_FiltersContents.Visible = _isFiltersExpanded;
             
-            if (_isFiltersExpanded)
-            {
-                _filtersAnimation.UsePreset(TextAnimationPreset.Up);
-            }
-            else
-            {
-                _filtersAnimation.UsePreset(TextAnimationPreset.Down);
-            }
+            UpdateSectionState(_filtersAnimation, Control_ReceivingAnalytics_Button_FiltersHeader, _isFiltersExpanded);
         }
 
         private void TogglePOStatesSection(object? sender, EventArgs e)
@@ -558,14 +526,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             _isPOStatesExpanded = !_isPOStatesExpanded;
             Control_ReceivingAnalytics_TableLayoutPanel_POStatesContents.Visible = _isPOStatesExpanded;
             
-            if (_isPOStatesExpanded)
-            {
-                _poStatesAnimation.UsePreset(TextAnimationPreset.Up);
-            }
-            else
-            {
-                _poStatesAnimation.UsePreset(TextAnimationPreset.Down);
-            }
+            UpdateSectionState(_poStatesAnimation, Control_ReceivingAnalytics_Button_POStatesHeader, _isPOStatesExpanded);
         }
 
         private void ToggleDeliveryStatesSection(object? sender, EventArgs e)
@@ -573,14 +534,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             _isDeliveryStatesExpanded = !_isDeliveryStatesExpanded;
             Control_ReceivingAnalytics_Panel_DeliveryStatesContents.Visible = _isDeliveryStatesExpanded;
             
-            if (_isDeliveryStatesExpanded)
-            {
-                _deliveryStatesAnimation.UsePreset(TextAnimationPreset.Up);
-            }
-            else
-            {
-                _deliveryStatesAnimation.UsePreset(TextAnimationPreset.Down);
-            }
+            UpdateSectionState(_deliveryStatesAnimation, Control_ReceivingAnalytics_Button_DeliveryStatesHeader, _isDeliveryStatesExpanded);
         }
 
         private void ToggleReceivingScopeSection(object? sender, EventArgs e)
@@ -588,31 +542,10 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             _isReceivingScopeExpanded = !_isReceivingScopeExpanded;
             Control_ReceivingAnalytics_Panel_ReceivingScopeContents.Visible = _isReceivingScopeExpanded;
             
-            if (_isReceivingScopeExpanded)
-            {
-                _receivingScopeAnimation.UsePreset(TextAnimationPreset.Up);
-            }
-            else
-            {
-                _receivingScopeAnimation.UsePreset(TextAnimationPreset.Down);
-            }
+            UpdateSectionState(_receivingScopeAnimation, Control_ReceivingAnalytics_Button_ReceivingScopeHeader, _isReceivingScopeExpanded);
         }
 
-        private void ToggleOutsideScopeSection(object? sender, EventArgs e)
-        {
-            _isOutsideScopeExpanded = !_isOutsideScopeExpanded;
-            Control_ReceivingAnalytics_Panel_OutsideScopeContents.Visible = _isOutsideScopeExpanded;
-            
-            if (_isOutsideScopeExpanded)
-            {
-                _outsideScopeAnimation.UsePreset(TextAnimationPreset.Up);
-            }
-            else
-            {
-                _outsideScopeAnimation.UsePreset(TextAnimationPreset.Down);
-            }
-        }
-void ToggleSearchPanel(object? sender, EventArgs e)
+        void ToggleSearchPanel(object? sender, EventArgs e)
         {
             _isSearchPanelExpanded = !_isSearchPanelExpanded;
 
@@ -622,14 +555,7 @@ void ToggleSearchPanel(object? sender, EventArgs e)
             tableLayoutPanel5.Visible = _isSearchPanelExpanded;
             Control_ReceivingAnalytics_TableLayoutPanel_DateRangeMain.Visible = _isSearchPanelExpanded;
 
-            if (_isSearchPanelExpanded)
-            {
-                _searchPanelAnimation.UsePreset(TextAnimationPreset.Up);
-            }
-            else
-            {
-                _searchPanelAnimation.UsePreset(TextAnimationPreset.Down);
-            }
+            UpdateSectionState(_searchPanelAnimation, button1, _isSearchPanelExpanded);
         }
 
         private async void Control_ReceivingAnalytics_Button_Analytics_Click(object? sender, EventArgs e)
@@ -818,24 +744,6 @@ void ToggleSearchPanel(object? sender, EventArgs e)
                 {
                     if (source == Control_ReceivingAnalytics_CheckBox_ShowOutsideService)
                     {
-                        UncheckAndDisable(Control_ReceivingAnalytics_CheckBox_ShowConsignment);
-                        UncheckAndDisable(Control_ReceivingAnalytics_CheckBox_ShowInternal);
-                        UncheckAndDisable(Control_ReceivingAnalytics_CheckBox_ShowWithPartID);
-                        UncheckAndDisable(Control_ReceivingAnalytics_CheckBox_ShowMMC);
-                        UncheckAndDisable(Control_ReceivingAnalytics_CheckBox_ShowMMF);
-                    }
-                    else if (source == Control_ReceivingAnalytics_CheckBox_ShowConsignment)
-                    {
-                        UncheckAndDisable(Control_ReceivingAnalytics_CheckBox_ShowOutsideService);
-                        UncheckAndDisable(Control_ReceivingAnalytics_CheckBox_ShowInternal);
-                        UncheckAndDisable(Control_ReceivingAnalytics_CheckBox_ShowWithPartID);
-                        UncheckAndDisable(Control_ReceivingAnalytics_CheckBox_ShowMMC);
-                        UncheckAndDisable(Control_ReceivingAnalytics_CheckBox_ShowMMF);
-                    }
-                    else if (source == Control_ReceivingAnalytics_CheckBox_ShowInternal)
-                    {
-                        UncheckAndDisable(Control_ReceivingAnalytics_CheckBox_ShowOutsideService);
-                        UncheckAndDisable(Control_ReceivingAnalytics_CheckBox_ShowConsignment);
                         UncheckAndDisable(Control_ReceivingAnalytics_CheckBox_ShowWithPartID);
                         UncheckAndDisable(Control_ReceivingAnalytics_CheckBox_ShowMMC);
                         UncheckAndDisable(Control_ReceivingAnalytics_CheckBox_ShowMMF);
@@ -843,8 +751,6 @@ void ToggleSearchPanel(object? sender, EventArgs e)
                     else if (source == Control_ReceivingAnalytics_CheckBox_ShowWithPartID)
                     {
                         Uncheck(Control_ReceivingAnalytics_CheckBox_ShowOutsideService);
-                        Uncheck(Control_ReceivingAnalytics_CheckBox_ShowConsignment);
-                        Uncheck(Control_ReceivingAnalytics_CheckBox_ShowInternal);
                         Uncheck(Control_ReceivingAnalytics_CheckBox_ShowMMC);
                         Uncheck(Control_ReceivingAnalytics_CheckBox_ShowMMF);
                         
@@ -854,8 +760,6 @@ void ToggleSearchPanel(object? sender, EventArgs e)
                     {
                         Uncheck(Control_ReceivingAnalytics_CheckBox_ShowWithPartID);
                         Uncheck(Control_ReceivingAnalytics_CheckBox_ShowOutsideService);
-                        Uncheck(Control_ReceivingAnalytics_CheckBox_ShowConsignment);
-                        Uncheck(Control_ReceivingAnalytics_CheckBox_ShowInternal);
                         
                         EnableAllFilters();
                     }
@@ -863,8 +767,6 @@ void ToggleSearchPanel(object? sender, EventArgs e)
                     {
                         Uncheck(Control_ReceivingAnalytics_CheckBox_ShowWithPartID);
                         Uncheck(Control_ReceivingAnalytics_CheckBox_ShowOutsideService);
-                        Uncheck(Control_ReceivingAnalytics_CheckBox_ShowConsignment);
-                        Uncheck(Control_ReceivingAnalytics_CheckBox_ShowInternal);
                         
                         EnableAllFilters();
                     }
@@ -872,9 +774,7 @@ void ToggleSearchPanel(object? sender, EventArgs e)
                 else
                 {
                     // If unchecked, we might need to re-enable things.
-                    if (source == Control_ReceivingAnalytics_CheckBox_ShowOutsideService ||
-                        source == Control_ReceivingAnalytics_CheckBox_ShowConsignment ||
-                        source == Control_ReceivingAnalytics_CheckBox_ShowInternal)
+                    if (source == Control_ReceivingAnalytics_CheckBox_ShowOutsideService)
                     {
                         EnableAllFilters();
                     }
@@ -900,11 +800,31 @@ void ToggleSearchPanel(object? sender, EventArgs e)
         private void EnableAllFilters()
         {
             Control_ReceivingAnalytics_CheckBox_ShowOutsideService.Enabled = true;
-            Control_ReceivingAnalytics_CheckBox_ShowConsignment.Enabled = true;
-            Control_ReceivingAnalytics_CheckBox_ShowInternal.Enabled = true;
             Control_ReceivingAnalytics_CheckBox_ShowWithPartID.Enabled = true;
             Control_ReceivingAnalytics_CheckBox_ShowMMC.Enabled = true;
             Control_ReceivingAnalytics_CheckBox_ShowMMF.Enabled = true;
+        }
+
+        private void UpdateSectionState(Component_TextAnimationSequence animation, Button button, bool isExpanded)
+        {
+            var preset = isExpanded ? TextAnimationPreset.Up : TextAnimationPreset.Down;
+            animation.UsePreset(preset);
+
+            if (Model_Application_Variables.AnimationsEnabled)
+            {
+                if (!animation.IsRunning) animation.StartAnimation();
+            }
+            else
+            {
+                if (animation.IsRunning) animation.StopAnimation();
+
+                // Set static text (first frame of the preset)
+                if (animation.Frames.Count > 0)
+                {
+                    string frame = animation.Frames[0];
+                    button.Text = animation.PrefixText + frame + animation.SuffixText;
+                }
+            }
         }
         #endregion
 

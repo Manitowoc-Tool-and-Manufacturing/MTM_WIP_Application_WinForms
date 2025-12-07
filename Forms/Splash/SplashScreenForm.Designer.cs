@@ -29,6 +29,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Splash
 
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SplashScreenForm));
             _mainLayout = new TableLayoutPanel();
             _headerLayout = new TableLayoutPanel();
             _logoBox = new PictureBox();

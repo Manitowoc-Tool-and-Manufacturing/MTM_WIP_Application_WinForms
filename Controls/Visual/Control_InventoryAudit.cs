@@ -28,15 +28,15 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         {
             InitializeComponent();
             _visualService = Program.ServiceProvider?.GetService(typeof(IService_VisualDatabase)) as IService_VisualDatabase;
-            
+
             // Initialize Search By options
-            Control_InventoryAudit_SuggestionTextBox_SearchBy.TextBox.DataProvider = () => Task.FromResult(new List<string> 
-            { 
-                "Part Number", 
-                "User", 
-                "Work Order", 
-                "Customer Order", 
-                "Purchase Order" 
+            Control_InventoryAudit_SuggestionTextBox_SearchBy.TextBox.DataProvider = () => Task.FromResult(new List<string>
+            {
+                "Part Number",
+                "User",
+                "Work Order",
+                "Customer Order",
+                "Purchase Order"
             });
             Control_InventoryAudit_SuggestionTextBox_SearchBy.EnableSuggestions = true;
             Control_InventoryAudit_SuggestionTextBox_SearchBy.ShowF4Button = true;
@@ -45,7 +45,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             WireUpEvents();
             ConfigureSuggestions();
             InitializeDefaultValues();
-            
+
             // Trigger initial setup for default selection
             OnSearchBySelected();
         }
@@ -69,7 +69,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         {
             Control_InventoryAudit_Button_Search.Click += async (s, e) => await PerformSearchAsync();
             Control_InventoryAudit_Button_Export.Click += BtnExport_Click;
-            
+
             // Search By Selection Change
             Control_InventoryAudit_SuggestionTextBox_SearchBy.SuggestionSelected += (s, e) => OnSearchBySelected();
             Control_InventoryAudit_SuggestionTextBox_SearchBy.TextBox.Leave += (s, e) => OnSearchBySelected(); // Ensure update on leave if typed
@@ -82,17 +82,17 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
 
             // Enter key support on inputs
             Control_InventoryAudit_SuggestionTextBox_LifecyclePart.TextBox.KeyDown += async (s, e) => { if (e.KeyCode == Keys.Enter) await PerformSearchAsync(); };
-            
+
             Control_InventoryAudit_DataGridView_Results.CellDoubleClick += DataGridView_CellDoubleClick;
         }
         #endregion
 
         #region Methods
-        
+
         private void OnSearchBySelected()
         {
             string selection = Control_InventoryAudit_SuggestionTextBox_SearchBy.Text ?? "";
-            
+
             // Prevent unnecessary updates if selection hasn't changed
             if (string.Equals(selection, _lastSearchSelection, StringComparison.OrdinalIgnoreCase))
             {
@@ -183,7 +183,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                     {
                         // This is a trace request on a specific transaction
                         string transIdStr = drv["Trans ID"]?.ToString() ?? "";
-                        
+
                         // Handle combined IDs (e.g. "123/124")
                         int transId = 0;
                         if (transIdStr.Contains("/"))
@@ -211,16 +211,16 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                         partId = drv["Part Number"]?.ToString() ?? "";
                     else if (drv.Row.Table.Columns.Contains("Part ID"))
                         partId = drv["Part ID"]?.ToString() ?? "";
-                    
+
                     if (!string.IsNullOrEmpty(partId))
                     {
                         // Switch to Part Number mode
                         Control_InventoryAudit_SuggestionTextBox_SearchBy.Text = "Part Number";
                         OnSearchBySelected();
                         Control_InventoryAudit_SuggestionTextBox_LifecyclePart.Text = partId;
-                        
+
                         // Set date range to cover a broad history
-                        Control_InventoryAudit_DateTimePicker_StartDate.Value = DateTime.Today.AddYears(-2); 
+                        Control_InventoryAudit_DateTimePicker_StartDate.Value = DateTime.Today.AddYears(-2);
                         Control_InventoryAudit_DateTimePicker_EndDate.Value = DateTime.Today;
 
                         await PerformSearchAsync();
@@ -257,12 +257,12 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                 {
                     // Apply Trace Logic
                     _cachedDataTable = Helper_VisualLifecycle.TraceTransactionFlow(result.Data, transId);
-                    
+
                     Control_InventoryAudit_DataGridView_Results.DataSource = _cachedDataTable;
                     await Service_DataGridView.ApplyStandardSettingsAsync(Control_InventoryAudit_DataGridView_Results, Model_Application_Variables.User);
                     Service_DataGridView.ApplySmartNumericFormatting(Control_InventoryAudit_DataGridView_Results);
                     ApplyLifecycleColoring();
-                    
+
                     Service_ErrorHandler.ShowInformation("Showing transaction flow trace. Search again to reset.");
                 }
                 else
@@ -300,7 +300,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
 
                 string searchBy = Control_InventoryAudit_SuggestionTextBox_SearchBy.Text ?? "Part Number";
                 string searchTerm = Control_InventoryAudit_SuggestionTextBox_LifecyclePart.Text?.Trim() ?? "";
-                
+
                 filter.StartDate = Control_InventoryAudit_DateTimePicker_StartDate.Value;
                 filter.EndDate = Control_InventoryAudit_DateTimePicker_EndDate.Value;
 
@@ -347,7 +347,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                     Control_InventoryAudit_DataGridView_Results.DataSource = _cachedDataTable;
                     await Service_DataGridView.ApplyStandardSettingsAsync(Control_InventoryAudit_DataGridView_Results, Model_Application_Variables.User);
                     Service_DataGridView.ApplySmartNumericFormatting(Control_InventoryAudit_DataGridView_Results);
-                    
+
                     // Apply row coloring if Lifecycle view
                     if (isLifecycleView)
                     {
@@ -385,7 +385,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                         case "transfer-in": row.DefaultCellStyle.BackColor = Color.FromArgb(26, 46, 76); break; // Dark Blue
                         case "shipment": row.DefaultCellStyle.BackColor = Color.FromArgb(76, 26, 26); break; // Dark Red
                     }
-                    
+
                     // Ensure text is readable on dark backgrounds
                     if (!string.IsNullOrEmpty(type))
                     {

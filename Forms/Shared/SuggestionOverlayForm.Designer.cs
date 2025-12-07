@@ -28,6 +28,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SuggestionOverlayForm));
             suggestionListBox = new ListBox();
             lblMatchCount = new Label();
             SuspendLayout();
@@ -71,6 +72,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             Controls.Add(lblMatchCount);
             Controls.Add(suggestionListBox);
             FormBorderStyle = FormBorderStyle.None;
+            Icon = (Icon)resources.GetObject("$this.Icon");
             KeyPreview = true;
             MaximizeBox = false;
             MinimizeBox = false;

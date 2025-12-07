@@ -262,7 +262,7 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
             lblTitle.Text = "Error Analysis Report";
             lblTitle.TextAlign = ContentAlignment.MiddleCenter;
             // 
-            // ErrorAnalysisReportDialog
+            // Form_ErrorReportDialog
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
@@ -270,7 +270,7 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
             Controls.Add(tableLayoutMain);
             Icon = (Icon)resources.GetObject("$this.Icon");
             Margin = new Padding(41, 19, 41, 19);
-            Name = "ErrorAnalysisReportDialog";
+            Name = "Form_ErrorReportDialog";
             Padding = new Padding(6);
             StartPosition = FormStartPosition.CenterParent;
             Text = "Error Analysis Report";

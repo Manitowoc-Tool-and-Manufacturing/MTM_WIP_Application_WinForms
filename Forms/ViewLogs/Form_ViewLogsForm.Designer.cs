@@ -15,6 +15,7 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ViewApplicationLogsForm));
             tableLayoutMain = new TableLayoutPanel();
             panel1 = new Panel();
             lblStatus = new Label();
@@ -848,6 +849,7 @@ namespace MTM_WIP_Application_Winforms.Forms.ViewLogs
             AutoScaleMode = AutoScaleMode.Dpi;
             ClientSize = new Size(724, 801);
             Controls.Add(tableLayoutMain);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             MaximizeBox = false;
             MaximumSize = new Size(740, 840);
             MinimizeBox = false;

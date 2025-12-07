@@ -4,6 +4,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
     {
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form_InforVisualDashboard));
             InforVisualDashboard_Panel_Content = new Panel();
             InforVisualDashboard_Control_EmptyState = new MTM_WIP_Application_Winforms.Components.Shared.Control_EmptyState();
             InforVisualDashboard_TableLayout_Main = new TableLayoutPanel();
@@ -155,7 +156,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             InforVisualDashboard_Button_InventoryAuditing.Size = new Size(143, 45);
             InforVisualDashboard_Button_InventoryAuditing.TabIndex = 10;
             InforVisualDashboard_Button_InventoryAuditing.Tag = Models.Enum_VisualDashboardCategory.InventoryAuditing;
-            InforVisualDashboard_Button_InventoryAuditing.Text = "Visual Auditing";
+            InforVisualDashboard_Button_InventoryAuditing.Text = "Visual Inventory History";
             InforVisualDashboard_Button_InventoryAuditing.TextAlign = ContentAlignment.MiddleLeft;
             InforVisualDashboard_Button_InventoryAuditing.UseVisualStyleBackColor = false;
             // 
@@ -183,7 +184,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             InforVisualDashboard_Button_MaterialHandlerGeneral.Size = new Size(143, 45);
             InforVisualDashboard_Button_MaterialHandlerGeneral.TabIndex = 12;
             InforVisualDashboard_Button_MaterialHandlerGeneral.Tag = Models.Enum_VisualDashboardCategory.MaterialHandlerAnalytics_General;
-            InforVisualDashboard_Button_MaterialHandlerGeneral.Text = "Inventory Analytics";
+            InforVisualDashboard_Button_MaterialHandlerGeneral.Text = "Visual User Analytics";
             InforVisualDashboard_Button_MaterialHandlerGeneral.TextAlign = ContentAlignment.MiddleLeft;
             InforVisualDashboard_Button_MaterialHandlerGeneral.UseVisualStyleBackColor = false;
             // 
@@ -195,6 +196,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             AutoSizeMode = AutoSizeMode.GrowAndShrink;
             ClientSize = new Size(1024, 768);
             Controls.Add(InforVisualDashboard_TableLayout_Main);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             MinimumSize = new Size(1024, 768);
             Name = "Form_InforVisualDashboard";
             StartPosition = FormStartPosition.CenterScreen;

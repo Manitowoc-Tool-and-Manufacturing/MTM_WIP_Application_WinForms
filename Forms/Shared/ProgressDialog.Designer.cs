@@ -25,6 +25,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
 
         private void InitializeComponent()
         {
+            ComponentResourceManager resources = new ComponentResourceManager(typeof(ProgressDialog));
             _progressControl = new MTM_WIP_Application_Winforms.Components.Shared.Component_ProgressBarUserControl();
             SuspendLayout();
             // 
@@ -35,6 +36,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             _progressControl.BorderStyle = BorderStyle.FixedSingle;
             _progressControl.Dock = DockStyle.Fill;
             _progressControl.Location = new Point(0, 0);
+            _progressControl.Margin = new Padding(6);
             _progressControl.Name = "_progressControl";
             _progressControl.Size = new Size(390, 123);
             _progressControl.TabIndex = 0;
@@ -50,6 +52,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             Controls.Add(_progressControl);
             DoubleBuffered = true;
             FormBorderStyle = FormBorderStyle.None;
+            Icon = (Icon)resources.GetObject("$this.Icon");
             MaximizeBox = false;
             MinimizeBox = false;
             Name = "ProgressDialog";

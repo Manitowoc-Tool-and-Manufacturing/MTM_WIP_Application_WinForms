@@ -28,6 +28,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form_PODetails));
             Form_PODetails_Label_Loading = new Label();
             Form_PODetails_Panel_Details = new Panel();
             Form_PODetails_Label_LineNo = new Label();
@@ -348,6 +349,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             AutoScaleMode = AutoScaleMode.Dpi;
             ClientSize = new Size(600, 550);
             Controls.Add(Form_PODetails_Panel_Details);
+            Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "Form_PODetails";
             StartPosition = FormStartPosition.CenterParent;
             Text = "PO Details";

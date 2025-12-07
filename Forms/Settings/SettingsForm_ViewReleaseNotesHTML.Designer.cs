@@ -67,7 +67,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
             btnViewComparison.UseVisualStyleBackColor = true;
             btnViewComparison.Click += btnViewComparison_Click;
             // 
-            // ViewReleaseNotesForm
+            // SettingsForm_ViewReleaseNotesHTML
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
@@ -75,7 +75,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
             Controls.Add(webView21);
             Controls.Add(panelTop);
             Icon = (Icon)resources.GetObject("$this.Icon");
-            Name = "ViewReleaseNotesForm";
+            Name = "SettingsForm_ViewReleaseNotesHTML";
             Text = "Release Notes";
             ((System.ComponentModel.ISupportInitialize)webView21).EndInit();
             panelTop.ResumeLayout(false);

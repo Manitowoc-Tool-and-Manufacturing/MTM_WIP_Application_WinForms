@@ -34,114 +34,34 @@
             SettingsForm_StatusText = new ToolStripStatusLabel();
             SettingsForm_Panel_Right = new Panel();
             SettingsForm_Panel_Database = new Panel();
+            SettingsForm_Control_Database = new MTM_WIP_Application_Winforms.Controls.SettingsForm.Control_Database();
             SettingsForm_Panel_Shortcuts = new Panel();
+            SettingsForm_Control_Shortcuts = new MTM_WIP_Application_Winforms.Controls.SettingsForm.Control_Shortcuts();
             SettingsForm_Panel_About = new Panel();
+            SettingsForm_Control_About = new MTM_WIP_Application_Winforms.Controls.SettingsForm.Control_About();
             SettingsForm_Panel_PartNumbers = new Panel();
+            SettingsForm_Control_PartManagement = new MTM_WIP_Application_Winforms.Controls.SettingsForm.Control_PartIDManagement();
             SettingsForm_Panel_AddOperation = new Panel();
+            SettingsForm_Control_OperationManagement = new MTM_WIP_Application_Winforms.Controls.SettingsForm.Control_OperationManagement();
             SettingsForm_Panel_EditOperation = new Panel();
             SettingsForm_Panel_RemoveOperation = new Panel();
             SettingsForm_Panel_AddLocation = new Panel();
+            SettingsForm_Control_LocationManagement = new MTM_WIP_Application_Winforms.Controls.SettingsForm.Control_LocationManagement();
             SettingsForm_Panel_AddItemType = new Panel();
+            SettingsForm_Control_ItemTypeManagement = new MTM_WIP_Application_Winforms.Controls.SettingsForm.Control_ItemTypeManagement();
             SettingsForm_Panel_EditItemType = new Panel();
             SettingsForm_Panel_RemoveItemType = new Panel();
             SettingsForm_Panel_AddUser = new Panel();
+            SettingsForm_Control_UserManagement = new MTM_WIP_Application_Winforms.Controls.SettingsForm.Control_User_Management();
             SettingsForm_Panel_EditUser = new Panel();
             SettingsForm_Panel_DeleteUser = new Panel();
             SettingsForm_Panel_Theme = new Panel();
+            SettingsForm_Control_Theme = new MTM_WIP_Application_Winforms.Controls.SettingsForm.Control_Theme();
             SettingsForm_Panel_Home = new Panel();
+            SettingsForm_Control_Home = new MTM_WIP_Application_Winforms.Controls.SettingsForm.Control_SettingsHome();
             SettingsForm_Panel_Right_Main = new Panel();
             SettingsForm_Panel_EditLocation = new Panel();
             SettingsForm_Panel_RemoveLocation = new Panel();
-            SettingsForm_Control_Home = new MTM_WIP_Application_Winforms.Controls.SettingsForm.Control_SettingsHome();
-            SettingsForm_Control_Shortcuts = new MTM_WIP_Application_Winforms.Controls.SettingsForm.Control_Shortcuts();
-            SettingsForm_Control_Theme = new MTM_WIP_Application_Winforms.Controls.SettingsForm.Control_Theme();
-            SettingsForm_Control_Database = new MTM_WIP_Application_Winforms.Controls.SettingsForm.Control_Database();
-            SettingsForm_Control_About = new MTM_WIP_Application_Winforms.Controls.SettingsForm.Control_About();
-            SettingsForm_Control_UserManagement = new MTM_WIP_Application_Winforms.Controls.SettingsForm.Control_User_Management();
-            SettingsForm_Control_PartManagement = new MTM_WIP_Application_Winforms.Controls.SettingsForm.Control_PartIDManagement();
-            SettingsForm_Control_OperationManagement = new MTM_WIP_Application_Winforms.Controls.SettingsForm.Control_OperationManagement();
-            SettingsForm_Control_LocationManagement = new MTM_WIP_Application_Winforms.Controls.SettingsForm.Control_LocationManagement();
-            SettingsForm_Control_ItemTypeManagement = new MTM_WIP_Application_Winforms.Controls.SettingsForm.Control_ItemTypeManagement();
-            // 
-            // SettingsForm_Control_Home
-            // 
-            SettingsForm_Control_Home.Dock = DockStyle.Fill;
-            SettingsForm_Control_Home.Location = new Point(0, 0);
-            SettingsForm_Control_Home.Name = "SettingsForm_Control_Home";
-            SettingsForm_Control_Home.Size = new Size(609, 541);
-            SettingsForm_Control_Home.TabIndex = 0;
-            // 
-            // SettingsForm_Control_Shortcuts
-            // 
-            SettingsForm_Control_Shortcuts.Dock = DockStyle.Fill;
-            SettingsForm_Control_Shortcuts.Location = new Point(0, 0);
-            SettingsForm_Control_Shortcuts.Name = "SettingsForm_Control_Shortcuts";
-            SettingsForm_Control_Shortcuts.Size = new Size(609, 541);
-            SettingsForm_Control_Shortcuts.TabIndex = 0;
-            // 
-            // SettingsForm_Control_Theme
-            // 
-            SettingsForm_Control_Theme.Dock = DockStyle.Fill;
-            SettingsForm_Control_Theme.Location = new Point(0, 0);
-            SettingsForm_Control_Theme.Name = "SettingsForm_Control_Theme";
-            SettingsForm_Control_Theme.Size = new Size(609, 541);
-            SettingsForm_Control_Theme.TabIndex = 0;
-            // 
-            // SettingsForm_Control_Database
-            // 
-            SettingsForm_Control_Database.Dock = DockStyle.Fill;
-            SettingsForm_Control_Database.Location = new Point(0, 0);
-            SettingsForm_Control_Database.Name = "SettingsForm_Control_Database";
-            SettingsForm_Control_Database.Size = new Size(609, 541);
-            SettingsForm_Control_Database.TabIndex = 0;
-            // 
-            // SettingsForm_Control_About
-            // 
-            SettingsForm_Control_About.Dock = DockStyle.Fill;
-            SettingsForm_Control_About.Location = new Point(0, 0);
-            SettingsForm_Control_About.Name = "SettingsForm_Control_About";
-            SettingsForm_Control_About.Size = new Size(609, 541);
-            SettingsForm_Control_About.TabIndex = 0;
-            // 
-            // SettingsForm_Control_UserManagement
-            // 
-            SettingsForm_Control_UserManagement.Dock = DockStyle.Fill;
-            SettingsForm_Control_UserManagement.Location = new Point(0, 0);
-            SettingsForm_Control_UserManagement.Name = "SettingsForm_Control_UserManagement";
-            SettingsForm_Control_UserManagement.Size = new Size(609, 541);
-            SettingsForm_Control_UserManagement.TabIndex = 0;
-            // 
-            // SettingsForm_Control_PartManagement
-            // 
-            SettingsForm_Control_PartManagement.Dock = DockStyle.Fill;
-            SettingsForm_Control_PartManagement.Location = new Point(0, 0);
-            SettingsForm_Control_PartManagement.Name = "SettingsForm_Control_PartManagement";
-            SettingsForm_Control_PartManagement.Size = new Size(609, 541);
-            SettingsForm_Control_PartManagement.TabIndex = 0;
-            // 
-            // SettingsForm_Control_OperationManagement
-            // 
-            SettingsForm_Control_OperationManagement.Dock = DockStyle.Fill;
-            SettingsForm_Control_OperationManagement.Location = new Point(0, 0);
-            SettingsForm_Control_OperationManagement.Name = "SettingsForm_Control_OperationManagement";
-            SettingsForm_Control_OperationManagement.Size = new Size(609, 541);
-            SettingsForm_Control_OperationManagement.TabIndex = 0;
-            // 
-            // SettingsForm_Control_LocationManagement
-            // 
-            SettingsForm_Control_LocationManagement.Dock = DockStyle.Fill;
-            SettingsForm_Control_LocationManagement.Location = new Point(0, 0);
-            SettingsForm_Control_LocationManagement.Name = "SettingsForm_Control_LocationManagement";
-            SettingsForm_Control_LocationManagement.Size = new Size(609, 541);
-            SettingsForm_Control_LocationManagement.TabIndex = 0;
-            // 
-            // SettingsForm_Control_ItemTypeManagement
-            // 
-            SettingsForm_Control_ItemTypeManagement.Dock = DockStyle.Fill;
-            SettingsForm_Control_ItemTypeManagement.Location = new Point(0, 0);
-            SettingsForm_Control_ItemTypeManagement.Name = "SettingsForm_Control_ItemTypeManagement";
-            SettingsForm_Control_ItemTypeManagement.Size = new Size(609, 541);
-            SettingsForm_Control_ItemTypeManagement.TabIndex = 0;
             ((System.ComponentModel.ISupportInitialize)SettingsForm_SplitContainer_Main).BeginInit();
             SettingsForm_SplitContainer_Main.Panel1.SuspendLayout();
             SettingsForm_SplitContainer_Main.Panel2.SuspendLayout();
@@ -149,6 +69,16 @@
             SettingsForm_TableLayout_Right.SuspendLayout();
             SettingsForm_StatusStrip.SuspendLayout();
             SettingsForm_Panel_Right.SuspendLayout();
+            SettingsForm_Panel_Database.SuspendLayout();
+            SettingsForm_Panel_Shortcuts.SuspendLayout();
+            SettingsForm_Panel_About.SuspendLayout();
+            SettingsForm_Panel_PartNumbers.SuspendLayout();
+            SettingsForm_Panel_AddOperation.SuspendLayout();
+            SettingsForm_Panel_AddLocation.SuspendLayout();
+            SettingsForm_Panel_AddItemType.SuspendLayout();
+            SettingsForm_Panel_AddUser.SuspendLayout();
+            SettingsForm_Panel_Theme.SuspendLayout();
+            SettingsForm_Panel_Home.SuspendLayout();
             SuspendLayout();
             // 
             // SettingsForm_TreeView_Category
@@ -247,61 +177,110 @@
             // 
             SettingsForm_Panel_Database.AutoSize = true;
             SettingsForm_Panel_Database.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            SettingsForm_Panel_Database.Controls.Add(SettingsForm_Control_Database);
             SettingsForm_Panel_Database.Dock = DockStyle.Fill;
             SettingsForm_Panel_Database.Location = new Point(3, 3);
             SettingsForm_Panel_Database.Name = "SettingsForm_Panel_Database";
             SettingsForm_Panel_Database.Size = new Size(609, 541);
             SettingsForm_Panel_Database.TabIndex = 41;
             SettingsForm_Panel_Database.Visible = false;
-            SettingsForm_Panel_Database.Controls.Add(SettingsForm_Control_Database);
+            // 
+            // SettingsForm_Control_Database
+            // 
+            SettingsForm_Control_Database.AutoSize = true;
+            SettingsForm_Control_Database.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            SettingsForm_Control_Database.BackColor = SystemColors.Control;
+            SettingsForm_Control_Database.Dock = DockStyle.Fill;
+            SettingsForm_Control_Database.Location = new Point(0, 0);
+            SettingsForm_Control_Database.Name = "SettingsForm_Control_Database";
+            SettingsForm_Control_Database.Size = new Size(609, 541);
+            SettingsForm_Control_Database.TabIndex = 0;
             // 
             // SettingsForm_Panel_Shortcuts
             // 
             SettingsForm_Panel_Shortcuts.AutoSize = true;
             SettingsForm_Panel_Shortcuts.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            SettingsForm_Panel_Shortcuts.Controls.Add(SettingsForm_Control_Shortcuts);
             SettingsForm_Panel_Shortcuts.Dock = DockStyle.Fill;
             SettingsForm_Panel_Shortcuts.Location = new Point(3, 3);
             SettingsForm_Panel_Shortcuts.Name = "SettingsForm_Panel_Shortcuts";
             SettingsForm_Panel_Shortcuts.Size = new Size(609, 541);
             SettingsForm_Panel_Shortcuts.TabIndex = 42;
             SettingsForm_Panel_Shortcuts.Visible = false;
-            SettingsForm_Panel_Shortcuts.Controls.Add(SettingsForm_Control_Shortcuts);
+            // 
+            // SettingsForm_Control_Shortcuts
+            // 
+            SettingsForm_Control_Shortcuts.AutoSize = true;
+            SettingsForm_Control_Shortcuts.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            SettingsForm_Control_Shortcuts.Dock = DockStyle.Fill;
+            SettingsForm_Control_Shortcuts.Location = new Point(0, 0);
+            SettingsForm_Control_Shortcuts.Name = "SettingsForm_Control_Shortcuts";
+            SettingsForm_Control_Shortcuts.Size = new Size(609, 541);
+            SettingsForm_Control_Shortcuts.TabIndex = 0;
             // 
             // SettingsForm_Panel_About
             // 
             SettingsForm_Panel_About.AutoSize = true;
             SettingsForm_Panel_About.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            SettingsForm_Panel_About.Controls.Add(SettingsForm_Control_About);
             SettingsForm_Panel_About.Dock = DockStyle.Fill;
             SettingsForm_Panel_About.Location = new Point(3, 3);
             SettingsForm_Panel_About.Name = "SettingsForm_Panel_About";
             SettingsForm_Panel_About.Size = new Size(609, 541);
             SettingsForm_Panel_About.TabIndex = 43;
             SettingsForm_Panel_About.Visible = false;
-            SettingsForm_Panel_About.Controls.Add(SettingsForm_Control_About);
+            // 
+            // SettingsForm_Control_About
+            // 
+            SettingsForm_Control_About.Dock = DockStyle.Fill;
+            SettingsForm_Control_About.Location = new Point(0, 0);
+            SettingsForm_Control_About.Name = "SettingsForm_Control_About";
+            SettingsForm_Control_About.Size = new Size(609, 541);
+            SettingsForm_Control_About.TabIndex = 0;
             // 
             // SettingsForm_Panel_PartNumbers
             // 
             SettingsForm_Panel_PartNumbers.AutoSize = true;
             SettingsForm_Panel_PartNumbers.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            SettingsForm_Panel_PartNumbers.Controls.Add(SettingsForm_Control_PartManagement);
             SettingsForm_Panel_PartNumbers.Dock = DockStyle.Fill;
             SettingsForm_Panel_PartNumbers.Location = new Point(3, 3);
             SettingsForm_Panel_PartNumbers.Name = "SettingsForm_Panel_PartNumbers";
             SettingsForm_Panel_PartNumbers.Size = new Size(609, 541);
             SettingsForm_Panel_PartNumbers.TabIndex = 44;
             SettingsForm_Panel_PartNumbers.Visible = false;
-            SettingsForm_Panel_PartNumbers.Controls.Add(SettingsForm_Control_PartManagement);
+            // 
+            // SettingsForm_Control_PartManagement
+            // 
+            SettingsForm_Control_PartManagement.AutoSize = true;
+            SettingsForm_Control_PartManagement.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            SettingsForm_Control_PartManagement.Dock = DockStyle.Fill;
+            SettingsForm_Control_PartManagement.Location = new Point(0, 0);
+            SettingsForm_Control_PartManagement.Name = "SettingsForm_Control_PartManagement";
+            SettingsForm_Control_PartManagement.Size = new Size(609, 541);
+            SettingsForm_Control_PartManagement.TabIndex = 0;
             // 
             // SettingsForm_Panel_AddOperation
             // 
             SettingsForm_Panel_AddOperation.AutoSize = true;
             SettingsForm_Panel_AddOperation.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            SettingsForm_Panel_AddOperation.Controls.Add(SettingsForm_Control_OperationManagement);
             SettingsForm_Panel_AddOperation.Dock = DockStyle.Fill;
             SettingsForm_Panel_AddOperation.Location = new Point(3, 3);
             SettingsForm_Panel_AddOperation.Name = "SettingsForm_Panel_AddOperation";
             SettingsForm_Panel_AddOperation.Size = new Size(609, 541);
             SettingsForm_Panel_AddOperation.TabIndex = 47;
             SettingsForm_Panel_AddOperation.Visible = false;
-            SettingsForm_Panel_AddOperation.Controls.Add(SettingsForm_Control_OperationManagement);
+            // 
+            // SettingsForm_Control_OperationManagement
+            // 
+            SettingsForm_Control_OperationManagement.AutoSize = true;
+            SettingsForm_Control_OperationManagement.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            SettingsForm_Control_OperationManagement.Dock = DockStyle.Fill;
+            SettingsForm_Control_OperationManagement.Location = new Point(0, 0);
+            SettingsForm_Control_OperationManagement.Name = "SettingsForm_Control_OperationManagement";
+            SettingsForm_Control_OperationManagement.Size = new Size(609, 541);
+            SettingsForm_Control_OperationManagement.TabIndex = 0;
             // 
             // SettingsForm_Panel_EditOperation
             // 
@@ -329,25 +308,45 @@
             // 
             SettingsForm_Panel_AddLocation.AutoSize = true;
             SettingsForm_Panel_AddLocation.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            SettingsForm_Panel_AddLocation.Controls.Add(SettingsForm_Control_LocationManagement);
             SettingsForm_Panel_AddLocation.Dock = DockStyle.Fill;
             SettingsForm_Panel_AddLocation.Location = new Point(3, 3);
             SettingsForm_Panel_AddLocation.Name = "SettingsForm_Panel_AddLocation";
             SettingsForm_Panel_AddLocation.Size = new Size(609, 541);
             SettingsForm_Panel_AddLocation.TabIndex = 50;
             SettingsForm_Panel_AddLocation.Visible = false;
-            SettingsForm_Panel_AddLocation.Controls.Add(SettingsForm_Control_LocationManagement);
+            // 
+            // SettingsForm_Control_LocationManagement
+            // 
+            SettingsForm_Control_LocationManagement.AutoSize = true;
+            SettingsForm_Control_LocationManagement.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            SettingsForm_Control_LocationManagement.Dock = DockStyle.Fill;
+            SettingsForm_Control_LocationManagement.Location = new Point(0, 0);
+            SettingsForm_Control_LocationManagement.Name = "SettingsForm_Control_LocationManagement";
+            SettingsForm_Control_LocationManagement.Size = new Size(609, 541);
+            SettingsForm_Control_LocationManagement.TabIndex = 0;
             // 
             // SettingsForm_Panel_AddItemType
             // 
             SettingsForm_Panel_AddItemType.AutoSize = true;
             SettingsForm_Panel_AddItemType.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            SettingsForm_Panel_AddItemType.Controls.Add(SettingsForm_Control_ItemTypeManagement);
             SettingsForm_Panel_AddItemType.Dock = DockStyle.Fill;
             SettingsForm_Panel_AddItemType.Location = new Point(3, 3);
             SettingsForm_Panel_AddItemType.Name = "SettingsForm_Panel_AddItemType";
             SettingsForm_Panel_AddItemType.Size = new Size(609, 541);
             SettingsForm_Panel_AddItemType.TabIndex = 53;
             SettingsForm_Panel_AddItemType.Visible = false;
-            SettingsForm_Panel_AddItemType.Controls.Add(SettingsForm_Control_ItemTypeManagement);
+            // 
+            // SettingsForm_Control_ItemTypeManagement
+            // 
+            SettingsForm_Control_ItemTypeManagement.AutoSize = true;
+            SettingsForm_Control_ItemTypeManagement.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            SettingsForm_Control_ItemTypeManagement.Dock = DockStyle.Fill;
+            SettingsForm_Control_ItemTypeManagement.Location = new Point(0, 0);
+            SettingsForm_Control_ItemTypeManagement.Name = "SettingsForm_Control_ItemTypeManagement";
+            SettingsForm_Control_ItemTypeManagement.Size = new Size(609, 541);
+            SettingsForm_Control_ItemTypeManagement.TabIndex = 0;
             // 
             // SettingsForm_Panel_EditItemType
             // 
@@ -375,13 +374,23 @@
             // 
             SettingsForm_Panel_AddUser.AutoSize = true;
             SettingsForm_Panel_AddUser.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            SettingsForm_Panel_AddUser.Controls.Add(SettingsForm_Control_UserManagement);
             SettingsForm_Panel_AddUser.Dock = DockStyle.Fill;
             SettingsForm_Panel_AddUser.Location = new Point(3, 3);
             SettingsForm_Panel_AddUser.Name = "SettingsForm_Panel_AddUser";
             SettingsForm_Panel_AddUser.Size = new Size(609, 541);
             SettingsForm_Panel_AddUser.TabIndex = 56;
             SettingsForm_Panel_AddUser.Visible = false;
-            SettingsForm_Panel_AddUser.Controls.Add(SettingsForm_Control_UserManagement);
+            // 
+            // SettingsForm_Control_UserManagement
+            // 
+            SettingsForm_Control_UserManagement.AutoSize = true;
+            SettingsForm_Control_UserManagement.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            SettingsForm_Control_UserManagement.Dock = DockStyle.Fill;
+            SettingsForm_Control_UserManagement.Location = new Point(0, 0);
+            SettingsForm_Control_UserManagement.Name = "SettingsForm_Control_UserManagement";
+            SettingsForm_Control_UserManagement.Size = new Size(609, 541);
+            SettingsForm_Control_UserManagement.TabIndex = 0;
             // 
             // SettingsForm_Panel_EditUser
             // 
@@ -409,23 +418,43 @@
             // 
             SettingsForm_Panel_Theme.AutoSize = true;
             SettingsForm_Panel_Theme.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            SettingsForm_Panel_Theme.Controls.Add(SettingsForm_Control_Theme);
             SettingsForm_Panel_Theme.Dock = DockStyle.Fill;
             SettingsForm_Panel_Theme.Location = new Point(3, 3);
             SettingsForm_Panel_Theme.Name = "SettingsForm_Panel_Theme";
             SettingsForm_Panel_Theme.Size = new Size(609, 541);
             SettingsForm_Panel_Theme.TabIndex = 40;
-            SettingsForm_Panel_Theme.Controls.Add(SettingsForm_Control_Theme);
+            // 
+            // SettingsForm_Control_Theme
+            // 
+            SettingsForm_Control_Theme.AutoSize = true;
+            SettingsForm_Control_Theme.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            SettingsForm_Control_Theme.Dock = DockStyle.Fill;
+            SettingsForm_Control_Theme.Location = new Point(0, 0);
+            SettingsForm_Control_Theme.Name = "SettingsForm_Control_Theme";
+            SettingsForm_Control_Theme.Size = new Size(609, 541);
+            SettingsForm_Control_Theme.TabIndex = 0;
             // 
             // SettingsForm_Panel_Home
             // 
             SettingsForm_Panel_Home.AutoSize = true;
             SettingsForm_Panel_Home.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            SettingsForm_Panel_Home.Controls.Add(SettingsForm_Control_Home);
             SettingsForm_Panel_Home.Dock = DockStyle.Fill;
             SettingsForm_Panel_Home.Location = new Point(3, 3);
             SettingsForm_Panel_Home.Name = "SettingsForm_Panel_Home";
             SettingsForm_Panel_Home.Size = new Size(609, 541);
             SettingsForm_Panel_Home.TabIndex = 50;
-            SettingsForm_Panel_Home.Controls.Add(SettingsForm_Control_Home);
+            // 
+            // SettingsForm_Control_Home
+            // 
+            SettingsForm_Control_Home.AutoSize = true;
+            SettingsForm_Control_Home.BackColor = SystemColors.Control;
+            SettingsForm_Control_Home.Dock = DockStyle.Fill;
+            SettingsForm_Control_Home.Location = new Point(0, 0);
+            SettingsForm_Control_Home.Name = "SettingsForm_Control_Home";
+            SettingsForm_Control_Home.Size = new Size(609, 541);
+            SettingsForm_Control_Home.TabIndex = 0;
             // 
             // SettingsForm_Panel_Right_Main
             // 
@@ -482,6 +511,25 @@
             SettingsForm_StatusStrip.PerformLayout();
             SettingsForm_Panel_Right.ResumeLayout(false);
             SettingsForm_Panel_Right.PerformLayout();
+            SettingsForm_Panel_Database.ResumeLayout(false);
+            SettingsForm_Panel_Database.PerformLayout();
+            SettingsForm_Panel_Shortcuts.ResumeLayout(false);
+            SettingsForm_Panel_Shortcuts.PerformLayout();
+            SettingsForm_Panel_About.ResumeLayout(false);
+            SettingsForm_Panel_PartNumbers.ResumeLayout(false);
+            SettingsForm_Panel_PartNumbers.PerformLayout();
+            SettingsForm_Panel_AddOperation.ResumeLayout(false);
+            SettingsForm_Panel_AddOperation.PerformLayout();
+            SettingsForm_Panel_AddLocation.ResumeLayout(false);
+            SettingsForm_Panel_AddLocation.PerformLayout();
+            SettingsForm_Panel_AddItemType.ResumeLayout(false);
+            SettingsForm_Panel_AddItemType.PerformLayout();
+            SettingsForm_Panel_AddUser.ResumeLayout(false);
+            SettingsForm_Panel_AddUser.PerformLayout();
+            SettingsForm_Panel_Theme.ResumeLayout(false);
+            SettingsForm_Panel_Theme.PerformLayout();
+            SettingsForm_Panel_Home.ResumeLayout(false);
+            SettingsForm_Panel_Home.PerformLayout();
             ResumeLayout(false);
         }
 

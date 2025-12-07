@@ -35,8 +35,8 @@ namespace MTM_WIP_Application_Winforms.Forms.Maintenance
             Form_DatabaseMaintenance_TableLayout_Migration = new TableLayoutPanel();
             grpBulkMigration = new GroupBox();
             tableLayoutPanel2 = new TableLayoutPanel();
-            btnMigrateBulk = new Button();
             chkMasterData = new CheckBox();
+            btnMigrateBulk = new Button();
             chkUsers = new CheckBox();
             chkInventory = new CheckBox();
             grpSingleTable = new GroupBox();
@@ -62,12 +62,12 @@ namespace MTM_WIP_Application_Winforms.Forms.Maintenance
             btnConnections = new Button();
             btnCheckHealth = new Button();
             btnOptimize = new Button();
-            txtLog = new RichTextBox();
-            progressBar = new ProgressBar();
             grpVisual = new GroupBox();
             tableLayoutPanelVisual = new TableLayoutPanel();
             btnUpdateUserShifts = new Button();
             btnUpdateUserNames = new Button();
+            txtLog = new RichTextBox();
+            progressBar = new ProgressBar();
             Form_DatabaseMaintenance_TableLayout_Main.SuspendLayout();
             Form_DatabaseMaintenance_TabControl_Main.SuspendLayout();
             tabMigration.SuspendLayout();
@@ -84,6 +84,8 @@ namespace MTM_WIP_Application_Winforms.Forms.Maintenance
             Form_DatabaseMaintenance_TableLayoutPanel_Cleanup.SuspendLayout();
             grpHealth.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
+            grpVisual.SuspendLayout();
+            tableLayoutPanelVisual.SuspendLayout();
             SuspendLayout();
             // 
             // Form_DatabaseMaintenance_TableLayout_Main
@@ -172,6 +174,19 @@ namespace MTM_WIP_Application_Winforms.Forms.Maintenance
             tableLayoutPanel2.Size = new Size(381, 277);
             tableLayoutPanel2.TabIndex = 4;
             // 
+            // chkMasterData
+            // 
+            chkMasterData.AutoSize = true;
+            chkMasterData.CheckAlign = ContentAlignment.BottomCenter;
+            chkMasterData.Dock = DockStyle.Fill;
+            chkMasterData.Location = new Point(3, 3);
+            chkMasterData.Name = "chkMasterData";
+            chkMasterData.Size = new Size(120, 33);
+            chkMasterData.TabIndex = 0;
+            chkMasterData.Text = "Master Data";
+            chkMasterData.TextAlign = ContentAlignment.TopCenter;
+            chkMasterData.UseVisualStyleBackColor = true;
+            // 
             // btnMigrateBulk
             // 
             btnMigrateBulk.AutoSize = true;
@@ -185,19 +200,6 @@ namespace MTM_WIP_Application_Winforms.Forms.Maintenance
             btnMigrateBulk.Text = "Start Bulk Migration";
             btnMigrateBulk.UseVisualStyleBackColor = true;
             btnMigrateBulk.Click += btnMigrateBulk_Click;
-            // 
-            // chkMasterData
-            // 
-            chkMasterData.AutoSize = true;
-            chkMasterData.CheckAlign = ContentAlignment.BottomCenter;
-            chkMasterData.Dock = DockStyle.Fill;
-            chkMasterData.Location = new Point(3, 3);
-            chkMasterData.Name = "chkMasterData";
-            chkMasterData.Size = new Size(120, 33);
-            chkMasterData.TabIndex = 0;
-            chkMasterData.Text = "Master Data";
-            chkMasterData.TextAlign = ContentAlignment.TopCenter;
-            chkMasterData.UseVisualStyleBackColor = true;
             // 
             // chkUsers
             // 
@@ -295,7 +297,6 @@ namespace MTM_WIP_Application_Winforms.Forms.Maintenance
             Form_DatabaseMaintenance_TableLayout_Maintenance.Controls.Add(grpCleanup, 1, 0);
             Form_DatabaseMaintenance_TableLayout_Maintenance.Controls.Add(grpHealth, 2, 0);
             Form_DatabaseMaintenance_TableLayout_Maintenance.Controls.Add(grpVisual, 0, 1);
-            Form_DatabaseMaintenance_TableLayout_Maintenance.SetColumnSpan(grpVisual, 3);
             Form_DatabaseMaintenance_TableLayout_Maintenance.Dock = DockStyle.Fill;
             Form_DatabaseMaintenance_TableLayout_Maintenance.Location = new Point(3, 3);
             Form_DatabaseMaintenance_TableLayout_Maintenance.Name = "Form_DatabaseMaintenance_TableLayout_Maintenance";
@@ -313,7 +314,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Maintenance
             grpBackup.Dock = DockStyle.Fill;
             grpBackup.Location = new Point(3, 3);
             grpBackup.Name = "grpBackup";
-            grpBackup.Size = new Size(321, 299);
+            grpBackup.Size = new Size(321, 207);
             grpBackup.TabIndex = 0;
             grpBackup.TabStop = false;
             grpBackup.Text = "Backup";
@@ -331,7 +332,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Maintenance
             Form_DatabaseMaintenance_TableLayoutPanel_Backup.RowCount = 1;
             Form_DatabaseMaintenance_TableLayoutPanel_Backup.RowStyles.Add(new RowStyle());
             Form_DatabaseMaintenance_TableLayoutPanel_Backup.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            Form_DatabaseMaintenance_TableLayoutPanel_Backup.Size = new Size(315, 277);
+            Form_DatabaseMaintenance_TableLayoutPanel_Backup.Size = new Size(315, 185);
             Form_DatabaseMaintenance_TableLayoutPanel_Backup.TabIndex = 1;
             // 
             // btnBackup
@@ -342,7 +343,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Maintenance
             btnBackup.Location = new Point(40, 40);
             btnBackup.Margin = new Padding(40);
             btnBackup.Name = "btnBackup";
-            btnBackup.Size = new Size(235, 197);
+            btnBackup.Size = new Size(235, 105);
             btnBackup.TabIndex = 0;
             btnBackup.Text = "Backup Database";
             btnBackup.UseVisualStyleBackColor = true;
@@ -356,7 +357,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Maintenance
             grpCleanup.Dock = DockStyle.Fill;
             grpCleanup.Location = new Point(330, 3);
             grpCleanup.Name = "grpCleanup";
-            grpCleanup.Size = new Size(321, 299);
+            grpCleanup.Size = new Size(321, 207);
             grpCleanup.TabIndex = 1;
             grpCleanup.TabStop = false;
             grpCleanup.Text = "Cleanup";
@@ -380,7 +381,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Maintenance
             Form_DatabaseMaintenance_TableLayoutPanel_Cleanup.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
             Form_DatabaseMaintenance_TableLayoutPanel_Cleanup.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
             Form_DatabaseMaintenance_TableLayoutPanel_Cleanup.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            Form_DatabaseMaintenance_TableLayoutPanel_Cleanup.Size = new Size(315, 277);
+            Form_DatabaseMaintenance_TableLayoutPanel_Cleanup.Size = new Size(315, 185);
             Form_DatabaseMaintenance_TableLayoutPanel_Cleanup.TabIndex = 4;
             // 
             // btnArchiveLogs
@@ -388,10 +389,10 @@ namespace MTM_WIP_Application_Winforms.Forms.Maintenance
             btnArchiveLogs.AutoSize = true;
             btnArchiveLogs.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             btnArchiveLogs.Dock = DockStyle.Fill;
-            btnArchiveLogs.Location = new Point(177, 112);
+            btnArchiveLogs.Location = new Point(177, 81);
             btnArchiveLogs.Margin = new Padding(20);
             btnArchiveLogs.Name = "btnArchiveLogs";
-            btnArchiveLogs.Size = new Size(118, 52);
+            btnArchiveLogs.Size = new Size(118, 21);
             btnArchiveLogs.TabIndex = 2;
             btnArchiveLogs.Text = "Archive && Clear Logs";
             btnArchiveLogs.UseVisualStyleBackColor = true;
@@ -406,7 +407,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Maintenance
             btnCleanTestData.Location = new Point(20, 20);
             btnCleanTestData.Margin = new Padding(20);
             btnCleanTestData.Name = "btnCleanTestData";
-            btnCleanTestData.Size = new Size(275, 52);
+            btnCleanTestData.Size = new Size(275, 21);
             btnCleanTestData.TabIndex = 0;
             btnCleanTestData.Text = "Dump Test Data";
             btnCleanTestData.UseVisualStyleBackColor = true;
@@ -419,10 +420,10 @@ namespace MTM_WIP_Application_Winforms.Forms.Maintenance
             btnFactoryReset.BackColor = Color.MistyRose;
             Form_DatabaseMaintenance_TableLayoutPanel_Cleanup.SetColumnSpan(btnFactoryReset, 2);
             btnFactoryReset.Dock = DockStyle.Fill;
-            btnFactoryReset.Location = new Point(20, 204);
+            btnFactoryReset.Location = new Point(20, 142);
             btnFactoryReset.Margin = new Padding(20);
             btnFactoryReset.Name = "btnFactoryReset";
-            btnFactoryReset.Size = new Size(275, 53);
+            btnFactoryReset.Size = new Size(275, 23);
             btnFactoryReset.TabIndex = 3;
             btnFactoryReset.Text = "Factory Reset (Wipe Inventory)";
             btnFactoryReset.UseVisualStyleBackColor = false;
@@ -433,10 +434,10 @@ namespace MTM_WIP_Application_Winforms.Forms.Maintenance
             btnTruncateLogs.AutoSize = true;
             btnTruncateLogs.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             btnTruncateLogs.Dock = DockStyle.Fill;
-            btnTruncateLogs.Location = new Point(20, 112);
+            btnTruncateLogs.Location = new Point(20, 81);
             btnTruncateLogs.Margin = new Padding(20);
             btnTruncateLogs.Name = "btnTruncateLogs";
-            btnTruncateLogs.Size = new Size(117, 52);
+            btnTruncateLogs.Size = new Size(117, 21);
             btnTruncateLogs.TabIndex = 1;
             btnTruncateLogs.Text = "Clear Error Logs";
             btnTruncateLogs.UseVisualStyleBackColor = true;
@@ -450,13 +451,121 @@ namespace MTM_WIP_Application_Winforms.Forms.Maintenance
             grpHealth.Dock = DockStyle.Fill;
             grpHealth.Location = new Point(657, 3);
             grpHealth.Name = "grpHealth";
-            grpHealth.Size = new Size(323, 299);
+            grpHealth.Size = new Size(323, 207);
             grpHealth.TabIndex = 2;
             grpHealth.TabStop = false;
             grpHealth.Text = "Health && Diagnostics";
             // 
+            // tableLayoutPanel1
+            // 
+            tableLayoutPanel1.AutoSize = true;
+            tableLayoutPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            tableLayoutPanel1.ColumnCount = 2;
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel1.Controls.Add(btnSchema, 1, 2);
+            tableLayoutPanel1.Controls.Add(btnIntegrity, 1, 1);
+            tableLayoutPanel1.Controls.Add(btnTableSizes, 0, 2);
+            tableLayoutPanel1.Controls.Add(btnConnections, 1, 0);
+            tableLayoutPanel1.Controls.Add(btnCheckHealth, 0, 1);
+            tableLayoutPanel1.Controls.Add(btnOptimize, 0, 0);
+            tableLayoutPanel1.Dock = DockStyle.Fill;
+            tableLayoutPanel1.Location = new Point(3, 19);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 3;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
+            tableLayoutPanel1.Size = new Size(317, 185);
+            tableLayoutPanel1.TabIndex = 1;
+            // 
+            // btnSchema
+            // 
+            btnSchema.AutoSize = true;
+            btnSchema.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            btnSchema.Dock = DockStyle.Fill;
+            btnSchema.Location = new Point(178, 142);
+            btnSchema.Margin = new Padding(20);
+            btnSchema.Name = "btnSchema";
+            btnSchema.Size = new Size(119, 23);
+            btnSchema.TabIndex = 5;
+            btnSchema.Text = "Validate Schema";
+            btnSchema.UseVisualStyleBackColor = true;
+            btnSchema.Click += btnSchema_Click;
+            // 
+            // btnIntegrity
+            // 
+            btnIntegrity.AutoSize = true;
+            btnIntegrity.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            btnIntegrity.Dock = DockStyle.Fill;
+            btnIntegrity.Location = new Point(178, 81);
+            btnIntegrity.Margin = new Padding(20);
+            btnIntegrity.Name = "btnIntegrity";
+            btnIntegrity.Size = new Size(119, 21);
+            btnIntegrity.TabIndex = 3;
+            btnIntegrity.Text = "Verify Integrity";
+            btnIntegrity.UseVisualStyleBackColor = true;
+            btnIntegrity.Click += btnIntegrity_Click;
+            // 
+            // btnTableSizes
+            // 
+            btnTableSizes.AutoSize = true;
+            btnTableSizes.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            btnTableSizes.Dock = DockStyle.Fill;
+            btnTableSizes.Location = new Point(20, 142);
+            btnTableSizes.Margin = new Padding(20);
+            btnTableSizes.Name = "btnTableSizes";
+            btnTableSizes.Size = new Size(118, 23);
+            btnTableSizes.TabIndex = 2;
+            btnTableSizes.Text = "Analyze Table Sizes";
+            btnTableSizes.UseVisualStyleBackColor = true;
+            btnTableSizes.Click += btnTableSizes_Click;
+            // 
+            // btnConnections
+            // 
+            btnConnections.AutoSize = true;
+            btnConnections.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            btnConnections.Dock = DockStyle.Fill;
+            btnConnections.Location = new Point(178, 20);
+            btnConnections.Margin = new Padding(20);
+            btnConnections.Name = "btnConnections";
+            btnConnections.Size = new Size(119, 21);
+            btnConnections.TabIndex = 4;
+            btnConnections.Text = "Monitor Connections";
+            btnConnections.UseVisualStyleBackColor = true;
+            btnConnections.Click += btnConnections_Click;
+            // 
+            // btnCheckHealth
+            // 
+            btnCheckHealth.AutoSize = true;
+            btnCheckHealth.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            btnCheckHealth.Dock = DockStyle.Fill;
+            btnCheckHealth.Location = new Point(20, 81);
+            btnCheckHealth.Margin = new Padding(20);
+            btnCheckHealth.Name = "btnCheckHealth";
+            btnCheckHealth.Size = new Size(118, 21);
+            btnCheckHealth.TabIndex = 1;
+            btnCheckHealth.Text = "Check Table Rows";
+            btnCheckHealth.UseVisualStyleBackColor = true;
+            btnCheckHealth.Click += btnCheckHealth_Click;
+            // 
+            // btnOptimize
+            // 
+            btnOptimize.AutoSize = true;
+            btnOptimize.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            btnOptimize.Dock = DockStyle.Fill;
+            btnOptimize.Location = new Point(20, 20);
+            btnOptimize.Margin = new Padding(20);
+            btnOptimize.Name = "btnOptimize";
+            btnOptimize.Size = new Size(118, 21);
+            btnOptimize.TabIndex = 0;
+            btnOptimize.Text = "Optimize Tables";
+            btnOptimize.UseVisualStyleBackColor = true;
+            btnOptimize.Click += btnOptimize_Click;
+            // 
             // grpVisual
             // 
+            Form_DatabaseMaintenance_TableLayout_Maintenance.SetColumnSpan(grpVisual, 3);
             grpVisual.Controls.Add(tableLayoutPanelVisual);
             grpVisual.Dock = DockStyle.Fill;
             grpVisual.Location = new Point(3, 216);
@@ -504,113 +613,6 @@ namespace MTM_WIP_Application_Winforms.Forms.Maintenance
             btnUpdateUserNames.Text = "Update User Names (From Visual)";
             btnUpdateUserNames.UseVisualStyleBackColor = true;
             btnUpdateUserNames.Click += btnUpdateUserNames_Click;
-            // 
-            // tableLayoutPanel1
-            // 
-            tableLayoutPanel1.AutoSize = true;
-            tableLayoutPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            tableLayoutPanel1.ColumnCount = 2;
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tableLayoutPanel1.Controls.Add(btnSchema, 1, 2);
-            tableLayoutPanel1.Controls.Add(btnIntegrity, 1, 1);
-            tableLayoutPanel1.Controls.Add(btnTableSizes, 0, 2);
-            tableLayoutPanel1.Controls.Add(btnConnections, 1, 0);
-            tableLayoutPanel1.Controls.Add(btnCheckHealth, 0, 1);
-            tableLayoutPanel1.Controls.Add(btnOptimize, 0, 0);
-            tableLayoutPanel1.Dock = DockStyle.Fill;
-            tableLayoutPanel1.Location = new Point(3, 19);
-            tableLayoutPanel1.Name = "tableLayoutPanel1";
-            tableLayoutPanel1.RowCount = 3;
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
-            tableLayoutPanel1.Size = new Size(317, 277);
-            tableLayoutPanel1.TabIndex = 1;
-            // 
-            // btnSchema
-            // 
-            btnSchema.AutoSize = true;
-            btnSchema.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            btnSchema.Dock = DockStyle.Fill;
-            btnSchema.Location = new Point(178, 204);
-            btnSchema.Margin = new Padding(20);
-            btnSchema.Name = "btnSchema";
-            btnSchema.Size = new Size(119, 53);
-            btnSchema.TabIndex = 5;
-            btnSchema.Text = "Validate Schema";
-            btnSchema.UseVisualStyleBackColor = true;
-            btnSchema.Click += btnSchema_Click;
-            // 
-            // btnIntegrity
-            // 
-            btnIntegrity.AutoSize = true;
-            btnIntegrity.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            btnIntegrity.Dock = DockStyle.Fill;
-            btnIntegrity.Location = new Point(178, 112);
-            btnIntegrity.Margin = new Padding(20);
-            btnIntegrity.Name = "btnIntegrity";
-            btnIntegrity.Size = new Size(119, 52);
-            btnIntegrity.TabIndex = 3;
-            btnIntegrity.Text = "Verify Integrity";
-            btnIntegrity.UseVisualStyleBackColor = true;
-            btnIntegrity.Click += btnIntegrity_Click;
-            // 
-            // btnTableSizes
-            // 
-            btnTableSizes.AutoSize = true;
-            btnTableSizes.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            btnTableSizes.Dock = DockStyle.Fill;
-            btnTableSizes.Location = new Point(20, 204);
-            btnTableSizes.Margin = new Padding(20);
-            btnTableSizes.Name = "btnTableSizes";
-            btnTableSizes.Size = new Size(118, 53);
-            btnTableSizes.TabIndex = 2;
-            btnTableSizes.Text = "Analyze Table Sizes";
-            btnTableSizes.UseVisualStyleBackColor = true;
-            btnTableSizes.Click += btnTableSizes_Click;
-            // 
-            // btnConnections
-            // 
-            btnConnections.AutoSize = true;
-            btnConnections.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            btnConnections.Dock = DockStyle.Fill;
-            btnConnections.Location = new Point(178, 20);
-            btnConnections.Margin = new Padding(20);
-            btnConnections.Name = "btnConnections";
-            btnConnections.Size = new Size(119, 52);
-            btnConnections.TabIndex = 4;
-            btnConnections.Text = "Monitor Connections";
-            btnConnections.UseVisualStyleBackColor = true;
-            btnConnections.Click += btnConnections_Click;
-            // 
-            // btnCheckHealth
-            // 
-            btnCheckHealth.AutoSize = true;
-            btnCheckHealth.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            btnCheckHealth.Dock = DockStyle.Fill;
-            btnCheckHealth.Location = new Point(20, 112);
-            btnCheckHealth.Margin = new Padding(20);
-            btnCheckHealth.Name = "btnCheckHealth";
-            btnCheckHealth.Size = new Size(118, 52);
-            btnCheckHealth.TabIndex = 1;
-            btnCheckHealth.Text = "Check Table Rows";
-            btnCheckHealth.UseVisualStyleBackColor = true;
-            btnCheckHealth.Click += btnCheckHealth_Click;
-            // 
-            // btnOptimize
-            // 
-            btnOptimize.AutoSize = true;
-            btnOptimize.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            btnOptimize.Dock = DockStyle.Fill;
-            btnOptimize.Location = new Point(20, 20);
-            btnOptimize.Margin = new Padding(20);
-            btnOptimize.Name = "btnOptimize";
-            btnOptimize.Size = new Size(118, 52);
-            btnOptimize.TabIndex = 0;
-            btnOptimize.Text = "Optimize Tables";
-            btnOptimize.UseVisualStyleBackColor = true;
-            btnOptimize.Click += btnOptimize_Click;
             // 
             // txtLog
             // 
@@ -666,6 +668,8 @@ namespace MTM_WIP_Application_Winforms.Forms.Maintenance
             grpHealth.PerformLayout();
             tableLayoutPanel1.ResumeLayout(false);
             tableLayoutPanel1.PerformLayout();
+            grpVisual.ResumeLayout(false);
+            tableLayoutPanelVisual.ResumeLayout(false);
             ResumeLayout(false);
 
         }

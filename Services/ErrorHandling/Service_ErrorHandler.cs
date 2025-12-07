@@ -260,7 +260,9 @@ internal static class Service_ErrorHandler
                 ["UserMessage"] = message
             };
 
-            HandleException(validationEx, Enum_ErrorSeverity.Low, null, contextData, callerName, controlName);
+            MessageBox.Show(message, "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            LoggingUtility.LogApplicationError(validationEx);
+            LogErrorContext(callerName, controlName, contextData);
         }
         catch (Exception ex)
         {

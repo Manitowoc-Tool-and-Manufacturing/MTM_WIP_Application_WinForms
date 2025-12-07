@@ -31,13 +31,6 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_ReceivingAnalytics_Label_LegendTitle = new Label();
             Control_ReceivingAnalytics_Panel_DataGridView = new Panel();
             Control_ReceivingAnalytics_DataGridView_Results = new DataGridView();
-            Control_ReceivingAnalytics_TableLayoutPanel_Buttons = new TableLayoutPanel();
-            button1 = new Button();
-            Control_ReceivingAnalytics_Button_Search = new Button();
-            Control_ReceivingAnalytics_Button_Analytics = new Button();
-            Control_ReceivingAnalytics_CheckBox_ShowOutsideService = new CheckBox();
-            Control_ReceivingAnalytics_CheckBox_ShowConsignment = new CheckBox();
-            Control_ReceivingAnalytics_CheckBox_ShowInternal = new CheckBox();
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PartNumber = new MTM_WIP_Application_Winforms.Components.Shared.Component_SuggestionTextBoxWithLabel();
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Supplier = new MTM_WIP_Application_Winforms.Components.Shared.Component_SuggestionTextBoxWithLabel();
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Carrier = new MTM_WIP_Application_Winforms.Components.Shared.Component_SuggestionTextBoxWithLabel();
@@ -48,9 +41,6 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_ReceivingAnalytics_CheckBox_ShowOpen = new CheckBox();
             Control_ReceivingAnalytics_CheckBox_ShowOnTime = new CheckBox();
             Control_ReceivingAnalytics_CheckBox_ShowLate = new CheckBox();
-            Control_ReceivingAnalytics_CheckBox_ShowWithPartID = new CheckBox();
-            Control_ReceivingAnalytics_CheckBox_ShowMMC = new CheckBox();
-            Control_ReceivingAnalytics_CheckBox_ShowMMF = new CheckBox();
             Control_ReceivingAnalytics_TableLayoutPanel_DateRange = new TableLayoutPanel();
             Control_ReceivingAnalytics_DateTimePicker_StartDate = new DateTimePicker();
             Control_ReceivingAnalytics_Label_DateRangeTo = new Label();
@@ -64,6 +54,11 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_ReceivingAnalytics_Panel_Results = new Panel();
             Control_ReceivingAnalytics_TableLayoutPanel_Results = new TableLayoutPanel();
             tableLayoutPanel1 = new TableLayoutPanel();
+            Control_ReceivingAnalytics_Panel_Buttons = new Panel();
+            Control_ReceivingAnalytics_TableLayoutPanel_Buttons = new TableLayoutPanel();
+            button1 = new Button();
+            Control_ReceivingAnalytics_Button_Search = new Button();
+            Control_ReceivingAnalytics_Button_Analytics = new Button();
             tableLayoutPanel2 = new TableLayoutPanel();
             Control_ReceivingAnalytics_TableLayoutPanel_POStatesMain = new TableLayoutPanel();
             Control_ReceivingAnalytics_Panel_POStatesHeader = new Panel();
@@ -80,13 +75,6 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_ReceivingAnalytics_Panel_DeliveryStatesContents = new Panel();
             Control_ReceivingAnalytics_TableLayoutPanel_DeliveryStatesContents = new TableLayoutPanel();
             tableLayoutPanel3 = new TableLayoutPanel();
-            Control_ReceivingAnalytics_Panel_OutsideScopeMain = new TableLayoutPanel();
-            Control_ReceivingAnalytics_Panel_OutsideScopeHeader = new Panel();
-            Control_ReceivingAnalytics_TableLayoutPanel_OutsideScopeHeader = new TableLayoutPanel();
-            Control_ReceivingAnalytics_Button_OutsideScopeHeader = new Button();
-            Control_ReceivingAnalytics_Label_OutsideScopeHeader = new Label();
-            Control_ReceivingAnalytics_Panel_OutsideScopeContents = new Panel();
-            Control_ReceivingAnalytics_TableLayoutPanel_OutsideScopeContents = new TableLayoutPanel();
             Control_ReceivingAnalytics_Panel_ReceivingScopeMain = new TableLayoutPanel();
             Control_ReceivingAnalytics_Panel_ReceivingScopeHeader = new Panel();
             Control_ReceivingAnalytics_TableLayoutPanel_ReceivingScopeHeader = new TableLayoutPanel();
@@ -94,6 +82,10 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_ReceivingAnalytics_Label_ReceivingScopeHeader = new Label();
             Control_ReceivingAnalytics_Panel_ReceivingScopeContents = new Panel();
             Control_ReceivingAnalytics_TableLayoutPanel_ReceivingScopeContents = new TableLayoutPanel();
+            Control_ReceivingAnalytics_CheckBox_ShowOutsideService = new CheckBox();
+            Control_ReceivingAnalytics_CheckBox_ShowWithPartID = new CheckBox();
+            Control_ReceivingAnalytics_CheckBox_ShowMMC = new CheckBox();
+            Control_ReceivingAnalytics_CheckBox_ShowMMF = new CheckBox();
             tableLayoutPanel4 = new TableLayoutPanel();
             Control_ReceivingAnalytics_TableLayoutPanel_DateRangeMain = new TableLayoutPanel();
             Control_ReceivingAnalytics_Panel_DateRangeHeader = new Panel();
@@ -101,7 +93,6 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_ReceivingAnalytics_Button_DateRangeHeader = new Button();
             Control_ReceivingAnalytics_Panel_DateRangeContents = new Panel();
             Control_ReceivingAnalytics_TableLayoutPanel_DateRangeContents = new TableLayoutPanel();
-            Control_ReceivingAnalytics_Panel_Buttons = new Panel();
             tableLayoutPanel5 = new TableLayoutPanel();
             Control_ReceivingAnalytics_TableLayoutPanel_FiltersMain = new TableLayoutPanel();
             Control_ReceivingAnalytics_Panel_FiltersContents = new Panel();
@@ -114,13 +105,14 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_ReceivingAnalytics_TableLayoutPanel_Legend.SuspendLayout();
             Control_ReceivingAnalytics_Panel_DataGridView.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)Control_ReceivingAnalytics_DataGridView_Results).BeginInit();
-            Control_ReceivingAnalytics_TableLayoutPanel_Buttons.SuspendLayout();
             Control_ReceivingAnalytics_TableLayoutPanel_DateRange.SuspendLayout();
             Control_ReceivingAnalytics_TableLayoutPanel_WeekButtons.SuspendLayout();
             Control_ReceivingAnalytics_TableLayoutPanel_Main.SuspendLayout();
             Control_ReceivingAnalytics_Panel_Results.SuspendLayout();
             Control_ReceivingAnalytics_TableLayoutPanel_Results.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
+            Control_ReceivingAnalytics_Panel_Buttons.SuspendLayout();
+            Control_ReceivingAnalytics_TableLayoutPanel_Buttons.SuspendLayout();
             tableLayoutPanel2.SuspendLayout();
             Control_ReceivingAnalytics_TableLayoutPanel_POStatesMain.SuspendLayout();
             Control_ReceivingAnalytics_Panel_POStatesHeader.SuspendLayout();
@@ -133,11 +125,6 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_ReceivingAnalytics_Panel_DeliveryStatesContents.SuspendLayout();
             Control_ReceivingAnalytics_TableLayoutPanel_DeliveryStatesContents.SuspendLayout();
             tableLayoutPanel3.SuspendLayout();
-            Control_ReceivingAnalytics_Panel_OutsideScopeMain.SuspendLayout();
-            Control_ReceivingAnalytics_Panel_OutsideScopeHeader.SuspendLayout();
-            Control_ReceivingAnalytics_TableLayoutPanel_OutsideScopeHeader.SuspendLayout();
-            Control_ReceivingAnalytics_Panel_OutsideScopeContents.SuspendLayout();
-            Control_ReceivingAnalytics_TableLayoutPanel_OutsideScopeContents.SuspendLayout();
             Control_ReceivingAnalytics_Panel_ReceivingScopeMain.SuspendLayout();
             Control_ReceivingAnalytics_Panel_ReceivingScopeHeader.SuspendLayout();
             Control_ReceivingAnalytics_TableLayoutPanel_ReceivingScopeHeader.SuspendLayout();
@@ -149,7 +136,6 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_ReceivingAnalytics_TableLayoutPanel_DateRangeHeader.SuspendLayout();
             Control_ReceivingAnalytics_Panel_DateRangeContents.SuspendLayout();
             Control_ReceivingAnalytics_TableLayoutPanel_DateRangeContents.SuspendLayout();
-            Control_ReceivingAnalytics_Panel_Buttons.SuspendLayout();
             tableLayoutPanel5.SuspendLayout();
             Control_ReceivingAnalytics_TableLayoutPanel_FiltersMain.SuspendLayout();
             Control_ReceivingAnalytics_Panel_FiltersContents.SuspendLayout();
@@ -338,109 +324,6 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_ReceivingAnalytics_DataGridView_Results.Size = new Size(1248, 307);
             Control_ReceivingAnalytics_DataGridView_Results.TabIndex = 2;
             // 
-            // Control_ReceivingAnalytics_TableLayoutPanel_Buttons
-            // 
-            Control_ReceivingAnalytics_TableLayoutPanel_Buttons.AutoSize = true;
-            Control_ReceivingAnalytics_TableLayoutPanel_Buttons.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            Control_ReceivingAnalytics_TableLayoutPanel_Buttons.ColumnCount = 3;
-            Control_ReceivingAnalytics_TableLayoutPanel_Buttons.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
-            Control_ReceivingAnalytics_TableLayoutPanel_Buttons.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 60F));
-            Control_ReceivingAnalytics_TableLayoutPanel_Buttons.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
-            Control_ReceivingAnalytics_TableLayoutPanel_Buttons.Controls.Add(button1, 2, 0);
-            Control_ReceivingAnalytics_TableLayoutPanel_Buttons.Controls.Add(Control_ReceivingAnalytics_Button_Search, 0, 0);
-            Control_ReceivingAnalytics_TableLayoutPanel_Buttons.Controls.Add(Control_ReceivingAnalytics_Button_Analytics, 1, 0);
-            Control_ReceivingAnalytics_TableLayoutPanel_Buttons.Dock = DockStyle.Fill;
-            Control_ReceivingAnalytics_TableLayoutPanel_Buttons.Location = new Point(0, 0);
-            Control_ReceivingAnalytics_TableLayoutPanel_Buttons.Name = "Control_ReceivingAnalytics_TableLayoutPanel_Buttons";
-            Control_ReceivingAnalytics_TableLayoutPanel_Buttons.RowCount = 1;
-            Control_ReceivingAnalytics_TableLayoutPanel_Buttons.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            Control_ReceivingAnalytics_TableLayoutPanel_Buttons.Size = new Size(300, 46);
-            Control_ReceivingAnalytics_TableLayoutPanel_Buttons.TabIndex = 25;
-            // 
-            // button1
-            // 
-            button1.BackColor = Color.Maroon;
-            button1.Dock = DockStyle.Fill;
-            button1.FlatStyle = FlatStyle.Flat;
-            button1.ForeColor = Color.White;
-            button1.Location = new Point(243, 3);
-            button1.MaximumSize = new Size(0, 40);
-            button1.MinimumSize = new Size(0, 40);
-            button1.Name = "button1";
-            button1.Size = new Size(54, 40);
-            button1.TabIndex = 13;
-            button1.Text = "🡱 All";
-            button1.UseVisualStyleBackColor = false;
-            // 
-            // Control_ReceivingAnalytics_Button_Search
-            // 
-            Control_ReceivingAnalytics_Button_Search.AutoSize = true;
-            Control_ReceivingAnalytics_Button_Search.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            Control_ReceivingAnalytics_Button_Search.BackColor = Color.FromArgb(0, 120, 215);
-            Control_ReceivingAnalytics_Button_Search.Dock = DockStyle.Fill;
-            Control_ReceivingAnalytics_Button_Search.FlatStyle = FlatStyle.Flat;
-            Control_ReceivingAnalytics_Button_Search.ForeColor = Color.White;
-            Control_ReceivingAnalytics_Button_Search.Location = new Point(3, 3);
-            Control_ReceivingAnalytics_Button_Search.MaximumSize = new Size(0, 40);
-            Control_ReceivingAnalytics_Button_Search.MinimumSize = new Size(0, 40);
-            Control_ReceivingAnalytics_Button_Search.Name = "Control_ReceivingAnalytics_Button_Search";
-            Control_ReceivingAnalytics_Button_Search.Size = new Size(54, 40);
-            Control_ReceivingAnalytics_Button_Search.TabIndex = 10;
-            Control_ReceivingAnalytics_Button_Search.Text = "Search";
-            Control_ReceivingAnalytics_Button_Search.UseVisualStyleBackColor = false;
-            // 
-            // Control_ReceivingAnalytics_Button_Analytics
-            // 
-            Control_ReceivingAnalytics_Button_Analytics.AutoSize = true;
-            Control_ReceivingAnalytics_Button_Analytics.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            Control_ReceivingAnalytics_Button_Analytics.BackColor = Color.Teal;
-            Control_ReceivingAnalytics_Button_Analytics.Dock = DockStyle.Fill;
-            Control_ReceivingAnalytics_Button_Analytics.FlatStyle = FlatStyle.Flat;
-            Control_ReceivingAnalytics_Button_Analytics.ForeColor = Color.White;
-            Control_ReceivingAnalytics_Button_Analytics.Location = new Point(63, 3);
-            Control_ReceivingAnalytics_Button_Analytics.MaximumSize = new Size(0, 40);
-            Control_ReceivingAnalytics_Button_Analytics.MinimumSize = new Size(0, 40);
-            Control_ReceivingAnalytics_Button_Analytics.Name = "Control_ReceivingAnalytics_Button_Analytics";
-            Control_ReceivingAnalytics_Button_Analytics.Size = new Size(174, 40);
-            Control_ReceivingAnalytics_Button_Analytics.TabIndex = 12;
-            Control_ReceivingAnalytics_Button_Analytics.Text = "Receiving Analytics";
-            Control_ReceivingAnalytics_Button_Analytics.UseVisualStyleBackColor = false;
-            // 
-            // Control_ReceivingAnalytics_CheckBox_ShowOutsideService
-            // 
-            Control_ReceivingAnalytics_CheckBox_ShowOutsideService.AutoSize = true;
-            Control_ReceivingAnalytics_CheckBox_ShowOutsideService.Dock = DockStyle.Fill;
-            Control_ReceivingAnalytics_CheckBox_ShowOutsideService.Location = new Point(3, 3);
-            Control_ReceivingAnalytics_CheckBox_ShowOutsideService.Name = "Control_ReceivingAnalytics_CheckBox_ShowOutsideService";
-            Control_ReceivingAnalytics_CheckBox_ShowOutsideService.Size = new Size(288, 19);
-            Control_ReceivingAnalytics_CheckBox_ShowOutsideService.TabIndex = 9;
-            Control_ReceivingAnalytics_CheckBox_ShowOutsideService.Text = "Show Outside Service";
-            Control_ReceivingAnalytics_CheckBox_ShowOutsideService.UseVisualStyleBackColor = true;
-            // 
-            // Control_ReceivingAnalytics_CheckBox_ShowConsignment
-            // 
-            Control_ReceivingAnalytics_CheckBox_ShowConsignment.AutoSize = true;
-            Control_ReceivingAnalytics_CheckBox_ShowConsignment.Dock = DockStyle.Fill;
-            Control_ReceivingAnalytics_CheckBox_ShowConsignment.Location = new Point(3, 28);
-            Control_ReceivingAnalytics_CheckBox_ShowConsignment.Name = "Control_ReceivingAnalytics_CheckBox_ShowConsignment";
-            Control_ReceivingAnalytics_CheckBox_ShowConsignment.Size = new Size(288, 19);
-            Control_ReceivingAnalytics_CheckBox_ShowConsignment.TabIndex = 7;
-            Control_ReceivingAnalytics_CheckBox_ShowConsignment.Text = "Show Consignment";
-            Control_ReceivingAnalytics_CheckBox_ShowConsignment.UseVisualStyleBackColor = true;
-            Control_ReceivingAnalytics_CheckBox_ShowConsignment.Visible = false;
-            // 
-            // Control_ReceivingAnalytics_CheckBox_ShowInternal
-            // 
-            Control_ReceivingAnalytics_CheckBox_ShowInternal.AutoSize = true;
-            Control_ReceivingAnalytics_CheckBox_ShowInternal.Dock = DockStyle.Fill;
-            Control_ReceivingAnalytics_CheckBox_ShowInternal.Location = new Point(3, 53);
-            Control_ReceivingAnalytics_CheckBox_ShowInternal.Name = "Control_ReceivingAnalytics_CheckBox_ShowInternal";
-            Control_ReceivingAnalytics_CheckBox_ShowInternal.Size = new Size(288, 19);
-            Control_ReceivingAnalytics_CheckBox_ShowInternal.TabIndex = 8;
-            Control_ReceivingAnalytics_CheckBox_ShowInternal.Text = "Show Internal Orders";
-            Control_ReceivingAnalytics_CheckBox_ShowInternal.UseVisualStyleBackColor = true;
-            Control_ReceivingAnalytics_CheckBox_ShowInternal.Visible = false;
-            // 
             // Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PartNumber
             // 
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PartNumber.AutoSize = true;
@@ -463,7 +346,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Supplier.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Supplier.Dock = DockStyle.Fill;
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Supplier.LabelVisibility = Enum_LabelVisibility.Hidden;
-            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Supplier.Location = new Point(3, 60);
+            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Supplier.Location = new Point(3, 61);
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Supplier.MaximumSize = new Size(0, 23);
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Supplier.MaxLength = 100;
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Supplier.MinimumSize = new Size(0, 23);
@@ -479,7 +362,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Carrier.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Carrier.Dock = DockStyle.Fill;
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Carrier.LabelVisibility = Enum_LabelVisibility.Hidden;
-            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Carrier.Location = new Point(3, 88);
+            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Carrier.Location = new Point(3, 90);
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Carrier.MaximumSize = new Size(0, 23);
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Carrier.MaxLength = 100;
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Carrier.MinimumSize = new Size(0, 23);
@@ -511,7 +394,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_DateType.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_DateType.Dock = DockStyle.Fill;
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_DateType.LabelVisibility = Enum_LabelVisibility.Hidden;
-            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_DateType.Location = new Point(3, 116);
+            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_DateType.Location = new Point(3, 119);
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_DateType.MaximumSize = new Size(0, 23);
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_DateType.MaxLength = 100;
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_DateType.MinimumSize = new Size(0, 23);
@@ -581,39 +464,6 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_ReceivingAnalytics_CheckBox_ShowLate.TabIndex = 15;
             Control_ReceivingAnalytics_CheckBox_ShowLate.Text = "Show Late";
             Control_ReceivingAnalytics_CheckBox_ShowLate.UseVisualStyleBackColor = true;
-            // 
-            // Control_ReceivingAnalytics_CheckBox_ShowWithPartID
-            // 
-            Control_ReceivingAnalytics_CheckBox_ShowWithPartID.AutoSize = true;
-            Control_ReceivingAnalytics_CheckBox_ShowWithPartID.Dock = DockStyle.Fill;
-            Control_ReceivingAnalytics_CheckBox_ShowWithPartID.Location = new Point(3, 3);
-            Control_ReceivingAnalytics_CheckBox_ShowWithPartID.Name = "Control_ReceivingAnalytics_CheckBox_ShowWithPartID";
-            Control_ReceivingAnalytics_CheckBox_ShowWithPartID.Size = new Size(288, 19);
-            Control_ReceivingAnalytics_CheckBox_ShowWithPartID.TabIndex = 18;
-            Control_ReceivingAnalytics_CheckBox_ShowWithPartID.Text = "Only Part Numbers";
-            Control_ReceivingAnalytics_CheckBox_ShowWithPartID.UseVisualStyleBackColor = true;
-            // 
-            // Control_ReceivingAnalytics_CheckBox_ShowMMC
-            // 
-            Control_ReceivingAnalytics_CheckBox_ShowMMC.AutoSize = true;
-            Control_ReceivingAnalytics_CheckBox_ShowMMC.Dock = DockStyle.Fill;
-            Control_ReceivingAnalytics_CheckBox_ShowMMC.Location = new Point(3, 28);
-            Control_ReceivingAnalytics_CheckBox_ShowMMC.Name = "Control_ReceivingAnalytics_CheckBox_ShowMMC";
-            Control_ReceivingAnalytics_CheckBox_ShowMMC.Size = new Size(288, 19);
-            Control_ReceivingAnalytics_CheckBox_ShowMMC.TabIndex = 20;
-            Control_ReceivingAnalytics_CheckBox_ShowMMC.Text = "Only Coils (MMC)";
-            Control_ReceivingAnalytics_CheckBox_ShowMMC.UseVisualStyleBackColor = true;
-            // 
-            // Control_ReceivingAnalytics_CheckBox_ShowMMF
-            // 
-            Control_ReceivingAnalytics_CheckBox_ShowMMF.AutoSize = true;
-            Control_ReceivingAnalytics_CheckBox_ShowMMF.Dock = DockStyle.Fill;
-            Control_ReceivingAnalytics_CheckBox_ShowMMF.Location = new Point(3, 53);
-            Control_ReceivingAnalytics_CheckBox_ShowMMF.Name = "Control_ReceivingAnalytics_CheckBox_ShowMMF";
-            Control_ReceivingAnalytics_CheckBox_ShowMMF.Size = new Size(288, 19);
-            Control_ReceivingAnalytics_CheckBox_ShowMMF.TabIndex = 21;
-            Control_ReceivingAnalytics_CheckBox_ShowMMF.Text = "Only Flat Stock (MMF)";
-            Control_ReceivingAnalytics_CheckBox_ShowMMF.UseVisualStyleBackColor = true;
             // 
             // Control_ReceivingAnalytics_TableLayoutPanel_DateRange
             // 
@@ -751,7 +601,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_ReceivingAnalytics_TableLayoutPanel_Main.RowCount = 2;
             Control_ReceivingAnalytics_TableLayoutPanel_Main.RowStyles.Add(new RowStyle());
             Control_ReceivingAnalytics_TableLayoutPanel_Main.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            Control_ReceivingAnalytics_TableLayoutPanel_Main.Size = new Size(1262, 605);
+            Control_ReceivingAnalytics_TableLayoutPanel_Main.Size = new Size(1262, 630);
             Control_ReceivingAnalytics_TableLayoutPanel_Main.TabIndex = 0;
             // 
             // Control_ReceivingAnalytics_Panel_Results
@@ -759,7 +609,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_ReceivingAnalytics_Panel_Results.BorderStyle = BorderStyle.FixedSingle;
             Control_ReceivingAnalytics_Panel_Results.Controls.Add(Control_ReceivingAnalytics_TableLayoutPanel_Results);
             Control_ReceivingAnalytics_Panel_Results.Dock = DockStyle.Fill;
-            Control_ReceivingAnalytics_Panel_Results.Location = new Point(3, 247);
+            Control_ReceivingAnalytics_Panel_Results.Location = new Point(3, 272);
             Control_ReceivingAnalytics_Panel_Results.Name = "Control_ReceivingAnalytics_Panel_Results";
             Control_ReceivingAnalytics_Panel_Results.Size = new Size(1256, 355);
             Control_ReceivingAnalytics_Panel_Results.TabIndex = 1;
@@ -788,17 +638,103 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 24.9999943F));
-            tableLayoutPanel1.Controls.Add(tableLayoutPanel2, 2, 0);
-            tableLayoutPanel1.Controls.Add(tableLayoutPanel3, 3, 0);
+            tableLayoutPanel1.Controls.Add(Control_ReceivingAnalytics_Panel_Buttons, 0, 1);
+            tableLayoutPanel1.Controls.Add(tableLayoutPanel2, 3, 0);
+            tableLayoutPanel1.Controls.Add(tableLayoutPanel3, 2, 0);
             tableLayoutPanel1.Controls.Add(tableLayoutPanel4, 0, 0);
             tableLayoutPanel1.Controls.Add(tableLayoutPanel5, 1, 0);
             tableLayoutPanel1.Dock = DockStyle.Fill;
             tableLayoutPanel1.Location = new Point(3, 3);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
-            tableLayoutPanel1.RowCount = 1;
+            tableLayoutPanel1.RowCount = 2;
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.Size = new Size(1256, 238);
+            tableLayoutPanel1.RowStyles.Add(new RowStyle());
+            tableLayoutPanel1.Size = new Size(1256, 263);
             tableLayoutPanel1.TabIndex = 2;
+            // 
+            // Control_ReceivingAnalytics_Panel_Buttons
+            // 
+            Control_ReceivingAnalytics_Panel_Buttons.AutoSize = true;
+            Control_ReceivingAnalytics_Panel_Buttons.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_ReceivingAnalytics_Panel_Buttons.BorderStyle = BorderStyle.FixedSingle;
+            tableLayoutPanel1.SetColumnSpan(Control_ReceivingAnalytics_Panel_Buttons, 4);
+            Control_ReceivingAnalytics_Panel_Buttons.Controls.Add(Control_ReceivingAnalytics_TableLayoutPanel_Buttons);
+            Control_ReceivingAnalytics_Panel_Buttons.Dock = DockStyle.Fill;
+            Control_ReceivingAnalytics_Panel_Buttons.Location = new Point(3, 216);
+            Control_ReceivingAnalytics_Panel_Buttons.Name = "Control_ReceivingAnalytics_Panel_Buttons";
+            Control_ReceivingAnalytics_Panel_Buttons.Size = new Size(1250, 44);
+            Control_ReceivingAnalytics_Panel_Buttons.TabIndex = 34;
+            // 
+            // Control_ReceivingAnalytics_TableLayoutPanel_Buttons
+            // 
+            Control_ReceivingAnalytics_TableLayoutPanel_Buttons.AutoSize = true;
+            Control_ReceivingAnalytics_TableLayoutPanel_Buttons.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_ReceivingAnalytics_TableLayoutPanel_Buttons.ColumnCount = 4;
+            Control_ReceivingAnalytics_TableLayoutPanel_Buttons.ColumnStyles.Add(new ColumnStyle());
+            Control_ReceivingAnalytics_TableLayoutPanel_Buttons.ColumnStyles.Add(new ColumnStyle());
+            Control_ReceivingAnalytics_TableLayoutPanel_Buttons.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            Control_ReceivingAnalytics_TableLayoutPanel_Buttons.ColumnStyles.Add(new ColumnStyle());
+            Control_ReceivingAnalytics_TableLayoutPanel_Buttons.Controls.Add(button1, 3, 0);
+            Control_ReceivingAnalytics_TableLayoutPanel_Buttons.Controls.Add(Control_ReceivingAnalytics_Button_Search, 0, 0);
+            Control_ReceivingAnalytics_TableLayoutPanel_Buttons.Controls.Add(Control_ReceivingAnalytics_Button_Analytics, 1, 0);
+            Control_ReceivingAnalytics_TableLayoutPanel_Buttons.Dock = DockStyle.Fill;
+            Control_ReceivingAnalytics_TableLayoutPanel_Buttons.Location = new Point(0, 0);
+            Control_ReceivingAnalytics_TableLayoutPanel_Buttons.Name = "Control_ReceivingAnalytics_TableLayoutPanel_Buttons";
+            Control_ReceivingAnalytics_TableLayoutPanel_Buttons.RowCount = 1;
+            Control_ReceivingAnalytics_TableLayoutPanel_Buttons.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            Control_ReceivingAnalytics_TableLayoutPanel_Buttons.Size = new Size(1248, 42);
+            Control_ReceivingAnalytics_TableLayoutPanel_Buttons.TabIndex = 25;
+            // 
+            // button1
+            // 
+            button1.AutoSize = true;
+            button1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            button1.BackColor = Color.Maroon;
+            button1.Dock = DockStyle.Fill;
+            button1.FlatStyle = FlatStyle.Flat;
+            button1.ForeColor = Color.White;
+            button1.Location = new Point(1105, 3);
+            button1.MaximumSize = new Size(0, 36);
+            button1.MinimumSize = new Size(140, 36);
+            button1.Name = "button1";
+            button1.Size = new Size(140, 36);
+            button1.TabIndex = 13;
+            button1.Text = "🡱 All";
+            button1.UseVisualStyleBackColor = false;
+            // 
+            // Control_ReceivingAnalytics_Button_Search
+            // 
+            Control_ReceivingAnalytics_Button_Search.AutoSize = true;
+            Control_ReceivingAnalytics_Button_Search.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_ReceivingAnalytics_Button_Search.BackColor = Color.FromArgb(0, 120, 215);
+            Control_ReceivingAnalytics_Button_Search.Dock = DockStyle.Fill;
+            Control_ReceivingAnalytics_Button_Search.FlatStyle = FlatStyle.Flat;
+            Control_ReceivingAnalytics_Button_Search.ForeColor = Color.White;
+            Control_ReceivingAnalytics_Button_Search.Location = new Point(3, 3);
+            Control_ReceivingAnalytics_Button_Search.MaximumSize = new Size(0, 36);
+            Control_ReceivingAnalytics_Button_Search.MinimumSize = new Size(140, 36);
+            Control_ReceivingAnalytics_Button_Search.Name = "Control_ReceivingAnalytics_Button_Search";
+            Control_ReceivingAnalytics_Button_Search.Size = new Size(140, 36);
+            Control_ReceivingAnalytics_Button_Search.TabIndex = 10;
+            Control_ReceivingAnalytics_Button_Search.Text = "Search";
+            Control_ReceivingAnalytics_Button_Search.UseVisualStyleBackColor = false;
+            // 
+            // Control_ReceivingAnalytics_Button_Analytics
+            // 
+            Control_ReceivingAnalytics_Button_Analytics.AutoSize = true;
+            Control_ReceivingAnalytics_Button_Analytics.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_ReceivingAnalytics_Button_Analytics.BackColor = Color.Teal;
+            Control_ReceivingAnalytics_Button_Analytics.Dock = DockStyle.Fill;
+            Control_ReceivingAnalytics_Button_Analytics.FlatStyle = FlatStyle.Flat;
+            Control_ReceivingAnalytics_Button_Analytics.ForeColor = Color.White;
+            Control_ReceivingAnalytics_Button_Analytics.Location = new Point(149, 3);
+            Control_ReceivingAnalytics_Button_Analytics.MaximumSize = new Size(0, 36);
+            Control_ReceivingAnalytics_Button_Analytics.MinimumSize = new Size(140, 36);
+            Control_ReceivingAnalytics_Button_Analytics.Name = "Control_ReceivingAnalytics_Button_Analytics";
+            Control_ReceivingAnalytics_Button_Analytics.Size = new Size(140, 36);
+            Control_ReceivingAnalytics_Button_Analytics.TabIndex = 12;
+            Control_ReceivingAnalytics_Button_Analytics.Text = "Receiving Analytics";
+            Control_ReceivingAnalytics_Button_Analytics.UseVisualStyleBackColor = false;
             // 
             // tableLayoutPanel2
             // 
@@ -809,13 +745,13 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             tableLayoutPanel2.Controls.Add(Control_ReceivingAnalytics_TableLayoutPanel_POStatesMain, 0, 1);
             tableLayoutPanel2.Controls.Add(Control_ReceivingAnalytics_TableLayoutPanel_DeliveryStatesMain, 0, 0);
             tableLayoutPanel2.Dock = DockStyle.Fill;
-            tableLayoutPanel2.Location = new Point(631, 3);
+            tableLayoutPanel2.Location = new Point(945, 3);
             tableLayoutPanel2.Name = "tableLayoutPanel2";
-            tableLayoutPanel2.RowCount = 3;
+            tableLayoutPanel2.RowCount = 2;
             tableLayoutPanel2.RowStyles.Add(new RowStyle());
             tableLayoutPanel2.RowStyles.Add(new RowStyle());
-            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel2.Size = new Size(308, 232);
+            tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            tableLayoutPanel2.Size = new Size(308, 207);
             tableLayoutPanel2.TabIndex = 30;
             // 
             // Control_ReceivingAnalytics_TableLayoutPanel_POStatesMain
@@ -917,10 +853,10 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_ReceivingAnalytics_TableLayoutPanel_SideBarPOStates.Dock = DockStyle.Fill;
             Control_ReceivingAnalytics_TableLayoutPanel_SideBarPOStates.Location = new Point(0, 0);
             Control_ReceivingAnalytics_TableLayoutPanel_SideBarPOStates.Name = "Control_ReceivingAnalytics_TableLayoutPanel_SideBarPOStates";
-            Control_ReceivingAnalytics_TableLayoutPanel_SideBarPOStates.RowCount = 2;
+            Control_ReceivingAnalytics_TableLayoutPanel_SideBarPOStates.RowCount = 3;
             Control_ReceivingAnalytics_TableLayoutPanel_SideBarPOStates.RowStyles.Add(new RowStyle());
             Control_ReceivingAnalytics_TableLayoutPanel_SideBarPOStates.RowStyles.Add(new RowStyle());
-            Control_ReceivingAnalytics_TableLayoutPanel_SideBarPOStates.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            Control_ReceivingAnalytics_TableLayoutPanel_SideBarPOStates.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             Control_ReceivingAnalytics_TableLayoutPanel_SideBarPOStates.Size = new Size(294, 50);
             Control_ReceivingAnalytics_TableLayoutPanel_SideBarPOStates.TabIndex = 3;
             // 
@@ -1037,124 +973,16 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             tableLayoutPanel3.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             tableLayoutPanel3.ColumnCount = 1;
             tableLayoutPanel3.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutPanel3.Controls.Add(Control_ReceivingAnalytics_Panel_OutsideScopeMain, 0, 0);
             tableLayoutPanel3.Controls.Add(Control_ReceivingAnalytics_Panel_ReceivingScopeMain, 0, 1);
             tableLayoutPanel3.Dock = DockStyle.Fill;
-            tableLayoutPanel3.Location = new Point(945, 3);
+            tableLayoutPanel3.Location = new Point(631, 3);
             tableLayoutPanel3.Name = "tableLayoutPanel3";
-            tableLayoutPanel3.RowCount = 3;
-            tableLayoutPanel3.RowStyles.Add(new RowStyle());
+            tableLayoutPanel3.RowCount = 2;
             tableLayoutPanel3.RowStyles.Add(new RowStyle());
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel3.Size = new Size(308, 232);
+            tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            tableLayoutPanel3.Size = new Size(308, 207);
             tableLayoutPanel3.TabIndex = 31;
-            // 
-            // Control_ReceivingAnalytics_Panel_OutsideScopeMain
-            // 
-            Control_ReceivingAnalytics_Panel_OutsideScopeMain.AutoSize = true;
-            Control_ReceivingAnalytics_Panel_OutsideScopeMain.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            Control_ReceivingAnalytics_Panel_OutsideScopeMain.ColumnCount = 1;
-            Control_ReceivingAnalytics_Panel_OutsideScopeMain.ColumnStyles.Add(new ColumnStyle());
-            Control_ReceivingAnalytics_Panel_OutsideScopeMain.Controls.Add(Control_ReceivingAnalytics_Panel_OutsideScopeHeader, 0, 0);
-            Control_ReceivingAnalytics_Panel_OutsideScopeMain.Controls.Add(Control_ReceivingAnalytics_Panel_OutsideScopeContents, 0, 1);
-            Control_ReceivingAnalytics_Panel_OutsideScopeMain.Dock = DockStyle.Fill;
-            Control_ReceivingAnalytics_Panel_OutsideScopeMain.Location = new Point(3, 0);
-            Control_ReceivingAnalytics_Panel_OutsideScopeMain.Margin = new Padding(3, 0, 3, 0);
-            Control_ReceivingAnalytics_Panel_OutsideScopeMain.Name = "Control_ReceivingAnalytics_Panel_OutsideScopeMain";
-            Control_ReceivingAnalytics_Panel_OutsideScopeMain.RowCount = 2;
-            Control_ReceivingAnalytics_Panel_OutsideScopeMain.RowStyles.Add(new RowStyle());
-            Control_ReceivingAnalytics_Panel_OutsideScopeMain.RowStyles.Add(new RowStyle());
-            Control_ReceivingAnalytics_Panel_OutsideScopeMain.Size = new Size(302, 116);
-            Control_ReceivingAnalytics_Panel_OutsideScopeMain.TabIndex = 28;
-            // 
-            // Control_ReceivingAnalytics_Panel_OutsideScopeHeader
-            // 
-            Control_ReceivingAnalytics_Panel_OutsideScopeHeader.AutoSize = true;
-            Control_ReceivingAnalytics_Panel_OutsideScopeHeader.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            Control_ReceivingAnalytics_Panel_OutsideScopeHeader.BorderStyle = BorderStyle.FixedSingle;
-            Control_ReceivingAnalytics_Panel_OutsideScopeHeader.Controls.Add(Control_ReceivingAnalytics_TableLayoutPanel_OutsideScopeHeader);
-            Control_ReceivingAnalytics_Panel_OutsideScopeHeader.Dock = DockStyle.Fill;
-            Control_ReceivingAnalytics_Panel_OutsideScopeHeader.Location = new Point(3, 3);
-            Control_ReceivingAnalytics_Panel_OutsideScopeHeader.Margin = new Padding(3, 3, 3, 0);
-            Control_ReceivingAnalytics_Panel_OutsideScopeHeader.Name = "Control_ReceivingAnalytics_Panel_OutsideScopeHeader";
-            Control_ReceivingAnalytics_Panel_OutsideScopeHeader.Size = new Size(296, 33);
-            Control_ReceivingAnalytics_Panel_OutsideScopeHeader.TabIndex = 27;
-            // 
-            // Control_ReceivingAnalytics_TableLayoutPanel_OutsideScopeHeader
-            // 
-            Control_ReceivingAnalytics_TableLayoutPanel_OutsideScopeHeader.AutoSize = true;
-            Control_ReceivingAnalytics_TableLayoutPanel_OutsideScopeHeader.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            Control_ReceivingAnalytics_TableLayoutPanel_OutsideScopeHeader.ColumnCount = 2;
-            Control_ReceivingAnalytics_TableLayoutPanel_OutsideScopeHeader.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            Control_ReceivingAnalytics_TableLayoutPanel_OutsideScopeHeader.ColumnStyles.Add(new ColumnStyle());
-            Control_ReceivingAnalytics_TableLayoutPanel_OutsideScopeHeader.Controls.Add(Control_ReceivingAnalytics_Button_OutsideScopeHeader, 1, 0);
-            Control_ReceivingAnalytics_TableLayoutPanel_OutsideScopeHeader.Controls.Add(Control_ReceivingAnalytics_Label_OutsideScopeHeader, 0, 0);
-            Control_ReceivingAnalytics_TableLayoutPanel_OutsideScopeHeader.Dock = DockStyle.Fill;
-            Control_ReceivingAnalytics_TableLayoutPanel_OutsideScopeHeader.Location = new Point(0, 0);
-            Control_ReceivingAnalytics_TableLayoutPanel_OutsideScopeHeader.Name = "Control_ReceivingAnalytics_TableLayoutPanel_OutsideScopeHeader";
-            Control_ReceivingAnalytics_TableLayoutPanel_OutsideScopeHeader.RowCount = 1;
-            Control_ReceivingAnalytics_TableLayoutPanel_OutsideScopeHeader.RowStyles.Add(new RowStyle());
-            Control_ReceivingAnalytics_TableLayoutPanel_OutsideScopeHeader.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            Control_ReceivingAnalytics_TableLayoutPanel_OutsideScopeHeader.Size = new Size(294, 31);
-            Control_ReceivingAnalytics_TableLayoutPanel_OutsideScopeHeader.TabIndex = 24;
-            // 
-            // Control_ReceivingAnalytics_Button_OutsideScopeHeader
-            // 
-            Control_ReceivingAnalytics_Button_OutsideScopeHeader.Dock = DockStyle.Fill;
-            Control_ReceivingAnalytics_Button_OutsideScopeHeader.FlatStyle = FlatStyle.Flat;
-            Control_ReceivingAnalytics_Button_OutsideScopeHeader.Location = new Point(231, 3);
-            Control_ReceivingAnalytics_Button_OutsideScopeHeader.MaximumSize = new Size(60, 25);
-            Control_ReceivingAnalytics_Button_OutsideScopeHeader.MinimumSize = new Size(60, 25);
-            Control_ReceivingAnalytics_Button_OutsideScopeHeader.Name = "Control_ReceivingAnalytics_Button_OutsideScopeHeader";
-            Control_ReceivingAnalytics_Button_OutsideScopeHeader.Size = new Size(60, 25);
-            Control_ReceivingAnalytics_Button_OutsideScopeHeader.TabIndex = 12;
-            Control_ReceivingAnalytics_Button_OutsideScopeHeader.Text = "🡱";
-            Control_ReceivingAnalytics_Button_OutsideScopeHeader.UseVisualStyleBackColor = false;
-            // 
-            // Control_ReceivingAnalytics_Label_OutsideScopeHeader
-            // 
-            Control_ReceivingAnalytics_Label_OutsideScopeHeader.AutoSize = true;
-            Control_ReceivingAnalytics_Label_OutsideScopeHeader.Dock = DockStyle.Fill;
-            Control_ReceivingAnalytics_Label_OutsideScopeHeader.Font = new Font("Segoe UI Emoji", 9.75F);
-            Control_ReceivingAnalytics_Label_OutsideScopeHeader.Location = new Point(3, 3);
-            Control_ReceivingAnalytics_Label_OutsideScopeHeader.Margin = new Padding(3);
-            Control_ReceivingAnalytics_Label_OutsideScopeHeader.Name = "Control_ReceivingAnalytics_Label_OutsideScopeHeader";
-            Control_ReceivingAnalytics_Label_OutsideScopeHeader.Size = new Size(222, 25);
-            Control_ReceivingAnalytics_Label_OutsideScopeHeader.TabIndex = 16;
-            Control_ReceivingAnalytics_Label_OutsideScopeHeader.Text = "🔘 Outside Scope";
-            Control_ReceivingAnalytics_Label_OutsideScopeHeader.TextAlign = ContentAlignment.MiddleLeft;
-            // 
-            // Control_ReceivingAnalytics_Panel_OutsideScopeContents
-            // 
-            Control_ReceivingAnalytics_Panel_OutsideScopeContents.AutoSize = true;
-            Control_ReceivingAnalytics_Panel_OutsideScopeContents.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            Control_ReceivingAnalytics_Panel_OutsideScopeContents.BorderStyle = BorderStyle.FixedSingle;
-            Control_ReceivingAnalytics_Panel_OutsideScopeContents.Controls.Add(Control_ReceivingAnalytics_TableLayoutPanel_OutsideScopeContents);
-            Control_ReceivingAnalytics_Panel_OutsideScopeContents.Dock = DockStyle.Fill;
-            Control_ReceivingAnalytics_Panel_OutsideScopeContents.Location = new Point(3, 36);
-            Control_ReceivingAnalytics_Panel_OutsideScopeContents.Margin = new Padding(3, 0, 3, 3);
-            Control_ReceivingAnalytics_Panel_OutsideScopeContents.Name = "Control_ReceivingAnalytics_Panel_OutsideScopeContents";
-            Control_ReceivingAnalytics_Panel_OutsideScopeContents.Size = new Size(296, 77);
-            Control_ReceivingAnalytics_Panel_OutsideScopeContents.TabIndex = 26;
-            // 
-            // Control_ReceivingAnalytics_TableLayoutPanel_OutsideScopeContents
-            // 
-            Control_ReceivingAnalytics_TableLayoutPanel_OutsideScopeContents.AutoSize = true;
-            Control_ReceivingAnalytics_TableLayoutPanel_OutsideScopeContents.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            Control_ReceivingAnalytics_TableLayoutPanel_OutsideScopeContents.ColumnCount = 1;
-            Control_ReceivingAnalytics_TableLayoutPanel_OutsideScopeContents.ColumnStyles.Add(new ColumnStyle());
-            Control_ReceivingAnalytics_TableLayoutPanel_OutsideScopeContents.Controls.Add(Control_ReceivingAnalytics_CheckBox_ShowOutsideService, 0, 0);
-            Control_ReceivingAnalytics_TableLayoutPanel_OutsideScopeContents.Controls.Add(Control_ReceivingAnalytics_CheckBox_ShowConsignment, 0, 1);
-            Control_ReceivingAnalytics_TableLayoutPanel_OutsideScopeContents.Controls.Add(Control_ReceivingAnalytics_CheckBox_ShowInternal, 0, 2);
-            Control_ReceivingAnalytics_TableLayoutPanel_OutsideScopeContents.Dock = DockStyle.Fill;
-            Control_ReceivingAnalytics_TableLayoutPanel_OutsideScopeContents.Location = new Point(0, 0);
-            Control_ReceivingAnalytics_TableLayoutPanel_OutsideScopeContents.Name = "Control_ReceivingAnalytics_TableLayoutPanel_OutsideScopeContents";
-            Control_ReceivingAnalytics_TableLayoutPanel_OutsideScopeContents.RowCount = 3;
-            Control_ReceivingAnalytics_TableLayoutPanel_OutsideScopeContents.RowStyles.Add(new RowStyle());
-            Control_ReceivingAnalytics_TableLayoutPanel_OutsideScopeContents.RowStyles.Add(new RowStyle());
-            Control_ReceivingAnalytics_TableLayoutPanel_OutsideScopeContents.RowStyles.Add(new RowStyle());
-            Control_ReceivingAnalytics_TableLayoutPanel_OutsideScopeContents.Size = new Size(294, 75);
-            Control_ReceivingAnalytics_TableLayoutPanel_OutsideScopeContents.TabIndex = 3;
             // 
             // Control_ReceivingAnalytics_Panel_ReceivingScopeMain
             // 
@@ -1165,13 +993,13 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_ReceivingAnalytics_Panel_ReceivingScopeMain.Controls.Add(Control_ReceivingAnalytics_Panel_ReceivingScopeHeader, 0, 0);
             Control_ReceivingAnalytics_Panel_ReceivingScopeMain.Controls.Add(Control_ReceivingAnalytics_Panel_ReceivingScopeContents, 0, 1);
             Control_ReceivingAnalytics_Panel_ReceivingScopeMain.Dock = DockStyle.Fill;
-            Control_ReceivingAnalytics_Panel_ReceivingScopeMain.Location = new Point(3, 116);
+            Control_ReceivingAnalytics_Panel_ReceivingScopeMain.Location = new Point(3, 0);
             Control_ReceivingAnalytics_Panel_ReceivingScopeMain.Margin = new Padding(3, 0, 3, 0);
             Control_ReceivingAnalytics_Panel_ReceivingScopeMain.Name = "Control_ReceivingAnalytics_Panel_ReceivingScopeMain";
             Control_ReceivingAnalytics_Panel_ReceivingScopeMain.RowCount = 2;
             Control_ReceivingAnalytics_Panel_ReceivingScopeMain.RowStyles.Add(new RowStyle());
             Control_ReceivingAnalytics_Panel_ReceivingScopeMain.RowStyles.Add(new RowStyle());
-            Control_ReceivingAnalytics_Panel_ReceivingScopeMain.Size = new Size(302, 116);
+            Control_ReceivingAnalytics_Panel_ReceivingScopeMain.Size = new Size(302, 207);
             Control_ReceivingAnalytics_Panel_ReceivingScopeMain.TabIndex = 27;
             // 
             // Control_ReceivingAnalytics_Panel_ReceivingScopeHeader
@@ -1241,7 +1069,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_ReceivingAnalytics_Panel_ReceivingScopeContents.Location = new Point(3, 36);
             Control_ReceivingAnalytics_Panel_ReceivingScopeContents.Margin = new Padding(3, 0, 3, 3);
             Control_ReceivingAnalytics_Panel_ReceivingScopeContents.Name = "Control_ReceivingAnalytics_Panel_ReceivingScopeContents";
-            Control_ReceivingAnalytics_Panel_ReceivingScopeContents.Size = new Size(296, 77);
+            Control_ReceivingAnalytics_Panel_ReceivingScopeContents.Size = new Size(296, 168);
             Control_ReceivingAnalytics_Panel_ReceivingScopeContents.TabIndex = 26;
             // 
             // Control_ReceivingAnalytics_TableLayoutPanel_ReceivingScopeContents
@@ -1250,18 +1078,64 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_ReceivingAnalytics_TableLayoutPanel_ReceivingScopeContents.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_ReceivingAnalytics_TableLayoutPanel_ReceivingScopeContents.ColumnCount = 1;
             Control_ReceivingAnalytics_TableLayoutPanel_ReceivingScopeContents.ColumnStyles.Add(new ColumnStyle());
+            Control_ReceivingAnalytics_TableLayoutPanel_ReceivingScopeContents.Controls.Add(Control_ReceivingAnalytics_CheckBox_ShowOutsideService, 0, 3);
             Control_ReceivingAnalytics_TableLayoutPanel_ReceivingScopeContents.Controls.Add(Control_ReceivingAnalytics_CheckBox_ShowWithPartID, 0, 0);
             Control_ReceivingAnalytics_TableLayoutPanel_ReceivingScopeContents.Controls.Add(Control_ReceivingAnalytics_CheckBox_ShowMMC, 0, 1);
             Control_ReceivingAnalytics_TableLayoutPanel_ReceivingScopeContents.Controls.Add(Control_ReceivingAnalytics_CheckBox_ShowMMF, 0, 2);
             Control_ReceivingAnalytics_TableLayoutPanel_ReceivingScopeContents.Dock = DockStyle.Fill;
             Control_ReceivingAnalytics_TableLayoutPanel_ReceivingScopeContents.Location = new Point(0, 0);
             Control_ReceivingAnalytics_TableLayoutPanel_ReceivingScopeContents.Name = "Control_ReceivingAnalytics_TableLayoutPanel_ReceivingScopeContents";
-            Control_ReceivingAnalytics_TableLayoutPanel_ReceivingScopeContents.RowCount = 3;
+            Control_ReceivingAnalytics_TableLayoutPanel_ReceivingScopeContents.RowCount = 5;
             Control_ReceivingAnalytics_TableLayoutPanel_ReceivingScopeContents.RowStyles.Add(new RowStyle());
             Control_ReceivingAnalytics_TableLayoutPanel_ReceivingScopeContents.RowStyles.Add(new RowStyle());
             Control_ReceivingAnalytics_TableLayoutPanel_ReceivingScopeContents.RowStyles.Add(new RowStyle());
-            Control_ReceivingAnalytics_TableLayoutPanel_ReceivingScopeContents.Size = new Size(294, 75);
+            Control_ReceivingAnalytics_TableLayoutPanel_ReceivingScopeContents.RowStyles.Add(new RowStyle());
+            Control_ReceivingAnalytics_TableLayoutPanel_ReceivingScopeContents.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            Control_ReceivingAnalytics_TableLayoutPanel_ReceivingScopeContents.Size = new Size(294, 166);
             Control_ReceivingAnalytics_TableLayoutPanel_ReceivingScopeContents.TabIndex = 3;
+            // 
+            // Control_ReceivingAnalytics_CheckBox_ShowOutsideService
+            // 
+            Control_ReceivingAnalytics_CheckBox_ShowOutsideService.AutoSize = true;
+            Control_ReceivingAnalytics_CheckBox_ShowOutsideService.Location = new Point(3, 78);
+            Control_ReceivingAnalytics_CheckBox_ShowOutsideService.Name = "Control_ReceivingAnalytics_CheckBox_ShowOutsideService";
+            Control_ReceivingAnalytics_CheckBox_ShowOutsideService.Size = new Size(139, 19);
+            Control_ReceivingAnalytics_CheckBox_ShowOutsideService.TabIndex = 9;
+            Control_ReceivingAnalytics_CheckBox_ShowOutsideService.Text = "Show Outside Service";
+            Control_ReceivingAnalytics_CheckBox_ShowOutsideService.UseVisualStyleBackColor = true;
+            // 
+            // Control_ReceivingAnalytics_CheckBox_ShowWithPartID
+            // 
+            Control_ReceivingAnalytics_CheckBox_ShowWithPartID.AutoSize = true;
+            Control_ReceivingAnalytics_CheckBox_ShowWithPartID.Dock = DockStyle.Fill;
+            Control_ReceivingAnalytics_CheckBox_ShowWithPartID.Location = new Point(3, 3);
+            Control_ReceivingAnalytics_CheckBox_ShowWithPartID.Name = "Control_ReceivingAnalytics_CheckBox_ShowWithPartID";
+            Control_ReceivingAnalytics_CheckBox_ShowWithPartID.Size = new Size(288, 19);
+            Control_ReceivingAnalytics_CheckBox_ShowWithPartID.TabIndex = 18;
+            Control_ReceivingAnalytics_CheckBox_ShowWithPartID.Text = "Only Part Numbers";
+            Control_ReceivingAnalytics_CheckBox_ShowWithPartID.UseVisualStyleBackColor = true;
+            // 
+            // Control_ReceivingAnalytics_CheckBox_ShowMMC
+            // 
+            Control_ReceivingAnalytics_CheckBox_ShowMMC.AutoSize = true;
+            Control_ReceivingAnalytics_CheckBox_ShowMMC.Dock = DockStyle.Fill;
+            Control_ReceivingAnalytics_CheckBox_ShowMMC.Location = new Point(3, 28);
+            Control_ReceivingAnalytics_CheckBox_ShowMMC.Name = "Control_ReceivingAnalytics_CheckBox_ShowMMC";
+            Control_ReceivingAnalytics_CheckBox_ShowMMC.Size = new Size(288, 19);
+            Control_ReceivingAnalytics_CheckBox_ShowMMC.TabIndex = 20;
+            Control_ReceivingAnalytics_CheckBox_ShowMMC.Text = "Only Coils (MMC)";
+            Control_ReceivingAnalytics_CheckBox_ShowMMC.UseVisualStyleBackColor = true;
+            // 
+            // Control_ReceivingAnalytics_CheckBox_ShowMMF
+            // 
+            Control_ReceivingAnalytics_CheckBox_ShowMMF.AutoSize = true;
+            Control_ReceivingAnalytics_CheckBox_ShowMMF.Dock = DockStyle.Fill;
+            Control_ReceivingAnalytics_CheckBox_ShowMMF.Location = new Point(3, 53);
+            Control_ReceivingAnalytics_CheckBox_ShowMMF.Name = "Control_ReceivingAnalytics_CheckBox_ShowMMF";
+            Control_ReceivingAnalytics_CheckBox_ShowMMF.Size = new Size(288, 19);
+            Control_ReceivingAnalytics_CheckBox_ShowMMF.TabIndex = 21;
+            Control_ReceivingAnalytics_CheckBox_ShowMMF.Text = "Only Flat Stock (MMF)";
+            Control_ReceivingAnalytics_CheckBox_ShowMMF.UseVisualStyleBackColor = true;
             // 
             // tableLayoutPanel4
             // 
@@ -1270,15 +1144,13 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             tableLayoutPanel4.ColumnCount = 1;
             tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             tableLayoutPanel4.Controls.Add(Control_ReceivingAnalytics_TableLayoutPanel_DateRangeMain, 0, 0);
-            tableLayoutPanel4.Controls.Add(Control_ReceivingAnalytics_Panel_Buttons, 0, 2);
             tableLayoutPanel4.Dock = DockStyle.Fill;
             tableLayoutPanel4.Location = new Point(3, 3);
             tableLayoutPanel4.Name = "tableLayoutPanel4";
-            tableLayoutPanel4.RowCount = 3;
+            tableLayoutPanel4.RowCount = 1;
             tableLayoutPanel4.RowStyles.Add(new RowStyle());
-            tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel4.RowStyles.Add(new RowStyle());
-            tableLayoutPanel4.Size = new Size(308, 232);
+            tableLayoutPanel4.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            tableLayoutPanel4.Size = new Size(308, 207);
             tableLayoutPanel4.TabIndex = 32;
             // 
             // Control_ReceivingAnalytics_TableLayoutPanel_DateRangeMain
@@ -1296,7 +1168,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_ReceivingAnalytics_TableLayoutPanel_DateRangeMain.RowCount = 2;
             Control_ReceivingAnalytics_TableLayoutPanel_DateRangeMain.RowStyles.Add(new RowStyle());
             Control_ReceivingAnalytics_TableLayoutPanel_DateRangeMain.RowStyles.Add(new RowStyle());
-            Control_ReceivingAnalytics_TableLayoutPanel_DateRangeMain.Size = new Size(302, 115);
+            Control_ReceivingAnalytics_TableLayoutPanel_DateRangeMain.Size = new Size(302, 207);
             Control_ReceivingAnalytics_TableLayoutPanel_DateRangeMain.TabIndex = 19;
             // 
             // Control_ReceivingAnalytics_Panel_DateRangeHeader
@@ -1352,7 +1224,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_ReceivingAnalytics_Panel_DateRangeContents.Location = new Point(3, 36);
             Control_ReceivingAnalytics_Panel_DateRangeContents.Margin = new Padding(3, 0, 3, 3);
             Control_ReceivingAnalytics_Panel_DateRangeContents.Name = "Control_ReceivingAnalytics_Panel_DateRangeContents";
-            Control_ReceivingAnalytics_Panel_DateRangeContents.Size = new Size(296, 76);
+            Control_ReceivingAnalytics_Panel_DateRangeContents.Size = new Size(296, 168);
             Control_ReceivingAnalytics_Panel_DateRangeContents.TabIndex = 23;
             // 
             // Control_ReceivingAnalytics_TableLayoutPanel_DateRangeContents
@@ -1366,24 +1238,12 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_ReceivingAnalytics_TableLayoutPanel_DateRangeContents.Dock = DockStyle.Fill;
             Control_ReceivingAnalytics_TableLayoutPanel_DateRangeContents.Location = new Point(0, 0);
             Control_ReceivingAnalytics_TableLayoutPanel_DateRangeContents.Name = "Control_ReceivingAnalytics_TableLayoutPanel_DateRangeContents";
-            Control_ReceivingAnalytics_TableLayoutPanel_DateRangeContents.RowCount = 2;
+            Control_ReceivingAnalytics_TableLayoutPanel_DateRangeContents.RowCount = 3;
             Control_ReceivingAnalytics_TableLayoutPanel_DateRangeContents.RowStyles.Add(new RowStyle());
             Control_ReceivingAnalytics_TableLayoutPanel_DateRangeContents.RowStyles.Add(new RowStyle());
-            Control_ReceivingAnalytics_TableLayoutPanel_DateRangeContents.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            Control_ReceivingAnalytics_TableLayoutPanel_DateRangeContents.Size = new Size(294, 74);
+            Control_ReceivingAnalytics_TableLayoutPanel_DateRangeContents.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            Control_ReceivingAnalytics_TableLayoutPanel_DateRangeContents.Size = new Size(294, 166);
             Control_ReceivingAnalytics_TableLayoutPanel_DateRangeContents.TabIndex = 1;
-            // 
-            // Control_ReceivingAnalytics_Panel_Buttons
-            // 
-            Control_ReceivingAnalytics_Panel_Buttons.AutoSize = true;
-            Control_ReceivingAnalytics_Panel_Buttons.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            Control_ReceivingAnalytics_Panel_Buttons.BorderStyle = BorderStyle.FixedSingle;
-            Control_ReceivingAnalytics_Panel_Buttons.Controls.Add(Control_ReceivingAnalytics_TableLayoutPanel_Buttons);
-            Control_ReceivingAnalytics_Panel_Buttons.Dock = DockStyle.Fill;
-            Control_ReceivingAnalytics_Panel_Buttons.Location = new Point(3, 181);
-            Control_ReceivingAnalytics_Panel_Buttons.Name = "Control_ReceivingAnalytics_Panel_Buttons";
-            Control_ReceivingAnalytics_Panel_Buttons.Size = new Size(302, 48);
-            Control_ReceivingAnalytics_Panel_Buttons.TabIndex = 29;
             // 
             // tableLayoutPanel5
             // 
@@ -1395,10 +1255,10 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             tableLayoutPanel5.Dock = DockStyle.Fill;
             tableLayoutPanel5.Location = new Point(317, 3);
             tableLayoutPanel5.Name = "tableLayoutPanel5";
-            tableLayoutPanel5.RowCount = 2;
+            tableLayoutPanel5.RowCount = 1;
             tableLayoutPanel5.RowStyles.Add(new RowStyle());
-            tableLayoutPanel5.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel5.Size = new Size(308, 232);
+            tableLayoutPanel5.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            tableLayoutPanel5.Size = new Size(308, 207);
             tableLayoutPanel5.TabIndex = 33;
             // 
             // Control_ReceivingAnalytics_TableLayoutPanel_FiltersMain
@@ -1416,7 +1276,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_ReceivingAnalytics_TableLayoutPanel_FiltersMain.RowCount = 2;
             Control_ReceivingAnalytics_TableLayoutPanel_FiltersMain.RowStyles.Add(new RowStyle());
             Control_ReceivingAnalytics_TableLayoutPanel_FiltersMain.RowStyles.Add(new RowStyle());
-            Control_ReceivingAnalytics_TableLayoutPanel_FiltersMain.Size = new Size(302, 186);
+            Control_ReceivingAnalytics_TableLayoutPanel_FiltersMain.Size = new Size(302, 207);
             Control_ReceivingAnalytics_TableLayoutPanel_FiltersMain.TabIndex = 23;
             // 
             // Control_ReceivingAnalytics_Panel_FiltersContents
@@ -1429,7 +1289,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_ReceivingAnalytics_Panel_FiltersContents.Location = new Point(3, 36);
             Control_ReceivingAnalytics_Panel_FiltersContents.Margin = new Padding(3, 0, 3, 3);
             Control_ReceivingAnalytics_Panel_FiltersContents.Name = "Control_ReceivingAnalytics_Panel_FiltersContents";
-            Control_ReceivingAnalytics_Panel_FiltersContents.Size = new Size(296, 147);
+            Control_ReceivingAnalytics_Panel_FiltersContents.Size = new Size(296, 168);
             Control_ReceivingAnalytics_Panel_FiltersContents.TabIndex = 25;
             // 
             // Control_ReceivingAnalytics_TableLayoutPanel_FiltersContents
@@ -1446,14 +1306,14 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_ReceivingAnalytics_TableLayoutPanel_FiltersContents.Dock = DockStyle.Fill;
             Control_ReceivingAnalytics_TableLayoutPanel_FiltersContents.Location = new Point(0, 0);
             Control_ReceivingAnalytics_TableLayoutPanel_FiltersContents.Name = "Control_ReceivingAnalytics_TableLayoutPanel_FiltersContents";
-            Control_ReceivingAnalytics_TableLayoutPanel_FiltersContents.RowCount = 5;
-            Control_ReceivingAnalytics_TableLayoutPanel_FiltersContents.RowStyles.Add(new RowStyle(SizeType.Percent, 20.0000019F));
-            Control_ReceivingAnalytics_TableLayoutPanel_FiltersContents.RowStyles.Add(new RowStyle(SizeType.Percent, 19.9999981F));
-            Control_ReceivingAnalytics_TableLayoutPanel_FiltersContents.RowStyles.Add(new RowStyle(SizeType.Percent, 19.9999981F));
-            Control_ReceivingAnalytics_TableLayoutPanel_FiltersContents.RowStyles.Add(new RowStyle(SizeType.Percent, 19.9999981F));
-            Control_ReceivingAnalytics_TableLayoutPanel_FiltersContents.RowStyles.Add(new RowStyle(SizeType.Percent, 19.9999981F));
-            Control_ReceivingAnalytics_TableLayoutPanel_FiltersContents.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            Control_ReceivingAnalytics_TableLayoutPanel_FiltersContents.Size = new Size(294, 145);
+            Control_ReceivingAnalytics_TableLayoutPanel_FiltersContents.RowCount = 6;
+            Control_ReceivingAnalytics_TableLayoutPanel_FiltersContents.RowStyles.Add(new RowStyle());
+            Control_ReceivingAnalytics_TableLayoutPanel_FiltersContents.RowStyles.Add(new RowStyle());
+            Control_ReceivingAnalytics_TableLayoutPanel_FiltersContents.RowStyles.Add(new RowStyle());
+            Control_ReceivingAnalytics_TableLayoutPanel_FiltersContents.RowStyles.Add(new RowStyle());
+            Control_ReceivingAnalytics_TableLayoutPanel_FiltersContents.RowStyles.Add(new RowStyle());
+            Control_ReceivingAnalytics_TableLayoutPanel_FiltersContents.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            Control_ReceivingAnalytics_TableLayoutPanel_FiltersContents.Size = new Size(294, 166);
             Control_ReceivingAnalytics_TableLayoutPanel_FiltersContents.TabIndex = 2;
             // 
             // Control_ReceivingAnalytics_Panel_FiltersHeader
@@ -1521,15 +1381,13 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Controls.Add(Control_ReceivingAnalytics_TableLayoutPanel_Main);
             MinimumSize = new Size(1225, 0);
             Name = "Control_ReceivingAnalytics";
-            Size = new Size(1262, 605);
+            Size = new Size(1262, 630);
             Control_ReceivingAnalytics_Panel_CheckBoxes_Legend.ResumeLayout(false);
             Control_ReceivingAnalytics_Panel_CheckBoxes_Legend.PerformLayout();
             Control_ReceivingAnalytics_TableLayoutPanel_Legend.ResumeLayout(false);
             Control_ReceivingAnalytics_TableLayoutPanel_Legend.PerformLayout();
             Control_ReceivingAnalytics_Panel_DataGridView.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)Control_ReceivingAnalytics_DataGridView_Results).EndInit();
-            Control_ReceivingAnalytics_TableLayoutPanel_Buttons.ResumeLayout(false);
-            Control_ReceivingAnalytics_TableLayoutPanel_Buttons.PerformLayout();
             Control_ReceivingAnalytics_TableLayoutPanel_DateRange.ResumeLayout(false);
             Control_ReceivingAnalytics_TableLayoutPanel_DateRange.PerformLayout();
             Control_ReceivingAnalytics_TableLayoutPanel_WeekButtons.ResumeLayout(false);
@@ -1541,6 +1399,10 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_ReceivingAnalytics_TableLayoutPanel_Results.PerformLayout();
             tableLayoutPanel1.ResumeLayout(false);
             tableLayoutPanel1.PerformLayout();
+            Control_ReceivingAnalytics_Panel_Buttons.ResumeLayout(false);
+            Control_ReceivingAnalytics_Panel_Buttons.PerformLayout();
+            Control_ReceivingAnalytics_TableLayoutPanel_Buttons.ResumeLayout(false);
+            Control_ReceivingAnalytics_TableLayoutPanel_Buttons.PerformLayout();
             tableLayoutPanel2.ResumeLayout(false);
             tableLayoutPanel2.PerformLayout();
             Control_ReceivingAnalytics_TableLayoutPanel_POStatesMain.ResumeLayout(false);
@@ -1565,16 +1427,6 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_ReceivingAnalytics_TableLayoutPanel_DeliveryStatesContents.PerformLayout();
             tableLayoutPanel3.ResumeLayout(false);
             tableLayoutPanel3.PerformLayout();
-            Control_ReceivingAnalytics_Panel_OutsideScopeMain.ResumeLayout(false);
-            Control_ReceivingAnalytics_Panel_OutsideScopeMain.PerformLayout();
-            Control_ReceivingAnalytics_Panel_OutsideScopeHeader.ResumeLayout(false);
-            Control_ReceivingAnalytics_Panel_OutsideScopeHeader.PerformLayout();
-            Control_ReceivingAnalytics_TableLayoutPanel_OutsideScopeHeader.ResumeLayout(false);
-            Control_ReceivingAnalytics_TableLayoutPanel_OutsideScopeHeader.PerformLayout();
-            Control_ReceivingAnalytics_Panel_OutsideScopeContents.ResumeLayout(false);
-            Control_ReceivingAnalytics_Panel_OutsideScopeContents.PerformLayout();
-            Control_ReceivingAnalytics_TableLayoutPanel_OutsideScopeContents.ResumeLayout(false);
-            Control_ReceivingAnalytics_TableLayoutPanel_OutsideScopeContents.PerformLayout();
             Control_ReceivingAnalytics_Panel_ReceivingScopeMain.ResumeLayout(false);
             Control_ReceivingAnalytics_Panel_ReceivingScopeMain.PerformLayout();
             Control_ReceivingAnalytics_Panel_ReceivingScopeHeader.ResumeLayout(false);
@@ -1597,8 +1449,6 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_ReceivingAnalytics_Panel_DateRangeContents.PerformLayout();
             Control_ReceivingAnalytics_TableLayoutPanel_DateRangeContents.ResumeLayout(false);
             Control_ReceivingAnalytics_TableLayoutPanel_DateRangeContents.PerformLayout();
-            Control_ReceivingAnalytics_Panel_Buttons.ResumeLayout(false);
-            Control_ReceivingAnalytics_Panel_Buttons.PerformLayout();
             tableLayoutPanel5.ResumeLayout(false);
             tableLayoutPanel5.PerformLayout();
             Control_ReceivingAnalytics_TableLayoutPanel_FiltersMain.ResumeLayout(false);
@@ -1622,21 +1472,13 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         private System.Windows.Forms.Label Control_ReceivingAnalytics_Label_DateRangeTo;
         private System.Windows.Forms.DateTimePicker Control_ReceivingAnalytics_DateTimePicker_EndDate;
         private System.Windows.Forms.CheckBox Control_ReceivingAnalytics_CheckBox_ShowClosed;
-        private System.Windows.Forms.CheckBox Control_ReceivingAnalytics_CheckBox_ShowConsignment;
-        private System.Windows.Forms.CheckBox Control_ReceivingAnalytics_CheckBox_ShowInternal;
-        private System.Windows.Forms.CheckBox Control_ReceivingAnalytics_CheckBox_ShowOutsideService;
-        private System.Windows.Forms.Button Control_ReceivingAnalytics_Button_Search;
         private System.Windows.Forms.CheckBox Control_ReceivingAnalytics_CheckBox_ShowLate;
         private System.Windows.Forms.CheckBox Control_ReceivingAnalytics_CheckBox_ShowPartial;
         private System.Windows.Forms.CheckBox Control_ReceivingAnalytics_CheckBox_ShowOnTime;
-        private System.Windows.Forms.CheckBox Control_ReceivingAnalytics_CheckBox_ShowWithPartID;
         private TableLayoutPanel Control_ReceivingAnalytics_TableLayoutPanel_DateRange;
         private CheckBox Control_ReceivingAnalytics_CheckBox_ShowOpen;
-        private CheckBox Control_ReceivingAnalytics_CheckBox_ShowMMC;
-        private CheckBox Control_ReceivingAnalytics_CheckBox_ShowMMF;
         private MTM_WIP_Application_Winforms.Components.Shared.Component_SuggestionTextBoxWithLabel Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Carrier;
         private MTM_WIP_Application_Winforms.Components.Shared.Component_SuggestionTextBoxWithLabel Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PartNumber;
-        private TableLayoutPanel Control_ReceivingAnalytics_TableLayoutPanel_Buttons;
         private Panel Control_ReceivingAnalytics_Panel_CheckBoxes_Legend;
         private TableLayoutPanel Control_ReceivingAnalytics_TableLayoutPanel_Legend;
         private MTM_WIP_Application_Winforms.Components.Shared.Component_SuggestionTextBoxWithLabel Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PONumber;
@@ -1651,7 +1493,6 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         private Panel Control_ReceivingAnalytics_Panel_LegendPartial;
         private Panel Control_ReceivingAnalytics_Panel_LegendOnTime;
         private Label Control_ReceivingAnalytics_Label_LegendTitle;
-        private Button Control_ReceivingAnalytics_Button_Analytics;
         private TableLayoutPanel Control_ReceivingAnalytics_TableLayoutPanel_WeekButtons;
         private Button Control_ReceivingAnalytics_Button_NextWeek;
         private Button Control_ReceivingAnalytics_Button_PreviousWeek;
@@ -1685,21 +1526,6 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         private Label Control_ReceivingAnalytics_Label_DeliveryStatesHeader;
         private Panel Control_ReceivingAnalytics_Panel_DeliveryStatesContents;
         private TableLayoutPanel Control_ReceivingAnalytics_TableLayoutPanel_DeliveryStatesContents;
-        private TableLayoutPanel Control_ReceivingAnalytics_Panel_ReceivingScopeMain;
-        private Panel Control_ReceivingAnalytics_Panel_ReceivingScopeHeader;
-        private TableLayoutPanel Control_ReceivingAnalytics_TableLayoutPanel_ReceivingScopeHeader;
-        private Button Control_ReceivingAnalytics_Button_ReceivingScopeHeader;
-        private Label Control_ReceivingAnalytics_Label_ReceivingScopeHeader;
-        private Panel Control_ReceivingAnalytics_Panel_ReceivingScopeContents;
-        private TableLayoutPanel Control_ReceivingAnalytics_TableLayoutPanel_ReceivingScopeContents;
-        private TableLayoutPanel Control_ReceivingAnalytics_Panel_OutsideScopeMain;
-        private Panel Control_ReceivingAnalytics_Panel_OutsideScopeHeader;
-        private TableLayoutPanel Control_ReceivingAnalytics_TableLayoutPanel_OutsideScopeHeader;
-        private Button Control_ReceivingAnalytics_Button_OutsideScopeHeader;
-        private Label Control_ReceivingAnalytics_Label_OutsideScopeHeader;
-        private Panel Control_ReceivingAnalytics_Panel_OutsideScopeContents;
-        private TableLayoutPanel Control_ReceivingAnalytics_TableLayoutPanel_OutsideScopeContents;
-        private Panel Control_ReceivingAnalytics_Panel_Buttons;
         private TableLayoutPanel Control_ReceivingAnalytics_TableLayoutPanel_Results;
         private Panel Control_ReceivingAnalytics_Panel_Results;
         private TableLayoutPanel tableLayoutPanel1;
@@ -1707,6 +1533,21 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         private TableLayoutPanel tableLayoutPanel3;
         private TableLayoutPanel tableLayoutPanel4;
         private TableLayoutPanel tableLayoutPanel5;
+        private Panel Control_ReceivingAnalytics_Panel_Buttons;
+        private TableLayoutPanel Control_ReceivingAnalytics_TableLayoutPanel_Buttons;
         private Button button1;
+        private Button Control_ReceivingAnalytics_Button_Search;
+        private Button Control_ReceivingAnalytics_Button_Analytics;
+        private TableLayoutPanel Control_ReceivingAnalytics_Panel_ReceivingScopeMain;
+        private Panel Control_ReceivingAnalytics_Panel_ReceivingScopeHeader;
+        private TableLayoutPanel Control_ReceivingAnalytics_TableLayoutPanel_ReceivingScopeHeader;
+        private Button Control_ReceivingAnalytics_Button_ReceivingScopeHeader;
+        private Label Control_ReceivingAnalytics_Label_ReceivingScopeHeader;
+        private Panel Control_ReceivingAnalytics_Panel_ReceivingScopeContents;
+        private TableLayoutPanel Control_ReceivingAnalytics_TableLayoutPanel_ReceivingScopeContents;
+        private CheckBox Control_ReceivingAnalytics_CheckBox_ShowOutsideService;
+        private CheckBox Control_ReceivingAnalytics_CheckBox_ShowWithPartID;
+        private CheckBox Control_ReceivingAnalytics_CheckBox_ShowMMC;
+        private CheckBox Control_ReceivingAnalytics_CheckBox_ShowMMF;
     }
 }

@@ -56,7 +56,6 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             InforVisualDashboard_Button_InventoryAuditing.Click += CategoryButton_Click;
             InforVisualDashboard_Button_DieToolDiscovery.Click += CategoryButton_Click;
             InforVisualDashboard_Button_MaterialHandlerGeneral.Click += CategoryButton_Click;
-            InforVisualDashboard_Button_MaterialHandlerTeam.Click += CategoryButton_Click;
         }
 
         private async Task LoadCategoryDataAsync(Enum_VisualDashboardCategory category)
@@ -191,9 +190,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
 
         private void SetLoadingState(bool isLoading)
         {
-            InforVisualDashboard_Label_Loading.Visible = isLoading;
             InforVisualDashboard_Panel_Navigation.Enabled = !isLoading;
-
 
             if (isLoading)
             {
