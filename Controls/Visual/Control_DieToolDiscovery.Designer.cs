@@ -17,515 +17,515 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         /// </summary>
         private void InitializeComponent()
         {
-            tabControlMain = new TabControl();
-            tabLocator = new TabPage();
-            grpSearch = new GroupBox();
-            tableLayoutPanel1 = new TableLayoutPanel();
-            tableLayoutPanel2 = new TableLayoutPanel();
-            txtSearch = new MTM_WIP_Application_Winforms.Components.Shared.Component_SuggestionTextBoxWithLabel();
-            btnSearch = new Button();
-            panel1 = new Panel();
-            gridResults = new DataGridView();
-            tabCoilFlatstock = new TabPage();
-            tableLayoutCoil = new TableLayoutPanel();
-            txtCoilSearch = new MTM_WIP_Application_Winforms.Components.Shared.Component_SuggestionTextBoxWithLabel();
-            btnCoilSearch = new Button();
-            tableLayoutCoilDetails = new TableLayoutPanel();
-            txtThickness = new MTM_WIP_Application_Winforms.Components.Shared.Component_SuggestionTextBoxWithLabel();
-            txtWidth = new MTM_WIP_Application_Winforms.Components.Shared.Component_SuggestionTextBoxWithLabel();
-            txtLength = new MTM_WIP_Application_Winforms.Components.Shared.Component_SuggestionTextBoxWithLabel();
-            txtGauge = new MTM_WIP_Application_Winforms.Components.Shared.Component_SuggestionTextBoxWithLabel();
-            txtWhereUsed = new MTM_WIP_Application_Winforms.Components.Shared.Component_SuggestionTextBoxWithLabel();
-            txtProgression = new MTM_WIP_Application_Winforms.Components.Shared.Component_SuggestionTextBoxWithLabel();
-            txtCustomer = new MTM_WIP_Application_Winforms.Components.Shared.Component_SuggestionTextBoxWithLabel();
-            txtScrapLocation = new MTM_WIP_Application_Winforms.Components.Shared.Component_SuggestionTextBoxWithLabel();
-            txtGenericType = new MTM_WIP_Application_Winforms.Components.Shared.Component_SuggestionTextBoxWithLabel();
-            txtDetailedType = new MTM_WIP_Application_Winforms.Components.Shared.Component_SuggestionTextBoxWithLabel();
-            txtAutoIssueLocation = new MTM_WIP_Application_Winforms.Components.Shared.Component_SuggestionTextBoxWithLabel();
-            flpSearchType = new FlowLayoutPanel();
-            rbSearchByPart = new RadioButton();
-            rbSearchByDie = new RadioButton();
-            btnWhereUsed = new Button();
-            tabControlMain.SuspendLayout();
-            tabLocator.SuspendLayout();
-            grpSearch.SuspendLayout();
-            tableLayoutPanel1.SuspendLayout();
-            tableLayoutPanel2.SuspendLayout();
-            panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)gridResults).BeginInit();
-            tabCoilFlatstock.SuspendLayout();
-            tableLayoutCoil.SuspendLayout();
-            tableLayoutCoilDetails.SuspendLayout();
+            Control_DieToolDiscovery_TabControl_Main = new TabControl();
+            Control_DieToolDiscovery_TabPage_Locator = new TabPage();
+            Control_DieToolDiscovery_GroupBox_Search = new GroupBox();
+            Control_DieToolDiscovery_TableLayoutPanel_Main = new TableLayoutPanel();
+            Control_DieToolDiscovery_FlowLayoutPanel_SearchType = new FlowLayoutPanel();
+            Control_DieToolDiscovery_RadioButton_SearchByPart = new RadioButton();
+            Control_DieToolDiscovery_RadioButton_SearchByDie = new RadioButton();
+            Control_DieToolDiscovery_TableLayoutPanel_Search = new TableLayoutPanel();
+            Control_DieToolDiscovery_SuggestionBox_Search = new Components.Shared.Component_SuggestionTextBoxWithLabel();
+            Control_DieToolDiscovery_Button_Search = new Button();
+            Control_DieToolDiscovery_Button_WhereUsed = new Button();
+            Control_DieToolDiscovery_Panel_Grid = new Panel();
+            Control_DieToolDiscovery_DataGridView_Results = new DataGridView();
+            Control_DieToolDiscovery_TabPage_CoilFlatstock = new TabPage();
+            Control_DieToolDiscovery_TableLayoutPanel_Coil = new TableLayoutPanel();
+            Control_DieToolDiscovery_SuggestionBox_CoilSearch = new Components.Shared.Component_SuggestionTextBoxWithLabel();
+            Control_DieToolDiscovery_Button_CoilSearch = new Button();
+            Control_DieToolDiscovery_TableLayoutPanel_CoilDetails = new TableLayoutPanel();
+            Control_DieToolDiscovery_SuggestionBox_Thickness = new Components.Shared.Component_SuggestionTextBoxWithLabel();
+            Control_DieToolDiscovery_SuggestionBox_Width = new Components.Shared.Component_SuggestionTextBoxWithLabel();
+            Control_DieToolDiscovery_SuggestionBox_Length = new Components.Shared.Component_SuggestionTextBoxWithLabel();
+            Control_DieToolDiscovery_SuggestionBox_Gauge = new Components.Shared.Component_SuggestionTextBoxWithLabel();
+            Control_DieToolDiscovery_SuggestionBox_WhereUsed = new Components.Shared.Component_SuggestionTextBoxWithLabel();
+            Control_DieToolDiscovery_SuggestionBox_Progression = new Components.Shared.Component_SuggestionTextBoxWithLabel();
+            Control_DieToolDiscovery_SuggestionBox_Customer = new Components.Shared.Component_SuggestionTextBoxWithLabel();
+            Control_DieToolDiscovery_SuggestionBox_ScrapLocation = new Components.Shared.Component_SuggestionTextBoxWithLabel();
+            Control_DieToolDiscovery_SuggestionBox_GenericType = new Components.Shared.Component_SuggestionTextBoxWithLabel();
+            Control_DieToolDiscovery_SuggestionBox_DetailedType = new Components.Shared.Component_SuggestionTextBoxWithLabel();
+            Control_DieToolDiscovery_SuggestionBox_AutoIssueLocation = new Components.Shared.Component_SuggestionTextBoxWithLabel();
+            Control_DieToolDiscovery_TabControl_Main.SuspendLayout();
+            Control_DieToolDiscovery_TabPage_Locator.SuspendLayout();
+            Control_DieToolDiscovery_GroupBox_Search.SuspendLayout();
+            Control_DieToolDiscovery_TableLayoutPanel_Main.SuspendLayout();
+            Control_DieToolDiscovery_FlowLayoutPanel_SearchType.SuspendLayout();
+            Control_DieToolDiscovery_TableLayoutPanel_Search.SuspendLayout();
+            Control_DieToolDiscovery_Panel_Grid.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)Control_DieToolDiscovery_DataGridView_Results).BeginInit();
+            Control_DieToolDiscovery_TabPage_CoilFlatstock.SuspendLayout();
+            Control_DieToolDiscovery_TableLayoutPanel_Coil.SuspendLayout();
+            Control_DieToolDiscovery_TableLayoutPanel_CoilDetails.SuspendLayout();
             SuspendLayout();
             // 
-            // tabControlMain
+            // Control_DieToolDiscovery_TabControl_Main
             // 
-            tabControlMain.Controls.Add(tabLocator);
-            tabControlMain.Controls.Add(tabCoilFlatstock);
-            tabControlMain.Dock = DockStyle.Fill;
-            tabControlMain.Location = new Point(0, 0);
-            tabControlMain.Name = "tabControlMain";
-            tabControlMain.SelectedIndex = 0;
-            tabControlMain.Size = new Size(800, 350);
-            tabControlMain.TabIndex = 0;
+            Control_DieToolDiscovery_TabControl_Main.Controls.Add(Control_DieToolDiscovery_TabPage_Locator);
+            Control_DieToolDiscovery_TabControl_Main.Controls.Add(Control_DieToolDiscovery_TabPage_CoilFlatstock);
+            Control_DieToolDiscovery_TabControl_Main.Dock = DockStyle.Fill;
+            Control_DieToolDiscovery_TabControl_Main.Location = new Point(0, 0);
+            Control_DieToolDiscovery_TabControl_Main.Name = "Control_DieToolDiscovery_TabControl_Main";
+            Control_DieToolDiscovery_TabControl_Main.SelectedIndex = 0;
+            Control_DieToolDiscovery_TabControl_Main.Size = new Size(800, 350);
+            Control_DieToolDiscovery_TabControl_Main.TabIndex = 0;
             // 
-            // tabLocator
+            // Control_DieToolDiscovery_TabPage_Locator
             // 
-            tabLocator.Controls.Add(grpSearch);
-            tabLocator.Location = new Point(4, 24);
-            tabLocator.Name = "tabLocator";
-            tabLocator.Padding = new Padding(10);
-            tabLocator.Size = new Size(792, 322);
-            tabLocator.TabIndex = 0;
-            tabLocator.Text = "Die Locator";
-            tabLocator.UseVisualStyleBackColor = true;
+            Control_DieToolDiscovery_TabPage_Locator.Controls.Add(Control_DieToolDiscovery_GroupBox_Search);
+            Control_DieToolDiscovery_TabPage_Locator.Location = new Point(4, 24);
+            Control_DieToolDiscovery_TabPage_Locator.Name = "Control_DieToolDiscovery_TabPage_Locator";
+            Control_DieToolDiscovery_TabPage_Locator.Padding = new Padding(10);
+            Control_DieToolDiscovery_TabPage_Locator.Size = new Size(792, 322);
+            Control_DieToolDiscovery_TabPage_Locator.TabIndex = 0;
+            Control_DieToolDiscovery_TabPage_Locator.Text = "Die Locator";
+            Control_DieToolDiscovery_TabPage_Locator.UseVisualStyleBackColor = true;
             // 
-            // grpSearch
+            // Control_DieToolDiscovery_GroupBox_Search
             // 
-            grpSearch.AutoSize = true;
-            grpSearch.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            grpSearch.Controls.Add(tableLayoutPanel1);
-            grpSearch.Dock = DockStyle.Fill;
-            grpSearch.Location = new Point(10, 10);
-            grpSearch.Name = "grpSearch";
-            grpSearch.Size = new Size(772, 302);
-            grpSearch.TabIndex = 0;
-            grpSearch.TabStop = false;
-            grpSearch.Text = "Search Criteria";
+            Control_DieToolDiscovery_GroupBox_Search.AutoSize = true;
+            Control_DieToolDiscovery_GroupBox_Search.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_DieToolDiscovery_GroupBox_Search.Controls.Add(Control_DieToolDiscovery_TableLayoutPanel_Main);
+            Control_DieToolDiscovery_GroupBox_Search.Dock = DockStyle.Fill;
+            Control_DieToolDiscovery_GroupBox_Search.Location = new Point(10, 10);
+            Control_DieToolDiscovery_GroupBox_Search.Name = "Control_DieToolDiscovery_GroupBox_Search";
+            Control_DieToolDiscovery_GroupBox_Search.Size = new Size(772, 302);
+            Control_DieToolDiscovery_GroupBox_Search.TabIndex = 0;
+            Control_DieToolDiscovery_GroupBox_Search.TabStop = false;
+            Control_DieToolDiscovery_GroupBox_Search.Text = "Search Criteria";
             // 
-            // tableLayoutPanel1
+            // Control_DieToolDiscovery_TableLayoutPanel_Main
             // 
-            tableLayoutPanel1.AutoSize = true;
-            tableLayoutPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            tableLayoutPanel1.ColumnCount = 2;
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tableLayoutPanel1.Controls.Add(flpSearchType, 0, 0);
-            tableLayoutPanel1.SetColumnSpan(flpSearchType, 2);
-            tableLayoutPanel1.Controls.Add(tableLayoutPanel2, 0, 1);
-            tableLayoutPanel1.SetColumnSpan(tableLayoutPanel2, 2);
-            tableLayoutPanel1.Controls.Add(btnSearch, 0, 2);
-            tableLayoutPanel1.Controls.Add(btnWhereUsed, 1, 2);
-            tableLayoutPanel1.Controls.Add(panel1, 0, 3);
-            tableLayoutPanel1.SetColumnSpan(panel1, 2);
-            tableLayoutPanel1.Dock = DockStyle.Fill;
-            tableLayoutPanel1.Location = new Point(3, 19);
-            tableLayoutPanel1.Name = "tableLayoutPanel1";
-            tableLayoutPanel1.RowCount = 4;
-            tableLayoutPanel1.RowStyles.Add(new RowStyle());
-            tableLayoutPanel1.RowStyles.Add(new RowStyle());
-            tableLayoutPanel1.RowStyles.Add(new RowStyle());
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.Size = new Size(766, 280);
-            tableLayoutPanel1.TabIndex = 5;
+            Control_DieToolDiscovery_TableLayoutPanel_Main.AutoSize = true;
+            Control_DieToolDiscovery_TableLayoutPanel_Main.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_DieToolDiscovery_TableLayoutPanel_Main.ColumnCount = 2;
+            Control_DieToolDiscovery_TableLayoutPanel_Main.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            Control_DieToolDiscovery_TableLayoutPanel_Main.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            Control_DieToolDiscovery_TableLayoutPanel_Main.Controls.Add(Control_DieToolDiscovery_FlowLayoutPanel_SearchType, 0, 0);
+            Control_DieToolDiscovery_TableLayoutPanel_Main.SetColumnSpan(Control_DieToolDiscovery_FlowLayoutPanel_SearchType, 2);
+            Control_DieToolDiscovery_TableLayoutPanel_Main.Controls.Add(Control_DieToolDiscovery_TableLayoutPanel_Search, 0, 1);
+            Control_DieToolDiscovery_TableLayoutPanel_Main.SetColumnSpan(Control_DieToolDiscovery_TableLayoutPanel_Search, 2);
+            Control_DieToolDiscovery_TableLayoutPanel_Main.Controls.Add(Control_DieToolDiscovery_Button_Search, 0, 2);
+            Control_DieToolDiscovery_TableLayoutPanel_Main.Controls.Add(Control_DieToolDiscovery_Button_WhereUsed, 1, 2);
+            Control_DieToolDiscovery_TableLayoutPanel_Main.Controls.Add(Control_DieToolDiscovery_Panel_Grid, 0, 3);
+            Control_DieToolDiscovery_TableLayoutPanel_Main.SetColumnSpan(Control_DieToolDiscovery_Panel_Grid, 2);
+            Control_DieToolDiscovery_TableLayoutPanel_Main.Dock = DockStyle.Fill;
+            Control_DieToolDiscovery_TableLayoutPanel_Main.Location = new Point(3, 19);
+            Control_DieToolDiscovery_TableLayoutPanel_Main.Name = "Control_DieToolDiscovery_TableLayoutPanel_Main";
+            Control_DieToolDiscovery_TableLayoutPanel_Main.RowCount = 4;
+            Control_DieToolDiscovery_TableLayoutPanel_Main.RowStyles.Add(new RowStyle());
+            Control_DieToolDiscovery_TableLayoutPanel_Main.RowStyles.Add(new RowStyle());
+            Control_DieToolDiscovery_TableLayoutPanel_Main.RowStyles.Add(new RowStyle());
+            Control_DieToolDiscovery_TableLayoutPanel_Main.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            Control_DieToolDiscovery_TableLayoutPanel_Main.Size = new Size(766, 280);
+            Control_DieToolDiscovery_TableLayoutPanel_Main.TabIndex = 5;
             // 
-            // flpSearchType
+            // Control_DieToolDiscovery_FlowLayoutPanel_SearchType
             // 
-            flpSearchType.AutoSize = true;
-            flpSearchType.Controls.Add(rbSearchByPart);
-            flpSearchType.Controls.Add(rbSearchByDie);
-            flpSearchType.Dock = DockStyle.Fill;
-            flpSearchType.Location = new Point(3, 3);
-            flpSearchType.Name = "flpSearchType";
-            flpSearchType.Size = new Size(760, 25);
-            flpSearchType.TabIndex = 0;
+            Control_DieToolDiscovery_FlowLayoutPanel_SearchType.AutoSize = true;
+            Control_DieToolDiscovery_FlowLayoutPanel_SearchType.Controls.Add(Control_DieToolDiscovery_RadioButton_SearchByPart);
+            Control_DieToolDiscovery_FlowLayoutPanel_SearchType.Controls.Add(Control_DieToolDiscovery_RadioButton_SearchByDie);
+            Control_DieToolDiscovery_FlowLayoutPanel_SearchType.Dock = DockStyle.Fill;
+            Control_DieToolDiscovery_FlowLayoutPanel_SearchType.Location = new Point(3, 3);
+            Control_DieToolDiscovery_FlowLayoutPanel_SearchType.Name = "Control_DieToolDiscovery_FlowLayoutPanel_SearchType";
+            Control_DieToolDiscovery_FlowLayoutPanel_SearchType.Size = new Size(760, 25);
+            Control_DieToolDiscovery_FlowLayoutPanel_SearchType.TabIndex = 0;
             // 
-            // rbSearchByPart
+            // Control_DieToolDiscovery_RadioButton_SearchByPart
             // 
-            rbSearchByPart.AutoSize = true;
-            rbSearchByPart.Checked = true;
-            rbSearchByPart.Location = new Point(3, 3);
-            rbSearchByPart.Name = "rbSearchByPart";
-            rbSearchByPart.Size = new Size(143, 19);
-            rbSearchByPart.TabIndex = 0;
-            rbSearchByPart.TabStop = true;
-            rbSearchByPart.Text = "Search by Part Number";
-            rbSearchByPart.UseVisualStyleBackColor = true;
+            Control_DieToolDiscovery_RadioButton_SearchByPart.AutoSize = true;
+            Control_DieToolDiscovery_RadioButton_SearchByPart.Checked = true;
+            Control_DieToolDiscovery_RadioButton_SearchByPart.Location = new Point(3, 3);
+            Control_DieToolDiscovery_RadioButton_SearchByPart.Name = "Control_DieToolDiscovery_RadioButton_SearchByPart";
+            Control_DieToolDiscovery_RadioButton_SearchByPart.Size = new Size(143, 19);
+            Control_DieToolDiscovery_RadioButton_SearchByPart.TabIndex = 0;
+            Control_DieToolDiscovery_RadioButton_SearchByPart.TabStop = true;
+            Control_DieToolDiscovery_RadioButton_SearchByPart.Text = "Search by Part Number";
+            Control_DieToolDiscovery_RadioButton_SearchByPart.UseVisualStyleBackColor = true;
             // 
-            // rbSearchByDie
+            // Control_DieToolDiscovery_RadioButton_SearchByDie
             // 
-            rbSearchByDie.AutoSize = true;
-            rbSearchByDie.Location = new Point(152, 3);
-            rbSearchByDie.Name = "rbSearchByDie";
-            rbSearchByDie.Size = new Size(139, 19);
-            rbSearchByDie.TabIndex = 1;
-            rbSearchByDie.Text = "Search by Die Number";
-            rbSearchByDie.UseVisualStyleBackColor = true;
+            Control_DieToolDiscovery_RadioButton_SearchByDie.AutoSize = true;
+            Control_DieToolDiscovery_RadioButton_SearchByDie.Location = new Point(152, 3);
+            Control_DieToolDiscovery_RadioButton_SearchByDie.Name = "Control_DieToolDiscovery_RadioButton_SearchByDie";
+            Control_DieToolDiscovery_RadioButton_SearchByDie.Size = new Size(139, 19);
+            Control_DieToolDiscovery_RadioButton_SearchByDie.TabIndex = 1;
+            Control_DieToolDiscovery_RadioButton_SearchByDie.Text = "Search by Die Number";
+            Control_DieToolDiscovery_RadioButton_SearchByDie.UseVisualStyleBackColor = true;
             // 
-            // tableLayoutPanel2
+            // Control_DieToolDiscovery_TableLayoutPanel_Search
             // 
-            tableLayoutPanel2.AutoSize = true;
-            tableLayoutPanel2.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            tableLayoutPanel2.ColumnCount = 1;
-            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutPanel2.Controls.Add(txtSearch, 0, 0);
-            tableLayoutPanel2.Dock = DockStyle.Fill;
-            tableLayoutPanel2.Location = new Point(3, 34);
-            tableLayoutPanel2.Name = "tableLayoutPanel2";
-            tableLayoutPanel2.RowCount = 1;
-            tableLayoutPanel2.RowStyles.Add(new RowStyle());
-            tableLayoutPanel2.Size = new Size(760, 29);
-            tableLayoutPanel2.TabIndex = 6;
+            Control_DieToolDiscovery_TableLayoutPanel_Search.AutoSize = true;
+            Control_DieToolDiscovery_TableLayoutPanel_Search.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_DieToolDiscovery_TableLayoutPanel_Search.ColumnCount = 1;
+            Control_DieToolDiscovery_TableLayoutPanel_Search.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            Control_DieToolDiscovery_TableLayoutPanel_Search.Controls.Add(Control_DieToolDiscovery_SuggestionBox_Search, 0, 0);
+            Control_DieToolDiscovery_TableLayoutPanel_Search.Dock = DockStyle.Fill;
+            Control_DieToolDiscovery_TableLayoutPanel_Search.Location = new Point(3, 34);
+            Control_DieToolDiscovery_TableLayoutPanel_Search.Name = "Control_DieToolDiscovery_TableLayoutPanel_Search";
+            Control_DieToolDiscovery_TableLayoutPanel_Search.RowCount = 1;
+            Control_DieToolDiscovery_TableLayoutPanel_Search.RowStyles.Add(new RowStyle());
+            Control_DieToolDiscovery_TableLayoutPanel_Search.Size = new Size(760, 29);
+            Control_DieToolDiscovery_TableLayoutPanel_Search.TabIndex = 6;
             // 
-            // txtSearch
+            // Control_DieToolDiscovery_SuggestionBox_Search
             // 
-            txtSearch.AutoSize = true;
-            txtSearch.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            txtSearch.Dock = DockStyle.Fill;
-            txtSearch.EnableSuggestions = true;
-            txtSearch.LabelText = "Search Term";
-            txtSearch.LabelVisibility = Enum_LabelVisibility.Hidden;
-            txtSearch.Location = new Point(3, 3);
-            txtSearch.Margin = new Padding(3, 3, 3, 3);
-            txtSearch.Name = "txtSearch";
-            txtSearch.PlaceholderText = "Enter Part Number or Die Number";
-            txtSearch.ShowF4Button = true;
-            txtSearch.Size = new Size(754, 23);
-            txtSearch.TabIndex = 3;
+            Control_DieToolDiscovery_SuggestionBox_Search.AutoSize = true;
+            Control_DieToolDiscovery_SuggestionBox_Search.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_DieToolDiscovery_SuggestionBox_Search.Dock = DockStyle.Fill;
+            Control_DieToolDiscovery_SuggestionBox_Search.EnableSuggestions = true;
+            Control_DieToolDiscovery_SuggestionBox_Search.LabelText = "Search Term";
+            Control_DieToolDiscovery_SuggestionBox_Search.LabelVisibility = Enum_LabelVisibility.Hidden;
+            Control_DieToolDiscovery_SuggestionBox_Search.Location = new Point(3, 3);
+            Control_DieToolDiscovery_SuggestionBox_Search.Margin = new Padding(3, 3, 3, 3);
+            Control_DieToolDiscovery_SuggestionBox_Search.Name = "Control_DieToolDiscovery_SuggestionBox_Search";
+            Control_DieToolDiscovery_SuggestionBox_Search.PlaceholderText = "Enter Part Number or Die Number";
+            Control_DieToolDiscovery_SuggestionBox_Search.ShowF4Button = true;
+            Control_DieToolDiscovery_SuggestionBox_Search.Size = new Size(754, 23);
+            Control_DieToolDiscovery_SuggestionBox_Search.TabIndex = 3;
             // 
-            // btnSearch
+            // Control_DieToolDiscovery_Button_Search
             // 
-            btnSearch.AutoSize = true;
-            btnSearch.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            btnSearch.Dock = DockStyle.Fill;
-            btnSearch.Location = new Point(3, 69);
-            btnSearch.Name = "btnSearch";
-            btnSearch.Size = new Size(377, 25);
-            btnSearch.TabIndex = 4;
-            btnSearch.Text = "Search";
-            btnSearch.UseVisualStyleBackColor = true;
-            btnSearch.Click += btnSearch_Click;
+            Control_DieToolDiscovery_Button_Search.AutoSize = true;
+            Control_DieToolDiscovery_Button_Search.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_DieToolDiscovery_Button_Search.Dock = DockStyle.Fill;
+            Control_DieToolDiscovery_Button_Search.Location = new Point(3, 69);
+            Control_DieToolDiscovery_Button_Search.Name = "Control_DieToolDiscovery_Button_Search";
+            Control_DieToolDiscovery_Button_Search.Size = new Size(377, 25);
+            Control_DieToolDiscovery_Button_Search.TabIndex = 4;
+            Control_DieToolDiscovery_Button_Search.Text = "Search";
+            Control_DieToolDiscovery_Button_Search.UseVisualStyleBackColor = true;
             // 
-            // btnWhereUsed
+            // Control_DieToolDiscovery_Button_WhereUsed
             // 
-            btnWhereUsed.AutoSize = true;
-            btnWhereUsed.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            btnWhereUsed.Dock = DockStyle.Fill;
-            btnWhereUsed.Location = new Point(386, 69);
-            btnWhereUsed.Name = "btnWhereUsed";
-            btnWhereUsed.Size = new Size(377, 25);
-            btnWhereUsed.TabIndex = 8;
-            btnWhereUsed.Text = "Where Used";
-            btnWhereUsed.UseVisualStyleBackColor = true;
+            Control_DieToolDiscovery_Button_WhereUsed.AutoSize = true;
+            Control_DieToolDiscovery_Button_WhereUsed.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_DieToolDiscovery_Button_WhereUsed.Dock = DockStyle.Fill;
+            Control_DieToolDiscovery_Button_WhereUsed.Location = new Point(386, 69);
+            Control_DieToolDiscovery_Button_WhereUsed.Name = "Control_DieToolDiscovery_Button_WhereUsed";
+            Control_DieToolDiscovery_Button_WhereUsed.Size = new Size(377, 25);
+            Control_DieToolDiscovery_Button_WhereUsed.TabIndex = 8;
+            Control_DieToolDiscovery_Button_WhereUsed.Text = "Where Used";
+            Control_DieToolDiscovery_Button_WhereUsed.UseVisualStyleBackColor = true;
             // 
-            // panel1
+            // Control_DieToolDiscovery_Panel_Grid
             // 
-            panel1.AutoSize = true;
-            panel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            panel1.BorderStyle = BorderStyle.FixedSingle;
-            panel1.Controls.Add(gridResults);
-            panel1.Dock = DockStyle.Fill;
-            panel1.Location = new Point(3, 100);
-            panel1.Name = "panel1";
-            panel1.Padding = new Padding(10);
-            panel1.Size = new Size(760, 177);
-            panel1.TabIndex = 7;
+            Control_DieToolDiscovery_Panel_Grid.AutoSize = true;
+            Control_DieToolDiscovery_Panel_Grid.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_DieToolDiscovery_Panel_Grid.BorderStyle = BorderStyle.FixedSingle;
+            Control_DieToolDiscovery_Panel_Grid.Controls.Add(Control_DieToolDiscovery_DataGridView_Results);
+            Control_DieToolDiscovery_Panel_Grid.Dock = DockStyle.Fill;
+            Control_DieToolDiscovery_Panel_Grid.Location = new Point(3, 100);
+            Control_DieToolDiscovery_Panel_Grid.Name = "Control_DieToolDiscovery_Panel_Grid";
+            Control_DieToolDiscovery_Panel_Grid.Padding = new Padding(10);
+            Control_DieToolDiscovery_Panel_Grid.Size = new Size(760, 177);
+            Control_DieToolDiscovery_Panel_Grid.TabIndex = 7;
             // 
-            // gridResults
+            // Control_DieToolDiscovery_DataGridView_Results
             // 
-            gridResults.AllowUserToAddRows = false;
-            gridResults.AllowUserToDeleteRows = false;
-            gridResults.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            gridResults.Dock = DockStyle.Fill;
-            gridResults.Location = new Point(10, 10);
-            gridResults.Name = "gridResults";
-            gridResults.ReadOnly = true;
-            gridResults.Size = new Size(738, 186);
-            gridResults.TabIndex = 2;
+            Control_DieToolDiscovery_DataGridView_Results.AllowUserToAddRows = false;
+            Control_DieToolDiscovery_DataGridView_Results.AllowUserToDeleteRows = false;
+            Control_DieToolDiscovery_DataGridView_Results.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            Control_DieToolDiscovery_DataGridView_Results.Dock = DockStyle.Fill;
+            Control_DieToolDiscovery_DataGridView_Results.Location = new Point(10, 10);
+            Control_DieToolDiscovery_DataGridView_Results.Name = "Control_DieToolDiscovery_DataGridView_Results";
+            Control_DieToolDiscovery_DataGridView_Results.ReadOnly = true;
+            Control_DieToolDiscovery_DataGridView_Results.Size = new Size(738, 186);
+            Control_DieToolDiscovery_DataGridView_Results.TabIndex = 2;
             // 
-            // tabCoilFlatstock
+            // Control_DieToolDiscovery_TabPage_CoilFlatstock
             // 
-            tabCoilFlatstock.Controls.Add(tableLayoutCoil);
-            tabCoilFlatstock.Location = new Point(4, 24);
-            tabCoilFlatstock.Name = "tabCoilFlatstock";
-            tabCoilFlatstock.Padding = new Padding(10);
-            tabCoilFlatstock.Size = new Size(792, 322);
-            tabCoilFlatstock.TabIndex = 1;
-            tabCoilFlatstock.Text = "Coil/Flatstock Search";
-            tabCoilFlatstock.UseVisualStyleBackColor = true;
+            Control_DieToolDiscovery_TabPage_CoilFlatstock.Controls.Add(Control_DieToolDiscovery_TableLayoutPanel_Coil);
+            Control_DieToolDiscovery_TabPage_CoilFlatstock.Location = new Point(4, 24);
+            Control_DieToolDiscovery_TabPage_CoilFlatstock.Name = "Control_DieToolDiscovery_TabPage_CoilFlatstock";
+            Control_DieToolDiscovery_TabPage_CoilFlatstock.Padding = new Padding(10);
+            Control_DieToolDiscovery_TabPage_CoilFlatstock.Size = new Size(792, 322);
+            Control_DieToolDiscovery_TabPage_CoilFlatstock.TabIndex = 1;
+            Control_DieToolDiscovery_TabPage_CoilFlatstock.Text = "Coil/Flatstock Search";
+            Control_DieToolDiscovery_TabPage_CoilFlatstock.UseVisualStyleBackColor = true;
             // 
-            // tableLayoutCoil
+            // Control_DieToolDiscovery_TableLayoutPanel_Coil
             // 
-            tableLayoutCoil.ColumnCount = 1;
-            tableLayoutCoil.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutCoil.Controls.Add(txtCoilSearch, 0, 0);
-            tableLayoutCoil.Controls.Add(btnCoilSearch, 0, 1);
-            tableLayoutCoil.Controls.Add(tableLayoutCoilDetails, 0, 2);
-            tableLayoutCoil.Dock = DockStyle.Fill;
-            tableLayoutCoil.Location = new Point(10, 10);
-            tableLayoutCoil.Name = "tableLayoutCoil";
-            tableLayoutCoil.RowCount = 3;
-            tableLayoutCoil.RowStyles.Add(new RowStyle());
-            tableLayoutCoil.RowStyles.Add(new RowStyle());
-            tableLayoutCoil.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutCoil.Size = new Size(772, 302);
-            tableLayoutCoil.TabIndex = 0;
+            Control_DieToolDiscovery_TableLayoutPanel_Coil.ColumnCount = 1;
+            Control_DieToolDiscovery_TableLayoutPanel_Coil.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            Control_DieToolDiscovery_TableLayoutPanel_Coil.Controls.Add(Control_DieToolDiscovery_SuggestionBox_CoilSearch, 0, 0);
+            Control_DieToolDiscovery_TableLayoutPanel_Coil.Controls.Add(Control_DieToolDiscovery_Button_CoilSearch, 0, 1);
+            Control_DieToolDiscovery_TableLayoutPanel_Coil.Controls.Add(Control_DieToolDiscovery_TableLayoutPanel_CoilDetails, 0, 2);
+            Control_DieToolDiscovery_TableLayoutPanel_Coil.Dock = DockStyle.Fill;
+            Control_DieToolDiscovery_TableLayoutPanel_Coil.Location = new Point(10, 10);
+            Control_DieToolDiscovery_TableLayoutPanel_Coil.Name = "Control_DieToolDiscovery_TableLayoutPanel_Coil";
+            Control_DieToolDiscovery_TableLayoutPanel_Coil.RowCount = 3;
+            Control_DieToolDiscovery_TableLayoutPanel_Coil.RowStyles.Add(new RowStyle());
+            Control_DieToolDiscovery_TableLayoutPanel_Coil.RowStyles.Add(new RowStyle());
+            Control_DieToolDiscovery_TableLayoutPanel_Coil.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            Control_DieToolDiscovery_TableLayoutPanel_Coil.Size = new Size(772, 302);
+            Control_DieToolDiscovery_TableLayoutPanel_Coil.TabIndex = 0;
             // 
-            // txtCoilSearch
+            // Control_DieToolDiscovery_SuggestionBox_CoilSearch
             // 
-            txtCoilSearch.AutoSize = true;
-            txtCoilSearch.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            txtCoilSearch.Dock = DockStyle.Fill;
-            txtCoilSearch.LabelVisibility = Enum_LabelVisibility.Hidden;
-            txtCoilSearch.Location = new Point(6, 6);
-            txtCoilSearch.Margin = new Padding(6);
-            txtCoilSearch.MaxLength = 130;
-            txtCoilSearch.MinimumSize = new Size(0, 23);
-            txtCoilSearch.MinLength = 130;
-            txtCoilSearch.Name = "txtCoilSearch";
-            txtCoilSearch.PlaceholderText = "Coil / Flatstock Number";
-            txtCoilSearch.Size = new Size(760, 23);
-            txtCoilSearch.TabIndex = 3;
+            Control_DieToolDiscovery_SuggestionBox_CoilSearch.AutoSize = true;
+            Control_DieToolDiscovery_SuggestionBox_CoilSearch.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_DieToolDiscovery_SuggestionBox_CoilSearch.Dock = DockStyle.Fill;
+            Control_DieToolDiscovery_SuggestionBox_CoilSearch.LabelVisibility = Enum_LabelVisibility.Hidden;
+            Control_DieToolDiscovery_SuggestionBox_CoilSearch.Location = new Point(6, 6);
+            Control_DieToolDiscovery_SuggestionBox_CoilSearch.Margin = new Padding(6);
+            Control_DieToolDiscovery_SuggestionBox_CoilSearch.MaxLength = 130;
+            Control_DieToolDiscovery_SuggestionBox_CoilSearch.MinimumSize = new Size(0, 23);
+            Control_DieToolDiscovery_SuggestionBox_CoilSearch.MinLength = 130;
+            Control_DieToolDiscovery_SuggestionBox_CoilSearch.Name = "Control_DieToolDiscovery_SuggestionBox_CoilSearch";
+            Control_DieToolDiscovery_SuggestionBox_CoilSearch.PlaceholderText = "Coil / Flatstock Number";
+            Control_DieToolDiscovery_SuggestionBox_CoilSearch.Size = new Size(760, 23);
+            Control_DieToolDiscovery_SuggestionBox_CoilSearch.TabIndex = 3;
             // 
-            // btnCoilSearch
+            // Control_DieToolDiscovery_Button_CoilSearch
             // 
-            btnCoilSearch.Dock = DockStyle.Fill;
-            btnCoilSearch.Location = new Point(6, 41);
-            btnCoilSearch.Margin = new Padding(6);
-            btnCoilSearch.Name = "btnCoilSearch";
-            btnCoilSearch.Size = new Size(760, 30);
-            btnCoilSearch.TabIndex = 4;
-            btnCoilSearch.Text = "Search";
-            btnCoilSearch.UseVisualStyleBackColor = true;
+            Control_DieToolDiscovery_Button_CoilSearch.Dock = DockStyle.Fill;
+            Control_DieToolDiscovery_Button_CoilSearch.Location = new Point(6, 41);
+            Control_DieToolDiscovery_Button_CoilSearch.Margin = new Padding(6);
+            Control_DieToolDiscovery_Button_CoilSearch.Name = "Control_DieToolDiscovery_Button_CoilSearch";
+            Control_DieToolDiscovery_Button_CoilSearch.Size = new Size(760, 30);
+            Control_DieToolDiscovery_Button_CoilSearch.TabIndex = 4;
+            Control_DieToolDiscovery_Button_CoilSearch.Text = "Search";
+            Control_DieToolDiscovery_Button_CoilSearch.UseVisualStyleBackColor = true;
             // 
-            // tableLayoutCoilDetails
+            // Control_DieToolDiscovery_TableLayoutPanel_CoilDetails
             // 
-            tableLayoutCoilDetails.ColumnCount = 2;
-            tableLayoutCoilDetails.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tableLayoutCoilDetails.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tableLayoutCoilDetails.Controls.Add(txtThickness, 0, 0);
-            tableLayoutCoilDetails.Controls.Add(txtWidth, 1, 0);
-            tableLayoutCoilDetails.Controls.Add(txtLength, 0, 1);
-            tableLayoutCoilDetails.Controls.Add(txtGauge, 1, 1);
-            tableLayoutCoilDetails.Controls.Add(txtWhereUsed, 0, 2);
-            tableLayoutCoilDetails.Controls.Add(txtProgression, 1, 2);
-            tableLayoutCoilDetails.Controls.Add(txtCustomer, 0, 3);
-            tableLayoutCoilDetails.Controls.Add(txtScrapLocation, 1, 3);
-            tableLayoutCoilDetails.Controls.Add(txtGenericType, 0, 4);
-            tableLayoutCoilDetails.Controls.Add(txtDetailedType, 1, 4);
-            tableLayoutCoilDetails.Controls.Add(txtAutoIssueLocation, 0, 5);
-            tableLayoutCoilDetails.Dock = DockStyle.Fill;
-            tableLayoutCoilDetails.Location = new Point(3, 80);
-            tableLayoutCoilDetails.Name = "tableLayoutCoilDetails";
-            tableLayoutCoilDetails.RowCount = 7;
-            tableLayoutCoilDetails.RowStyles.Add(new RowStyle());
-            tableLayoutCoilDetails.RowStyles.Add(new RowStyle());
-            tableLayoutCoilDetails.RowStyles.Add(new RowStyle());
-            tableLayoutCoilDetails.RowStyles.Add(new RowStyle());
-            tableLayoutCoilDetails.RowStyles.Add(new RowStyle());
-            tableLayoutCoilDetails.RowStyles.Add(new RowStyle());
-            tableLayoutCoilDetails.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutCoilDetails.Size = new Size(766, 219);
-            tableLayoutCoilDetails.TabIndex = 5;
+            Control_DieToolDiscovery_TableLayoutPanel_CoilDetails.ColumnCount = 2;
+            Control_DieToolDiscovery_TableLayoutPanel_CoilDetails.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            Control_DieToolDiscovery_TableLayoutPanel_CoilDetails.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            Control_DieToolDiscovery_TableLayoutPanel_CoilDetails.Controls.Add(Control_DieToolDiscovery_SuggestionBox_Thickness, 0, 0);
+            Control_DieToolDiscovery_TableLayoutPanel_CoilDetails.Controls.Add(Control_DieToolDiscovery_SuggestionBox_Width, 1, 0);
+            Control_DieToolDiscovery_TableLayoutPanel_CoilDetails.Controls.Add(Control_DieToolDiscovery_SuggestionBox_Length, 0, 1);
+            Control_DieToolDiscovery_TableLayoutPanel_CoilDetails.Controls.Add(Control_DieToolDiscovery_SuggestionBox_Gauge, 1, 1);
+            Control_DieToolDiscovery_TableLayoutPanel_CoilDetails.Controls.Add(Control_DieToolDiscovery_SuggestionBox_WhereUsed, 0, 2);
+            Control_DieToolDiscovery_TableLayoutPanel_CoilDetails.Controls.Add(Control_DieToolDiscovery_SuggestionBox_Progression, 1, 2);
+            Control_DieToolDiscovery_TableLayoutPanel_CoilDetails.Controls.Add(Control_DieToolDiscovery_SuggestionBox_Customer, 0, 3);
+            Control_DieToolDiscovery_TableLayoutPanel_CoilDetails.Controls.Add(Control_DieToolDiscovery_SuggestionBox_ScrapLocation, 1, 3);
+            Control_DieToolDiscovery_TableLayoutPanel_CoilDetails.Controls.Add(Control_DieToolDiscovery_SuggestionBox_GenericType, 0, 4);
+            Control_DieToolDiscovery_TableLayoutPanel_CoilDetails.Controls.Add(Control_DieToolDiscovery_SuggestionBox_DetailedType, 1, 4);
+            Control_DieToolDiscovery_TableLayoutPanel_CoilDetails.Controls.Add(Control_DieToolDiscovery_SuggestionBox_AutoIssueLocation, 0, 5);
+            Control_DieToolDiscovery_TableLayoutPanel_CoilDetails.Dock = DockStyle.Fill;
+            Control_DieToolDiscovery_TableLayoutPanel_CoilDetails.Location = new Point(3, 80);
+            Control_DieToolDiscovery_TableLayoutPanel_CoilDetails.Name = "Control_DieToolDiscovery_TableLayoutPanel_CoilDetails";
+            Control_DieToolDiscovery_TableLayoutPanel_CoilDetails.RowCount = 7;
+            Control_DieToolDiscovery_TableLayoutPanel_CoilDetails.RowStyles.Add(new RowStyle());
+            Control_DieToolDiscovery_TableLayoutPanel_CoilDetails.RowStyles.Add(new RowStyle());
+            Control_DieToolDiscovery_TableLayoutPanel_CoilDetails.RowStyles.Add(new RowStyle());
+            Control_DieToolDiscovery_TableLayoutPanel_CoilDetails.RowStyles.Add(new RowStyle());
+            Control_DieToolDiscovery_TableLayoutPanel_CoilDetails.RowStyles.Add(new RowStyle());
+            Control_DieToolDiscovery_TableLayoutPanel_CoilDetails.RowStyles.Add(new RowStyle());
+            Control_DieToolDiscovery_TableLayoutPanel_CoilDetails.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            Control_DieToolDiscovery_TableLayoutPanel_CoilDetails.Size = new Size(766, 219);
+            Control_DieToolDiscovery_TableLayoutPanel_CoilDetails.TabIndex = 5;
             // 
-            // txtThickness
+            // Control_DieToolDiscovery_SuggestionBox_Thickness
             // 
-            txtThickness.AutoSize = true;
-            txtThickness.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            txtThickness.Dock = DockStyle.Fill;
-            txtThickness.Enabled = false;
-            txtThickness.EnableSuggestions = false;
-            txtThickness.LabelText = "Thickness";
-            txtThickness.LabelVisibility = Enum_LabelVisibility.Visible;
-            txtThickness.Location = new Point(6, 6);
-            txtThickness.Margin = new Padding(6);
-            txtThickness.MaxLength = 130;
-            txtThickness.MinimumSize = new Size(0, 23);
-            txtThickness.MinLength = 130;
-            txtThickness.Name = "txtThickness";
-            txtThickness.ShowF4Button = false;
-            txtThickness.Size = new Size(371, 23);
-            txtThickness.TabIndex = 10;
+            Control_DieToolDiscovery_SuggestionBox_Thickness.AutoSize = true;
+            Control_DieToolDiscovery_SuggestionBox_Thickness.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_DieToolDiscovery_SuggestionBox_Thickness.Dock = DockStyle.Fill;
+            Control_DieToolDiscovery_SuggestionBox_Thickness.Enabled = false;
+            Control_DieToolDiscovery_SuggestionBox_Thickness.EnableSuggestions = false;
+            Control_DieToolDiscovery_SuggestionBox_Thickness.LabelText = "Thickness";
+            Control_DieToolDiscovery_SuggestionBox_Thickness.LabelVisibility = Enum_LabelVisibility.Visible;
+            Control_DieToolDiscovery_SuggestionBox_Thickness.Location = new Point(6, 6);
+            Control_DieToolDiscovery_SuggestionBox_Thickness.Margin = new Padding(6);
+            Control_DieToolDiscovery_SuggestionBox_Thickness.MaxLength = 130;
+            Control_DieToolDiscovery_SuggestionBox_Thickness.MinimumSize = new Size(0, 23);
+            Control_DieToolDiscovery_SuggestionBox_Thickness.MinLength = 130;
+            Control_DieToolDiscovery_SuggestionBox_Thickness.Name = "Control_DieToolDiscovery_SuggestionBox_Thickness";
+            Control_DieToolDiscovery_SuggestionBox_Thickness.ShowF4Button = false;
+            Control_DieToolDiscovery_SuggestionBox_Thickness.Size = new Size(371, 23);
+            Control_DieToolDiscovery_SuggestionBox_Thickness.TabIndex = 10;
             // 
-            // txtWidth
+            // Control_DieToolDiscovery_SuggestionBox_Width
             // 
-            txtWidth.AutoSize = true;
-            txtWidth.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            txtWidth.Dock = DockStyle.Fill;
-            txtWidth.Enabled = false;
-            txtWidth.EnableSuggestions = false;
-            txtWidth.LabelText = "Width";
-            txtWidth.LabelVisibility = Enum_LabelVisibility.Visible;
-            txtWidth.Location = new Point(389, 6);
-            txtWidth.Margin = new Padding(6);
-            txtWidth.MaxLength = 130;
-            txtWidth.MinimumSize = new Size(0, 23);
-            txtWidth.MinLength = 130;
-            txtWidth.Name = "txtWidth";
-            txtWidth.ShowF4Button = false;
-            txtWidth.Size = new Size(371, 23);
-            txtWidth.TabIndex = 11;
+            Control_DieToolDiscovery_SuggestionBox_Width.AutoSize = true;
+            Control_DieToolDiscovery_SuggestionBox_Width.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_DieToolDiscovery_SuggestionBox_Width.Dock = DockStyle.Fill;
+            Control_DieToolDiscovery_SuggestionBox_Width.Enabled = false;
+            Control_DieToolDiscovery_SuggestionBox_Width.EnableSuggestions = false;
+            Control_DieToolDiscovery_SuggestionBox_Width.LabelText = "Width";
+            Control_DieToolDiscovery_SuggestionBox_Width.LabelVisibility = Enum_LabelVisibility.Visible;
+            Control_DieToolDiscovery_SuggestionBox_Width.Location = new Point(389, 6);
+            Control_DieToolDiscovery_SuggestionBox_Width.Margin = new Padding(6);
+            Control_DieToolDiscovery_SuggestionBox_Width.MaxLength = 130;
+            Control_DieToolDiscovery_SuggestionBox_Width.MinimumSize = new Size(0, 23);
+            Control_DieToolDiscovery_SuggestionBox_Width.MinLength = 130;
+            Control_DieToolDiscovery_SuggestionBox_Width.Name = "Control_DieToolDiscovery_SuggestionBox_Width";
+            Control_DieToolDiscovery_SuggestionBox_Width.ShowF4Button = false;
+            Control_DieToolDiscovery_SuggestionBox_Width.Size = new Size(371, 23);
+            Control_DieToolDiscovery_SuggestionBox_Width.TabIndex = 11;
             // 
-            // txtLength
+            // Control_DieToolDiscovery_SuggestionBox_Length
             // 
-            txtLength.AutoSize = true;
-            txtLength.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            txtLength.Dock = DockStyle.Fill;
-            txtLength.Enabled = false;
-            txtLength.EnableSuggestions = false;
-            txtLength.LabelText = "Length";
-            txtLength.LabelVisibility = Enum_LabelVisibility.Visible;
-            txtLength.Location = new Point(6, 41);
-            txtLength.Margin = new Padding(6);
-            txtLength.MaxLength = 130;
-            txtLength.MinimumSize = new Size(0, 23);
-            txtLength.MinLength = 130;
-            txtLength.Name = "txtLength";
-            txtLength.ShowF4Button = false;
-            txtLength.Size = new Size(371, 23);
-            txtLength.TabIndex = 12;
+            Control_DieToolDiscovery_SuggestionBox_Length.AutoSize = true;
+            Control_DieToolDiscovery_SuggestionBox_Length.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_DieToolDiscovery_SuggestionBox_Length.Dock = DockStyle.Fill;
+            Control_DieToolDiscovery_SuggestionBox_Length.Enabled = false;
+            Control_DieToolDiscovery_SuggestionBox_Length.EnableSuggestions = false;
+            Control_DieToolDiscovery_SuggestionBox_Length.LabelText = "Length";
+            Control_DieToolDiscovery_SuggestionBox_Length.LabelVisibility = Enum_LabelVisibility.Visible;
+            Control_DieToolDiscovery_SuggestionBox_Length.Location = new Point(6, 41);
+            Control_DieToolDiscovery_SuggestionBox_Length.Margin = new Padding(6);
+            Control_DieToolDiscovery_SuggestionBox_Length.MaxLength = 130;
+            Control_DieToolDiscovery_SuggestionBox_Length.MinimumSize = new Size(0, 23);
+            Control_DieToolDiscovery_SuggestionBox_Length.MinLength = 130;
+            Control_DieToolDiscovery_SuggestionBox_Length.Name = "Control_DieToolDiscovery_SuggestionBox_Length";
+            Control_DieToolDiscovery_SuggestionBox_Length.ShowF4Button = false;
+            Control_DieToolDiscovery_SuggestionBox_Length.Size = new Size(371, 23);
+            Control_DieToolDiscovery_SuggestionBox_Length.TabIndex = 12;
             // 
-            // txtGauge
+            // Control_DieToolDiscovery_SuggestionBox_Gauge
             // 
-            txtGauge.AutoSize = true;
-            txtGauge.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            txtGauge.Dock = DockStyle.Fill;
-            txtGauge.Enabled = false;
-            txtGauge.EnableSuggestions = false;
-            txtGauge.LabelText = "Ga.";
-            txtGauge.LabelVisibility = Enum_LabelVisibility.Visible;
-            txtGauge.Location = new Point(389, 41);
-            txtGauge.Margin = new Padding(6);
-            txtGauge.MaxLength = 130;
-            txtGauge.MinimumSize = new Size(0, 23);
-            txtGauge.MinLength = 130;
-            txtGauge.Name = "txtGauge";
-            txtGauge.ShowF4Button = false;
-            txtGauge.Size = new Size(371, 23);
-            txtGauge.TabIndex = 13;
+            Control_DieToolDiscovery_SuggestionBox_Gauge.AutoSize = true;
+            Control_DieToolDiscovery_SuggestionBox_Gauge.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_DieToolDiscovery_SuggestionBox_Gauge.Dock = DockStyle.Fill;
+            Control_DieToolDiscovery_SuggestionBox_Gauge.Enabled = false;
+            Control_DieToolDiscovery_SuggestionBox_Gauge.EnableSuggestions = false;
+            Control_DieToolDiscovery_SuggestionBox_Gauge.LabelText = "Ga.";
+            Control_DieToolDiscovery_SuggestionBox_Gauge.LabelVisibility = Enum_LabelVisibility.Visible;
+            Control_DieToolDiscovery_SuggestionBox_Gauge.Location = new Point(389, 41);
+            Control_DieToolDiscovery_SuggestionBox_Gauge.Margin = new Padding(6);
+            Control_DieToolDiscovery_SuggestionBox_Gauge.MaxLength = 130;
+            Control_DieToolDiscovery_SuggestionBox_Gauge.MinimumSize = new Size(0, 23);
+            Control_DieToolDiscovery_SuggestionBox_Gauge.MinLength = 130;
+            Control_DieToolDiscovery_SuggestionBox_Gauge.Name = "Control_DieToolDiscovery_SuggestionBox_Gauge";
+            Control_DieToolDiscovery_SuggestionBox_Gauge.ShowF4Button = false;
+            Control_DieToolDiscovery_SuggestionBox_Gauge.Size = new Size(371, 23);
+            Control_DieToolDiscovery_SuggestionBox_Gauge.TabIndex = 13;
             // 
-            // txtWhereUsed
+            // Control_DieToolDiscovery_SuggestionBox_WhereUsed
             // 
-            txtWhereUsed.AutoSize = true;
-            txtWhereUsed.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            txtWhereUsed.Dock = DockStyle.Fill;
-            txtWhereUsed.Enabled = false;
-            txtWhereUsed.EnableSuggestions = false;
-            txtWhereUsed.LabelText = "Where Used";
-            txtWhereUsed.LabelVisibility = Enum_LabelVisibility.Visible;
-            txtWhereUsed.Location = new Point(6, 76);
-            txtWhereUsed.Margin = new Padding(6);
-            txtWhereUsed.MaxLength = 130;
-            txtWhereUsed.MinimumSize = new Size(0, 23);
-            txtWhereUsed.MinLength = 130;
-            txtWhereUsed.Name = "txtWhereUsed";
-            txtWhereUsed.ShowF4Button = false;
-            txtWhereUsed.Size = new Size(371, 23);
-            txtWhereUsed.TabIndex = 14;
+            Control_DieToolDiscovery_SuggestionBox_WhereUsed.AutoSize = true;
+            Control_DieToolDiscovery_SuggestionBox_WhereUsed.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_DieToolDiscovery_SuggestionBox_WhereUsed.Dock = DockStyle.Fill;
+            Control_DieToolDiscovery_SuggestionBox_WhereUsed.Enabled = false;
+            Control_DieToolDiscovery_SuggestionBox_WhereUsed.EnableSuggestions = false;
+            Control_DieToolDiscovery_SuggestionBox_WhereUsed.LabelText = "Where Used";
+            Control_DieToolDiscovery_SuggestionBox_WhereUsed.LabelVisibility = Enum_LabelVisibility.Visible;
+            Control_DieToolDiscovery_SuggestionBox_WhereUsed.Location = new Point(6, 76);
+            Control_DieToolDiscovery_SuggestionBox_WhereUsed.Margin = new Padding(6);
+            Control_DieToolDiscovery_SuggestionBox_WhereUsed.MaxLength = 130;
+            Control_DieToolDiscovery_SuggestionBox_WhereUsed.MinimumSize = new Size(0, 23);
+            Control_DieToolDiscovery_SuggestionBox_WhereUsed.MinLength = 130;
+            Control_DieToolDiscovery_SuggestionBox_WhereUsed.Name = "Control_DieToolDiscovery_SuggestionBox_WhereUsed";
+            Control_DieToolDiscovery_SuggestionBox_WhereUsed.ShowF4Button = false;
+            Control_DieToolDiscovery_SuggestionBox_WhereUsed.Size = new Size(371, 23);
+            Control_DieToolDiscovery_SuggestionBox_WhereUsed.TabIndex = 14;
             // 
-            // txtProgression
+            // Control_DieToolDiscovery_SuggestionBox_Progression
             // 
-            txtProgression.AutoSize = true;
-            txtProgression.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            txtProgression.Dock = DockStyle.Fill;
-            txtProgression.Enabled = false;
-            txtProgression.EnableSuggestions = false;
-            txtProgression.LabelText = "Progression";
-            txtProgression.LabelVisibility = Enum_LabelVisibility.Visible;
-            txtProgression.Location = new Point(389, 76);
-            txtProgression.Margin = new Padding(6);
-            txtProgression.MaxLength = 130;
-            txtProgression.MinimumSize = new Size(0, 23);
-            txtProgression.MinLength = 130;
-            txtProgression.Name = "txtProgression";
-            txtProgression.ShowF4Button = false;
-            txtProgression.Size = new Size(371, 23);
-            txtProgression.TabIndex = 15;
+            Control_DieToolDiscovery_SuggestionBox_Progression.AutoSize = true;
+            Control_DieToolDiscovery_SuggestionBox_Progression.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_DieToolDiscovery_SuggestionBox_Progression.Dock = DockStyle.Fill;
+            Control_DieToolDiscovery_SuggestionBox_Progression.Enabled = false;
+            Control_DieToolDiscovery_SuggestionBox_Progression.EnableSuggestions = false;
+            Control_DieToolDiscovery_SuggestionBox_Progression.LabelText = "Progression";
+            Control_DieToolDiscovery_SuggestionBox_Progression.LabelVisibility = Enum_LabelVisibility.Visible;
+            Control_DieToolDiscovery_SuggestionBox_Progression.Location = new Point(389, 76);
+            Control_DieToolDiscovery_SuggestionBox_Progression.Margin = new Padding(6);
+            Control_DieToolDiscovery_SuggestionBox_Progression.MaxLength = 130;
+            Control_DieToolDiscovery_SuggestionBox_Progression.MinimumSize = new Size(0, 23);
+            Control_DieToolDiscovery_SuggestionBox_Progression.MinLength = 130;
+            Control_DieToolDiscovery_SuggestionBox_Progression.Name = "Control_DieToolDiscovery_SuggestionBox_Progression";
+            Control_DieToolDiscovery_SuggestionBox_Progression.ShowF4Button = false;
+            Control_DieToolDiscovery_SuggestionBox_Progression.Size = new Size(371, 23);
+            Control_DieToolDiscovery_SuggestionBox_Progression.TabIndex = 15;
             // 
-            // txtCustomer
+            // Control_DieToolDiscovery_SuggestionBox_Customer
             // 
-            txtCustomer.AutoSize = true;
-            txtCustomer.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            txtCustomer.Dock = DockStyle.Fill;
-            txtCustomer.Enabled = false;
-            txtCustomer.EnableSuggestions = false;
-            txtCustomer.LabelText = "Customer";
-            txtCustomer.LabelVisibility = Enum_LabelVisibility.Visible;
-            txtCustomer.Location = new Point(6, 111);
-            txtCustomer.Margin = new Padding(6);
-            txtCustomer.MaxLength = 130;
-            txtCustomer.MinimumSize = new Size(0, 23);
-            txtCustomer.MinLength = 130;
-            txtCustomer.Name = "txtCustomer";
-            txtCustomer.ShowF4Button = false;
-            txtCustomer.Size = new Size(371, 23);
-            txtCustomer.TabIndex = 16;
+            Control_DieToolDiscovery_SuggestionBox_Customer.AutoSize = true;
+            Control_DieToolDiscovery_SuggestionBox_Customer.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_DieToolDiscovery_SuggestionBox_Customer.Dock = DockStyle.Fill;
+            Control_DieToolDiscovery_SuggestionBox_Customer.Enabled = false;
+            Control_DieToolDiscovery_SuggestionBox_Customer.EnableSuggestions = false;
+            Control_DieToolDiscovery_SuggestionBox_Customer.LabelText = "Customer";
+            Control_DieToolDiscovery_SuggestionBox_Customer.LabelVisibility = Enum_LabelVisibility.Visible;
+            Control_DieToolDiscovery_SuggestionBox_Customer.Location = new Point(6, 111);
+            Control_DieToolDiscovery_SuggestionBox_Customer.Margin = new Padding(6);
+            Control_DieToolDiscovery_SuggestionBox_Customer.MaxLength = 130;
+            Control_DieToolDiscovery_SuggestionBox_Customer.MinimumSize = new Size(0, 23);
+            Control_DieToolDiscovery_SuggestionBox_Customer.MinLength = 130;
+            Control_DieToolDiscovery_SuggestionBox_Customer.Name = "Control_DieToolDiscovery_SuggestionBox_Customer";
+            Control_DieToolDiscovery_SuggestionBox_Customer.ShowF4Button = false;
+            Control_DieToolDiscovery_SuggestionBox_Customer.Size = new Size(371, 23);
+            Control_DieToolDiscovery_SuggestionBox_Customer.TabIndex = 16;
             // 
-            // txtScrapLocation
+            // Control_DieToolDiscovery_SuggestionBox_ScrapLocation
             // 
-            txtScrapLocation.AutoSize = true;
-            txtScrapLocation.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            txtScrapLocation.Dock = DockStyle.Fill;
-            txtScrapLocation.Enabled = false;
-            txtScrapLocation.EnableSuggestions = false;
-            txtScrapLocation.LabelText = "Scrap Location";
-            txtScrapLocation.LabelVisibility = Enum_LabelVisibility.Visible;
-            txtScrapLocation.Location = new Point(389, 111);
-            txtScrapLocation.Margin = new Padding(6);
-            txtScrapLocation.MaxLength = 130;
-            txtScrapLocation.MinimumSize = new Size(0, 23);
-            txtScrapLocation.MinLength = 130;
-            txtScrapLocation.Name = "txtScrapLocation";
-            txtScrapLocation.ShowF4Button = false;
-            txtScrapLocation.Size = new Size(371, 23);
-            txtScrapLocation.TabIndex = 17;
+            Control_DieToolDiscovery_SuggestionBox_ScrapLocation.AutoSize = true;
+            Control_DieToolDiscovery_SuggestionBox_ScrapLocation.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_DieToolDiscovery_SuggestionBox_ScrapLocation.Dock = DockStyle.Fill;
+            Control_DieToolDiscovery_SuggestionBox_ScrapLocation.Enabled = false;
+            Control_DieToolDiscovery_SuggestionBox_ScrapLocation.EnableSuggestions = false;
+            Control_DieToolDiscovery_SuggestionBox_ScrapLocation.LabelText = "Scrap Location";
+            Control_DieToolDiscovery_SuggestionBox_ScrapLocation.LabelVisibility = Enum_LabelVisibility.Visible;
+            Control_DieToolDiscovery_SuggestionBox_ScrapLocation.Location = new Point(389, 111);
+            Control_DieToolDiscovery_SuggestionBox_ScrapLocation.Margin = new Padding(6);
+            Control_DieToolDiscovery_SuggestionBox_ScrapLocation.MaxLength = 130;
+            Control_DieToolDiscovery_SuggestionBox_ScrapLocation.MinimumSize = new Size(0, 23);
+            Control_DieToolDiscovery_SuggestionBox_ScrapLocation.MinLength = 130;
+            Control_DieToolDiscovery_SuggestionBox_ScrapLocation.Name = "Control_DieToolDiscovery_SuggestionBox_ScrapLocation";
+            Control_DieToolDiscovery_SuggestionBox_ScrapLocation.ShowF4Button = false;
+            Control_DieToolDiscovery_SuggestionBox_ScrapLocation.Size = new Size(371, 23);
+            Control_DieToolDiscovery_SuggestionBox_ScrapLocation.TabIndex = 17;
             // 
-            // txtGenericType
+            // Control_DieToolDiscovery_SuggestionBox_GenericType
             // 
-            txtGenericType.AutoSize = true;
-            txtGenericType.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            txtGenericType.Dock = DockStyle.Fill;
-            txtGenericType.Enabled = false;
-            txtGenericType.EnableSuggestions = false;
-            txtGenericType.LabelText = "Generic Type";
-            txtGenericType.LabelVisibility = Enum_LabelVisibility.Visible;
-            txtGenericType.Location = new Point(6, 146);
-            txtGenericType.Margin = new Padding(6);
-            txtGenericType.MaxLength = 130;
-            txtGenericType.MinimumSize = new Size(0, 23);
-            txtGenericType.MinLength = 130;
-            txtGenericType.Name = "txtGenericType";
-            txtGenericType.ShowF4Button = false;
-            txtGenericType.Size = new Size(371, 23);
-            txtGenericType.TabIndex = 18;
+            Control_DieToolDiscovery_SuggestionBox_GenericType.AutoSize = true;
+            Control_DieToolDiscovery_SuggestionBox_GenericType.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_DieToolDiscovery_SuggestionBox_GenericType.Dock = DockStyle.Fill;
+            Control_DieToolDiscovery_SuggestionBox_GenericType.Enabled = false;
+            Control_DieToolDiscovery_SuggestionBox_GenericType.EnableSuggestions = false;
+            Control_DieToolDiscovery_SuggestionBox_GenericType.LabelText = "Generic Type";
+            Control_DieToolDiscovery_SuggestionBox_GenericType.LabelVisibility = Enum_LabelVisibility.Visible;
+            Control_DieToolDiscovery_SuggestionBox_GenericType.Location = new Point(6, 146);
+            Control_DieToolDiscovery_SuggestionBox_GenericType.Margin = new Padding(6);
+            Control_DieToolDiscovery_SuggestionBox_GenericType.MaxLength = 130;
+            Control_DieToolDiscovery_SuggestionBox_GenericType.MinimumSize = new Size(0, 23);
+            Control_DieToolDiscovery_SuggestionBox_GenericType.MinLength = 130;
+            Control_DieToolDiscovery_SuggestionBox_GenericType.Name = "Control_DieToolDiscovery_SuggestionBox_GenericType";
+            Control_DieToolDiscovery_SuggestionBox_GenericType.ShowF4Button = false;
+            Control_DieToolDiscovery_SuggestionBox_GenericType.Size = new Size(371, 23);
+            Control_DieToolDiscovery_SuggestionBox_GenericType.TabIndex = 18;
             // 
-            // txtDetailedType
+            // Control_DieToolDiscovery_SuggestionBox_DetailedType
             // 
-            txtDetailedType.AutoSize = true;
-            txtDetailedType.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            txtDetailedType.Dock = DockStyle.Fill;
-            txtDetailedType.Enabled = false;
-            txtDetailedType.EnableSuggestions = false;
-            txtDetailedType.LabelText = "Detailed Type";
-            txtDetailedType.LabelVisibility = Enum_LabelVisibility.Visible;
-            txtDetailedType.Location = new Point(389, 146);
-            txtDetailedType.Margin = new Padding(6);
-            txtDetailedType.MaxLength = 130;
-            txtDetailedType.MinimumSize = new Size(0, 23);
-            txtDetailedType.MinLength = 130;
-            txtDetailedType.Name = "txtDetailedType";
-            txtDetailedType.ShowF4Button = false;
-            txtDetailedType.Size = new Size(371, 23);
-            txtDetailedType.TabIndex = 19;
+            Control_DieToolDiscovery_SuggestionBox_DetailedType.AutoSize = true;
+            Control_DieToolDiscovery_SuggestionBox_DetailedType.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_DieToolDiscovery_SuggestionBox_DetailedType.Dock = DockStyle.Fill;
+            Control_DieToolDiscovery_SuggestionBox_DetailedType.Enabled = false;
+            Control_DieToolDiscovery_SuggestionBox_DetailedType.EnableSuggestions = false;
+            Control_DieToolDiscovery_SuggestionBox_DetailedType.LabelText = "Detailed Type";
+            Control_DieToolDiscovery_SuggestionBox_DetailedType.LabelVisibility = Enum_LabelVisibility.Visible;
+            Control_DieToolDiscovery_SuggestionBox_DetailedType.Location = new Point(389, 146);
+            Control_DieToolDiscovery_SuggestionBox_DetailedType.Margin = new Padding(6);
+            Control_DieToolDiscovery_SuggestionBox_DetailedType.MaxLength = 130;
+            Control_DieToolDiscovery_SuggestionBox_DetailedType.MinimumSize = new Size(0, 23);
+            Control_DieToolDiscovery_SuggestionBox_DetailedType.MinLength = 130;
+            Control_DieToolDiscovery_SuggestionBox_DetailedType.Name = "Control_DieToolDiscovery_SuggestionBox_DetailedType";
+            Control_DieToolDiscovery_SuggestionBox_DetailedType.ShowF4Button = false;
+            Control_DieToolDiscovery_SuggestionBox_DetailedType.Size = new Size(371, 23);
+            Control_DieToolDiscovery_SuggestionBox_DetailedType.TabIndex = 19;
             // 
-            // txtAutoIssueLocation
+            // Control_DieToolDiscovery_SuggestionBox_AutoIssueLocation
             // 
-            txtAutoIssueLocation.AutoSize = true;
-            txtAutoIssueLocation.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            txtAutoIssueLocation.Dock = DockStyle.Fill;
-            txtAutoIssueLocation.Enabled = false;
-            txtAutoIssueLocation.EnableSuggestions = false;
-            txtAutoIssueLocation.LabelText = "Auto-Issue Location";
-            txtAutoIssueLocation.LabelVisibility = Enum_LabelVisibility.Visible;
-            txtAutoIssueLocation.Location = new Point(6, 181);
-            txtAutoIssueLocation.Margin = new Padding(6);
-            txtAutoIssueLocation.MaxLength = 130;
-            txtAutoIssueLocation.MinimumSize = new Size(0, 23);
-            txtAutoIssueLocation.MinLength = 130;
-            txtAutoIssueLocation.Name = "txtAutoIssueLocation";
-            txtAutoIssueLocation.ShowF4Button = false;
-            txtAutoIssueLocation.Size = new Size(371, 23);
-            txtAutoIssueLocation.TabIndex = 20;
+            Control_DieToolDiscovery_SuggestionBox_AutoIssueLocation.AutoSize = true;
+            Control_DieToolDiscovery_SuggestionBox_AutoIssueLocation.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_DieToolDiscovery_SuggestionBox_AutoIssueLocation.Dock = DockStyle.Fill;
+            Control_DieToolDiscovery_SuggestionBox_AutoIssueLocation.Enabled = false;
+            Control_DieToolDiscovery_SuggestionBox_AutoIssueLocation.EnableSuggestions = false;
+            Control_DieToolDiscovery_SuggestionBox_AutoIssueLocation.LabelText = "Auto-Issue Location";
+            Control_DieToolDiscovery_SuggestionBox_AutoIssueLocation.LabelVisibility = Enum_LabelVisibility.Visible;
+            Control_DieToolDiscovery_SuggestionBox_AutoIssueLocation.Location = new Point(6, 181);
+            Control_DieToolDiscovery_SuggestionBox_AutoIssueLocation.Margin = new Padding(6);
+            Control_DieToolDiscovery_SuggestionBox_AutoIssueLocation.MaxLength = 130;
+            Control_DieToolDiscovery_SuggestionBox_AutoIssueLocation.MinimumSize = new Size(0, 23);
+            Control_DieToolDiscovery_SuggestionBox_AutoIssueLocation.MinLength = 130;
+            Control_DieToolDiscovery_SuggestionBox_AutoIssueLocation.Name = "Control_DieToolDiscovery_SuggestionBox_AutoIssueLocation";
+            Control_DieToolDiscovery_SuggestionBox_AutoIssueLocation.ShowF4Button = false;
+            Control_DieToolDiscovery_SuggestionBox_AutoIssueLocation.Size = new Size(371, 23);
+            Control_DieToolDiscovery_SuggestionBox_AutoIssueLocation.TabIndex = 20;
             // 
             // Control_DieToolDiscovery
             // 
@@ -533,61 +533,63 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             AutoScaleMode = AutoScaleMode.Dpi;
             AutoSize = true;
             AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            Controls.Add(tabControlMain);
+            Controls.Add(Control_DieToolDiscovery_TabControl_Main);
             MinimumSize = new Size(800, 350);
             Name = "Control_DieToolDiscovery";
             Size = new Size(800, 350);
-            tabControlMain.ResumeLayout(false);
-            tabLocator.ResumeLayout(false);
-            tabLocator.PerformLayout();
-            grpSearch.ResumeLayout(false);
-            grpSearch.PerformLayout();
-            tableLayoutPanel1.ResumeLayout(false);
-            tableLayoutPanel1.PerformLayout();
-            tableLayoutPanel2.ResumeLayout(false);
-            tableLayoutPanel2.PerformLayout();
-            panel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)gridResults).EndInit();
-            tabCoilFlatstock.ResumeLayout(false);
-            tableLayoutCoil.ResumeLayout(false);
-            tableLayoutCoil.PerformLayout();
-            tableLayoutCoilDetails.ResumeLayout(false);
-            tableLayoutCoilDetails.PerformLayout();
+            Control_DieToolDiscovery_TabControl_Main.ResumeLayout(false);
+            Control_DieToolDiscovery_TabPage_Locator.ResumeLayout(false);
+            Control_DieToolDiscovery_TabPage_Locator.PerformLayout();
+            Control_DieToolDiscovery_GroupBox_Search.ResumeLayout(false);
+            Control_DieToolDiscovery_GroupBox_Search.PerformLayout();
+            Control_DieToolDiscovery_TableLayoutPanel_Main.ResumeLayout(false);
+            Control_DieToolDiscovery_TableLayoutPanel_Main.PerformLayout();
+            Control_DieToolDiscovery_FlowLayoutPanel_SearchType.ResumeLayout(false);
+            Control_DieToolDiscovery_FlowLayoutPanel_SearchType.PerformLayout();
+            Control_DieToolDiscovery_TableLayoutPanel_Search.ResumeLayout(false);
+            Control_DieToolDiscovery_TableLayoutPanel_Search.PerformLayout();
+            Control_DieToolDiscovery_Panel_Grid.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)Control_DieToolDiscovery_DataGridView_Results).EndInit();
+            Control_DieToolDiscovery_TabPage_CoilFlatstock.ResumeLayout(false);
+            Control_DieToolDiscovery_TableLayoutPanel_Coil.ResumeLayout(false);
+            Control_DieToolDiscovery_TableLayoutPanel_Coil.PerformLayout();
+            Control_DieToolDiscovery_TableLayoutPanel_CoilDetails.ResumeLayout(false);
+            Control_DieToolDiscovery_TableLayoutPanel_CoilDetails.PerformLayout();
             ResumeLayout(false);
 
         }
 
         #endregion
 
-        private System.Windows.Forms.TabControl tabControlMain;
-        private System.Windows.Forms.TabPage tabLocator;
-        private System.Windows.Forms.GroupBox grpSearch;
-        private Components.Shared.Component_SuggestionTextBoxWithLabel txtSearch;
-        private System.Windows.Forms.Button btnSearch;
-        private TableLayoutPanel tableLayoutPanel1;
-        private TableLayoutPanel tableLayoutPanel2;
-        private Panel panel1;
-        private DataGridView gridResults;
+        private System.Windows.Forms.TabControl Control_DieToolDiscovery_TabControl_Main;
+        private System.Windows.Forms.TabPage Control_DieToolDiscovery_TabPage_Locator;
+        private System.Windows.Forms.GroupBox Control_DieToolDiscovery_GroupBox_Search;
+        private Components.Shared.Component_SuggestionTextBoxWithLabel Control_DieToolDiscovery_SuggestionBox_Search;
+        private System.Windows.Forms.Button Control_DieToolDiscovery_Button_Search;
+        private TableLayoutPanel Control_DieToolDiscovery_TableLayoutPanel_Main;
+        private TableLayoutPanel Control_DieToolDiscovery_TableLayoutPanel_Search;
+        private Panel Control_DieToolDiscovery_Panel_Grid;
+        private DataGridView Control_DieToolDiscovery_DataGridView_Results;
 
-        private System.Windows.Forms.TabPage tabCoilFlatstock;
-        private TableLayoutPanel tableLayoutCoil;
-        private Components.Shared.Component_SuggestionTextBoxWithLabel txtCoilSearch;
-        private Button btnCoilSearch;
-        private TableLayoutPanel tableLayoutCoilDetails;
-        private Components.Shared.Component_SuggestionTextBoxWithLabel txtThickness;
-        private Components.Shared.Component_SuggestionTextBoxWithLabel txtWidth;
-        private Components.Shared.Component_SuggestionTextBoxWithLabel txtLength;
-        private Components.Shared.Component_SuggestionTextBoxWithLabel txtGauge;
-        private Components.Shared.Component_SuggestionTextBoxWithLabel txtWhereUsed;
-        private Components.Shared.Component_SuggestionTextBoxWithLabel txtProgression;
-        private Components.Shared.Component_SuggestionTextBoxWithLabel txtCustomer;
-        private Components.Shared.Component_SuggestionTextBoxWithLabel txtScrapLocation;
-        private Components.Shared.Component_SuggestionTextBoxWithLabel txtGenericType;
-        private Components.Shared.Component_SuggestionTextBoxWithLabel txtDetailedType;
-        private Components.Shared.Component_SuggestionTextBoxWithLabel txtAutoIssueLocation;
-        private System.Windows.Forms.RadioButton rbSearchByPart;
-        private System.Windows.Forms.RadioButton rbSearchByDie;
-        private System.Windows.Forms.FlowLayoutPanel flpSearchType;
-        private System.Windows.Forms.Button btnWhereUsed;
+        private System.Windows.Forms.TabPage Control_DieToolDiscovery_TabPage_CoilFlatstock;
+        private TableLayoutPanel Control_DieToolDiscovery_TableLayoutPanel_Coil;
+        private Components.Shared.Component_SuggestionTextBoxWithLabel Control_DieToolDiscovery_SuggestionBox_CoilSearch;
+        private Button Control_DieToolDiscovery_Button_CoilSearch;
+        private TableLayoutPanel Control_DieToolDiscovery_TableLayoutPanel_CoilDetails;
+        private Components.Shared.Component_SuggestionTextBoxWithLabel Control_DieToolDiscovery_SuggestionBox_Thickness;
+        private Components.Shared.Component_SuggestionTextBoxWithLabel Control_DieToolDiscovery_SuggestionBox_Width;
+        private Components.Shared.Component_SuggestionTextBoxWithLabel Control_DieToolDiscovery_SuggestionBox_Length;
+        private Components.Shared.Component_SuggestionTextBoxWithLabel Control_DieToolDiscovery_SuggestionBox_Gauge;
+        private Components.Shared.Component_SuggestionTextBoxWithLabel Control_DieToolDiscovery_SuggestionBox_WhereUsed;
+        private Components.Shared.Component_SuggestionTextBoxWithLabel Control_DieToolDiscovery_SuggestionBox_Progression;
+        private Components.Shared.Component_SuggestionTextBoxWithLabel Control_DieToolDiscovery_SuggestionBox_Customer;
+        private Components.Shared.Component_SuggestionTextBoxWithLabel Control_DieToolDiscovery_SuggestionBox_ScrapLocation;
+        private Components.Shared.Component_SuggestionTextBoxWithLabel Control_DieToolDiscovery_SuggestionBox_GenericType;
+        private Components.Shared.Component_SuggestionTextBoxWithLabel Control_DieToolDiscovery_SuggestionBox_DetailedType;
+        private Components.Shared.Component_SuggestionTextBoxWithLabel Control_DieToolDiscovery_SuggestionBox_AutoIssueLocation;
+        private System.Windows.Forms.RadioButton Control_DieToolDiscovery_RadioButton_SearchByPart;
+        private System.Windows.Forms.RadioButton Control_DieToolDiscovery_RadioButton_SearchByDie;
+        private System.Windows.Forms.FlowLayoutPanel Control_DieToolDiscovery_FlowLayoutPanel_SearchType;
+        private System.Windows.Forms.Button Control_DieToolDiscovery_Button_WhereUsed;
     }
 }
