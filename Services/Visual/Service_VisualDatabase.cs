@@ -81,7 +81,7 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 return new Model_Dao_Result<bool>
                 {
                     IsSuccess = false,
-                    ErrorMessage = $"Connection failed: {ex.Message}",
+                    ErrorMessage = $"Connection failed: {GetFriendlyErrorMessage(ex)}",
                     Data = false
                 };
 #endif
@@ -140,7 +140,7 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 return new Model_Dao_Result<DataTable>
                 {
                     IsSuccess = false,
-                    ErrorMessage = $"Error retrieving data: {ex.Message}"
+                    ErrorMessage = $"Error retrieving data: {GetFriendlyErrorMessage(ex)}"
                 };
             }
         }
@@ -1385,6 +1385,18 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
         #endregion
 
         #region Helpers
+        private string GetFriendlyErrorMessage(Exception ex)
+        {
+            if (ex.Message.Contains("network-related") || 
+                ex.Message.Contains("error: 40") || 
+                ex.Message.Contains("error: 26") || 
+                ex.Message.Contains("The server was not found"))
+            {
+                return "Unable to connect to the Visual ERP Server. Please verify your network connection.";
+            }
+            return ex.Message;
+        }
+
         private Model_Dao_Result<DataTable> GetSampleTransactions(Model_VisualTransactionFilter filter)
         {
             var dt = new DataTable();
@@ -1692,7 +1704,7 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 return new Model_Dao_Result<List<string>>
                 {
                     IsSuccess = false,
-                    ErrorMessage = $"Error retrieving users: {ex.Message}"
+                    ErrorMessage = $"Error retrieving users: {GetFriendlyErrorMessage(ex)}"
                 };
             }
         }
