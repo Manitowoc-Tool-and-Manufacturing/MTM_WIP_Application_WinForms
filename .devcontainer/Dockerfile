@@ -28,4 +28,5 @@ RUN mkdir -p /workspace/.nuget/packages \
 # Install global .NET tools
 # Switch to vscode user to ensure tools are installed to /home/vscode/.dotnet/tools
 USER vscode
-RUN dotnet tool install --global dotnet-ef
+# dotnet-ef is not required for this project as it uses direct ADO.NET/Stored Procedures
+# RUN dotnet tool install --global dotnet-ef --version 8.*

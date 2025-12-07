@@ -1,0 +1,17 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Rebuild Dev Container Instruction",
+			"type": "shell",
+			"command": "echo \"Please rebuild the dev container manually via VS Code command palette: Dev Containers: Rebuild Container\"",
+			"args": [
+				"rebuild",
+				"container"
+			],
+			"isBackground": false,
+			"problemMatcher": [],
+			"group": "build"
+		}
+	]
+}
