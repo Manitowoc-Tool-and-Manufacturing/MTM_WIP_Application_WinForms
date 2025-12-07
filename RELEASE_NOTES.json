@@ -1,5 +1,11 @@
 [
   {
+    "Version": "6.4.0",
+    "Date": "December 06, 2025",
+    "Summary": "New Infor Visual Dashboard with Receiving Analytics, Inventory Audit, and Die Tool Discovery.",
+    "Details": "<h3>Infor Visual Dashboard</h3><p><strong>What's new</strong>:</p><ul><li><strong>Centralized Hub</strong>: Access all your visual tools and analytics from a single dashboard.</li><li><strong>Receiving Analytics</strong>: Track receiving performance, view Purchase Order details, and analyze trends with interactive charts.</li><li><strong>Inventory Audit</strong>: Easily audit inventory, search transactions, and export data for reporting.</li><li><strong>Die Tool Discovery</strong>: Quickly search for dies and tools with the new dedicated search tool.</li><li><strong>User Analytics</strong>: Track material handler performance and quality metrics to improve efficiency.</li></ul>"
+  },
+  {
     "Version": "6.3.5",
     "Date": "November 23, 2025",
     "Summary": "QuickButtons visual improvements and theme system refinements.",

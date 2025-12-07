@@ -8,7 +8,8 @@
 
 | Date | Version | Summary | What to do |
 | --- | --- | --- | --- |
-| [Nov 23, 2025](#latest-update---november-23-2025-version-635) | [6.3.5](#latest-update---november-23-2025-version-635) | QuickButtons visual improvements and theme system refinements. | Nothing—enjoy the clearer buttons! |
+| [Dec 06, 2025](#latest-update---december-06-2025-version-640) | [6.4.0](#latest-update---december-06-2025-version-640) | New Infor Visual Dashboard with Receiving Analytics, Inventory Audit, and Die Tool Discovery. | Check out the new Dashboard tab! |
+| [Nov 23, 2025](#previous-update---november-23-2025-version-635) | [6.3.5](#previous-update---november-23-2025-version-635) | QuickButtons visual improvements and theme system refinements. | Nothing—enjoy the clearer buttons! |
 | [Nov 23, 2025](#previous-update---november-23-2025-version-634) | [6.3.4](#previous-update---november-23-2025-version-634) | Startup architecture modernization and service refactoring. | Nothing—internal improvements. |
 | [Nov 23, 2025](#previous-update---november-23-2025-version-633) | [6.3.3](#previous-update---november-23-2025-version-633) | System reliability improvements and error report management tools. | Nothing—automatic improvement. |
 | [Nov 22, 2025](#previous-update---november-22-2025-version-632) | [6.3.2](#previous-update---november-22-2025-version-632) | Print dialog improvements: Notes column, collapsible sidebars, and better printer reliability. | Try the new "Add Notes Column" option when printing! |
@@ -38,7 +39,32 @@
 
 ---
 
-## Latest Update - November 23, 2025 (Version 6.3.5)
+## Latest Update - December 06, 2025 (Version 6.4.0)
+
+**What Changed**: We've introduced a powerful new **Infor Visual Dashboard** that brings together Receiving Analytics, Inventory Audit, Die Tool Discovery, and more into one convenient place.
+**Do I Need To Do Anything?**: No, but you should explore the new Dashboard tab to see the new tools available to you.
+
+---
+
+### 🎯 What This Means For You
+
+#### Infor Visual Dashboard
+
+**What's new**:
+- **Centralized Hub**: Access all your visual tools and analytics from a single dashboard.
+- **Receiving Analytics**: Track receiving performance, view Purchase Order details, and analyze trends with interactive charts.
+- **Inventory Audit**: Easily audit inventory, search transactions, and export data for reporting.
+- **Die Tool Discovery**: Quickly search for dies and tools with the new dedicated search tool.
+- **User Analytics**: Track material handler performance and quality metrics to improve efficiency.
+
+**Why this helps**:
+- **Better Visibility**: Get a clear view of your operations with visual data and analytics.
+- **Faster Access**: Find the tools you need quickly without navigating through multiple menus.
+- **Data-Driven Decisions**: Use the new analytics to make informed decisions about inventory and staffing.
+
+---
+
+## Previous Update - November 23, 2025 (Version 6.3.5)
 
 **What Changed**: We've polished the QuickButtons to make complex shortcuts easier to read and fixed some color issues.
 **Do I Need To Do Anything?**: No.
@@ -1156,7 +1182,7 @@ A: No, it's optional - but it helps us fix problems faster if you do
 A: Your username, what you were doing (if you tell us), the error details, and the date/time. No personal information or production data is sent.
 
 **Q: Can I see my submitted reports?**  
-A: Yes - Contact John Koll at (ext. 323) or jkoll@mantoolmfg.com / Dan Smith at (ext. 311) or dsmith@mantoolmfg.com / Ka Lee at (ext. ___ ) or klee@mantoolmfg.com and provide your Report ID number
+A: Yes - Contact JDecember 06t (ext. 323) or jkoll@mantoolmfg.com / Dan Smith at (ext. 311) or dsmith@mantoolmfg.com / Ka Lee at (ext. ___ ) or klee@mantoolmfg.com and provide your Report ID number
 
 **Q: What if I submit a report by accident?**  
 A: No problem - Contact John Koll at (ext. 323) or jkoll@mantoolmfg.com / Dan Smith at (ext. 311) or dsmith@mantoolmfg.com / Ka Lee at (ext. ___ ) or klee@mantoolmfg.com
