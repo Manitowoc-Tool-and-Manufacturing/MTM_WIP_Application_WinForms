@@ -40,6 +40,7 @@ public class Core_TablePrinter : IDisposable
     private int _endRowIndexExclusive;
     private int _firstPageNumber;
     private bool _completionLogged;
+    private bool _disposed;
 
     #endregion
 
@@ -283,7 +284,7 @@ public class Core_TablePrinter : IDisposable
 
     private void PrintDocument_PrintPage(object? sender, PrintPageEventArgs e)
     {
-        if (_data == null || e.Graphics == null)
+        if (_disposed || _data == null || e.Graphics == null)
         {
             e.HasMorePages = false;
             return;
@@ -592,6 +593,9 @@ public class Core_TablePrinter : IDisposable
     /// </summary>
     public void Dispose()
     {
+        if (_disposed) return;
+        _disposed = true;
+
         _printDocument?.Dispose();
         _titleFont?.Dispose();
         _headerFont?.Dispose();

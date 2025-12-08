@@ -80,6 +80,8 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_TableLayoutPanel_ColumnButtons = new TableLayoutPanel();
             PrintForm_Button_ColumnUp = new Button();
             PrintForm_Button_ColumnDown = new Button();
+            PrintForm_Label_SortBy = new Label();
+            PrintForm_ComboBox_SortBy = new ComboBox();
             PrintForm_CheckBox_AddNotesColumn = new CheckBox();
             tableLayoutPanel1 = new TableLayoutPanel();
             PrintForm_NumericUpDown_AddNotesColumn = new NumericUpDown();
@@ -1009,12 +1011,16 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_TableLayout_ColumnSettingsContent.Controls.Add(PrintForm_TableLayoutPanel_ColumnButtons, 0, 2);
             PrintForm_TableLayout_ColumnSettingsContent.Controls.Add(PrintForm_Label_Columns, 0, 0);
             PrintForm_TableLayout_ColumnSettingsContent.Controls.Add(PrintForm_CheckedListBox_Columns, 0, 1);
+            PrintForm_TableLayout_ColumnSettingsContent.Controls.Add(PrintForm_Label_SortBy, 0, 3);
+            PrintForm_TableLayout_ColumnSettingsContent.Controls.Add(PrintForm_ComboBox_SortBy, 0, 4);
             PrintForm_TableLayout_ColumnSettingsContent.Dock = DockStyle.Fill;
             PrintForm_TableLayout_ColumnSettingsContent.Location = new Point(0, 0);
             PrintForm_TableLayout_ColumnSettingsContent.Name = "PrintForm_TableLayout_ColumnSettingsContent";
-            PrintForm_TableLayout_ColumnSettingsContent.RowCount = 3;
+            PrintForm_TableLayout_ColumnSettingsContent.RowCount = 5;
             PrintForm_TableLayout_ColumnSettingsContent.RowStyles.Add(new RowStyle());
             PrintForm_TableLayout_ColumnSettingsContent.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            PrintForm_TableLayout_ColumnSettingsContent.RowStyles.Add(new RowStyle());
+            PrintForm_TableLayout_ColumnSettingsContent.RowStyles.Add(new RowStyle());
             PrintForm_TableLayout_ColumnSettingsContent.RowStyles.Add(new RowStyle());
             PrintForm_TableLayout_ColumnSettingsContent.Size = new Size(340, 219);
             PrintForm_TableLayout_ColumnSettingsContent.TabIndex = 0;
@@ -1134,6 +1140,28 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             PrintForm_CheckedListBox_Columns.Name = "PrintForm_CheckedListBox_Columns";
             PrintForm_CheckedListBox_Columns.Size = new Size(334, 120);
             PrintForm_CheckedListBox_Columns.TabIndex = 1;
+            // 
+            // PrintForm_Label_SortBy
+            // 
+            PrintForm_Label_SortBy.AutoSize = true;
+            PrintForm_Label_SortBy.Dock = DockStyle.Fill;
+            PrintForm_Label_SortBy.Location = new Point(3, 222);
+            PrintForm_Label_SortBy.Margin = new Padding(3);
+            PrintForm_Label_SortBy.Name = "PrintForm_Label_SortBy";
+            PrintForm_Label_SortBy.Size = new Size(334, 15);
+            PrintForm_Label_SortBy.TabIndex = 2;
+            PrintForm_Label_SortBy.Text = "Sort By";
+            PrintForm_Label_SortBy.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // PrintForm_ComboBox_SortBy
+            // 
+            PrintForm_ComboBox_SortBy.Dock = DockStyle.Fill;
+            PrintForm_ComboBox_SortBy.DropDownStyle = ComboBoxStyle.DropDownList;
+            PrintForm_ComboBox_SortBy.FormattingEnabled = true;
+            PrintForm_ComboBox_SortBy.Location = new Point(3, 243);
+            PrintForm_ComboBox_SortBy.Name = "PrintForm_ComboBox_SortBy";
+            PrintForm_ComboBox_SortBy.Size = new Size(334, 23);
+            PrintForm_ComboBox_SortBy.TabIndex = 3;
             // 
             // PrintForm_TableLayout_OptionsSection
             // 
@@ -1362,7 +1390,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             ClientSize = new Size(1259, 501);
             Controls.Add(PrintForm_Panel_Main);
             Icon = (Icon)resources.GetObject("$this.Icon");
-            MinimumSize = new Size(1275, 540);
+            MinimumSize = new Size(1275, 590);
             Name = "PrintForm";
             StartPosition = FormStartPosition.CenterParent;
             Text = "Print Preview";
@@ -1517,6 +1545,8 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
         private TableLayoutPanel PrintForm_TableLayoutPanel_ColumnButtons;
         private Button PrintForm_Button_ColumnUp;
         private Button PrintForm_Button_ColumnDown;
+        private Label PrintForm_Label_SortBy;
+        private ComboBox PrintForm_ComboBox_SortBy;
         private CheckBox PrintForm_CheckBox_AddNotesColumn;
         private Label PrintForm_Label_Columns;
         private CheckedListBox PrintForm_CheckedListBox_Columns;

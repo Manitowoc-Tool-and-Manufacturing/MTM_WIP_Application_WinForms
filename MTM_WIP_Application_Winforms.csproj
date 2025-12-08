@@ -9,7 +9,7 @@
         <Nullable>enable</Nullable>
         <UseWindowsForms>true</UseWindowsForms>
         <ImplicitUsings>enable</ImplicitUsings>
-        <Version>6.4.0.3</Version>
+        <Version>6.4.0.4</Version>
         <ApplicationIcon>MTMWIPApp.ico</ApplicationIcon>
         
         <!-- Build Behavior -->

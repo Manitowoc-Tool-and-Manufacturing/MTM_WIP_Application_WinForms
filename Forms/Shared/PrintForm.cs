@@ -65,6 +65,10 @@ public partial class PrintForm : ThemedForm
     private bool _isLeftPanelExpanded = false;
     private bool _isRightPanelExpanded = false;
     private bool _isPrinterOnline = true;
+    private bool _isUpdatingSortComboBox = false;
+
+    private DataTable? _originalData;
+    private Dictionary<int, Color>? _originalRowColors;
 
     #endregion
 
@@ -109,7 +113,20 @@ public partial class PrintForm : ThemedForm
         _printJob = printJob;
         _printSettings = printSettings;
 
-
+        // Capture original data state for sorting
+        if (_printJob.Data != null)
+        {
+            _originalData = _printJob.Data.Copy();
+            if (!_originalData.Columns.Contains("__OriginalIndex"))
+            {
+                _originalData.Columns.Add("__OriginalIndex", typeof(int));
+                for (int i = 0; i < _originalData.Rows.Count; i++)
+                {
+                    _originalData.Rows[i]["__OriginalIndex"] = i;
+                }
+            }
+            _originalRowColors = new Dictionary<int, Color>(_printJob.RowColors);
+        }
 
         InitializeComponent();
         InitializeHelpButton();
@@ -169,6 +186,9 @@ public partial class PrintForm : ThemedForm
         // CheckedListBox
         PrintForm_CheckedListBox_Columns.SelectedIndexChanged += PrintForm_CheckedListBox_Columns_SelectedIndexChanged;
         PrintForm_CheckedListBox_Columns.ItemCheck += PrintForm_CheckedListBox_Columns_ItemCheck;
+
+        // ComboBox - Sort
+        PrintForm_ComboBox_SortBy.SelectedIndexChanged += PrintForm_ComboBox_SortBy_SelectedIndexChanged;
 
         // CheckBox
         PrintForm_CheckBox_AddNotesColumn.CheckedChanged += PrintForm_CheckBox_AddNotesColumn_CheckedChanged;
@@ -324,8 +344,9 @@ public partial class PrintForm : ThemedForm
             // Attempt 1: Primary Printer
             try
             {
-                // Use a 4-second timeout for the primary printer to prevent hanging if offline
-                (previewDocument, pageInfos) = await CreatePreviewDocumentAsync(4000);
+                // Use a 15-second timeout for the primary printer to prevent hanging if offline
+                // Increased from 4s to 15s to handle larger datasets (e.g. 20+ pages)
+                (previewDocument, pageInfos) = await CreatePreviewDocumentAsync(15000);
                 generationSucceeded = true;
             }
             catch (Exception ex)
@@ -831,6 +852,17 @@ public partial class PrintForm : ThemedForm
         BeginInvoke(new Action(() => ApplyColumnSelectionFromListBoxWithPendingState(e.Index, e.NewValue == CheckState.Checked)));
     }
 
+    private void PrintForm_ComboBox_SortBy_SelectedIndexChanged(object? sender, EventArgs e)
+    {
+        if (_isUpdatingSortComboBox)
+        {
+            return;
+        }
+
+        ApplySorting();
+        SchedulePreviewRefresh();
+    }
+
     private void PrintForm_RadioButton_Color_CheckedChanged(object? sender, EventArgs e)
     {
         if (_isUpdatingOptionsSection || !PrintForm_RadioButton_Color.Checked)
@@ -1197,6 +1229,8 @@ public partial class PrintForm : ThemedForm
         }
 
         UpdateColumnActionStates();
+        UpdateSortComboBox();
+        ApplySorting();
         UpdateColumnSettingsCollapseState();
     }
 
@@ -1620,7 +1654,97 @@ public partial class PrintForm : ThemedForm
         _printSettings.LastModified = DateTime.UtcNow;
 
         UpdateColumnActionStates();
+        UpdateSortComboBox();
+        ApplySorting();
         SchedulePreviewRefresh();
+    }
+
+    private void UpdateSortComboBox()
+    {
+        _isUpdatingSortComboBox = true;
+        try
+        {
+            string? currentSelection = PrintForm_ComboBox_SortBy.SelectedItem as string;
+            
+            PrintForm_ComboBox_SortBy.Items.Clear();
+            
+            // Add checked columns to sort combo box
+            for (int i = 0; i < PrintForm_CheckedListBox_Columns.Items.Count; i++)
+            {
+                if (PrintForm_CheckedListBox_Columns.GetItemChecked(i) &&
+                    PrintForm_CheckedListBox_Columns.Items[i] is string columnName)
+                {
+                    PrintForm_ComboBox_SortBy.Items.Add(columnName);
+                }
+            }
+            
+            // Restore previous selection if still valid, otherwise select first item
+            if (!string.IsNullOrEmpty(currentSelection) && PrintForm_ComboBox_SortBy.Items.Contains(currentSelection))
+            {
+                PrintForm_ComboBox_SortBy.SelectedItem = currentSelection;
+            }
+            else if (PrintForm_ComboBox_SortBy.Items.Count > 0)
+            {
+                PrintForm_ComboBox_SortBy.SelectedIndex = 0;
+            }
+        }
+        finally
+        {
+            _isUpdatingSortComboBox = false;
+        }
+    }
+
+    private void ApplySorting()
+    {
+        if (_originalData == null) return;
+
+        string? sortColumn = PrintForm_ComboBox_SortBy.SelectedItem as string;
+        if (string.IsNullOrEmpty(sortColumn))
+        {
+            // Revert to original
+            var data = _originalData.Copy();
+            if (data.Columns.Contains("__OriginalIndex")) data.Columns.Remove("__OriginalIndex");
+            _printJob.Data = data;
+            if (_originalRowColors != null)
+            {
+                _printJob.RowColors = new Dictionary<int, Color>(_originalRowColors);
+            }
+        }
+        else
+        {
+            // Sort
+            DataView view = _originalData.DefaultView;
+            view.Sort = $"[{sortColumn}] ASC";
+            DataTable sortedTable = view.ToTable();
+            
+            _printJob.Data = sortedTable;
+            _printJob.RowColors.Clear();
+            
+            if (_originalRowColors != null && _originalRowColors.Count > 0)
+            {
+                for (int i = 0; i < sortedTable.Rows.Count; i++)
+                {
+                    if (sortedTable.Rows[i].Table.Columns.Contains("__OriginalIndex"))
+                    {
+                        object val = sortedTable.Rows[i]["__OriginalIndex"];
+                        if (val != DBNull.Value)
+                        {
+                            int originalIndex = Convert.ToInt32(val);
+                            if (_originalRowColors.TryGetValue(originalIndex, out Color color))
+                            {
+                                _printJob.RowColors[i] = color;
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // Remove __OriginalIndex from _printJob.Data to be clean
+            if (_printJob.Data.Columns.Contains("__OriginalIndex"))
+            {
+                _printJob.Data.Columns.Remove("__OriginalIndex");
+            }
+        }
     }
 
     private void MoveColumnItem(int direction)
