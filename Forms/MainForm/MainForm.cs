@@ -12,6 +12,7 @@ using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
+using MTM_WIP_Application_Winforms.Services.Database;
 using Timer = System.Windows.Forms.Timer;
 using System.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,7 +22,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
 {
     #region MainForm
 
-    public partial class MainForm : ThemedForm
+    public partial class MainForm : ThemedForm, IConnectionRecoveryView
     {
         #region Fields
 
@@ -1686,6 +1687,41 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                 MainForm_MenuStrip_View.DropDownItems.Add(analyticsMenu);
             }
         }
+
+        #region IConnectionRecoveryView Implementation
+
+        public void UpdateSignalStrength(int strength, int ping)
+        {
+            if (MainForm_UserControl_SignalStrength != null)
+            {
+                MainForm_UserControl_SignalStrength.Strength = strength;
+                MainForm_UserControl_SignalStrength.Ping = ping;
+            }
+        }
+
+        public void SetApplicationEnabled(bool enabled)
+        {
+            if (MainForm_TabControl != null) MainForm_TabControl.Enabled = enabled;
+            if (MainForm_SplitContainer_Middle?.Panel2 != null) MainForm_SplitContainer_Middle.Panel2.Enabled = enabled;
+            if (MainForm_MenuStrip != null) MainForm_MenuStrip.Enabled = enabled;
+        }
+
+        public void SetReadyStatusVisible(bool visible)
+        {
+            if (MainForm_StatusText != null) MainForm_StatusText.Visible = visible;
+        }
+
+        public void SetDisconnectedStatusVisible(bool visible)
+        {
+            if (MainForm_StatusStrip_Disconnected != null) MainForm_StatusStrip_Disconnected.Visible = visible;
+        }
+
+        public void SetDisconnectedStatusText(string text)
+        {
+            if (MainForm_StatusStrip_Disconnected != null) MainForm_StatusStrip_Disconnected.Text = text;
+        }
+
+        #endregion
     }
 
     #endregion

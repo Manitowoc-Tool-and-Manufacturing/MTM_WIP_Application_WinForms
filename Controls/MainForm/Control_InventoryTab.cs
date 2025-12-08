@@ -11,6 +11,7 @@ using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
 using MTM_WIP_Application_Winforms.Services.Help;
+using MTM_WIP_Application_Winforms.Models.Enums;
 
 namespace MTM_WIP_Application_Winforms.Controls.MainForm
 {
@@ -407,31 +408,43 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 _progressHelper?.UpdateProgress(10, "Configuring part suggestions...");
 
                 // Configure SuggestionTextBox controls using helper methods with F4 support
-                Helper_SuggestionTextBox.ConfigureForPartNumbers(
-                    Control_InventoryTab_SuggestionBox_Part.TextBox,
-                    GetPartNumberSuggestionsAsync,
-                    enableF4: false); // F4 handled by composite control button
+                var partTb = Control_InventoryTab_SuggestionBox_Part.TextBox;
+                partTb.DataProvider = GetPartNumberSuggestionsAsync;
+                partTb.MaxResults = 100;
+                partTb.EnableWildcards = true;
+                partTb.NoMatchAction = Enum_SuggestionNoMatchAction.ShowWarningAndClear;
+                partTb.SuppressExactMatch = true;
+                partTb.EnableF4 = false;
 
                 _progressHelper?.UpdateProgress(40, "Configuring operation suggestions...");
 
-                Helper_SuggestionTextBox.ConfigureForOperations(
-                    Control_InventoryTab_SuggestionBox_Operation.TextBox,
-                    GetOperationSuggestionsAsync,
-                    enableF4: false);
+                var opTb = Control_InventoryTab_SuggestionBox_Operation.TextBox;
+                opTb.DataProvider = GetOperationSuggestionsAsync;
+                opTb.MaxResults = 50;
+                opTb.EnableWildcards = true;
+                opTb.NoMatchAction = Enum_SuggestionNoMatchAction.ShowWarningAndClear;
+                opTb.SuppressExactMatch = true;
+                opTb.EnableF4 = false;
 
                 _progressHelper?.UpdateProgress(70, "Configuring location suggestions...");
 
-                Helper_SuggestionTextBox.ConfigureForLocations(
-                    Control_InventoryTab_SuggestionBox_Location.TextBox,
-                    GetLocationSuggestionsAsync,
-                    enableF4: false);
+                var locTb = Control_InventoryTab_SuggestionBox_Location.TextBox;
+                locTb.DataProvider = GetLocationSuggestionsAsync;
+                locTb.MaxResults = 100;
+                locTb.EnableWildcards = true;
+                locTb.NoMatchAction = Enum_SuggestionNoMatchAction.ShowWarningAndClear;
+                locTb.SuppressExactMatch = true;
+                locTb.EnableF4 = false;
 
                 _progressHelper?.UpdateProgress(85, "Configuring color code suggestions...");
 
-                Helper_SuggestionTextBox.ConfigureForColorCodes(
-                    Control_InventoryTab_SuggestionBox_ColorCode.TextBox,
-                    GetColorCodeSuggestionsAsync,
-                    enableF4: false);
+                var colorTb = Control_InventoryTab_SuggestionBox_ColorCode.TextBox;
+                colorTb.DataProvider = GetColorCodeSuggestionsAsync;
+                colorTb.MaxResults = 20;
+                colorTb.EnableWildcards = false;
+                colorTb.NoMatchAction = Enum_SuggestionNoMatchAction.None;
+                colorTb.SuppressExactMatch = true;
+                colorTb.EnableF4 = false;
 
                 _progressHelper?.UpdateProgress(100, "Combo boxes loaded");
                 await Task.Delay(100);

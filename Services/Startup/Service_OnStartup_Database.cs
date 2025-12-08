@@ -17,16 +17,11 @@ namespace MTM_WIP_Application_Winforms.Services.Startup
         /// Validates connectivity to the database during application startup.
         /// </summary>
         /// <returns>
-        /// <c>true</c> if the database connection is successful; otherwise, <c>false</c>.
+        /// A <see cref="Model_StartupResult"/> indicating success or failure.
         /// </returns>
-        /// <remarks>
-        /// This method attempts to connect to the database using <see cref="Dao_System.CheckConnectivityAsync"/>.
-        /// If connectivity fails, it logs the error, displays a fatal error via <see cref="Service_ErrorHandler"/>,
-        /// and triggers an application restart/exit.
-        /// </remarks>
-        public static bool ValidateConnectivity()
+        public static async Task<Model_StartupResult> ValidateConnectivityAsync()
         {
-            var connectivityResult = Dao_System.CheckConnectivityAsync().GetAwaiter().GetResult();
+            var connectivityResult = await Dao_System.CheckConnectivityAsync();
             if (!connectivityResult.IsSuccess)
             {
                 LoggingUtility.Log($"[Startup] Database connectivity validation failed: {connectivityResult.StatusMessage}");
@@ -39,43 +34,26 @@ namespace MTM_WIP_Application_Winforms.Services.Startup
                                     ? connectivityResult.StatusMessage
                                     : connectivityResult.ErrorMessage;
 
-                Service_ErrorHandler.HandleException(
-                    connectivityResult.Exception ?? new Exception(errorMessage),
-                    Enum_ErrorSeverity.Fatal,
-                    retryAction: () => { 
-                        // We can't easily restart Main from here without circular dependency or passing a delegate.
-                        // But we can restart the app.
-                        Application.Restart();
-                        Environment.Exit(0);
-                        return true; 
-                    },
-                    contextData: new Dictionary<string, object>
-                    {
-                        ["DatabaseName"] = Model_Shared_Users.Database ?? "mtm_wip_application_winforms",
-                        ["ServerAddress"] = Model_Shared_Users.WipServerAddress,
-                        ["MethodName"] = "ValidateConnectivity",
-                        ["ErrorType"] = "DatabaseConnectivityValidation"
-                    },
-                    controlName: "Program_Main_DatabaseConnectivity");
-
-                LoggingUtility.Log("[Startup] Exiting after database connectivity error");
-                return false;
+                return Model_StartupResult.Failure(errorMessage, connectivityResult.Exception ?? new Exception(errorMessage), new Dictionary<string, object>
+                {
+                    ["DatabaseName"] = Model_Shared_Users.Database ?? "mtm_wip_application_winforms",
+                    ["ServerAddress"] = Model_Shared_Users.WipServerAddress,
+                    ["MethodName"] = "ValidateConnectivity",
+                    ["ErrorType"] = "DatabaseConnectivityValidation"
+                });
             }
 
             LoggingUtility.Log("[Startup] Database connectivity validated successfully");
-            return true;
+            return Model_StartupResult.Success("Database connectivity validated successfully");
         }
 
         /// <summary>
         /// Initializes the stored procedure parameter cache by querying INFORMATION_SCHEMA.
         /// </summary>
-        /// <remarks>
-        /// This cache allows the application to determine parameter modes (IN/OUT) for stored procedures
-        /// without needing explicit configuration or runtime round-trips.
-        /// If initialization fails, the application falls back to convention-based parameter detection
-        /// and displays a non-critical warning to the user.
-        /// </remarks>
-        public static void InitializeParameterCache()
+        /// <returns>
+        /// A <see cref="Model_StartupResult"/> indicating success or failure.
+        /// </returns>
+        public static Model_StartupResult InitializeParameterCache()
         {
             try
             {
@@ -87,33 +65,27 @@ namespace MTM_WIP_Application_Winforms.Services.Startup
 
                 if (cacheResult.IsSuccess)
                 {
-                    LoggingUtility.Log($"[Startup] Parameter prefix cache initialized successfully in {stopwatch.ElapsedMilliseconds}ms. Cached {Model_ParameterPrefix_Cache.ProcedureCount} stored procedures.");
+                    string msg = $"[Startup] Parameter prefix cache initialized successfully in {stopwatch.ElapsedMilliseconds}ms. Cached {Model_ParameterPrefix_Cache.ProcedureCount} stored procedures.";
+                    LoggingUtility.Log(msg);
                     Console.WriteLine($"[Startup] Parameter cache: {Model_ParameterPrefix_Cache.ProcedureCount} procedures cached in {stopwatch.ElapsedMilliseconds}ms");
+                    return Model_StartupResult.Success(msg);
                 }
                 else
                 {
-                    LoggingUtility.Log($"[Startup] Warning: Parameter prefix cache initialization failed: {cacheResult.ErrorMessage}. Using fallback convention-based detection.");
-                    Console.WriteLine($"[Startup Warning] Parameter cache init failed: {cacheResult.ErrorMessage}");
+                    string errorMsg = $"Parameter prefix cache initialization failed: {cacheResult.ErrorMessage}. Using fallback convention-based detection.";
+                    LoggingUtility.Log($"[Startup] Warning: {errorMsg}");
+                    Console.WriteLine($"[Startup Warning] {errorMsg}");
 
-                    Service_OnStartup_AppLifecycle.ShowNonCriticalError("Parameter Cache Warning",
-                        "The stored procedure parameter cache could not be initialized.\n\n" +
-                        $"Reason: {cacheResult.ErrorMessage}\n\n" +
-                        "The application will continue using convention-based parameter detection.\n" +
-                        "This may result in slower database operations or parameter errors for non-standard procedures.\n\n" +
-                        "Please contact your system administrator if this problem persists.");
+                    return Model_StartupResult.Failure(errorMsg, null, new Dictionary<string, object>
+                    {
+                        ["IsCritical"] = false
+                    });
                 }
             }
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                LoggingUtility.Log($"[Startup] Warning: Parameter prefix cache initialization threw exception: {ex.Message}. Using fallback convention-based detection.");
-                Console.WriteLine($"[Startup Warning] Parameter cache exception: {ex.Message}");
-
-                Service_OnStartup_AppLifecycle.ShowNonCriticalError("Parameter Cache Error",
-                    $"An error occurred while initializing the parameter cache:\n\n{ex.Message}\n\n" +
-                    "The application will continue using convention-based parameter detection.\n" +
-                    "Some database operations may be slower or fail if procedures use non-standard parameter naming.\n\n" +
-                    "Please contact your system administrator.");
+                return Model_StartupResult.Failure("Unexpected error initializing parameter cache", ex);
             }
         }
 

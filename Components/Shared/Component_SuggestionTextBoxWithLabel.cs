@@ -301,68 +301,12 @@ namespace MTM_WIP_Application_Winforms.Components.Shared
 
         private void ConfigureDataSource()
         {
-            switch (_suggestionDataSource)
-            {
-                case Enum_SuggestionDataSource.MTM_PartNumber:
-                    Helper_SuggestionTextBox.ConfigureForPartNumbers(this, Helper_SuggestionTextBox.GetCachedPartNumbersAsync);
-                    break;
-                case Enum_SuggestionDataSource.MTM_Operation:
-                    Helper_SuggestionTextBox.ConfigureForOperations(this, Helper_SuggestionTextBox.GetCachedOperationsAsync);
-                    break;
-                case Enum_SuggestionDataSource.MTM_Location:
-                    Helper_SuggestionTextBox.ConfigureForLocations(this, Helper_SuggestionTextBox.GetCachedLocationsAsync);
-                    break;
-                case Enum_SuggestionDataSource.MTM_Color:
-                    Helper_SuggestionTextBox.ConfigureForColorCodes(this, Helper_SuggestionTextBox.GetCachedColorsAsync);
-                    break;
-                case Enum_SuggestionDataSource.MTM_User:
-                    Helper_SuggestionTextBox.ConfigureForUsers(this, Helper_SuggestionTextBox.GetCachedUsersAsync);
-                    break;
-                // InforVisual types
-                case Enum_SuggestionDataSource.Infor_PartNumber:
-                    Helper_SuggestionTextBox.ConfigureForInforPartNumbers(this);
-                    break;
-                case Enum_SuggestionDataSource.Infor_User:
-                    Helper_SuggestionTextBox.ConfigureForInforUsers(this);
-                    break;
-                case Enum_SuggestionDataSource.Infor_Location:
-                    Helper_SuggestionTextBox.ConfigureForInforLocations(this);
-                    break;
-                case Enum_SuggestionDataSource.Infor_Warehouse:
-                    Helper_SuggestionTextBox.ConfigureForInforWarehouses(this);
-                    break;
-                case Enum_SuggestionDataSource.Infor_Operation:
-                    // Note: Visual operations might be different from MTM operations, but using same config pattern
-                    // Assuming we don't have a specific ConfigureForInforOperations yet, or reusing existing pattern
-                    // Wait, I didn't add ConfigureForInforOperations. I should check if I need it.
-                    // I added ConfigureForInforPartNumbers, Users, Locations, Warehouses, WorkOrders, PurchaseOrders, CustomerOrders.
-                    // I missed Operations.
-                    // Let's check Helper_SuggestionTextBox again.
-                    // I did NOT add ConfigureForInforOperations.
-                    // I should add it or use generic ConfigureForOperations with Infor provider.
-                    // But I don't have GetCachedInforOperationsAsync either.
-                    // I'll skip Operation for now or add it if needed.
-                    break; 
-                case Enum_SuggestionDataSource.Infor_PONumber:
-                    Helper_SuggestionTextBox.ConfigureForInforPurchaseOrders(this);
-                    break;
-                case Enum_SuggestionDataSource.Infor_CONumber:
-                    Helper_SuggestionTextBox.ConfigureForInforCustomerOrders(this);
-                    break;
-                case Enum_SuggestionDataSource.Infor_WONumber:
-                    Helper_SuggestionTextBox.ConfigureForInforWorkOrders(this);
-                    break;
-                case Enum_SuggestionDataSource.Infor_FGTNumber:
-                    Helper_SuggestionTextBox.ConfigureForInforFGTNumbers(this);
-                    break;
-                case Enum_SuggestionDataSource.Infor_MMCNumber:
-                case Enum_SuggestionDataSource.Infor_MMFNumber:
-                    Helper_SuggestionTextBox.ConfigureForInforCoilFlatstockNumbers(this);
-                    break;
-                case Enum_SuggestionDataSource.None:
-                default:
-                    break;
-            }
+            // Pass the data source type to the inner control
+            // The inner control will configure itself (DataProvider, MaxResults, etc.)
+            SuggestionTextBoxWithLabel_TextBox_Main.SuggestionDataSource = _suggestionDataSource;
+            
+            // Disable F4 on the inner textbox because this control has its own F4 button
+            SuggestionTextBoxWithLabel_TextBox_Main.EnableF4 = false;
         }
 
         /// <summary>
@@ -510,7 +454,7 @@ namespace MTM_WIP_Application_Winforms.Components.Shared
             _isSuggestionInvocationInProgress = true;
             try
             {
-                await Helper_SuggestionTextBox.ShowFullSuggestionListAsync(SuggestionTextBoxWithLabel_TextBox_Main);
+                await SuggestionTextBoxWithLabel_TextBox_Main.ShowFullListAsync();
             }
             finally
             {

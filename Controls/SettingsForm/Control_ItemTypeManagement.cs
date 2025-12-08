@@ -5,6 +5,7 @@ using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
+using MTM_WIP_Application_Winforms.Models.Enums;
 
 namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 {
@@ -152,13 +153,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 Control_ItemTypeManagement_TextBox_AddItemType.TextBox.Enabled = true;
                 Control_ItemTypeManagement_TextBox_AddItemType.TextBox.BackColor = System.Drawing.SystemColors.Window;
             }
-            Helper_SuggestionTextBox.ConfigureForItemTypes(
-                Control_ItemTypeManagement_Suggestion_EditSelectItemType,
-                Helper_SuggestionTextBox.GetCachedItemTypesAsync);
-
-            Helper_SuggestionTextBox.ConfigureForItemTypes(
-                Control_ItemTypeManagement_Suggestion_RemoveSelectItemType,
-                Helper_SuggestionTextBox.GetCachedItemTypesAsync);
+            
+            Control_ItemTypeManagement_Suggestion_EditSelectItemType.SuggestionDataSource = Enum_SuggestionDataSource.MTM_ItemType;
+            Control_ItemTypeManagement_Suggestion_RemoveSelectItemType.SuggestionDataSource = Enum_SuggestionDataSource.MTM_ItemType;
         }
 
         private void WireUpEventHandlers()
@@ -564,14 +561,14 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
         private void ClearAddSection()
         {
-            Helper_SuggestionTextBox.Clear(Control_ItemTypeManagement_TextBox_AddItemType.TextBox);
+            Control_ItemTypeManagement_TextBox_AddItemType.TextBox.Clear();
         }
 
         private void ClearEditSection()
         {
             _selectedEditItemType = null;
-            Helper_SuggestionTextBox.Clear(Control_ItemTypeManagement_Suggestion_EditSelectItemType.TextBox);
-            Helper_SuggestionTextBox.Clear(Control_ItemTypeManagement_TextBox_EditNewItemType.TextBox);
+            Control_ItemTypeManagement_Suggestion_EditSelectItemType.TextBox.Clear();
+            Control_ItemTypeManagement_TextBox_EditNewItemType.TextBox.Clear();
             Control_ItemTypeManagement_Label_EditIssuedByValue.Text = Model_Application_Variables.User ?? "Current User";
             SetEditSectionEnabled(false);
         }
@@ -579,7 +576,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         private void ClearRemoveSection()
         {
             _selectedRemoveItemType = null;
-            Helper_SuggestionTextBox.Clear(Control_ItemTypeManagement_Suggestion_RemoveSelectItemType.TextBox);
+            Control_ItemTypeManagement_Suggestion_RemoveSelectItemType.TextBox.Clear();
             Control_ItemTypeManagement_Label_RemoveItemTypeValue.Text = string.Empty;
             Control_ItemTypeManagement_Label_RemoveIssuedByValue.Text = Model_Application_Variables.User ?? "Current User";
             Control_ItemTypeManagement_TableLayout_RemoveDetails.Visible = false;

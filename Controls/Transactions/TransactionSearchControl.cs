@@ -4,6 +4,7 @@ using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
+using MTM_WIP_Application_Winforms.Models.Enums;
 
 namespace MTM_WIP_Application_Winforms.Controls.Transactions;
 
@@ -162,7 +163,13 @@ internal partial class TransactionSearchControl : ThemedUserControl
 
             if (!_partSuggestionsConfigured)
             {
-                Helper_SuggestionTextBox.ConfigureForPartNumbers(TransactionSearchControl_Suggestion_PartNumber, GetPartSuggestionsAsync);
+                var tb = TransactionSearchControl_Suggestion_PartNumber.TextBox;
+                tb.DataProvider = GetPartSuggestionsAsync;
+                tb.MaxResults = 100;
+                tb.EnableWildcards = true;
+                tb.NoMatchAction = Enum_SuggestionNoMatchAction.ShowWarningAndClear;
+                tb.SuppressExactMatch = true;
+                tb.EnableF4 = false;
                 _partSuggestionsConfigured = true;
             }
 
@@ -220,7 +227,13 @@ internal partial class TransactionSearchControl : ThemedUserControl
 
             if (!_userSuggestionsConfigured)
             {
-                Helper_SuggestionTextBox.ConfigureForUsers(TransactionSearchControl_Suggestion_User, GetUserSuggestionsAsync);
+                var tb = TransactionSearchControl_Suggestion_User.TextBox;
+                tb.DataProvider = GetUserSuggestionsAsync;
+                tb.MaxResults = 50;
+                tb.EnableWildcards = false;
+                tb.NoMatchAction = Enum_SuggestionNoMatchAction.ShowWarningAndClear;
+                tb.SuppressExactMatch = true;
+                tb.EnableF4 = false;
                 _userSuggestionsConfigured = true;
             }
 
@@ -281,13 +294,25 @@ internal partial class TransactionSearchControl : ThemedUserControl
 
             if (!_fromLocationSuggestionsConfigured)
             {
-                Helper_SuggestionTextBox.ConfigureForLocations(TransactionSearchControl_Suggestion_FromLocation, GetLocationSuggestionsAsync);
+                var tb = TransactionSearchControl_Suggestion_FromLocation.TextBox;
+                tb.DataProvider = GetLocationSuggestionsAsync;
+                tb.MaxResults = 100;
+                tb.EnableWildcards = true;
+                tb.NoMatchAction = Enum_SuggestionNoMatchAction.ShowWarningAndClear;
+                tb.SuppressExactMatch = true;
+                tb.EnableF4 = false;
                 _fromLocationSuggestionsConfigured = true;
             }
 
             if (!_toLocationSuggestionsConfigured)
             {
-                Helper_SuggestionTextBox.ConfigureForLocations(TransactionSearchControl_Suggestion_ToLocation, GetLocationSuggestionsAsync);
+                var tb = TransactionSearchControl_Suggestion_ToLocation.TextBox;
+                tb.DataProvider = GetLocationSuggestionsAsync;
+                tb.MaxResults = 100;
+                tb.EnableWildcards = true;
+                tb.NoMatchAction = Enum_SuggestionNoMatchAction.ShowWarningAndClear;
+                tb.SuppressExactMatch = true;
+                tb.EnableF4 = false;
                 _toLocationSuggestionsConfigured = true;
             }
 
@@ -343,7 +368,13 @@ internal partial class TransactionSearchControl : ThemedUserControl
 
             if (!_operationSuggestionsConfigured)
             {
-                Helper_SuggestionTextBox.ConfigureForOperations(TransactionSearchControl_Suggestion_Operation, GetOperationSuggestionsAsync);
+                var tb = TransactionSearchControl_Suggestion_Operation.TextBox;
+                tb.DataProvider = GetOperationSuggestionsAsync;
+                tb.MaxResults = 50;
+                tb.EnableWildcards = true;
+                tb.NoMatchAction = Enum_SuggestionNoMatchAction.ShowWarningAndClear;
+                tb.SuppressExactMatch = true;
+                tb.EnableF4 = false;
                 _operationSuggestionsConfigured = true;
             }
 

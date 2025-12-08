@@ -55,7 +55,21 @@ namespace MTM_WIP_Application_Winforms
                 ServiceProvider = Service_OnStartup_DependencyInjection.ConfigureServices();
 
                 // Start application
-                Service_OnStartup_AppLifecycle.RunApplication();
+                try
+                {
+                    Application.Run(new Service_Onstartup_StartupSplashApplicationContext());
+                }
+                catch (InvalidOperationException ex) when (ex.Message.Contains("Application.Run"))
+                {
+                    LoggingUtility.LogApplicationError(ex);
+                    Service_OnStartup_AppLifecycle.ShowFatalError("Application Startup Error",
+                        "Failed to start the main application interface.\n\n" +
+                        "This usually means:\n" +
+                        "• Another instance may already be running\n" +
+                        "• System resources are insufficient\n" +
+                        "• Display configuration issues\n\n" +
+                        "Please restart your computer and try again.");
+                }
             }
             catch (OutOfMemoryException ex)
             {

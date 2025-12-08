@@ -5,7 +5,6 @@ using System.Diagnostics;
 using DocumentFormat.OpenXml.Vml.Office;
 using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Models;
-using MTM_WIP_Application_Winforms.Services.Startup;
 using MySql.Data.MySqlClient;
 
 namespace MTM_WIP_Application_Winforms.Services.Logging;
@@ -96,18 +95,8 @@ internal static class LoggingUtility
 
             if (Debugger.IsAttached) return;
 
-            // Clean up application data directories
-            var appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-                "MTM_WIP_Application_Winforms");
-            var localAppDataPath =
-                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "MTM_WIP_Application_Winforms");
-
-            // Run directory cleanup operations asynchronously
-            await Task.Run(() =>
-            {
-                Service_OnStartup_AppDataCleaner.DeleteDirectoryContents(appDataPath);
-                Service_OnStartup_AppDataCleaner.DeleteDirectoryContents(localAppDataPath);
-            }, cts.Token);
+            // Application data cleanup is now handled by the Orchestrator (Service_OnStartup_AppLifecycle)
+            // to avoid circular dependencies.
         }
         catch (Exception ex)
         {
@@ -225,7 +214,7 @@ internal static class LoggingUtility
             string logFilePath;
             try
             {
-                logFilePath = await Helper_Database_Variables.GetLogFilePathAsync(server, userName);
+                logFilePath = await Helper_LogPath.GetLogFilePathAsync(server, userName);
             }
             catch (OperationCanceledException)
             {

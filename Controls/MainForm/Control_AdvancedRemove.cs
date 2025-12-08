@@ -13,6 +13,7 @@ using MTM_WIP_Application_Winforms.Services;
 using Microsoft.Extensions.DependencyInjection;
 using MTM_WIP_Application_Winforms.Services.Visual;
 using MTM_WIP_Application_Winforms.Forms.Help;
+using MTM_WIP_Application_Winforms.Models.Enums;
 
 namespace MTM_WIP_Application_Winforms.Controls.MainForm
 {
@@ -272,9 +273,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             try
             {
                 // Configure SuggestionTextBoxWithLabel for Users
-                Helper_SuggestionTextBox.ConfigureForUsers(
-                    Control_AdvancedRemove_SuggestionBox_User,
-                    Helper_SuggestionTextBox.GetCachedUsersAsync);
+                Control_AdvancedRemove_SuggestionBox_User.SuggestionDataSource = Enum_SuggestionDataSource.MTM_User;
             }
             catch (Exception ex)
             {

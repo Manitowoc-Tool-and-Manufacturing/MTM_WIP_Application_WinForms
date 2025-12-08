@@ -13,10 +13,10 @@ using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Models;
+using MTM_WIP_Application_Winforms.Models.Enums;
 using MTM_WIP_Application_Winforms.Services;
 using Microsoft.Extensions.DependencyInjection;
 using MySql.Data.MySqlClient;
-
 using Color = System.Drawing.Color;
 using MTM_WIP_Application_Winforms.Forms.Help;
 
@@ -249,22 +249,13 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         {
             // Single Entry tab
             AdvancedInventory_Single_TextBox_Part.ShowF4Button = true;
-            Helper_SuggestionTextBox.ConfigureForPartNumbers(
-                AdvancedInventory_Single_TextBox_Part.TextBox,
-                Helper_SuggestionTextBox.GetCachedPartNumbersAsync,
-                enableF4: true);
+            AdvancedInventory_Single_TextBox_Part.SuggestionDataSource = Enum_SuggestionDataSource.MTM_PartNumber;
 
             AdvancedInventory_Single_TextBox_Op.ShowF4Button = true;
-            Helper_SuggestionTextBox.ConfigureForOperations(
-                AdvancedInventory_Single_TextBox_Op.TextBox,
-                Helper_SuggestionTextBox.GetCachedOperationsAsync,
-                enableF4: true);            
+            AdvancedInventory_Single_TextBox_Op.SuggestionDataSource = Enum_SuggestionDataSource.MTM_Operation;
 
             AdvancedInventory_Single_TextBox_Loc.ShowF4Button = true;
-            Helper_SuggestionTextBox.ConfigureForLocations(
-                AdvancedInventory_Single_TextBox_Loc.TextBox,
-                Helper_SuggestionTextBox.GetCachedLocationsAsync,
-                enableF4: true);
+            AdvancedInventory_Single_TextBox_Loc.SuggestionDataSource = Enum_SuggestionDataSource.MTM_Location;
 
             // Wire up SuggestionSelected event handlers for Single tab
             AdvancedInventory_Single_TextBox_Part.SuggestionSelected += AdvancedInventory_Single_TextBox_Part_SuggestionSelected;
@@ -277,22 +268,13 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
             // Multi-Location tab
             AdvancedInventory_MultiLoc_TextBox_Part.ShowF4Button = true;
-            Helper_SuggestionTextBox.ConfigureForPartNumbers(
-                AdvancedInventory_MultiLoc_TextBox_Part.TextBox,
-                Helper_SuggestionTextBox.GetCachedPartNumbersAsync,
-                enableF4: true);
+            AdvancedInventory_MultiLoc_TextBox_Part.SuggestionDataSource = Enum_SuggestionDataSource.MTM_PartNumber;
 
             AdvancedInventory_MultiLoc_TextBox_Op.ShowF4Button = true;
-            Helper_SuggestionTextBox.ConfigureForOperations(
-                AdvancedInventory_MultiLoc_TextBox_Op.TextBox,
-                Helper_SuggestionTextBox.GetCachedOperationsAsync,
-                enableF4: true);
+            AdvancedInventory_MultiLoc_TextBox_Op.SuggestionDataSource = Enum_SuggestionDataSource.MTM_Operation;
 
             AdvancedInventory_MultiLoc_TextBox_Loc.ShowF4Button = true;
-            Helper_SuggestionTextBox.ConfigureForLocations(
-                AdvancedInventory_MultiLoc_TextBox_Loc.TextBox,
-                Helper_SuggestionTextBox.GetCachedLocationsAsync,
-                enableF4: true);
+            AdvancedInventory_MultiLoc_TextBox_Loc.SuggestionDataSource = Enum_SuggestionDataSource.MTM_Location;
 
             // Wire up SuggestionSelected event handlers for Multi-Location tab
             AdvancedInventory_MultiLoc_TextBox_Part.SuggestionSelected += AdvancedInventory_MultiLoc_TextBox_Part_SuggestionSelected;
@@ -2031,7 +2013,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             userName = Path.GetInvalidFileNameChars()
                 .Aggregate(userName, (current, c) => current.Replace(c.ToString(), "_"));
 
-            string logFilePath = await Helper_Database_Variables.GetLogFilePathAsync(server, userName);
+            string logFilePath = await Helper_LogPath.GetLogFilePathAsync(server, userName);
             string logDir = Directory.GetParent(logFilePath)?.Parent?.FullName ?? "";
             string excelRoot = Path.Combine(logDir, "WIP App Excel Files");
             string userFolder = Path.Combine(excelRoot, userName);

@@ -7,12 +7,13 @@ namespace MTM_WIP_Application_Winforms.Services.Startup
 {
     public static class Service_OnStartup_User
     {
-        public static void IdentifyUser()
+        public static Model_StartupResult IdentifyUser()
         {
             try
             {
                 Model_Application_Variables.User = Dao_System.System_GetUserName();
                 LoggingUtility.Log($"[Startup] User identified: {Model_Application_Variables.User}");
+                return Model_StartupResult.Success($"User identified: {Model_Application_Variables.User}");
             }
             catch (Exception ex)
             {
@@ -23,20 +24,16 @@ namespace MTM_WIP_Application_Winforms.Services.Startup
                 try
                 {
                     Model_Application_Variables.User = Environment.UserName ?? "Unknown";
-                    LoggingUtility.Log($"[Startup] Using fallback user identification: {Model_Application_Variables.User}");
+                    string msg = $"Could not identify user through normal methods. Using system username '{Model_Application_Variables.User}' as fallback.";
+                    LoggingUtility.Log($"[Startup] {msg}");
 
-                    Service_OnStartup_AppLifecycle.ShowNonCriticalError("User Identification Warning",
-                        $"Could not identify user through normal methods:\n\n{ex.Message}\n\n" +
-                        $"Using system username '{Model_Application_Variables.User}' as fallback.\n" +
-                        "Some user-specific features may not work correctly.");
+                    return Model_StartupResult.Failure(msg, ex, new Dictionary<string, object> { ["IsCritical"] = false });
                 }
                 catch (Exception fallbackEx)
                 {
                     Model_Application_Variables.User = "SHOP2";
                     LoggingUtility.LogApplicationError(fallbackEx);
-                    Service_OnStartup_AppLifecycle.ShowNonCriticalError("User Identification Error",
-                        "Failed to identify current user. Using 'Unknown' as username.\n" +
-                        "This may affect user-specific settings and permissions.");
+                    return Model_StartupResult.Failure("Failed to identify current user. Using 'SHOP2' as username.", fallbackEx, new Dictionary<string, object> { ["IsCritical"] = false });
                 }
             }
         }
@@ -68,8 +65,21 @@ namespace MTM_WIP_Application_Winforms.Services.Startup
 
                     // Allow any database name that the user has configured
                     // Connectivity validation happens in CheckConnectivityAsync below
+#if !DEBUG
                     Model_Shared_Users.Database = dbName;
                     LoggingUtility.Log($"[Startup] Loaded user database name setting: {dbName}");
+#else
+                    if (System.Diagnostics.Debugger.IsAttached)
+                    {
+                        Model_Shared_Users.Database = "mtm_wip_application_winforms_test";
+                        LoggingUtility.Log($"[Startup] Debugger attached: Ignoring user database setting '{dbName}' and enforcing test database.");
+                    }
+                    else
+                    {
+                        Model_Shared_Users.Database = dbName;
+                        LoggingUtility.Log($"[Startup] Debug configuration (No Debugger): Loaded user database name setting: {dbName}");
+                    }
+#endif
                 }
             }
             catch (Exception ex)
@@ -79,88 +89,23 @@ namespace MTM_WIP_Application_Winforms.Services.Startup
             }
         }
 
-        public static async Task LoadUserAccessAsync()
+        public static async Task<Model_StartupResult> LoadUserAccessAsync()
         {
             try
             {
                 await Dao_System.System_UserAccessTypeAsync();
+                return Model_StartupResult.Success("User access loaded");
             }
             catch (MySqlException ex)
             {
                 LoggingUtility.LogDatabaseError(ex);
                 string userMessage = Service_OnStartup_Database.GetDatabaseConnectionErrorMessage(ex);
-
-                Service_ErrorHandler.HandleException(
-                    ex,
-                    Enum_ErrorSeverity.Fatal,
-                    retryAction: () => { 
-                        Application.Restart();
-                        Environment.Exit(0);
-                        return true; 
-                    },
-                    contextData: new Dictionary<string, object>
-                    {
-                        ["User"] = Model_Application_Variables.User,
-                        ["DatabaseName"] = Model_Shared_Users.Database ?? "mtm_wip_application_winforms",
-                        ["ServerAddress"] = Model_Shared_Users.WipServerAddress,
-                        ["MethodName"] = "System_UserAccessTypeAsync",
-                        ["ErrorType"] = "UserAccessLoading_MySqlException"
-                    },
-                    controlName: "Program_Main_UserAccessLoading");
-
-                LoggingUtility.Log("[Startup] Exiting after user access loading failure");
-                Environment.Exit(1);
-            }
-            catch (TimeoutException ex)
-            {
-                LoggingUtility.LogApplicationError(ex);
-
-                Service_ErrorHandler.HandleException(
-                    ex,
-                    Enum_ErrorSeverity.High,
-                    retryAction: () => { 
-                        Application.Restart();
-                        Environment.Exit(0);
-                        return true; 
-                    },
-                    contextData: new Dictionary<string, object>
-                    {
-                        ["User"] = Model_Application_Variables.User,
-                        ["MethodName"] = "System_UserAccessTypeAsync",
-                        ["ErrorType"] = "UserAccessLoading_Timeout"
-                    },
-                    controlName: "Program_Main_UserAccessTimeout");
-            }
-            catch (UnauthorizedAccessException ex)
-            {
-                LoggingUtility.LogApplicationError(ex);
-
-                Service_ErrorHandler.HandleException(
-                    ex,
-                    Enum_ErrorSeverity.Fatal,
-                    contextData: new Dictionary<string, object>
-                    {
-                        ["User"] = Model_Application_Variables.User,
-                        ["MethodName"] = "System_UserAccessTypeAsync",
-                        ["ErrorType"] = "UserAccessLoading_UnauthorizedAccess"
-                    },
-                    controlName: "Program_Main_UnauthorizedAccess");
+                return Model_StartupResult.Failure(userMessage, ex);
             }
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-
-                Service_ErrorHandler.HandleException(
-                    ex,
-                    Enum_ErrorSeverity.Fatal,
-                    contextData: new Dictionary<string, object>
-                    {
-                        ["User"] = Model_Application_Variables.User,
-                        ["MethodName"] = "System_UserAccessTypeAsync",
-                        ["ErrorType"] = "UserAccessLoading_GeneralException",
-                        ["ExceptionType"] = ex.GetType().Name
-                    },
-                    controlName: "Program_Main_UserAccessError");
+                return Model_StartupResult.Failure("Failed to load user access", ex);
             }
         }
     }

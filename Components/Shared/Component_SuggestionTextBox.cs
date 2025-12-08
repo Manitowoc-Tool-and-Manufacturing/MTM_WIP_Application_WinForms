@@ -90,6 +90,15 @@ namespace MTM_WIP_Application_Winforms.Components.Shared
         public bool EnableWildcards { get; set; } = true;
 
         /// <summary>
+        /// Gets or sets whether F4 key triggers the full suggestion list.
+        /// Default: true.
+        /// </summary>
+        [Category("Behavior")]
+        [Description("Enable F4 key to show full suggestion list")]
+        [DefaultValue(true)]
+        public bool EnableF4 { get; set; } = true;
+
+        /// <summary>
         /// Gets or sets whether to show loading indicator for slow data sources.
         /// Loading indicator appears if data loading exceeds LoadingThresholdMs.
         /// Default: true.
@@ -312,59 +321,74 @@ namespace MTM_WIP_Application_Winforms.Components.Shared
 
         private void ConfigureDataSource()
         {
+            if (DesignMode) return;
+
             switch (_suggestionDataSource)
             {
                 case Enum_SuggestionDataSource.MTM_PartNumber:
-                    Helper_SuggestionTextBox.ConfigureForPartNumbers(this, Helper_SuggestionTextBox.GetCachedPartNumbersAsync, enableF4: true);
+                    ConfigureInternal(Helper_SuggestionTextBox.GetCachedPartNumbersAsync, 100, true, Enum_SuggestionNoMatchAction.ShowWarningAndClear, true);
                     break;
                 case Enum_SuggestionDataSource.MTM_Operation:
-                    Helper_SuggestionTextBox.ConfigureForOperations(this, Helper_SuggestionTextBox.GetCachedOperationsAsync, enableF4: true);
+                    ConfigureInternal(Helper_SuggestionTextBox.GetCachedOperationsAsync, 50, true, Enum_SuggestionNoMatchAction.ShowWarningAndClear, true);
                     break;
                 case Enum_SuggestionDataSource.MTM_Location:
-                    Helper_SuggestionTextBox.ConfigureForLocations(this, Helper_SuggestionTextBox.GetCachedLocationsAsync, enableF4: true);
+                    ConfigureInternal(Helper_SuggestionTextBox.GetCachedLocationsAsync, 100, true, Enum_SuggestionNoMatchAction.ShowWarningAndClear, true);
                     break;
                 case Enum_SuggestionDataSource.MTM_Color:
-                    Helper_SuggestionTextBox.ConfigureForColorCodes(this, Helper_SuggestionTextBox.GetCachedColorsAsync, enableF4: true);
+                    ConfigureInternal(Helper_SuggestionTextBox.GetCachedColorsAsync, 20, false, Enum_SuggestionNoMatchAction.None, true);
                     break;
                 case Enum_SuggestionDataSource.MTM_User:
-                    Helper_SuggestionTextBox.ConfigureForUsers(this, Helper_SuggestionTextBox.GetCachedUsersAsync, enableF4: true);
+                    ConfigureInternal(Helper_SuggestionTextBox.GetCachedUsersAsync, 50, false, Enum_SuggestionNoMatchAction.ShowWarningAndClear, true);
+                    break;
+                case Enum_SuggestionDataSource.MTM_ItemType:
+                    ConfigureInternal(Helper_SuggestionTextBox.GetCachedItemTypesAsync, 50, false, Enum_SuggestionNoMatchAction.ShowWarningAndClear, true);
                     break;
                 // InforVisual types
                 case Enum_SuggestionDataSource.Infor_PartNumber:
-                    Helper_SuggestionTextBox.ConfigureForInforPartNumbers(this, enableF4: true);
+                    ConfigureInternal(Helper_SuggestionTextBox.GetCachedInforPartNumbersAsync, 100, true, Enum_SuggestionNoMatchAction.ShowWarningAndClear, true);
                     break;
                 case Enum_SuggestionDataSource.Infor_User:
-                    Helper_SuggestionTextBox.ConfigureForInforUsers(this, enableF4: true);
+                    ConfigureInternal(Helper_SuggestionTextBox.GetCachedInforUsersAsync, 50, false, Enum_SuggestionNoMatchAction.ShowWarningAndClear, true);
                     break;
                 case Enum_SuggestionDataSource.Infor_Location:
-                    Helper_SuggestionTextBox.ConfigureForInforLocations(this, enableF4: true);
+                    ConfigureInternal(Helper_SuggestionTextBox.GetCachedInforLocationsAsync, 100, true, Enum_SuggestionNoMatchAction.ShowWarningAndClear, true);
                     break;
                 case Enum_SuggestionDataSource.Infor_Warehouse:
-                    Helper_SuggestionTextBox.ConfigureForInforWarehouses(this, enableF4: true);
+                    ConfigureInternal(Helper_SuggestionTextBox.GetCachedInforWarehousesAsync, 50, true, Enum_SuggestionNoMatchAction.ShowWarningAndClear, true);
                     break;
                 case Enum_SuggestionDataSource.Infor_Operation:
                     // Not implemented yet
                     break;
                 case Enum_SuggestionDataSource.Infor_PONumber:
-                    Helper_SuggestionTextBox.ConfigureForInforPurchaseOrders(this, enableF4: true);
+                    ConfigureInternal(Helper_SuggestionTextBox.GetCachedInforPurchaseOrdersAsync, 50, true, Enum_SuggestionNoMatchAction.ShowWarningAndClear, true);
                     break;
                 case Enum_SuggestionDataSource.Infor_CONumber:
-                    Helper_SuggestionTextBox.ConfigureForInforCustomerOrders(this, enableF4: true);
+                    ConfigureInternal(Helper_SuggestionTextBox.GetCachedInforCustomerOrdersAsync, 50, true, Enum_SuggestionNoMatchAction.ShowWarningAndClear, true);
                     break;
                 case Enum_SuggestionDataSource.Infor_WONumber:
-                    Helper_SuggestionTextBox.ConfigureForInforWorkOrders(this, enableF4: true);
+                    ConfigureInternal(Helper_SuggestionTextBox.GetCachedInforWorkOrdersAsync, 50, true, Enum_SuggestionNoMatchAction.ShowWarningAndClear, true);
                     break;
                 case Enum_SuggestionDataSource.Infor_FGTNumber:
-                    Helper_SuggestionTextBox.ConfigureForInforFGTNumbers(this, enableF4: true);
+                    ConfigureInternal(Helper_SuggestionTextBox.GetCachedInforFGTNumbersAsync, 100, true, Enum_SuggestionNoMatchAction.ShowWarningAndClear, true);
                     break;
                 case Enum_SuggestionDataSource.Infor_MMCNumber:
                 case Enum_SuggestionDataSource.Infor_MMFNumber:
-                    Helper_SuggestionTextBox.ConfigureForInforCoilFlatstockNumbers(this, enableF4: true);
+                    ConfigureInternal(Helper_SuggestionTextBox.GetCachedInforCoilFlatstockNumbersAsync, 100, true, Enum_SuggestionNoMatchAction.ShowWarningAndClear, true);
                     break;
                 case Enum_SuggestionDataSource.None:
                 default:
                     break;
             }
+        }
+
+        private void ConfigureInternal(Func<Task<List<string>>> dataProvider, int maxResults, bool enableWildcards, Enum_SuggestionNoMatchAction noMatchAction, bool suppressExactMatch)
+        {
+            this.DataProvider = dataProvider;
+            this.MaxResults = maxResults;
+            this.EnableWildcards = enableWildcards;
+            this.NoMatchAction = noMatchAction;
+            this.SuppressExactMatch = suppressExactMatch;
+            this.EnableF4 = true;
         }
 
             private void WireInnerTextBoxEvents()
@@ -402,6 +426,39 @@ private void UpdateCueBanner()
                 throw new InvalidOperationException("DataProvider must be set before showing suggestions");
 
             await ShowSuggestionOverlayAsync();
+        }
+
+        /// <summary>
+        /// Shows the full suggestion list regardless of current text (F4 functionality).
+        /// </summary>
+        /// <returns>Task that completes when overlay is closed</returns>
+        public async Task ShowFullListAsync()
+        {
+            if (DataProvider == null) return;
+
+            try
+            {
+                // Get all suggestions from data provider
+                var allSuggestions = await DataProvider.Invoke();
+                
+                if (allSuggestions == null || allSuggestions.Count == 0)
+                {
+                    Service_ErrorHandler.ShowWarning("No suggestions available.");
+                    return;
+                }
+
+                // Clean the source list
+                allSuggestions = Service_SuggestionFilter.CleanSourceList(allSuggestions);
+
+                // Show overlay with full list
+                DisplayOverlay(allSuggestions);
+            }
+            catch (Exception ex)
+            {
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
+                    controlName: this.Name,
+                    callerName: nameof(ShowFullListAsync));
+            }
         }
 
         /// <summary>
@@ -820,7 +877,7 @@ private void UpdateCueBanner()
             await ShowSuggestionOverlayAsync();
         }
 
-        private void InnerTextBox_KeyDown(object? sender, KeyEventArgs e)
+        private async void InnerTextBox_KeyDown(object? sender, KeyEventArgs e)
         {
             if (_isOverlayVisible && _currentOverlay != null)
             {
@@ -862,6 +919,14 @@ private void UpdateCueBanner()
                         e.SuppressKeyPress = true;
                         return;
                 }
+            }
+
+            if (EnableF4 && (e.KeyCode == Keys.F4 || (e.KeyCode == Keys.Down && Text.Length == 0)))
+            {
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+                await ShowFullListAsync();
+                return;
             }
 
             base.OnKeyDown(e);

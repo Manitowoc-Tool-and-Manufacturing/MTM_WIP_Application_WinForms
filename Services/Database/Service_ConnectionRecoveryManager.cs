@@ -2,8 +2,8 @@ using System.Diagnostics;
 using System.Media;
 using MTM_WIP_Application_Winforms.Controls.Addons;
 using MTM_WIP_Application_Winforms.Core;
-using MTM_WIP_Application_Winforms.Forms.MainForm;
 using MTM_WIP_Application_Winforms.Helpers;
+using MTM_WIP_Application_Winforms.Services.Database;
 using MySql.Data.MySqlClient;
 using Timer = System.Windows.Forms.Timer;
 
@@ -14,19 +14,19 @@ namespace MTM_WIP_Application_Winforms.Services
     /// </summary>
     public class Service_ConnectionRecoveryManager
     {
-    #region Fields
+        #region Fields
 
-    private readonly MainForm _mainForm;
-    private readonly Timer _reconnectTimer;
-    private int _secondsUntilRetry;
-    private int _consecutiveFailures;
-    private bool _isReconnecting; // Prevents concurrent reconnection attempts
-    private const int RetryIntervalSeconds = 5;
-    private const int MaxConsecutiveFailures = 5;
+        private readonly IConnectionRecoveryView _view;
+        private readonly Timer _reconnectTimer;
+        private int _secondsUntilRetry;
+        private int _consecutiveFailures;
+        private bool _isReconnecting; // Prevents concurrent reconnection attempts
+        private const int RetryIntervalSeconds = 5;
+        private const int MaxConsecutiveFailures = 5;
 
-    #endregion
+        #endregion
 
-    #region Properties
+        #region Properties
 
         /// <summary>
         /// Gets a value indicating whether the disconnect timer is currently active
@@ -40,11 +40,11 @@ namespace MTM_WIP_Application_Winforms.Services
         /// <summary>
         /// Initializes a new instance of the Service_ConnectionRecoveryManager class
         /// </summary>
-        /// <param name="mainForm">Reference to the main form</param>
-        /// <exception cref="ArgumentNullException">Thrown when mainForm is null</exception>
-        public Service_ConnectionRecoveryManager(MainForm mainForm)
+        /// <param name="view">Reference to the view implementing IConnectionRecoveryView</param>
+        /// <exception cref="ArgumentNullException">Thrown when view is null</exception>
+        public Service_ConnectionRecoveryManager(IConnectionRecoveryView view)
         {
-            _mainForm = mainForm ?? throw new ArgumentNullException(nameof(mainForm));
+            _view = view ?? throw new ArgumentNullException(nameof(view));
             _secondsUntilRetry = RetryIntervalSeconds;
             
             // Timer ticks every 1 second to update countdown
@@ -61,9 +61,9 @@ namespace MTM_WIP_Application_Winforms.Services
         /// </summary>
         public void HandleConnectionLost()
         {
-            if (_mainForm.InvokeRequired)
+            if (_view.InvokeRequired)
             {
-                _mainForm.Invoke(new Action(HandleConnectionLost));
+                _view.Invoke(new Action(HandleConnectionLost));
                 return;
             }
 
@@ -82,18 +82,15 @@ namespace MTM_WIP_Application_Winforms.Services
             _consecutiveFailures = 0;
 
             // Update connection strength control to show no signal
-            _mainForm.MainForm_UserControl_SignalStrength.Strength = 0;
-            _mainForm.MainForm_UserControl_SignalStrength.Ping = -1;
+            _view.UpdateSignalStrength(0, -1);
             Debug.WriteLine("[ConnectionRecovery] Connection strength set to 0");
 
             // Lock the main form - disable all tabs, quick buttons, and menu
-            _mainForm.MainForm_TabControl.Enabled = false;
-            _mainForm.MainForm_SplitContainer_Middle.Panel2.Enabled = false; // Disable quick buttons
-            _mainForm.MainForm_MenuStrip.Enabled = false; // Disable menu strip
-            Debug.WriteLine("[ConnectionRecovery] TabControl, QuickButtons, and MenuStrip disabled");
+            _view.SetApplicationEnabled(false);
+            Debug.WriteLine("[ConnectionRecovery] Application controls disabled");
             
             // Hide the "Ready" status text
-            _mainForm.MainForm_StatusText.Visible = false;
+            _view.SetReadyStatusVisible(false);
             Debug.WriteLine("[ConnectionRecovery] Ready status hidden");
             
             // Initialize countdown
@@ -101,7 +98,7 @@ namespace MTM_WIP_Application_Winforms.Services
             UpdateDisconnectedStatusMessage();
             
             // Show disconnected status
-            _mainForm.MainForm_StatusStrip_Disconnected.Visible = true;
+            _view.SetDisconnectedStatusVisible(true);
             Debug.WriteLine("[ConnectionRecovery] Disconnected status shown");
             _reconnectTimer.Start();
             Debug.WriteLine("[ConnectionRecovery] Reconnect timer started");
@@ -112,9 +109,9 @@ namespace MTM_WIP_Application_Winforms.Services
         /// </summary>
         public void HandleConnectionRestored()
         {
-            if (_mainForm.InvokeRequired)
+            if (_view.InvokeRequired)
             {
-                _mainForm.Invoke(new Action(HandleConnectionRestored));
+                _view.Invoke(new Action(HandleConnectionRestored));
                 return;
             }
 
@@ -126,15 +123,13 @@ namespace MTM_WIP_Application_Winforms.Services
             Debug.WriteLine("[ConnectionRecovery] Consecutive failures reset to 0");
             
             // Unlock the main form - enable all tabs, quick buttons, and menu
-            _mainForm.MainForm_TabControl.Enabled = true;
-            _mainForm.MainForm_SplitContainer_Middle.Panel2.Enabled = true; // Enable quick buttons
-            _mainForm.MainForm_MenuStrip.Enabled = true; // Enable menu strip
+            _view.SetApplicationEnabled(true);
             
             // Show the "Ready" status text again
-            _mainForm.MainForm_StatusText.Visible = true;
+            _view.SetReadyStatusVisible(true);
             
             // Hide disconnected status
-            _mainForm.MainForm_StatusStrip_Disconnected.Visible = false;
+            _view.SetDisconnectedStatusVisible(false);
             _reconnectTimer.Stop();
         }
 
@@ -144,16 +139,23 @@ namespace MTM_WIP_Application_Winforms.Services
         public async Task UpdateConnectionStrengthAsync()
         {
             Debug.WriteLine("[ConnectionRecovery] UpdateConnectionStrengthAsync called");
-            Control_ConnectionStrengthControl? signalStrength = _mainForm.MainForm_UserControl_SignalStrength;
-            ToolStripStatusLabel? statusStripDisconnected = _mainForm.MainForm_StatusStrip_Disconnected;
 
-            if (signalStrength.InvokeRequired)
-            {
-                await Task.Run(async () => await UpdateConnectionStrengthAsync());
-                return;
-            }
-
+            // 1. Perform network check (async, no UI access needed yet)
             (int strength, int pingMs) = await Helper_Control_MySqlSignal.GetStrengthAsync();
+            
+            // 2. Update UI (must be on UI thread)
+            if (_view.InvokeRequired)
+            {
+                _view.Invoke(new Action(() => UpdateConnectionStrengthUI(strength, pingMs)));
+            }
+            else
+            {
+                UpdateConnectionStrengthUI(strength, pingMs);
+            }
+        }
+
+        private void UpdateConnectionStrengthUI(int strength, int pingMs)
+        {
             Debug.WriteLine($"[ConnectionRecovery] Strength: {strength}, Ping: {pingMs}, TimerActive: {IsDisconnectTimerActive}");
 
             // If reconnect timer is active, we're disconnected - show 0 strength
@@ -164,10 +166,8 @@ namespace MTM_WIP_Application_Winforms.Services
                 Debug.WriteLine("[ConnectionRecovery] Timer active, forcing strength to 0");
             }
 
-            signalStrength.Strength = strength;
-            signalStrength.Ping = pingMs;
-
-            statusStripDisconnected.Visible = strength == 0;
+            _view.UpdateSignalStrength(strength, pingMs);
+            _view.SetDisconnectedStatusVisible(strength == 0);
 
             if (strength == 0 && !IsDisconnectTimerActive)
             {
@@ -208,14 +208,14 @@ namespace MTM_WIP_Application_Winforms.Services
         /// </summary>
         private void UpdateDisconnectedStatusMessage()
         {
-            if (_mainForm.InvokeRequired)
+            if (_view.InvokeRequired)
             {
-                _mainForm.Invoke(new Action(UpdateDisconnectedStatusMessage));
+                _view.Invoke(new Action(UpdateDisconnectedStatusMessage));
                 return;
             }
 
-            _mainForm.MainForm_StatusStrip_Disconnected.Text = 
-                $"Connection to server lost, attempting to reconnect... (Attempt {_consecutiveFailures + 1}/{MaxConsecutiveFailures})";
+            _view.SetDisconnectedStatusText(
+                $"Connection to server lost, attempting to reconnect... (Attempt {_consecutiveFailures + 1}/{MaxConsecutiveFailures})");
         }
 
         /// <summary>

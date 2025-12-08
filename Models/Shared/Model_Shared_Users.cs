@@ -16,7 +16,11 @@ namespace MTM_WIP_Application_Winforms.Models
         public static string VisualPassword { get; set; } = "Password";
         public static string VisualUserName { get; set; } = "User Name";
         public bool VitsUser { get; set; } = false;
-        public static string? Database { get; set ; } = "mtm_wip_application_winforms";
+#if DEBUG
+        public static string? Database { get; set; } = "mtm_wip_application_winforms_test";
+#else
+        public static string? Database { get; set; } = "mtm_wip_application_winforms";
+#endif
 
         public static string WipServerAddress { get; set; } = "localhost";
 

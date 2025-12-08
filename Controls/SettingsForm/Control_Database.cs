@@ -79,6 +79,21 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                     ? databaseResult.Data
                     : "mtm_wip_application_winforms";
 
+                // Update Active Connection Label
+                string activeDb = Model_Shared_Users.Database ?? "Unknown";
+                string activeServer = Model_Shared_Users.WipServerAddress;
+                Control_Database_Label_ActiveConnection.Text = $"Active Connection: {activeDb} on {activeServer}";
+
+                if (activeDb.Contains("test", StringComparison.OrdinalIgnoreCase))
+                {
+                    Control_Database_Label_ActiveConnection.ForeColor = Color.OrangeRed;
+                    Control_Database_Label_ActiveConnection.Text += " (TEST MODE)";
+                }
+                else
+                {
+                    Control_Database_Label_ActiveConnection.ForeColor = Color.DimGray;
+                }
+
                 StatusMessageChanged?.Invoke(this, "Database settings loaded.");
             }
             catch (Exception ex)
@@ -202,9 +217,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 Control_Database_Button_TestConnection.Text = "Testing...";
 
                 // Show progress
-                StatusMessageChanged?.Invoke(this, "Testing database connection...");
+                StatusMessageChanged?.Invoke(this, "Testing database connections...");
 
-                // Build connection string from textbox values
+                // 1. Test Proposed Settings (from TextBoxes)
                 string testServer = Control_Database_TextBox_Server.Text.Trim();
                 string testPort = Control_Database_TextBox_Port.Text.Trim();
                 string testDatabase = Control_Database_TextBox_Database.Text.Trim();
@@ -218,38 +233,67 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                     return;
                 }
 
-                // Create test connection string with the values from the form
-                string testConnectionString = Helper_Database_Variables.GetConnectionString(
+                string proposedConnectionString = Helper_Database_Variables.GetConnectionString(
                     testServer,
                     testDatabase,
                     Model_Application_Variables.DatabaseUser,
                     Model_Application_Variables.DatabasePassword);
 
-                // Test the connection by trying to query the database
-                var testResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
-                    testConnectionString,
+                var proposedResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
+                    proposedConnectionString,
                     "usr_users_Exists",
                     new Dictionary<string, object> { ["User"] = Model_Application_Variables.User });
 
-                if (testResult.IsSuccess)
-                {
-                    Service_ErrorHandler.ShowInformation(
-                        "✅ Database connection successful!\n\n" +
-                        $"Server: {testServer}\n" +
-                        $"Port: {testPort}\n" +
-                        $"Database: {testDatabase}",
-                        "Connection Test Successful");
+                // 2. Test Active Connection (Current Runtime)
+                string activeConnectionString = Helper_Database_Variables.GetConnectionString(
+                    null, // Use default from Model_Shared_Users
+                    null, // Use default from Model_Shared_Users
+                    Model_Application_Variables.DatabaseUser,
+                    Model_Application_Variables.DatabasePassword);
 
-                    StatusMessageChanged?.Invoke(this, "Connection test successful.");
+                var activeResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
+                    activeConnectionString,
+                    "usr_users_Exists",
+                    new Dictionary<string, object> { ["User"] = Model_Application_Variables.User });
+
+                // 3. Construct Result Message
+                var sb = new System.Text.StringBuilder();
+                bool overallSuccess = proposedResult.IsSuccess && activeResult.IsSuccess;
+
+                sb.AppendLine("Connection Test Results:");
+                sb.AppendLine("--------------------------------------------------");
+
+                // Proposed Results
+                sb.AppendLine("1. Proposed Settings (TextBoxes):");
+                sb.AppendLine($"   Server: {testServer}");
+                sb.AppendLine($"   Database: {testDatabase}");
+                if (proposedResult.IsSuccess)
+                    sb.AppendLine("   Status: ✅ SUCCESS");
+                else
+                    sb.AppendLine($"   Status: ❌ FAILED ({proposedResult.ErrorMessage})");
+
+                sb.AppendLine();
+
+                // Active Results
+                sb.AppendLine("2. Active Runtime Connection:");
+                sb.AppendLine($"   Server: {Model_Shared_Users.WipServerAddress}");
+                sb.AppendLine($"   Database: {Model_Shared_Users.Database}");
+                if (activeResult.IsSuccess)
+                    sb.AppendLine("   Status: ✅ SUCCESS");
+                else
+                    sb.AppendLine($"   Status: ❌ FAILED ({activeResult.ErrorMessage})");
+
+                // Show Message
+                if (overallSuccess)
+                {
+                    Service_ErrorHandler.ShowInformation(sb.ToString(), "Connection Tests Passed");
+                    StatusMessageChanged?.Invoke(this, "All connection tests passed.");
                 }
                 else
                 {
-                    MessageBox.Show(
-                        $"❌ Database connection failed:\n\n{testResult.ErrorMessage}\n\n" +
-                        "Please check your settings and try again.",
-                        "Connection Test Failed", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-                    StatusMessageChanged?.Invoke(this, "Connection test failed.");
+                    MessageBox.Show(sb.ToString(), "Connection Tests Completed with Errors",
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    StatusMessageChanged?.Invoke(this, "Connection tests completed with errors.");
                 }
             }
             catch (Exception ex)

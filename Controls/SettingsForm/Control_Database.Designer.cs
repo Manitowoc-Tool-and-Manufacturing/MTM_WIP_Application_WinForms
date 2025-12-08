@@ -11,6 +11,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         private IContainer components = null!;
         private TableLayoutPanel Control_Database_TableLayout_Main = null!;
         private Label Control_Database_Label_Header = null!;
+        private Label Control_Database_Label_ActiveConnection = null!;
         private Panel Control_Database_Panel_Content = null!;
         private Panel Control_Database_Panel_ServerCard = null!;
         private Label Control_Database_Label_ServerIcon = null!;
@@ -45,6 +46,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         {
             Control_Database_TableLayout_Main = new TableLayoutPanel();
             Control_Database_Label_Header = new Label();
+            Control_Database_Label_ActiveConnection = new Label();
             Control_Database_Panel_Content = new Panel();
             tableLayoutPanel4 = new TableLayoutPanel();
             Control_Database_Panel_ServerCard = new Panel();
@@ -87,13 +89,15 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Database_TableLayout_Main.ColumnCount = 1;
             Control_Database_TableLayout_Main.ColumnStyles.Add(new ColumnStyle());
             Control_Database_TableLayout_Main.Controls.Add(Control_Database_Label_Header, 0, 0);
-            Control_Database_TableLayout_Main.Controls.Add(Control_Database_Panel_Content, 0, 1);
-            Control_Database_TableLayout_Main.Controls.Add(tableLayoutPanel5, 0, 3);
+            Control_Database_TableLayout_Main.Controls.Add(Control_Database_Label_ActiveConnection, 0, 1);
+            Control_Database_TableLayout_Main.Controls.Add(Control_Database_Panel_Content, 0, 2);
+            Control_Database_TableLayout_Main.Controls.Add(tableLayoutPanel5, 0, 4);
             Control_Database_TableLayout_Main.Dock = DockStyle.Fill;
             Control_Database_TableLayout_Main.Location = new Point(0, 0);
             Control_Database_TableLayout_Main.Name = "Control_Database_TableLayout_Main";
             Control_Database_TableLayout_Main.Padding = new Padding(20);
-            Control_Database_TableLayout_Main.RowCount = 4;
+            Control_Database_TableLayout_Main.RowCount = 5;
+            Control_Database_TableLayout_Main.RowStyles.Add(new RowStyle());
             Control_Database_TableLayout_Main.RowStyles.Add(new RowStyle());
             Control_Database_TableLayout_Main.RowStyles.Add(new RowStyle());
             Control_Database_TableLayout_Main.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
@@ -115,6 +119,19 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Database_Label_Header.TabIndex = 0;
             Control_Database_Label_Header.Text = "Database Connection Settings";
             Control_Database_Label_Header.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // Control_Database_Label_ActiveConnection
+            // 
+            Control_Database_Label_ActiveConnection.AutoSize = true;
+            Control_Database_Label_ActiveConnection.Dock = DockStyle.Fill;
+            Control_Database_Label_ActiveConnection.Font = new Font("Segoe UI", 10F, FontStyle.Italic);
+            Control_Database_Label_ActiveConnection.ForeColor = Color.DimGray;
+            Control_Database_Label_ActiveConnection.Location = new Point(23, 52);
+            Control_Database_Label_ActiveConnection.Name = "Control_Database_Label_ActiveConnection";
+            Control_Database_Label_ActiveConnection.Size = new Size(400, 20);
+            Control_Database_Label_ActiveConnection.TabIndex = 4;
+            Control_Database_Label_ActiveConnection.Text = "Active Connection: Loading...";
+            Control_Database_Label_ActiveConnection.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // Control_Database_Panel_Content
             // 

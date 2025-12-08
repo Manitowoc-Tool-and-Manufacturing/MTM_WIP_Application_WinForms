@@ -13,6 +13,7 @@ using Microsoft.Extensions.DependencyInjection;
 using static System.Int32;
 using MTM_WIP_Application_Winforms.Services.Visual;
 using MTM_WIP_Application_Winforms.Forms.Help;
+using MTM_WIP_Application_Winforms.Models.Enums;
 
 namespace MTM_WIP_Application_Winforms.Controls.MainForm
 {
@@ -294,17 +295,23 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 _progressHelper?.UpdateProgress(10, "Configuring part suggestions...");
 
                 // Configure SuggestionTextBoxWithLabel controls by wiring their inner textboxes
-                Helper_SuggestionTextBox.ConfigureForPartNumbers(
-                    Control_RemoveTab_TextBox_Part.TextBox,
-                    GetPartNumberSuggestionsAsync,
-                    enableF4: true);
+                var partTb = Control_RemoveTab_TextBox_Part.TextBox;
+                partTb.DataProvider = GetPartNumberSuggestionsAsync;
+                partTb.MaxResults = 100;
+                partTb.EnableWildcards = true;
+                partTb.NoMatchAction = Enum_SuggestionNoMatchAction.ShowWarningAndClear;
+                partTb.SuppressExactMatch = true;
+                partTb.EnableF4 = true;
 
                 _progressHelper?.UpdateProgress(70, "Configuring operation suggestions...");
 
-                Helper_SuggestionTextBox.ConfigureForOperations(
-                    Control_RemoveTab_TextBox_Operation.TextBox,
-                    GetOperationSuggestionsAsync,
-                    enableF4: true);
+                var opTb = Control_RemoveTab_TextBox_Operation.TextBox;
+                opTb.DataProvider = GetOperationSuggestionsAsync;
+                opTb.MaxResults = 50;
+                opTb.EnableWildcards = true;
+                opTb.NoMatchAction = Enum_SuggestionNoMatchAction.ShowWarningAndClear;
+                opTb.SuppressExactMatch = true;
+                opTb.EnableF4 = true;
 
                 _progressHelper?.UpdateProgress(100, "Suggestion controls configured");
                 await Task.Delay(100);

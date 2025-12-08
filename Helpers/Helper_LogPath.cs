@@ -1,10 +1,11 @@
-using MTM_WIP_Application_Winforms.Services.Logging;
+using System.Diagnostics;
 
 namespace MTM_WIP_Application_Winforms.Helpers;
 
 /// <summary>
 /// Provides security validation for log file paths to prevent directory traversal attacks
 /// and ensure access is restricted to the application's log directory structure.
+/// Also provides log file path generation.
 /// </summary>
 public static class Helper_LogPath
 {
@@ -13,7 +14,7 @@ public static class Helper_LogPath
     /// <summary>
     /// Primary log directory path (production location).
     /// </summary>
-    private static readonly string PrimaryLogDirectory = Environment.UserName.Equals("johnk", StringComparison.OrdinalIgnoreCase)
+    public static readonly string PrimaryLogDirectory = Environment.UserName.Equals("johnk", StringComparison.OrdinalIgnoreCase)
         ? @"C:\Users\johnk\OneDrive\Documents\Work Folder\WIP App Logs"
         : @"X:\MH_RESOURCE\Material_Handler\MTM WIP App\Logs";
 
@@ -58,6 +59,56 @@ public static class Helper_LogPath
 
     #endregion
 
+    #region Log File Path
+
+    /// <summary>
+    /// Gets the base directory for logs.
+    /// </summary>
+    public static string LogDirectory => BaseLogDirectory;
+
+    /// <summary>
+    /// Gets the full path to the log file for the specified user.
+    /// Creates the directory if it does not exist.
+    /// </summary>
+    /// <param name="server">The server name (unused in current logic but kept for signature compatibility).</param>
+    /// <param name="userName">The user name.</param>
+    /// <returns>The full path to the log file.</returns>
+    public static async Task<string> GetLogFilePathAsync(string server, string userName)
+    {
+        try
+        {
+            string userDirectory = Path.Combine(LogDirectory, userName);
+
+            using CancellationTokenSource cts = new(TimeSpan.FromSeconds(5));
+
+            try
+            {
+                await Task.Run(() =>
+                {
+                    if (!Directory.Exists(userDirectory))
+                    {
+                        Directory.CreateDirectory(userDirectory);
+                    }
+                }, cts.Token);
+            }
+            catch (OperationCanceledException)
+            {
+                throw new TimeoutException($"Directory creation timed out for: {userDirectory}");
+            }
+
+            string timestamp = DateTime.Now.ToString("MM-dd-yyyy @ h-mm tt");
+            string logFileName = $"{userName} {timestamp}.csv";
+            return Path.Combine(userDirectory, logFileName);
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"[Helper_LogPath] Error in GetLogFilePathAsync: {ex.Message}");
+            throw;
+        }
+    }
+
+    #endregion
+
     #region Path Validation
 
     /// <summary>
@@ -91,7 +142,7 @@ public static class Helper_LogPath
         }
         catch (Exception ex)
         {
-            LoggingUtility.LogApplicationError(ex);
+            Debug.WriteLine($"[Helper_LogPath] Error in IsPathSafe: {ex.Message}");
             return false;
         }
     }

@@ -12,6 +12,7 @@ using MTM_WIP_Application_Winforms.Services;
 using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Forms.Help;
 using Microsoft.Extensions.DependencyInjection;
+using MTM_WIP_Application_Winforms.Models.Enums;
 
 namespace MTM_WIP_Application_Winforms.Controls.MainForm
 {
@@ -365,24 +366,33 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 _progressHelper?.UpdateProgress(10, "Configuring part suggestions...");
 
                 // Configure SuggestionTextBox controls using helper methods with F4 support
-                Helper_SuggestionTextBox.ConfigureForPartNumbers(
-                    Control_TransferTab_TextBox_Part.TextBox,
-                    GetPartNumberSuggestionsAsync,
-                    enableF4: true);
+                var partTb = Control_TransferTab_TextBox_Part.TextBox;
+                partTb.DataProvider = GetPartNumberSuggestionsAsync;
+                partTb.MaxResults = 100;
+                partTb.EnableWildcards = true;
+                partTb.NoMatchAction = Enum_SuggestionNoMatchAction.ShowWarningAndClear;
+                partTb.SuppressExactMatch = true;
+                partTb.EnableF4 = true;
 
                 _progressHelper?.UpdateProgress(40, "Configuring operation suggestions...");
 
-                Helper_SuggestionTextBox.ConfigureForOperations(
-                    Control_TransferTab_TextBox_Operation.TextBox,
-                    GetOperationSuggestionsAsync,
-                    enableF4: true);
+                var opTb = Control_TransferTab_TextBox_Operation.TextBox;
+                opTb.DataProvider = GetOperationSuggestionsAsync;
+                opTb.MaxResults = 50;
+                opTb.EnableWildcards = true;
+                opTb.NoMatchAction = Enum_SuggestionNoMatchAction.ShowWarningAndClear;
+                opTb.SuppressExactMatch = true;
+                opTb.EnableF4 = true;
 
                 _progressHelper?.UpdateProgress(70, "Configuring location suggestions...");
 
-                Helper_SuggestionTextBox.ConfigureForLocations(
-                    Control_TransferTab_TextBox_ToLocation.TextBox,
-                    GetLocationSuggestionsAsync,
-                    enableF4: true);
+                var locTb = Control_TransferTab_TextBox_ToLocation.TextBox;
+                locTb.DataProvider = GetLocationSuggestionsAsync;
+                locTb.MaxResults = 100;
+                locTb.EnableWildcards = true;
+                locTb.NoMatchAction = Enum_SuggestionNoMatchAction.ShowWarningAndClear;
+                locTb.SuppressExactMatch = true;
+                locTb.EnableF4 = true;
 
                 _progressHelper?.UpdateProgress(100, "Suggestion controls configured");
                 await Task.Delay(100);
