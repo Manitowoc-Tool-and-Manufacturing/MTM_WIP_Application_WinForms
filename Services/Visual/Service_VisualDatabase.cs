@@ -654,7 +654,7 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                     POL.LINE_STATUS as [Status],
                     POL.UNIT_PRICE as [Unit Price],
                     POL.TOTAL_AMT_ORDERED as [Total Amount],
-                    CAST(PLB.BITS AS VARCHAR(MAX)) as [Specs]
+                    CAST(CAST(PLB.BITS AS VARBINARY(MAX)) AS VARCHAR(MAX)) as [Specs]
                 FROM PURC_ORDER_LINE POL
                 LEFT JOIN PART P ON POL.PART_ID = P.ID
                 LEFT JOIN PURC_LINE_BINARY PLB ON POL.PURC_ORDER_ID = PLB.PURC_ORDER_ID 

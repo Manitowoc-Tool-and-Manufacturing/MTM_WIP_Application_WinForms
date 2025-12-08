@@ -3,19 +3,13 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Nov 24, 2025 at 01:44 PM
+-- Generation Time: Dec 08, 2025 at 04:40 PM
 -- Server version: 5.7.24
 -- PHP Version: 8.3.1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
 
 --
 -- Database: `mtm_wip_application_winforms`
@@ -50,6 +44,21 @@ CREATE TABLE `debug_matching` (
   `out_batch` varchar(100) DEFAULT NULL,
   `matched_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `emailnotificationconfig`
+--
+
+CREATE TABLE `emailnotificationconfig` (
+  `ConfigID` int(11) NOT NULL,
+  `FeedbackCategory` varchar(100) NOT NULL,
+  `RecipientEmails` text NOT NULL,
+  `IsActive` tinyint(1) NOT NULL DEFAULT '1',
+  `CreatedDateTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `LastModifiedDateTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -310,6 +319,104 @@ CREATE TABLE `sys_user_roles` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `sys_visual`
+--
+
+CREATE TABLE `sys_visual` (
+  `id` int(11) NOT NULL,
+  `json_shift_data` json DEFAULT NULL,
+  `json_user_fullnames` json DEFAULT NULL,
+  `last_updated` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `trackingnumbersequence`
+--
+
+CREATE TABLE `trackingnumbersequence` (
+  `SequenceID` int(11) NOT NULL,
+  `FeedbackType` varchar(50) NOT NULL,
+  `Year` int(11) NOT NULL,
+  `NextNumber` int(11) NOT NULL DEFAULT '1',
+  `LastGeneratedDateTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `usercontrolmapping`
+--
+
+CREATE TABLE `usercontrolmapping` (
+  `MappingID` int(11) NOT NULL,
+  `WindowFormMappingID` int(11) NOT NULL,
+  `CodebaseName` varchar(100) NOT NULL,
+  `UserFriendlyName` varchar(100) NOT NULL,
+  `IsActive` tinyint(1) NOT NULL DEFAULT '1',
+  `CreatedDateTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `LastModifiedDateTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `userfeedback`
+--
+
+CREATE TABLE `userfeedback` (
+  `FeedbackID` int(11) NOT NULL,
+  `FeedbackType` varchar(50) NOT NULL,
+  `TrackingNumber` varchar(50) NOT NULL,
+  `UserID` int(11) NOT NULL,
+  `SubmissionDateTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `LastUpdatedDateTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `ApplicationVersion` varchar(50) DEFAULT NULL,
+  `OSVersion` varchar(100) DEFAULT NULL,
+  `MachineIdentifier` varchar(100) DEFAULT NULL,
+  `WindowForm` varchar(100) DEFAULT NULL,
+  `ActiveSection` varchar(100) DEFAULT NULL,
+  `Category` varchar(100) DEFAULT NULL,
+  `CustomCategory` varchar(100) DEFAULT NULL,
+  `Severity` varchar(50) DEFAULT NULL,
+  `Priority` varchar(50) DEFAULT NULL,
+  `Title` varchar(255) DEFAULT NULL,
+  `Description` mediumtext,
+  `StepsToReproduce` mediumtext,
+  `ExpectedBehavior` mediumtext,
+  `ActualBehavior` mediumtext,
+  `BusinessJustification` mediumtext,
+  `AffectedUsers` varchar(50) DEFAULT NULL,
+  `Location1` varchar(255) DEFAULT NULL,
+  `Location2` varchar(255) DEFAULT NULL,
+  `ExpectedConsistency` mediumtext,
+  `Status` varchar(50) NOT NULL DEFAULT 'New',
+  `AssignedToDeveloperID` int(11) DEFAULT NULL,
+  `DeveloperNotes` mediumtext,
+  `ResolutionDateTime` datetime DEFAULT NULL,
+  `IsDuplicate` tinyint(1) NOT NULL DEFAULT '0',
+  `DuplicateOfFeedbackID` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `userfeedbackcomments`
+--
+
+CREATE TABLE `userfeedbackcomments` (
+  `CommentID` int(11) NOT NULL,
+  `FeedbackID` int(11) NOT NULL,
+  `UserID` int(11) NOT NULL,
+  `CommentDateTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `CommentText` mediumtext NOT NULL,
+  `IsInternalNote` tinyint(1) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `usr_dgv_settings`
 --
 
@@ -362,6 +469,21 @@ CREATE TABLE `usr_user_shortcuts` (
   `LastModified` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `windowformmapping`
+--
+
+CREATE TABLE `windowformmapping` (
+  `MappingID` int(11) NOT NULL,
+  `CodebaseName` varchar(100) NOT NULL,
+  `UserFriendlyName` varchar(100) NOT NULL,
+  `IsActive` tinyint(1) NOT NULL DEFAULT '1',
+  `CreatedDateTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `LastModifiedDateTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 --
 -- Indexes for dumped tables
 --
@@ -377,6 +499,13 @@ ALTER TABLE `app_themes`
 --
 ALTER TABLE `debug_matching`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `emailnotificationconfig`
+--
+ALTER TABLE `emailnotificationconfig`
+  ADD PRIMARY KEY (`ConfigID`),
+  ADD UNIQUE KEY `IX_EmailNotificationConfig_Category` (`FeedbackCategory`);
 
 --
 -- Indexes for table `error_reports`
@@ -504,6 +633,47 @@ ALTER TABLE `sys_user_roles`
   ADD KEY `idx_roleid` (`RoleID`);
 
 --
+-- Indexes for table `sys_visual`
+--
+ALTER TABLE `sys_visual`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `trackingnumbersequence`
+--
+ALTER TABLE `trackingnumbersequence`
+  ADD PRIMARY KEY (`SequenceID`),
+  ADD UNIQUE KEY `IX_TrackingNumberSequence_Type_Year` (`FeedbackType`,`Year`);
+
+--
+-- Indexes for table `usercontrolmapping`
+--
+ALTER TABLE `usercontrolmapping`
+  ADD PRIMARY KEY (`MappingID`),
+  ADD UNIQUE KEY `IX_UserControlMapping_Window_Codebase` (`WindowFormMappingID`,`CodebaseName`);
+
+--
+-- Indexes for table `userfeedback`
+--
+ALTER TABLE `userfeedback`
+  ADD PRIMARY KEY (`FeedbackID`),
+  ADD UNIQUE KEY `IX_UserFeedback_TrackingNumber` (`TrackingNumber`),
+  ADD KEY `IX_UserFeedback_UserID` (`UserID`),
+  ADD KEY `IX_UserFeedback_Status` (`Status`),
+  ADD KEY `IX_UserFeedback_FeedbackType` (`FeedbackType`),
+  ADD KEY `IX_UserFeedback_SubmissionDateTime` (`SubmissionDateTime`),
+  ADD KEY `FK_UserFeedback_AssignedToDeveloperID` (`AssignedToDeveloperID`),
+  ADD KEY `FK_UserFeedback_DuplicateOfFeedbackID` (`DuplicateOfFeedbackID`);
+
+--
+-- Indexes for table `userfeedbackcomments`
+--
+ALTER TABLE `userfeedbackcomments`
+  ADD PRIMARY KEY (`CommentID`),
+  ADD KEY `IX_UserFeedbackComments_FeedbackID` (`FeedbackID`),
+  ADD KEY `IX_UserFeedbackComments_UserID` (`UserID`);
+
+--
 -- Indexes for table `usr_dgv_settings`
 --
 ALTER TABLE `usr_dgv_settings`
@@ -530,6 +700,13 @@ ALTER TABLE `usr_user_shortcuts`
   ADD KEY `ShortcutName` (`ShortcutName`);
 
 --
+-- Indexes for table `windowformmapping`
+--
+ALTER TABLE `windowformmapping`
+  ADD PRIMARY KEY (`MappingID`),
+  ADD UNIQUE KEY `IX_WindowFormMapping_CodebaseName` (`CodebaseName`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -538,6 +715,12 @@ ALTER TABLE `usr_user_shortcuts`
 --
 ALTER TABLE `debug_matching`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `emailnotificationconfig`
+--
+ALTER TABLE `emailnotificationconfig`
+  MODIFY `ConfigID` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `error_reports`
@@ -606,10 +789,46 @@ ALTER TABLE `sys_roles`
   MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `sys_visual`
+--
+ALTER TABLE `sys_visual`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `trackingnumbersequence`
+--
+ALTER TABLE `trackingnumbersequence`
+  MODIFY `SequenceID` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `usercontrolmapping`
+--
+ALTER TABLE `usercontrolmapping`
+  MODIFY `MappingID` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `userfeedback`
+--
+ALTER TABLE `userfeedback`
+  MODIFY `FeedbackID` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `userfeedbackcomments`
+--
+ALTER TABLE `userfeedbackcomments`
+  MODIFY `CommentID` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `usr_users`
 --
 ALTER TABLE `usr_users`
   MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `windowformmapping`
+--
+ALTER TABLE `windowformmapping`
+  MODIFY `MappingID` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables
@@ -621,6 +840,27 @@ ALTER TABLE `usr_users`
 ALTER TABLE `sys_user_roles`
   ADD CONSTRAINT `sys_user_roles_ibfk_1` FOREIGN KEY (`UserID`) REFERENCES `usr_users` (`ID`) ON DELETE CASCADE,
   ADD CONSTRAINT `sys_user_roles_ibfk_2` FOREIGN KEY (`RoleID`) REFERENCES `sys_roles` (`ID`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `usercontrolmapping`
+--
+ALTER TABLE `usercontrolmapping`
+  ADD CONSTRAINT `FK_UserControlMapping_WindowFormMappingID` FOREIGN KEY (`WindowFormMappingID`) REFERENCES `windowformmapping` (`MappingID`) ON DELETE CASCADE ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `userfeedback`
+--
+ALTER TABLE `userfeedback`
+  ADD CONSTRAINT `FK_UserFeedback_AssignedToDeveloperID` FOREIGN KEY (`AssignedToDeveloperID`) REFERENCES `usr_users` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `FK_UserFeedback_DuplicateOfFeedbackID` FOREIGN KEY (`DuplicateOfFeedbackID`) REFERENCES `userfeedback` (`FeedbackID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `FK_UserFeedback_UserID` FOREIGN KEY (`UserID`) REFERENCES `usr_users` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--
+-- Constraints for table `userfeedbackcomments`
+--
+ALTER TABLE `userfeedbackcomments`
+  ADD CONSTRAINT `FK_UserFeedbackComments_FeedbackID` FOREIGN KEY (`FeedbackID`) REFERENCES `userfeedback` (`FeedbackID`) ON DELETE CASCADE ON UPDATE NO ACTION,
+  ADD CONSTRAINT `FK_UserFeedbackComments_UserID` FOREIGN KEY (`UserID`) REFERENCES `usr_users` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --
 -- Constraints for table `usr_dgv_settings`
@@ -640,7 +880,3 @@ ALTER TABLE `usr_settings`
 ALTER TABLE `usr_user_shortcuts`
   ADD CONSTRAINT `usr_user_shortcuts_ibfk_1` FOREIGN KEY (`ShortcutName`) REFERENCES `sys_shortcuts` (`ShortcutName`) ON DELETE CASCADE;
 COMMIT;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
