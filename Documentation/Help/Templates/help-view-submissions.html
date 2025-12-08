@@ -1,9 +1,25 @@
 <div class="submissions-container">
-    <h1>My Submissions</h1>
-    
-    <div class="controls">
-        <button onclick="window.location.href='help://support'" class="btn-secondary">Back to Support</button>
-        <button onclick="refreshSubmissions()" class="btn-secondary">Refresh</button>
+    <div class="header-controls">
+        <h1>My Submissions</h1>
+        <div class="filters">
+            <select id="filterType" onchange="applyFilters()">
+                <option value="All">All Types</option>
+                <option value="Bug Report">Bug Report</option>
+                <option value="Suggestion">Suggestion</option>
+                <option value="Question">Question</option>
+                <option value="Inconsistency">Inconsistency</option>
+            </select>
+            <select id="filterStatus" onchange="applyFilters()">
+                <option value="All">All Statuses</option>
+                <option value="New">New</option>
+                <option value="In Review">In Review</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Resolved">Resolved</option>
+                <option value="Closed">Closed</option>
+            </select>
+            <button onclick="refreshSubmissions()" class="btn-secondary">Refresh</button>
+            <button onclick="window.location.href='help://support'" class="btn-secondary">Back to Support</button>
+        </div>
     </div>
 
     <div class="table-container">
@@ -11,11 +27,12 @@
             <thead>
                 <tr>
                     <th onclick="sortTable(0)">Type</th>
-                    <th onclick="sortTable(1)">Title</th>
-                    <th onclick="sortTable(2)">Status</th>
-                    <th onclick="sortTable(3)">Priority</th>
-                    <th onclick="sortTable(4)">Submitted</th>
-                    <th onclick="sortTable(5)">Last Updated</th>
+                    <th onclick="sortTable(1)">Tracking #</th>
+                    <th onclick="sortTable(2)">Title</th>
+                    <th onclick="sortTable(3)">Status</th>
+                    <th onclick="sortTable(4)">Priority</th>
+                    <th onclick="sortTable(5)">Submitted</th>
+                    <th onclick="sortTable(6)">Last Updated</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -26,17 +43,96 @@
     </div>
 </div>
 
+<!-- Details Modal -->
+<div id="detailsModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2 id="modalTitle">Submission Details</h2>
+        
+        <div id="modalContent">
+            <!-- Details populated here -->
+        </div>
+
+        <div class="comments-section">
+            <h3>Comments & Updates</h3>
+            <div id="commentsList">
+                <!-- Comments populated here -->
+            </div>
+            
+            <div style="margin-top: 15px;">
+                <label class="detail-label">Add Comment</label>
+                <textarea id="newCommentText" placeholder="Type your comment here..."></textarea>
+                <button onclick="submitComment()" class="btn-primary">Post Comment</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <style>
-    .submissions-container { max-width: 1000px; margin: 0 auto; }
-    .controls { margin-bottom: 20px; display: flex; gap: 10px; }
-    .table-container { overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; background-color: var(--card-bg); border: 1px solid var(--card-border); }
-    th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--card-border); }
-    th { background-color: var(--sidebar-bg); cursor: pointer; font-weight: 600; }
+    .submissions-container { max-width: 1200px; margin: 0 auto; }
+    
+    .header-controls {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .filters {
+        display: flex;
+        gap: 10px;
+    }
+
+    select, button {
+        padding: 8px 12px;
+        border: 1px solid var(--sidebar-border);
+        background-color: var(--card-bg);
+        color: var(--text-color);
+        border-radius: 4px;
+        font-family: inherit;
+    }
+
+    button { cursor: pointer; }
+    button:hover { background-color: var(--card-hover); }
+    
+    .btn-primary {
+        background-color: var(--primary-color);
+        color: white;
+        border: none;
+    }
+    .btn-primary:hover { background-color: var(--primary-hover); }
+
+    .table-container { 
+        overflow-x: auto; 
+        border: 1px solid var(--card-border);
+        border-radius: 4px;
+    }
+    
+    table { 
+        width: 100%; 
+        border-collapse: collapse; 
+        background-color: var(--card-bg); 
+    }
+    
+    th, td { 
+        padding: 12px; 
+        text-align: left; 
+        border-bottom: 1px solid var(--card-border); 
+    }
+    
+    th { 
+        background-color: var(--sidebar-bg); 
+        cursor: pointer; 
+        font-weight: 600; 
+        user-select: none;
+    }
+    
     th:hover { background-color: var(--sidebar-border); }
     tr:hover { background-color: var(--card-hover); }
     
-    .status-badge { padding: 4px 8px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+    .status-badge { padding: 4px 8px; border-radius: 12px; font-size: 12px; font-weight: 600; display: inline-block; }
     .status-New { background-color: #e3f2fd; color: #0d47a1; }
     .status-InReview { background-color: #fff3e0; color: #e65100; }
     .status-InProgress { background-color: #e8f5e9; color: #1b5e20; }
@@ -46,28 +142,137 @@
     .btn-secondary { padding: 8px 16px; border: 1px solid var(--sidebar-border); background-color: var(--sidebar-bg); color: var(--text-color); border-radius: 4px; cursor: pointer; }
     .btn-secondary:hover { background-color: var(--sidebar-border); }
     .btn-sm { padding: 4px 8px; font-size: 12px; }
+
+    /* Modal Styles */
+    .modal {
+        display: none; 
+        position: fixed; 
+        z-index: 1000; 
+        left: 0;
+        top: 0;
+        width: 100%; 
+        height: 100%; 
+        overflow: auto; 
+        background-color: rgba(0,0,0,0.4); 
+    }
+
+    .modal-content {
+        background-color: var(--card-bg);
+        margin: 5% auto; 
+        padding: 20px;
+        border: 1px solid var(--card-border);
+        width: 80%; 
+        max-width: 800px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        position: relative;
+    }
+
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .close:hover,
+    .close:focus {
+        color: var(--text-color);
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    .detail-row { margin-bottom: 15px; }
+    .detail-label { font-weight: 600; display: block; margin-bottom: 5px; color: var(--primary-color); }
+    .detail-value { white-space: pre-wrap; }
+
+    .comments-section {
+        margin-top: 20px;
+        border-top: 1px solid var(--card-border);
+        padding-top: 20px;
+    }
+
+    .comment-item {
+        background-color: var(--sidebar-bg);
+        padding: 10px;
+        border-radius: 4px;
+        margin-bottom: 10px;
+        border-left: 3px solid var(--primary-color);
+    }
+    
+    .comment-meta {
+        font-size: 0.85em;
+        color: #666;
+        margin-bottom: 5px;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .dev-note {
+        border-left-color: var(--success-color);
+        background-color: rgba(46, 125, 50, 0.1);
+    }
+
+    textarea {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid var(--sidebar-border);
+        border-radius: 4px;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        font-family: inherit;
+        resize: vertical;
+        min-height: 80px;
+        margin-bottom: 10px;
+    }
 </style>
 
 <script>
+    let allSubmissions = [];
+    let currentFeedbackId = 0;
+
     function refreshSubmissions() {
         window.chrome.webview.postMessage(JSON.stringify({type: 'viewSubmissions'}));
     }
 
-    window.populateSubmissions = function(submissions) {
+    // Called by C#
+    window.onSubmissionsLoaded = function(submissions) {
+        allSubmissions = submissions;
+        applyFilters();
+    };
+
+    function applyFilters() {
+        const typeFilter = document.getElementById('filterType').value;
+        const statusFilter = document.getElementById('filterStatus').value;
+
+        const filtered = allSubmissions.filter(s => {
+            const typeMatch = typeFilter === 'All' || s.FeedbackType === typeFilter;
+            const statusMatch = statusFilter === 'All' || s.Status === statusFilter;
+            return typeMatch && statusMatch;
+        });
+
+        renderTable(filtered);
+    }
+
+    function renderTable(data) {
         const tbody = document.querySelector('#submissionsTable tbody');
         tbody.innerHTML = '';
         
-        if (submissions.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center">No submissions found.</td></tr>';
+        if (data.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding: 20px;">No submissions found matching your criteria.</td></tr>';
             return;
         }
 
-        submissions.forEach(s => {
+        data.forEach(s => {
             const tr = document.createElement('tr');
+            const statusClass = 'status-' + (s.Status ? s.Status.replace(/\s+/g, '') : 'New');
+            
             tr.innerHTML = `
                 <td>${s.FeedbackType}</td>
+                <td>${s.TrackingNumber || '-'}</td>
                 <td>${s.Title}</td>
-                <td><span class="status-badge status-${s.Status.replace(' ', '')}">${s.Status}</span></td>
+                <td><span class="status-badge ${statusClass}">${s.Status}</span></td>
                 <td>${s.Priority || s.Severity || '-'}</td>
                 <td>${new Date(s.SubmissionDateTime).toLocaleDateString()}</td>
                 <td>${new Date(s.LastUpdatedDateTime).toLocaleDateString()}</td>
@@ -77,17 +282,111 @@
             `;
             tbody.appendChild(tr);
         });
-    };
+    }
 
     function viewDetails(id) {
-        // Navigate to details page (not implemented yet, or maybe show modal?)
-        // For now, let's assume we navigate to a details view
-        // window.location.href = 'help://support/details/' + id;
-        alert('Details view not implemented yet for ID: ' + id);
+        const submission = allSubmissions.find(s => s.FeedbackID === id);
+        if (!submission) return;
+
+        currentFeedbackId = id;
+        const content = document.getElementById('modalContent');
+        
+        let html = `
+            <div class="detail-row">
+                <span class="detail-label">Tracking Number</span>
+                <span class="detail-value">${submission.TrackingNumber || '-'}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Title</span>
+                <span class="detail-value">${submission.Title}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Description</span>
+                <span class="detail-value">${submission.Description}</span>
+            </div>
+        `;
+
+        if (submission.StepsToReproduce) {
+            html += `
+                <div class="detail-row">
+                    <span class="detail-label">Steps to Reproduce</span>
+                    <span class="detail-value">${submission.StepsToReproduce}</span>
+                </div>`;
+        }
+        
+        if (submission.DeveloperNotes) {
+             html += `
+                <div class="detail-row" style="background-color: rgba(46, 125, 50, 0.1); padding: 10px; border-radius: 4px;">
+                    <span class="detail-label" style="color: var(--success-color);">Developer Notes</span>
+                    <span class="detail-value">${submission.DeveloperNotes}</span>
+                </div>`;
+        }
+
+        content.innerHTML = html;
+        
+        document.getElementById('commentsList').innerHTML = '<p>Loading comments...</p>';
+        window.chrome.webview.postMessage(JSON.stringify({
+            type: 'getSubmissionDetails', 
+            feedbackId: id
+        }));
+
+        document.getElementById('detailsModal').style.display = "block";
+    }
+
+    // New function to handle details response
+    window.onSubmissionDetailsLoaded = function(details) {
+        // Update comments
+        const commentsList = document.getElementById('commentsList');
+        commentsList.innerHTML = '';
+
+        if (details.Comments && details.Comments.length > 0) {
+            details.Comments.forEach(c => {
+                const div = document.createElement('div');
+                div.className = `comment-item ${c.IsInternalNote ? 'dev-note' : ''}`;
+                div.innerHTML = `
+                    <div class="comment-meta">
+                        <span>${c.UserFullName || 'User ' + c.UserID}</span>
+                        <span>${new Date(c.CommentDateTime).toLocaleString()}</span>
+                    </div>
+                    <div class="detail-value">${c.CommentText}</div>
+                `;
+                commentsList.appendChild(div);
+            });
+        } else {
+            commentsList.innerHTML = '<p>No comments yet.</p>';
+        }
+    };
+
+    function closeModal() {
+        document.getElementById('detailsModal').style.display = "none";
+    }
+
+    function submitComment() {
+        const text = document.getElementById('newCommentText').value;
+        if (!text.trim()) {
+            alert('Please enter a comment.');
+            return;
+        }
+
+        window.chrome.webview.postMessage(JSON.stringify({
+            type: 'addComment',
+            data: {
+                feedbackId: currentFeedbackId,
+                comment: text
+            }
+        }));
+        
+        document.getElementById('newCommentText').value = '';
+    }
+
+    window.onclick = function(event) {
+        const modal = document.getElementById('detailsModal');
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
     }
 
     function sortTable(n) {
-        // Simple sort implementation
         var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
         table = document.getElementById("submissionsTable");
         switching = true;

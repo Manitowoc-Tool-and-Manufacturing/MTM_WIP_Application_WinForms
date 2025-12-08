@@ -228,6 +228,13 @@ namespace MTM_WIP_Application_Winforms.Forms.Help
                         HandleViewSubmissions();
                         break;
 
+                    case "getSubmissionDetails":
+                        if (root.TryGetProperty("feedbackId", out JsonElement feedbackIdElement))
+                        {
+                            HandleGetSubmissionDetails(feedbackIdElement.GetInt32());
+                        }
+                        break;
+
                     case "addComment":
                         if (root.TryGetProperty("data", out JsonElement commentData))
                         {
@@ -263,7 +270,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Help
                 if (userResult.IsSuccess) userId = userResult.Data;
 
                 var result = await _feedbackManager.GetUserSubmissionsAsync(userId);
-                if (result.IsSuccess)
+                if (result.IsSuccess && result.Data != null)
                 {
                     var submissions = new List<Dictionary<string, object>>();
                     foreach (DataRow row in result.Data.Rows)
@@ -287,6 +294,27 @@ namespace MTM_WIP_Application_Winforms.Forms.Help
             catch (Exception ex)
             {
                 Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: nameof(HandleViewSubmissions), controlName: this.Name);
+            }
+        }
+
+        private async void HandleGetSubmissionDetails(int feedbackId)
+        {
+            try
+            {
+                var result = await _feedbackManager.GetSubmissionAsync(feedbackId);
+                if (result.IsSuccess)
+                {
+                    string json = JsonSerializer.Serialize(result.Data);
+                    await webView.CoreWebView2.ExecuteScriptAsync($"if(typeof onSubmissionDetailsLoaded === 'function') {{ onSubmissionDetailsLoaded({json}); }}");
+                }
+                else
+                {
+                    Service_ErrorHandler.ShowUserError($"Failed to load submission details: {result.ErrorMessage}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: nameof(HandleGetSubmissionDetails), controlName: this.Name);
             }
         }
 
@@ -326,7 +354,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Help
             try
             {
                 var result = await _feedbackManager.GetWindowMappingsAsync();
-                if (result.IsSuccess)
+                if (result.IsSuccess && result.Data != null)
                 {
                     var mappings = new List<Dictionary<string, object>>();
                     foreach (DataRow row in result.Data.Rows)
@@ -355,7 +383,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Help
                 if (int.TryParse(windowIdStr, out int windowId))
                 {
                     var result = await _feedbackManager.GetControlMappingsAsync(windowId);
-                    if (result.IsSuccess)
+                    if (result.IsSuccess && result.Data != null)
                     {
                         var mappings = new List<Dictionary<string, object>>();
                         foreach (DataRow row in result.Data.Rows)
@@ -506,7 +534,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Help
 
                 if (result.IsSuccess)
                 {
-                    string trackingNumber = result.Data;
+                    string trackingNumber = result.Data ?? string.Empty;
                     await webView.CoreWebView2.ExecuteScriptAsync($"if(typeof onFeedbackSubmitted === 'function') {{ onFeedbackSubmitted('{trackingNumber}'); }} else {{ alert('Feedback submitted! Tracking #: {trackingNumber}'); }}");
                 }
                 else

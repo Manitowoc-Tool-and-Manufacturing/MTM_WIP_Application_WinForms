@@ -1529,6 +1529,19 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             }
         }
 
+        private void MainForm_MenuStrip_Development_DeveloperTools_Click(object? sender, EventArgs e)
+        {
+            try
+            {
+                var form = new Forms.DeveloperTools.Form_DeveloperTools();
+                form.Show();
+            }
+            catch (Exception ex)
+            {
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, controlName: nameof(MainForm_MenuStrip_Development_DeveloperTools_Click));
+            }
+        }
+
         #region Help Menu Event Handlers
 
 

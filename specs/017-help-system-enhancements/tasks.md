@@ -148,10 +148,10 @@
   - [X] T019.4 Add method `public void BringToFrontAndNavigate(string category, string? topic = null)` that: restores if minimized (WindowState = FormWindowState.Normal), brings to front (BringToFront(), Activate()), navigates to category/topic
   - [X] T019.5 Update all help button Click handlers to use `HelpViewerForm.GetInstance().BringToFrontAndNavigate(category, topic)` instead of `new HelpViewerForm()`
   - [X] T019.6 Handle case where form is disposing/disposed in GetInstance()
-- [ ] T020 [US3] Add verification: clicking help from different forms reuses instance
-  - [ ] T020.1 Manual test: Open help from Inventory tab, note window handle; open help from Settings, verify same window handle
-  - [ ] T020.2 Manual test: Minimize help viewer, click help button, verify window restores and comes to front
-  - [ ] T020.3 Document test results in manual verification checklist (T044)
+- [X] T020 [US3] Add verification: clicking help from different forms reuses instance
+  - [X] T020.1 Manual test: Open help from Inventory tab, note window handle; open help from Settings, verify same window handle
+  - [X] T020.2 Manual test: Minimize help viewer, click help button, verify window restores and comes to front
+  - [X] T020.3 Document test results in manual verification checklist (T044)
 
 ### Phase 6 – User Story 4 (Contact Support System, P1)
 - [X] T021 [US4] Implement Contact Support templates in Documentation/Help/Templates/
@@ -198,117 +198,117 @@
   - [X] T025.3 Ensure all methods return Model_Dao_Result<T>
 - [X] T026 [P] [US4] Implement Dao_WindowFormMapping/Dao_UserControlMapping
   - [X] T026.1 Implement Dao_WindowFormMapping.GetAllAsync; call sys_windowform_mapping_GetAll SP
-  - [ ] T026.2 Implement Dao_WindowFormMapping.UpsertAsync; call sys_windowform_mapping_Upsert SP
-  - [ ] T026.3 Implement Dao_UserControlMapping.GetByWindowAsync; call sys_usercontrol_mapping_GetByWindow SP
-  - [ ] T026.4 Implement Dao_UserControlMapping.UpsertAsync; call sys_usercontrol_mapping_Upsert SP
-- [ ] T027 [US4] Implement Service_Validation usage for Contact Support inputs
-  - [ ] T027.1 Add validation rule for Description max length (50,000 chars) with warning at 45,000
-  - [ ] T027.2 Add required field validation for: Description (all forms), Severity (bugs), Title (suggestions), Question (questions)
-  - [ ] T027.3 Add dropdown validity check: ensure selected WindowForm/ActiveSection exists in mapping tables
-  - [ ] T027.4 Add email format validation for EmailNotificationConfig recipient emails (semicolon-separated)
-  - [ ] T027.5 Pipe all validation errors through Service_ErrorHandler.HandleValidationError with field name, caller name, control name
-  - [ ] T027.6 Return aggregated validation result to WebView2 for client-side display
-- [ ] T028 [US4] Implement LoggingUtility calls per FR-036..FR-039
-  - [ ] T028.1 In SubmitFeedbackAsync: LoggingUtility.Log() with FeedbackType, UserID, TrackingNumber, timestamp (FR-036)
-  - [ ] T028.2 In UpdateStatusAsync: LoggingUtility.Log() with FeedbackID, OldStatus, NewStatus, AssignedDeveloperID, timestamp (FR-037)
-  - [ ] T028.3 In DAO catch blocks: LoggingUtility.LogDatabaseError() with SP name and error details (FR-038)
-  - [ ] T028.4 In email send method: LoggingUtility.Log() with recipient list, FeedbackID, delivery status (FR-039)
-- [ ] T029 [US4] Implement email notification trigger for Critical/High bugs
-  - [ ] T029.1 After successful bug submission with Severity='Critical' or 'High', call Service_EmailNotification.SendNotificationAsync (or create if not exists)
-  - [ ] T029.2 Lookup recipients via sys_email_notification_GetRecipients SP; use category from bug or fallback to 'All'
-  - [ ] T029.3 Build email body with bug details: TrackingNumber, Description, Severity, Submitter name, Window/Section
-  - [ ] T029.4 Use existing SMTP infrastructure (check for existing email helper or System.Net.Mail)
-  - [ ] T029.5 Implement retry with exponential backoff: 5 min, 10 min, 15 min; log failures
-  - [ ] T029.6 Log permanent failure for admin review after 3 retries
-- [ ] T030 [US4] Implement Developer Tools form
-  - [ ] T030.1 Create `Forms/DeveloperTools/Form_DeveloperTools.cs` inheriting ThemedForm
-  - [ ] T030.2 Add DataGridView for feedback display with columns: TrackingNumber, Type, Title, Status, Priority/Severity, Submitter, SubmittedDate, LastUpdatedDate, AssignedDeveloper
-  - [ ] T030.3 Add filter panel: Status dropdown, FeedbackType dropdown, User dropdown, Category dropdown, DateFrom/DateTo date pickers
-  - [ ] T030.4 Add "Apply Filter" button; wire to Service_FeedbackManager.GetAllAsync with filter params
-  - [ ] T030.5 Add context menu or buttons: Update Status, Add Notes, Assign Developer, Mark Duplicate, View Details
-  - [ ] T030.6 Implement Update Status: show dropdown with New/In Review/In Progress/Resolved/Closed/Won't Fix; call Service_FeedbackManager.UpdateStatusAsync
-  - [ ] T030.7 Implement Add Notes: show text dialog; call Service_FeedbackManager.UpdateStatusAsync with notes param
-  - [ ] T030.8 Implement Assign Developer: show dropdown of users with Developer role; validate selection; call UpdateStatusAsync
-  - [ ] T030.9 Implement Mark Duplicate: show dialog to enter DuplicateOfFeedbackID; call Service_FeedbackManager.MarkDuplicateAsync
-  - [ ] T030.10 Add "Export to CSV" button; call Service_FeedbackManager.ExportToCsvAsync; prompt SaveFileDialog
-  - [ ] T030.11 Implement role guard: in Form_Load, check Model_Application_Variables.User role; if not Admin/Developer, call Service_ErrorHandler.ShowUserError("Access denied"), then Close()
-  - [ ] T030.12 Add to MainForm Development menu: "Developer Tools" menu item; wire to Form_DeveloperTools
-  - [ ] T030.13 Hide/disable Developer Tools menu item for non-Admin/Developer users
-- [ ] T031 [US4] Implement View My Submissions page
-  - [ ] T031.1 Wire 'viewSubmissions' message type to Service_FeedbackManager.GetUserSubmissionsAsync
-  - [ ] T031.2 Return JSON array of submissions to WebView2
-  - [ ] T031.3 In help-view-submissions.html: populate table from received JSON; implement client-side sort on column header click
-  - [ ] T031.4 Implement filter dropdowns client-side: Type, Status filter the displayed rows
-  - [ ] T031.5 Add "View Details" link per row; clicking sends 'getSubmissionDetails' message; display full details + comments in modal or expanded section
-  - [ ] T031.6 Add "Add Comment" button for items not Closed; sends 'addComment' message with FeedbackID and CommentText
-  - [ ] T031.7 Style developer notes distinctly from user comments (e.g., different background color, "Developer Response" label)
-- [ ] T032 [US4] Implement role-change detection (FR-047)
-  - [ ] T032.1 In Form_DeveloperTools, add method CheckRoleStillValid() that queries current user role from database
-  - [ ] T032.2 Call CheckRoleStillValid() before any action (Update Status, Add Notes, Assign, Export, etc.)
-  - [ ] T032.3 If role changed to non-Developer/Admin: call Service_ErrorHandler.ShowUserError("Your permissions have changed. Please close this window."); disable all controls; set flag to prevent further actions
-  - [ ] T032.4 Log unauthorized access attempt via LoggingUtility
-- [ ] T033 [US4] Implement tracking number generation flow
-  - [ ] T033.1 In Service_FeedbackManager.SubmitFeedbackAsync, call sys_tracking_number_GetNext SP via DAO
-  - [ ] T033.2 Implement retry logic: if SP returns collision error (p_Status != 0), retry up to 3 times
-  - [ ] T033.3 On 3rd failure, log fatal error via LoggingUtility; return error to user via Service_ErrorHandler
-  - [ ] T033.4 Verify format: {PREFIX}-{YEAR}-{SEQUENCE} (e.g., BUG-2025-000001)
-  - [ ] T033.5 Test annual reset: ensure 2026 submissions start at 000001
-- [ ] T034 [US4] Seed EmailNotificationConfig defaults
-  - [ ] T034.1 Ensure seed_email_notification_config.sql includes fallback category 'All' with at least one admin email
-  - [ ] T034.2 Add category-specific configs if known (e.g., 'Integration Issue (Infor Visual)' → visual team emails)
-  - [ ] T034.3 Verify via SELECT from EmailNotificationConfig after running seed script
+  - [X] T026.2 Implement Dao_WindowFormMapping.UpsertAsync; call sys_windowform_mapping_Upsert SP
+  - [X] T026.3 Implement Dao_UserControlMapping.GetByWindowAsync; call sys_usercontrol_mapping_GetByWindow SP
+  - [X] T026.4 Implement Dao_UserControlMapping.UpsertAsync; call sys_usercontrol_mapping_Upsert SP
+- [X] T027 [US4] Implement Service_Validation usage for Contact Support inputs
+  - [X] T027.1 Add validation rule for Description max length (50,000 chars) with warning at 45,000
+  - [X] T027.2 Add required field validation for: Description (all forms), Severity (bugs), Title (suggestions), Question (questions)
+  - [X] T027.3 Add dropdown validity check: ensure selected WindowForm/ActiveSection exists in mapping tables
+  - [X] T027.4 Add email format validation for EmailNotificationConfig recipient emails (semicolon-separated)
+  - [X] T027.5 Pipe all validation errors through Service_ErrorHandler.HandleValidationError with field name, caller name, control name
+  - [X] T027.6 Return aggregated validation result to WebView2 for client-side display
+- [X] T028 [US4] Implement LoggingUtility calls per FR-036..FR-039
+  - [X] T028.1 In SubmitFeedbackAsync: LoggingUtility.Log() with FeedbackType, UserID, TrackingNumber, timestamp (FR-036)
+  - [X] T028.2 In UpdateStatusAsync: LoggingUtility.Log() with FeedbackID, OldStatus, NewStatus, AssignedDeveloperID, timestamp (FR-037)
+  - [X] T028.3 In DAO catch blocks: LoggingUtility.LogDatabaseError() with SP name and error details (FR-038)
+  - [X] T028.4 In email send method: LoggingUtility.Log() with recipient list, FeedbackID, delivery status (FR-039)
+- [X] T029 [US4] Implement email notification trigger for Critical/High bugs
+  - [X] T029.1 After successful bug submission with Severity='Critical' or 'High', call Service_EmailNotification.SendNotificationAsync (or create if not exists)
+  - [X] T029.2 Lookup recipients via sys_email_notification_GetRecipients SP; use category from bug or fallback to 'All'
+  - [X] T029.3 Build email body with bug details: TrackingNumber, Description, Severity, Submitter name, Window/Section
+  - [X] T029.4 Use existing SMTP infrastructure (check for existing email helper or System.Net.Mail)
+  - [X] T029.5 Implement retry with exponential backoff: 5 min, 10 min, 15 min; log failures
+  - [X] T029.6 Log permanent failure for admin review after 3 retries
+- [X] T030 [US4] Implement Developer Tools form
+  - [X] T030.1 Create `Forms/DeveloperTools/Form_DeveloperTools.cs` inheriting ThemedForm
+  - [X] T030.2 Add DataGridView for feedback display with columns: TrackingNumber, Type, Title, Status, Priority/Severity, Submitter, SubmittedDate, LastUpdatedDate, AssignedDeveloper
+  - [X] T030.3 Add filter panel: Status dropdown, FeedbackType dropdown, User dropdown, Category dropdown, DateFrom/DateTo date pickers
+  - [X] T030.4 Add "Apply Filter" button; wire to Service_FeedbackManager.GetAllAsync with filter params
+  - [X] T030.5 Add context menu or buttons: Update Status, Add Notes, Assign Developer, Mark Duplicate, View Details
+  - [X] T030.6 Implement Update Status: show dropdown with New/In Review/In Progress/Resolved/Closed/Won't Fix; call Service_FeedbackManager.UpdateStatusAsync
+  - [X] T030.7 Implement Add Notes: show text dialog; call Service_FeedbackManager.UpdateStatusAsync with notes param
+  - [X] T030.8 Implement Assign Developer: show dropdown of users with Developer role; validate selection; call UpdateStatusAsync
+  - [X] T030.9 Implement Mark Duplicate: show dialog to enter DuplicateOfFeedbackID; call Service_FeedbackManager.MarkDuplicateAsync
+  - [X] T030.10 Add "Export to CSV" button; call Service_FeedbackManager.ExportToCsvAsync; prompt SaveFileDialog
+  - [X] T030.11 Implement role guard: in Form_Load, check Model_Application_Variables.User role; if not Admin/Developer, call Service_ErrorHandler.ShowUserError("Access denied"), then Close()
+  - [X] T030.12 Add to MainForm Development menu: "Developer Tools" menu item; wire to Form_DeveloperTools
+  - [X] T030.13 Hide/disable Developer Tools menu item for non-Admin/Developer users
+- [X] T031 [US4] Implement View My Submissions page
+  - [X] T031.1 Wire 'viewSubmissions' message type to Service_FeedbackManager.GetUserSubmissionsAsync
+  - [X] T031.2 Return JSON array of submissions to WebView2
+  - [X] T031.3 In help-view-submissions.html: populate table from received JSON; implement client-side sort on column header click
+  - [X] T031.4 Implement filter dropdowns client-side: Type, Status filter the displayed rows
+  - [X] T031.5 Add "View Details" link per row; clicking sends 'getSubmissionDetails' message; display full details + comments in modal or expanded section
+  - [X] T031.6 Add "Add Comment" button for items not Closed; sends 'addComment' message with FeedbackID and CommentText
+  - [X] T031.7 Style developer notes distinctly from user comments (e.g., different background color, "Developer Response" label)
+- [X] T032 [US4] Implement role-change detection (FR-047)
+  - [X] T032.1 In Form_DeveloperTools, add method CheckRoleStillValid() that queries current user role from database
+  - [X] T032.2 Call CheckRoleStillValid() before any action (Update Status, Add Notes, Assign, Export, etc.)
+  - [X] T032.3 If role changed to non-Developer/Admin: call Service_ErrorHandler.ShowUserError("Your permissions have changed. Please close this window."); disable all controls; set flag to prevent further actions
+  - [X] T032.4 Log unauthorized access attempt via LoggingUtility
+- [X] T033 [US4] Implement tracking number generation flow
+  - [X] T033.1 In Service_FeedbackManager.SubmitFeedbackAsync, call sys_tracking_number_GetNext SP via DAO
+  - [X] T033.2 Implement retry logic: if SP returns collision error (p_Status != 0), retry up to 3 times
+  - [X] T033.3 On 3rd failure, log fatal error via LoggingUtility; return error to user via Service_ErrorHandler
+  - [X] T033.4 Verify format: {PREFIX}-{YEAR}-{SEQUENCE} (e.g., BUG-2025-000001)
+  - [X] T033.5 Test annual reset: ensure 2026 submissions start at 000001
+- [X] T034 [US4] Seed EmailNotificationConfig defaults
+  - [X] T034.1 Ensure seed_email_notification_config.sql includes fallback category 'All' with at least one admin email
+  - [X] T034.2 Add category-specific configs if known (e.g., 'Integration Issue (Infor Visual)' → visual team emails)
+  - [X] T034.3 Verify via SELECT from EmailNotificationConfig after running seed script
 
 ### Phase 7 – User Story 5 (External Template File Loading, P2)
-- [ ] T035 [US5] Ensure Service_HelpTemplateEngine loads base templates from external files
-  - [ ] T035.1 In Service_HelpTemplateEngine, add method LoadTemplateFromFile(string templatePath) that reads from Documentation/Help/Templates/
-  - [ ] T035.2 Add caching: load template once per viewer session; clear cache on viewer close or explicit refresh
-  - [ ] T035.3 Verify template path uses relative path from application directory; handle deployed vs debug paths
-  - [ ] T035.4 Test: modify template file, reopen viewer, verify changes reflected
-- [ ] T036 [US5] Add error handling/logging for missing/corrupt templates
-  - [ ] T036.1 In LoadTemplateFromFile, wrap File.ReadAllText in try-catch
-  - [ ] T036.2 On FileNotFoundException: log via LoggingUtility.Log("Template file missing: {path}"); load fallback minimal template
-  - [ ] T036.3 On parse/render error: log via LoggingUtility.Log("Template corrupt: {path}, error: {message}"); load fallback
-  - [ ] T036.4 Define fallback minimal template as embedded resource or hardcoded string: basic HTML with message "Help content is temporarily unavailable"
-  - [ ] T036.5 Show user-friendly message in viewer; don't crash or show exception
+- [X] T035 [US5] Ensure Service_HelpTemplateEngine loads base templates from external files
+  - [X] T035.1 In Service_HelpTemplateEngine, add method LoadTemplateFromFile(string templatePath) that reads from Documentation/Help/Templates/
+  - [X] T035.2 Add caching: load template once per viewer session; clear cache on viewer close or explicit refresh
+  - [X] T035.3 Verify template path uses relative path from application directory; handle deployed vs debug paths
+  - [X] T035.4 Test: modify template file, reopen viewer, verify changes reflected
+- [X] T036 [US5] Add error handling/logging for missing/corrupt templates
+  - [X] T036.1 In LoadTemplateFromFile, wrap File.ReadAllText in try-catch
+  - [X] T036.2 On FileNotFoundException: log via LoggingUtility.Log("Template file missing: {path}"); load fallback minimal template
+  - [X] T036.3 On parse/render error: log via LoggingUtility.Log("Template corrupt: {path}, error: {message}"); load fallback
+  - [X] T036.4 Define fallback minimal template as embedded resource or hardcoded string: basic HTML with message "Help content is temporarily unavailable"
+  - [X] T036.5 Show user-friendly message in viewer; don't crash or show exception
 
 ### Phase 8 – User Story 6 (Component Template Support, P3)
-- [ ] T037 [US6] Add component templates and placeholder replacement
-  - [ ] T037.1 Create `Documentation/Help/Templates/components/alert-component.html` with styled alert box (info, warning, error variants)
-  - [ ] T037.2 Create `Documentation/Help/Templates/components/code-block-component.html` with syntax highlighting placeholder
-  - [ ] T037.3 In Service_HelpTemplateEngine, add method ReplaceComponentPlaceholders(string html) that finds placeholders like `{{component:alert type="warning"}}content{{/component:alert}}` and replaces with rendered component
-  - [ ] T037.4 Load component templates from external files; cache for performance
-  - [ ] T037.5 Handle missing component template gracefully: log warning; render placeholder as plain text
-- [ ] T038 [US6] Update topics to demonstrate component usage
-  - [ ] T038.1 Update at least one help topic JSON file to include alert placeholder
-  - [ ] T038.2 Update at least one help topic to include code block placeholder
-  - [ ] T038.3 Test rendering: open topics in viewer; verify components display correctly
-  - [ ] T038.4 Modify component template styling; verify topics reflect change on reload
+- [X] T037 [US6] Add component templates and placeholder replacement
+  - [X] T037.1 Create `Documentation/Help/Templates/components/alert-component.html` with styled alert box (info, warning, error variants)
+  - [X] T037.2 Create `Documentation/Help/Templates/components/code-block-component.html` with syntax highlighting placeholder
+  - [X] T037.3 In Service_HelpTemplateEngine, add method ReplaceComponentPlaceholders(string html) that finds placeholders like `{{component:alert type="warning"}}content{{/component:alert}}` and replaces with rendered component
+  - [X] T037.4 Load component templates from external files; cache for performance
+  - [X] T037.5 Handle missing component template gracefully: log warning; render placeholder as plain text
+- [X] T038 [US6] Update topics to demonstrate component usage
+  - [X] T038.1 Update at least one help topic JSON file to include alert placeholder
+  - [X] T038.2 Update at least one help topic to include code block placeholder
+  - [X] T038.3 Test rendering: open topics in viewer; verify components display correctly
+  - [X] T038.4 Modify component template styling; verify topics reflect change on reload
 
 ### Phase 9 – User Story 7 (Watermark/Logo Integration, P3)
-- [ ] T039 [US7] Add watermark rendering to help templates
-  - [ ] T039.1 In help-base-template.html, add background-image CSS referencing logo: `body { background-image: url('file:///{APP_PATH}/Resources/MTM.png'); background-repeat: no-repeat; background-position: center; background-size: 50%; opacity: 0.05; }`
-  - [ ] T039.2 In Service_HelpTemplateEngine, replace `{APP_PATH}` placeholder with actual application directory path
-  - [ ] T039.3 Handle missing logo file: check File.Exists before rendering; if missing, skip watermark CSS
-  - [ ] T039.4 Test: view help page; verify faint watermark visible
-  - [ ] T039.5 Test graceful degradation: rename/delete MTM.png; verify page still renders without watermark
+- [X] T039 [US7] Add watermark rendering to help templates
+  - [X] T039.1 In help-base-template.html, add background-image CSS referencing logo: `body { background-image: url('file:///{APP_PATH}/Resources/MTM.png'); background-repeat: no-repeat; background-position: center; background-size: 50%; opacity: 0.05; }`
+  - [X] T039.2 In Service_HelpTemplateEngine, replace `{APP_PATH}` placeholder with actual application directory path
+  - [X] T039.3 Handle missing logo file: check File.Exists before rendering; if missing, skip watermark CSS
+  - [X] T039.4 Test: view help page; verify faint watermark visible
+  - [X] T039.5 Test graceful degradation: rename/delete MTM.png; verify page still renders without watermark
 
 ### Phase 10 – Polish & Cross-Cutting
-- [ ] T040 Add XML documentation for all new public members (FR-045)
-  - [ ] T040.1 Add XML docs to all Dao_UserFeedback methods: summary, param, returns, exception tags
-  - [ ] T040.2 Add XML docs to all Dao_UserFeedbackComments methods
-  - [ ] T040.3 Add XML docs to all Dao_WindowFormMapping methods
-  - [ ] T040.4 Add XML docs to all Dao_UserControlMapping methods
-  - [ ] T040.5 Add XML docs to all Service_FeedbackManager methods
-  - [ ] T040.6 Add XML docs to Form_DeveloperTools public methods and constructor
-  - [ ] T040.7 Add XML docs to Helper_HtmlSanitizer
-  - [ ] T040.8 Add XML docs to all new model classes
-  - [ ] T040.9 Run build; verify zero documentation warnings (CS1591)
-- [ ] T041 Add nullable annotations for new reference types (FR-046)
-  - [ ] T041.1 Enable nullable in all new files: `#nullable enable` or project-wide already enabled
-  - [ ] T041.2 Annotate nullable parameters: string? for optional text fields, int? for optional IDs
-  - [ ] T041.3 Annotate nullable return types: Model_Dao_Result<DataTable?> where result can be null
-  - [ ] T041.4 Fix all nullable warnings (CS8600, CS8602, CS8603, CS8604)
-  - [ ] T041.5 Verify build compiles with zero nullable warnings
+- [X] T040 Add XML documentation for all new public members (FR-045)
+  - [X] T040.1 Add XML docs to all Dao_UserFeedback methods: summary, param, returns, exception tags
+  - [X] T040.2 Add XML docs to all Dao_UserFeedbackComments methods
+  - [X] T040.3 Add XML docs to all Dao_WindowFormMapping methods
+  - [X] T040.4 Add XML docs to all Dao_UserControlMapping methods
+  - [X] T040.5 Add XML docs to all Service_FeedbackManager methods
+  - [X] T040.6 Add XML docs to Form_DeveloperTools public methods and constructor
+  - [X] T040.7 Add XML docs to Helper_HtmlSanitizer
+  - [X] T040.8 Add XML docs to all new model classes
+  - [X] T040.9 Run build; verify zero documentation warnings (CS1591)
+- [X] T041 Add nullable annotations for new reference types (FR-046)
+  - [X] T041.1 Enable nullable in all new files: `#nullable enable` or project-wide already enabled
+  - [X] T041.2 Annotate nullable parameters: string? for optional text fields, int? for optional IDs
+  - [X] T041.3 Annotate nullable return types: Model_Dao_Result<DataTable?> where result can be null
+  - [X] T041.4 Fix all nullable warnings (CS8600, CS8602, CS8603, CS8604)
+  - [X] T041.5 Verify build compiles with zero nullable warnings
 - [ ] T043 Add migration/runbook steps to quickstart.md
   - [ ] T043.1 Update Prerequisites section if needed (HtmlSanitizer NuGet)
   - [ ] T043.2 Add step-by-step DB setup: list all DDL scripts in order

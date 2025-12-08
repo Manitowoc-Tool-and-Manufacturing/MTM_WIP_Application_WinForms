@@ -1,0 +1,73 @@
+<div class="alert alert-{{TYPE}}" role="alert">
+    <div class="alert-icon">
+        {{ICON}}
+    </div>
+    <div class="alert-content">
+        {{CONTENT}}
+    </div>
+</div>
+<style>
+    /* Component Styles: Alert */
+    .alert {
+        padding: 12px 16px;
+        margin-bottom: 16px;
+        border: 1px solid transparent;
+        border-radius: 4px;
+        display: flex;
+        align-items: flex-start;
+        font-size: 14px;
+        line-height: 1.5;
+    }
+    .alert-icon {
+        margin-right: 12px;
+        font-size: 18px;
+        flex-shrink: 0;
+        margin-top: 2px;
+    }
+    .alert-content {
+        flex: 1;
+    }
+    
+    /* Info Variant */
+    .alert-info {
+        color: #0c5460;
+        background-color: #d1ecf1;
+        border-color: #bee5eb;
+    }
+    .alert-info .alert-icon::before { content: 'ℹ'; }
+    
+    /* Warning Variant */
+    .alert-warning {
+        color: #856404;
+        background-color: #fff3cd;
+        border-color: #ffeeba;
+    }
+    .alert-warning .alert-icon::before { content: '⚠'; }
+    
+    /* Error Variant */
+    .alert-error {
+        color: #721c24;
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+    }
+    .alert-error .alert-icon::before { content: '✖'; }
+
+    /* Dark Mode Overrides */
+    @media (prefers-color-scheme: dark) {
+        .alert-info {
+            color: #d1ecf1;
+            background-color: #0c5460;
+            border-color: #0f6674;
+        }
+        .alert-warning {
+            color: #fff3cd;
+            background-color: #533f03;
+            border-color: #664d03;
+        }
+        .alert-error {
+            color: #f8d7da;
+            background-color: #58151c;
+            border-color: #842029;
+        }
+    }
+</style>

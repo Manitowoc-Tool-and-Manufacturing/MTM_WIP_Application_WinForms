@@ -1,0 +1,85 @@
+<div class="code-block">
+    <div class="code-header">
+        <span class="code-lang">{{LANGUAGE}}</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+    </div>
+    <pre><code class="language-{{LANGUAGE}}">{{CONTENT}}</code></pre>
+</div>
+<style>
+    /* Component Styles: Code Block */
+    .code-block {
+        background-color: #f6f8fa;
+        border: 1px solid #e1e4e8;
+        border-radius: 6px;
+        margin-bottom: 16px;
+        overflow: hidden;
+    }
+    .code-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 12px;
+        background-color: #f1f3f5;
+        border-bottom: 1px solid #e1e4e8;
+        font-size: 12px;
+        color: #586069;
+    }
+    .code-lang {
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+    .copy-btn {
+        background: none;
+        border: 1px solid #d1d5da;
+        border-radius: 3px;
+        padding: 3px 8px;
+        font-size: 12px;
+        cursor: pointer;
+        color: #24292e;
+    }
+    .copy-btn:hover {
+        background-color: #e1e4e8;
+    }
+    .code-block pre {
+        margin: 0;
+        padding: 12px;
+        overflow-x: auto;
+        font-family: Consolas, "Courier New", monospace;
+        font-size: 13px;
+        line-height: 1.45;
+    }
+    
+    /* Dark Mode */
+    @media (prefers-color-scheme: dark) {
+        .code-block {
+            background-color: #161b22;
+            border-color: #30363d;
+        }
+        .code-header {
+            background-color: #21262d;
+            border-bottom-color: #30363d;
+            color: #8b949e;
+        }
+        .copy-btn {
+            border-color: #30363d;
+            color: #c9d1d9;
+        }
+        .copy-btn:hover {
+            background-color: #30363d;
+        }
+        .code-block pre {
+            color: #c9d1d9;
+        }
+    }
+</style>
+<script>
+    function copyCode(btn) {
+        const pre = btn.parentElement.nextElementSibling;
+        const code = pre.innerText;
+        navigator.clipboard.writeText(code).then(() => {
+            const originalText = btn.innerText;
+            btn.innerText = 'Copied!';
+            setTimeout(() => btn.innerText = originalText, 2000);
+        });
+    }
+</script>

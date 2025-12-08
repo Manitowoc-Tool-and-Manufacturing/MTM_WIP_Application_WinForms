@@ -25,7 +25,7 @@
       "TopicId": "add-item",
       "Title": "Adding Inventory",
       "Summary": "Create new inventory records.",
-      "Content": "<h2>Adding New Inventory</h2><p>To add a new item:</p><ol><li>Navigate to the Inventory tab.</li><li>Enter the <strong>Part Number</strong> (or scan a barcode).</li><li>Enter the <strong>Quantity</strong>.</li><li>Select or scan the <strong>Location</strong>.</li><li>Click <strong>Save</strong> (Ctrl+S).</li></ol><p>The system will validate the part number against the Infor Visual database before saving.</p>",
+      "Content": "<h2>Adding New Inventory</h2><p>To add a new item:</p><ol><li>Navigate to the Inventory tab.</li><li>Enter the <strong>Part Number</strong> (or scan a barcode).</li><li>Enter the <strong>Operation</strong>.</li><li>Enter the <strong>Quantity</strong>.</li><li>Select or scan the <strong>Location</strong>.</li><li>Click <strong>Save</strong> (Ctrl+S).</li></ol><p>The system will validate the part number against the Infor Visual database before saving.</p>",
       "Keywords": ["create", "new", "stock"],
       "LastUpdated": "2025-12-07T10:00:00"
     },

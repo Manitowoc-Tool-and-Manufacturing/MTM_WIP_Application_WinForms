@@ -69,7 +69,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 // Update UI with loaded values (or defaults)
                 Control_Database_TextBox_Server.Text = serverResult.IsSuccess && !string.IsNullOrWhiteSpace(serverResult.Data)
                     ? serverResult.Data
-                    : "172.16.1.104";
+                    : "localhost";
 
                 Control_Database_TextBox_Port.Text = portResult.IsSuccess && !string.IsNullOrWhiteSpace(portResult.Data)
                     ? portResult.Data
@@ -89,7 +89,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                     controlName: nameof(Control_Database));
 
                 // Set default values as fallback
-                Control_Database_TextBox_Server.Text = "172.16.1.104";
+                Control_Database_TextBox_Server.Text = "localhost";
                 Control_Database_TextBox_Port.Text = "3306";
                 Control_Database_TextBox_Database.Text = "mtm_wip_application_winforms";
 
@@ -291,7 +291,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         private void Control_Database_Button_Reset_Click(object sender, EventArgs e)
         {
             // Reset to production defaults
-            Control_Database_TextBox_Server.Text = "172.16.1.104";
+            Control_Database_TextBox_Server.Text = "localhost";
             Control_Database_TextBox_Port.Text = "3306";
             Control_Database_TextBox_Database.Text = "mtm_wip_application_winforms";
 

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Text;
 using MTM_WIP_Application_Winforms.Models.Help;
 using MTM_WIP_Application_Winforms.Models; // For Model_Application_Variables
+using MTM_WIP_Application_Winforms.Services.Logging;
 
 namespace MTM_WIP_Application_Winforms.Services.Help
 {
@@ -20,6 +21,42 @@ namespace MTM_WIP_Application_Winforms.Services.Help
         private const string InconsistencyTemplatePath = "Documentation/Help/Templates/help-inconsistency-form.html";
         private const string QuestionTemplatePath = "Documentation/Help/Templates/help-question-form.html";
         private const string ViewSubmissionsTemplatePath = "Documentation/Help/Templates/help-view-submissions.html";
+        private const string AlertComponentPath = "Documentation/Help/Templates/components/alert-component.html";
+        private const string CodeBlockComponentPath = "Documentation/Help/Templates/components/code-block-component.html";
+
+        private readonly Dictionary<string, string> _templateCache = new();
+
+        private string LoadTemplateFromFile(string templatePath)
+        {
+            if (_templateCache.TryGetValue(templatePath, out var cachedContent))
+            {
+                return cachedContent;
+            }
+
+            try
+            {
+                string fullPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, templatePath);
+                if (!File.Exists(fullPath))
+                {
+                    LoggingUtility.Log(Enum_LogLevel.Error, "HelpSystem", $"Template file missing: {fullPath}");
+                    // Fallback for base template if missing
+                    if (templatePath == BaseTemplatePath)
+                    {
+                         return "<html><body><h1>Help System Error</h1><p>Base template missing.</p>{{CONTENT}}</body></html>";
+                    }
+                    return $"<div class='error'>Error: Template {templatePath} not found.</div>";
+                }
+
+                string content = File.ReadAllText(fullPath);
+                _templateCache[templatePath] = content;
+                return content;
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.Log(Enum_LogLevel.Error, "HelpSystem", $"Error loading template: {templatePath}", ex: ex);
+                return $"<div class='error'>Error loading template: {ex.Message}</div>";
+            }
+        }
 
         /// <summary>
         /// Generates the HTML for the Index page (category cards).
@@ -31,14 +68,16 @@ namespace MTM_WIP_Application_Winforms.Services.Help
             var sb = new StringBuilder();
             sb.Append("<div class='category-grid'>");
 
+            string cardTemplate = LoadTemplateFromFile(TopicCardTemplatePath);
+
             foreach (var category in categories)
             {
-                sb.Append($@"
-                    <div class='category-card' onclick='window.location.href=""help://category/{category.CategoryId}""'>
-                        <div class='category-icon'>{category.Icon}</div>
-                        <div class='category-title'>{category.Title}</div>
-                        <div class='category-desc'>{category.Description}</div>
-                    </div>");
+                string card = cardTemplate
+                    .Replace("{{CATEGORY_ID}}", category.CategoryId)
+                    .Replace("{{ICON}}", category.Icon)
+                    .Replace("{{TITLE}}", category.Title)
+                    .Replace("{{DESCRIPTION}}", category.Description);
+                sb.Append(card);
             }
 
             sb.Append("</div>");
@@ -48,37 +87,37 @@ namespace MTM_WIP_Application_Winforms.Services.Help
 
         public string GenerateContactSupportHtml()
         {
-            string content = File.ReadAllText(ContactSupportTemplatePath);
+            string content = LoadTemplateFromFile(ContactSupportTemplatePath);
             return WrapInBaseTemplate("Contact Support", content, string.Empty);
         }
 
         public string GenerateBugReportFormHtml()
         {
-            string content = File.ReadAllText(BugReportTemplatePath);
+            string content = LoadTemplateFromFile(BugReportTemplatePath);
             return WrapInBaseTemplate("Report a Bug", content, string.Empty);
         }
 
         public string GenerateSuggestionFormHtml()
         {
-            string content = File.ReadAllText(SuggestionTemplatePath);
+            string content = LoadTemplateFromFile(SuggestionTemplatePath);
             return WrapInBaseTemplate("Suggest Improvement", content, string.Empty);
         }
 
         public string GenerateInconsistencyFormHtml()
         {
-            string content = File.ReadAllText(InconsistencyTemplatePath);
+            string content = LoadTemplateFromFile(InconsistencyTemplatePath);
             return WrapInBaseTemplate("Report Inconsistency", content, string.Empty);
         }
 
         public string GenerateQuestionFormHtml()
         {
-            string content = File.ReadAllText(QuestionTemplatePath);
+            string content = LoadTemplateFromFile(QuestionTemplatePath);
             return WrapInBaseTemplate("Ask a Question", content, string.Empty);
         }
 
         public string GenerateViewSubmissionsHtml()
         {
-            string content = File.ReadAllText(ViewSubmissionsTemplatePath);
+            string content = LoadTemplateFromFile(ViewSubmissionsTemplatePath);
             return WrapInBaseTemplate("My Submissions", content, string.Empty);
         }
 
@@ -143,20 +182,78 @@ namespace MTM_WIP_Application_Winforms.Services.Help
             return WrapInBaseTemplate($"Search: {query}", sb.ToString(), string.Empty);
         }
 
+        private string ReplaceComponentPlaceholders(string html)
+        {
+            // Regex to find component blocks: {{component:name attributes}}content{{/component:name}}
+            var regex = new System.Text.RegularExpressions.Regex(@"\{\{component:(\w+)([^}]*)\}\}(.*?)\{\{/component:\1\}\}", System.Text.RegularExpressions.RegexOptions.Singleline | System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+
+            return regex.Replace(html, match =>
+            {
+                string componentName = match.Groups[1].Value.ToLower();
+                string attributes = match.Groups[2].Value;
+                string content = match.Groups[3].Value;
+
+                return RenderComponent(componentName, attributes, content);
+            });
+        }
+
+        private string RenderComponent(string name, string attributes, string content)
+        {
+            string? templatePath = name switch
+            {
+                "alert" => AlertComponentPath,
+                "code" => CodeBlockComponentPath,
+                _ => null
+            };
+
+            if (templatePath == null) return $"<!-- Unknown component: {name} -->{content}";
+
+            string fullPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, templatePath);
+            if (!File.Exists(fullPath))
+            {
+                 LoggingUtility.Log(Enum_LogLevel.Warning, "HelpSystem", $"Component template missing: {templatePath}");
+                 return content; // Render content as plain text
+            }
+
+            string template = LoadTemplateFromFile(templatePath);
+            
+            // Parse attributes: type="warning"
+            var attrRegex = new System.Text.RegularExpressions.Regex(@"(\w+)=""([^""]*)""");
+            var attrMatches = attrRegex.Matches(attributes);
+            
+            foreach (System.Text.RegularExpressions.Match attr in attrMatches)
+            {
+                string key = attr.Groups[1].Value.ToUpper();
+                string value = attr.Groups[2].Value;
+                template = template.Replace($"{{{{{key}}}}}", value);
+            }
+
+            // Replace content
+            template = template.Replace("{{CONTENT}}", content);
+
+            // Clean up unused placeholders with defaults
+            template = template.Replace("{{ICON}}", ""); 
+            template = template.Replace("{{TYPE}}", "info");
+            template = template.Replace("{{LANGUAGE}}", "text");
+
+            return template;
+        }
+
         private string WrapInBaseTemplate(string title, string content, string sidebar)
         {
             // Load base template
-            string template = "";
-            try 
+            string template = LoadTemplateFromFile(BaseTemplatePath);
+
+            // Process components in content
+            content = ReplaceComponentPlaceholders(content);
+
+            // Watermark Logic
+            string watermarkUrl = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='50%' x='50%' dy='.3em' text-anchor='middle' font-size='20' fill='rgba(128,128,128,0.05)' font-family='Arial'>MTM WIP</text></svg>";
+            string logoPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "MTM.png");
+            
+            if (File.Exists(logoPath))
             {
-                // In a real app, we'd read from file. For now, we use the embedded string from T013
-                // But since we can't easily read the file here without IO, we'll reconstruct it with theme support
-                template = GetBaseTemplate();
-            }
-            catch
-            {
-                // Fallback
-                template = "<html><body>{{CONTENT}}</body></html>";
+                watermarkUrl = new Uri(logoPath).AbsoluteUri;
             }
 
             // Inject Theme Colors
@@ -169,237 +266,12 @@ namespace MTM_WIP_Application_Winforms.Services.Help
             template = template.Replace("{{TITLE}}", title);
             template = template.Replace("{{CONTENT}}", content);
             template = template.Replace("{{SIDEBAR}}", sidebar);
+            template = template.Replace("{{WATERMARK_URL}}", watermarkUrl);
 
             return template;
         }
 
-        private string GetBaseTemplate()
-        {
-            // This should match T013 content
-            return @"<!DOCTYPE html>
-<html lang=""en"">
-<head>
-    <meta charset=""UTF-8"">
-    <meta name=""viewport"" content=""width=device-width, initial-scale=1.0"">
-    <title>{{TITLE}} - MTM Help</title>
-    <style>
-        :root {
-            --bg-color: #ffffff;
-            --text-color: #333333;
-            --sidebar-bg: #f5f5f5;
-            --sidebar-border: #e0e0e0;
-            --link-color: #0066cc;
-            --card-bg: #ffffff;
-            --card-border: #dddddd;
-            --card-hover: #f9f9f9;
-        }
 
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --bg-color: #1e1e1e;
-                --text-color: #e0e0e0;
-                --sidebar-bg: #252526;
-                --sidebar-border: #3e3e42;
-                --link-color: #3794ff;
-                --card-bg: #2d2d30;
-                --card-border: #3e3e42;
-                --card-hover: #3e3e42;
-            }
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            display: flex;
-            height: 100vh;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            overflow: hidden;
-        }
-
-        .sidebar {
-            width: 280px;
-            background-color: var(--sidebar-bg);
-            border-right: 1px solid var(--sidebar-border);
-            display: flex;
-            flex-direction: column;
-            flex-shrink: 0;
-        }
-
-        .search-container {
-            padding: 15px;
-            border-bottom: 1px solid var(--sidebar-border);
-        }
-
-        .nav-list {
-            flex: 1;
-            overflow-y: auto;
-            padding: 10px 0;
-            list-style: none;
-            margin: 0;
-        }
-
-        .nav-item {
-            padding: 0;
-        }
-
-        .nav-link {
-            display: block;
-            padding: 8px 20px;
-            color: var(--text-color);
-            text-decoration: none;
-            font-size: 14px;
-            border-left: 3px solid transparent;
-        }
-
-        .nav-link:hover {
-            background-color: rgba(128, 128, 128, 0.1);
-        }
-
-        .nav-link.active {
-            background-color: rgba(128, 128, 128, 0.15);
-            border-left-color: var(--link-color);
-            font-weight: 600;
-        }
-
-        .content-area {
-            flex: 1;
-            padding: 40px;
-            overflow-y: auto;
-            position: relative;
-        }
-
-        /* Watermark */
-        .content-area::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 300px;
-            height: 300px;
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns=""http://www.w3.org/2000/svg"" viewBox=""0 0 100 100""><text y=""50%"" x=""50%"" dy="".3em"" text-anchor=""middle"" font-size=""20"" fill=""rgba(128,128,128,0.05)"" font-family=""Arial"">MTM WIP</text></svg>');
-            background-repeat: no-repeat;
-            background-position: center;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        h1, h2, h3 { margin-top: 0; }
-        h1 { font-size: 28px; margin-bottom: 10px; }
-        .topic-meta { font-size: 12px; color: #888; margin-bottom: 20px; }
-        
-        p { line-height: 1.6; margin-bottom: 15px; }
-        
-        code {
-            background-color: rgba(128, 128, 128, 0.1);
-            padding: 2px 5px;
-            border-radius: 3px;
-            font-family: Consolas, monospace;
-        }
-
-        /* Index Grid */
-        .category-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .category-card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 8px;
-            padding: 20px;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
-            text-decoration: none;
-            color: var(--text-color);
-            display: block;
-        }
-
-        .category-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            background-color: var(--card-hover);
-        }
-
-        .category-icon {
-            font-size: 24px;
-            margin-bottom: 10px;
-            color: var(--link-color);
-        }
-
-        .category-title {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-
-        .category-desc {
-            font-size: 14px;
-            color: #888;
-            line-height: 1.4;
-        }
-
-        /* Breadcrumbs */
-        .breadcrumbs {
-            font-size: 12px;
-            color: #888;
-            margin-bottom: 20px;
-        }
-        .breadcrumbs a { color: #888; text-decoration: none; }
-        .breadcrumbs a:hover { text-decoration: underline; }
-
-    </style>
-</head>
-<body>
-    <div class=""sidebar"">
-        <div class=""search-container"">
-            <input type=""text"" id=""searchInput"" placeholder=""Search help..."" 
-                   style=""width: 100%; padding: 8px; border: 1px solid var(--sidebar-border); border-radius: 4px; background: var(--bg-color); color: var(--text-color); box-sizing: border-box;"">
-        </div>
-        {{SIDEBAR}}
-    </div>
-    <div class=""content-area"">
-        {{CONTENT}}
-    </div>
-
-    <script>
-        // Handle internal navigation
-        document.addEventListener('click', function(e) {
-            if (e.target.tagName === 'A' && e.target.href.startsWith('help://')) {
-                // Let WebView2 handle it via NavigationStarting
-            }
-        });
-
-        // Search Logic
-        const searchInput = document.getElementById('searchInput');
-        let debounceTimer;
-        
-        if (searchInput) {
-            searchInput.addEventListener('input', (e) => {
-                clearTimeout(debounceTimer);
-                debounceTimer = setTimeout(() => {
-                    if (window.chrome && window.chrome.webview) {
-                        window.chrome.webview.postMessage(JSON.stringify({ type: 'search', query: e.target.value }));
-                    }
-                }, 300);
-            });
-            
-            // Focus search on Ctrl+F
-            document.addEventListener('keydown', function(e) {
-                if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
-                    e.preventDefault();
-                    searchInput.focus();
-                }
-            });
-        }
-    </script>
-</body>
-</html>";
-        }
         private string GenerateFeedbackSection(string topicId, string categoryId)
         {
             return $@"

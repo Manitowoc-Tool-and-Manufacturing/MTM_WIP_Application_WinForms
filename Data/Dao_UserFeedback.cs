@@ -15,8 +15,20 @@ namespace MTM_WIP_Application_Winforms.Data
         /// <inheritdoc/>
         public async Task<Model_Dao_Result<DataTable>> GetAllAsync(Dictionary<string, object>? filters = null)
         {
-            // Map filters to SP parameters
-            var parameters = new Dictionary<string, object>();
+            // Initialize all parameters with DBNull.Value to ensure they exist in the collection
+            // This prevents "Parameter not found" errors since the SP requires all parameters to be present
+            var parameters = new Dictionary<string, object>
+            {
+                { "FilterStatus", DBNull.Value },
+                { "FilterFeedbackType", DBNull.Value },
+                { "FilterUserID", DBNull.Value },
+                { "FilterDateFrom", DBNull.Value },
+                { "FilterDateTo", DBNull.Value },
+                { "FilterAssignedDeveloperID", DBNull.Value },
+                { "FilterCategory", DBNull.Value }
+            };
+
+            // Override with provided filters
             if (filters != null)
             {
                 foreach (var kvp in filters)
@@ -161,26 +173,37 @@ namespace MTM_WIP_Application_Winforms.Data
         /// <inheritdoc/>
         public async Task<Model_Dao_Result<string>> GetTrackingNumberAsync(string feedbackType)
         {
-            var parameters = new Dictionary<string, object>
+            int maxRetries = 3;
+            int currentRetry = 0;
+            string lastError = string.Empty;
+
+            while (currentRetry < maxRetries)
             {
-                { "FeedbackType", feedbackType },
-                { "Year", DateTime.Now.Year }
-            };
+                var parameters = new Dictionary<string, object>
+                {
+                    { "FeedbackType", feedbackType },
+                    { "Year", DateTime.Now.Year }
+                };
 
-            var outputParams = new List<string> { "TrackingNumber" };
+                var outputParams = new List<string> { "TrackingNumber" };
 
-            var result = await Helper_Database_StoredProcedure.ExecuteWithCustomOutputAsync(
-                Model_Application_Variables.ConnectionString,
-                "sys_tracking_number_GetNext",
-                parameters,
-                outputParams);
+                var result = await Helper_Database_StoredProcedure.ExecuteWithCustomOutputAsync(
+                    Model_Application_Variables.ConnectionString,
+                    "sys_tracking_number_GetNext",
+                    parameters,
+                    outputParams);
 
-            if (result.IsSuccess && result.Data != null && result.Data.TryGetValue("TrackingNumber", out var trackingNumber))
-            {
-                return Model_Dao_Result<string>.Success(data: trackingNumber?.ToString() ?? string.Empty);
+                if (result.IsSuccess && result.Data != null && result.Data.TryGetValue("TrackingNumber", out var trackingNumber))
+                {
+                    return Model_Dao_Result<string>.Success(data: trackingNumber?.ToString() ?? string.Empty);
+                }
+
+                lastError = result.ErrorMessage;
+                currentRetry++;
+                await Task.Delay(100); // Small delay before retry
             }
 
-            return Model_Dao_Result<string>.Failure(result.ErrorMessage);
+            return Model_Dao_Result<string>.Failure($"Failed to generate tracking number after {maxRetries} attempts. Last error: {lastError}");
         }
     }
 }

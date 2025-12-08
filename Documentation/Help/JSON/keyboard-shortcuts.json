@@ -25,7 +25,7 @@
       "TopicId": "advanced-inventory-shortcuts",
       "Title": "Advanced Inventory",
       "Summary": "Shortcuts for Advanced Inventory operations.",
-      "Content": "<h2>Advanced Inventory Shortcuts</h2><table class='table table-striped'><thead><tr><th>Action</th><th>Default Key</th></tr></thead><tbody><tr><td>Return to Normal Inventory</td><td>Ctrl+N</td></tr><tr><td>Save Single Entry</td><td>Ctrl+S</td></tr><tr><td>Reset Single Entry</td><td>Ctrl+R</td></tr><tr><td>Send Single Entry</td><td>Ctrl+Enter</td></tr><tr><td>Add Location (Multi)</td><td>Ctrl+Enter</td></tr><tr><td>Save All (Multi)</td><td>Ctrl+S</td></tr><tr><td>Reset Multi Entry</td><td>Ctrl+R</td></tr><tr><td>Import Excel Data</td><td>Ctrl+I</td></tr><tr><td>Open Excel File</td><td>Ctrl+O</td></tr></tbody></table>",
+      "Content": "<h2>Advanced Inventory Shortcuts</h2><table class='table table-striped'><thead><tr><th>Action</th><th>Default Key</th></tr></thead><tbody><tr><td>Return to Normal Inventory</td><td>Ctrl+B</td></tr><tr><td>Save Single Entry</td><td>Ctrl+S</td></tr><tr><td>Reset Single Entry</td><td>Ctrl+R</td></tr><tr><td>Send Single Entry</td><td>Ctrl+Enter</td></tr><tr><td>Add Location (Multi)</td><td>Ctrl+Enter</td></tr><tr><td>Save All (Multi)</td><td>Ctrl+S</td></tr><tr><td>Reset Multi Entry</td><td>Ctrl+R</td></tr><tr><td>Import Excel Data</td><td>Ctrl+I</td></tr><tr><td>Open Excel File</td><td>Ctrl+E</td></tr></tbody></table>",
       "Keywords": ["advanced", "multi", "import", "excel"],
       "LastUpdated": "2025-12-07T10:00:00"
     },
@@ -33,7 +33,7 @@
       "TopicId": "remove-shortcuts",
       "Title": "Remove Operations",
       "Summary": "Shortcuts for the Remove tab.",
-      "Content": "<h2>Remove Shortcuts</h2><table class='table table-striped'><thead><tr><th>Action</th><th>Default Key</th></tr></thead><tbody><tr><td>Delete Selected Items</td><td>Delete</td></tr><tr><td>Undo Last Deletion</td><td>Ctrl+Z</td></tr><tr><td>Return to Normal Remove</td><td>Ctrl+N</td></tr><tr><td>Reset Advanced Remove</td><td>Ctrl+R</td></tr><tr><td>Search Advanced Remove</td><td>Ctrl+S</td></tr></tbody></table>",
+      "Content": "<h2>Remove Shortcuts</h2><table class='table table-striped'><thead><tr><th>Action</th><th>Default Key</th></tr></thead><tbody><tr><td>Delete Selected Items</td><td>Delete</td></tr><tr><td>Undo Last Deletion</td><td>Ctrl+Z</td></tr><tr><td>Return to Normal Remove</td><td>Ctrl+B</td></tr><tr><td>Reset Advanced Remove</td><td>Ctrl+R</td></tr><tr><td>Search Advanced Remove</td><td>Ctrl+S</td></tr></tbody></table>",
       "Keywords": ["remove", "delete", "undo"],
       "LastUpdated": "2025-12-07T10:00:00"
     },

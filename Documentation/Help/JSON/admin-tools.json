@@ -1,24 +1,32 @@
 {
   "CategoryId": "admin-tools",
-  "Title": "Admin Tools",
+  "Title": "Development & Admin Tools",
   "Icon": "🛡️",
-  "Description": "Tools for system administrators.",
+  "Description": "Tools for system administrators and developers.",
   "Order": 11,
   "Topics": [
     {
-      "TopicId": "user-management",
-      "Title": "User Permissions",
-      "Summary": "Managing user access levels.",
-      "Content": "<h2>User Permissions</h2><p>The application supports multiple user privilege levels.</p><h3>Access Levels</h3><ul><li><strong>Standard User:</strong> Can perform basic inventory operations (IN, OUT, TRANSFER).</li><li><strong>Admin:</strong> Can access all features, including transaction history for all users and advanced settings.</li><li><strong>Developer:</strong> Full system access including diagnostic tools and database configuration.</li></ul><h3>Managing Users</h3><p>User permissions are managed through the Infor Visual ERP system. Contact your IT department to request permission changes.</p>",
-      "Keywords": ["admin", "permissions", "access", "privileges"],
+      "TopicId": "developer-tools",
+      "Title": "Developer Tools",
+      "Summary": "Manage user feedback and system mappings.",
+      "Content": "<h2>Developer Tools</h2><p>The Developer Tools form allows administrators to manage user feedback and system configurations.</p><h3>User Feedback Management</h3><p>View and manage bug reports, suggestions, and questions submitted by users.</p><ul><li><strong>Filter:</strong> Use the dropdowns to filter by Status (New, In Progress, Resolved) or Type (Bug, Suggestion).</li><li><strong>Review:</strong> Select an item to view details and update its status.</li></ul>",
+      "Keywords": ["developer", "feedback", "bugs", "suggestions", "admin"],
       "LastUpdated": "2025-12-07T10:00:00"
     },
     {
-      "TopicId": "system-maintenance",
-      "Title": "System Maintenance",
-      "Summary": "Maintaining application health.",
-      "Content": "<h2>System Maintenance</h2><p>Administrators can perform maintenance tasks to keep the application running smoothly.</p><h3>Available Tasks</h3><ul><li><strong>Clear Cache:</strong> Reset cached data (parts, locations, operations).</li><li><strong>Rebuild Indexes:</strong> Optimize database performance.</li><li><strong>View Error Reports:</strong> Access detailed error logs for troubleshooting.</li></ul><h3>Scheduled Maintenance</h3><p>The application performs automatic maintenance tasks daily during off-peak hours, including log cleanup and database optimization.</p>",
-      "Keywords": ["maintenance", "optimization", "cache"],
+      "TopicId": "database-maintenance",
+      "Title": "Database Maintenance",
+      "Summary": "Tools for database migration and maintenance.",
+      "Content": "<h2>Database Maintenance</h2><p><strong>Warning: These tools are for advanced users only. Improper use can result in data loss.</strong></p><h3>Data Migration</h3><p>Migrate data between databases (e.g., from Production to Test).</p><ul><li><strong>Bulk Migration:</strong> Migrate entire categories of data (Master Data, Users, Inventory).</li><li><strong>Selected Tables:</strong> Choose specific tables to migrate.</li></ul><p>Always ensure you have a backup before performing any migration operations.</p>",
+      "Keywords": ["maintenance", "migration", "database", "backup"],
+      "LastUpdated": "2025-12-07T10:00:00"
+    },
+    {
+      "TopicId": "system-logs",
+      "Title": "System Logs & Reports",
+      "Summary": "View application logs and error reports.",
+      "Content": "<h2>System Logs & Reports</h2><p>Access detailed system information for troubleshooting.</p><h3>View Error Reports</h3><p>Navigate to <strong>Development > View Error Reports</strong> to see a list of recorded application errors. This is useful for diagnosing crashes or unexpected behavior.</p><h3>View Application Logs</h3><p>Navigate to <strong>Development > View Application Logs</strong> to see a chronological log of system events. Logs are stored locally in CSV format and can be filtered by date or severity.</p>",
+      "Keywords": ["logs", "errors", "reports", "troubleshooting"],
       "LastUpdated": "2025-12-07T10:00:00"
     }
   ]

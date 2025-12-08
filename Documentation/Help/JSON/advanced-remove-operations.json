@@ -9,7 +9,7 @@
       "TopicId": "advanced-remove-overview",
       "Title": "Advanced Remove Overview",
       "Summary": "Overview of advanced remove features.",
-      "Content": "<h2>Advanced Remove Overview</h2><p>This section covers advanced remove operations such as bulk removal and scrap processing.</p><h3>Key Features</h3><ul><li><strong>Bulk Remove:</strong> Remove multiple inventory items at once.</li><li><strong>Scrap Processing:</strong> Record scrapped inventory with reason codes.</li></ul><p>Ensure you have the correct authorization before performing bulk removals.</p>",
+      "Content": "<h2>Advanced Remove Overview</h2><p>This section covers advanced remove operations such as bulk removal and scrap processing.</p><h3>Key Features</h3><ul><li><strong>Bulk Remove:</strong> Remove multiple inventory items at once.</li><li><strong>Search:</strong> Advanced search capabilities to find specific items.</li></ul><p>Ensure you have the correct authorization before performing bulk removals.</p>",
       "Keywords": ["advanced", "remove", "bulk", "scrap"],
       "LastUpdated": "2025-12-07T10:00:00"
     }

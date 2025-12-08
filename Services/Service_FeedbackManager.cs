@@ -20,6 +20,13 @@ namespace MTM_WIP_Application_Winforms.Services
         Task<Model_Dao_Result<string>> SubmitFeedbackAsync(Model_UserFeedback feedback);
 
         /// <summary>
+        /// Retrieves all feedback submissions with optional filters.
+        /// </summary>
+        /// <param name="filters">Filter parameters.</param>
+        /// <returns>DataTable of feedback.</returns>
+        Task<Model_Dao_Result<DataTable>> GetAllAsync(Dictionary<string, object> filters);
+
+        /// <summary>
         /// Retrieves feedback submissions for a specific user.
         /// </summary>
         /// <param name="userId">The user ID.</param>
@@ -102,6 +109,7 @@ namespace MTM_WIP_Application_Winforms.Services
         private readonly IDao_UserFeedbackComments _commentsDao;
         private readonly IDao_WindowFormMapping _windowMappingDao;
         private readonly IDao_UserControlMapping _controlMappingDao;
+        private readonly IService_EmailNotification _emailService;
 
         #endregion
 
@@ -114,20 +122,31 @@ namespace MTM_WIP_Application_Winforms.Services
             new Dao_UserFeedback(),
             new Dao_UserFeedbackComments(),
             new Dao_WindowFormMapping(),
-            new Dao_UserControlMapping())
+            new Dao_UserControlMapping(),
+            new Service_EmailNotification())
         {
         }
 
+        /// <summary>
+        /// Constructor with dependency injection.
+        /// </summary>
+        /// <param name="feedbackDao">The feedback DAO.</param>
+        /// <param name="commentsDao">The comments DAO.</param>
+        /// <param name="windowMappingDao">The window mapping DAO.</param>
+        /// <param name="controlMappingDao">The control mapping DAO.</param>
+        /// <param name="emailService">The email service.</param>
         public Service_FeedbackManager(
             IDao_UserFeedback feedbackDao,
             IDao_UserFeedbackComments commentsDao,
             IDao_WindowFormMapping windowMappingDao,
-            IDao_UserControlMapping controlMappingDao)
+            IDao_UserControlMapping controlMappingDao,
+            IService_EmailNotification emailService)
         {
             _feedbackDao = feedbackDao;
             _commentsDao = commentsDao;
             _windowMappingDao = windowMappingDao;
             _controlMappingDao = controlMappingDao;
+            _emailService = emailService;
         }
 
         #endregion
@@ -140,11 +159,14 @@ namespace MTM_WIP_Application_Winforms.Services
             try
             {
                 // Validate inputs
-                if (string.IsNullOrEmpty(feedback.Title)) return Model_Dao_Result<string>.Failure("Title is required.");
-                if (string.IsNullOrEmpty(feedback.Description)) return Model_Dao_Result<string>.Failure("Description is required.");
+                var validationResult = await ValidateFeedbackAsync(feedback);
+                if (!validationResult.IsSuccess)
+                {
+                    return Model_Dao_Result<string>.Failure(validationResult.ErrorMessage);
+                }
                 
                 // Sanitize HTML
-                feedback.Description = Helper_HtmlSanitizer.Sanitize(feedback.Description);
+                feedback.Description = Helper_HtmlSanitizer.Sanitize(feedback.Description ?? string.Empty);
                 if (!string.IsNullOrEmpty(feedback.StepsToReproduce)) feedback.StepsToReproduce = Helper_HtmlSanitizer.Sanitize(feedback.StepsToReproduce);
                 if (!string.IsNullOrEmpty(feedback.ExpectedBehavior)) feedback.ExpectedBehavior = Helper_HtmlSanitizer.Sanitize(feedback.ExpectedBehavior);
                 if (!string.IsNullOrEmpty(feedback.ActualBehavior)) feedback.ActualBehavior = Helper_HtmlSanitizer.Sanitize(feedback.ActualBehavior);
@@ -154,12 +176,23 @@ namespace MTM_WIP_Application_Winforms.Services
                 // Insert
                 var result = await _feedbackDao.InsertAsync(feedback);
                 
-                if (result.IsSuccess)
+                if (result.IsSuccess && result.Data != null)
                 {
-                    LoggingUtility.Log(Enum_LogLevel.Information, "Feedback", $"Feedback submitted: {result.Data.TrackingNumber}", feedback.UserID.ToString());
+                    LoggingUtility.Log(Enum_LogLevel.Information, "Feedback", $"Feedback submitted: {result.Data.TrackingNumber} (Type: {feedback.FeedbackType})", feedback.UserID.ToString());
                     
-                    // TODO: Trigger email notification if Critical/High bug (Phase 7)
-                    // if (feedback.Severity == "Critical" || feedback.Severity == "High") { ... }
+                    // Trigger email notification if Critical/High bug (Phase 7)
+                    if (feedback.FeedbackType == "Bug Report" && (feedback.Severity == "Critical" || feedback.Severity == "High"))
+                    {
+                        string subject = $"[{feedback.Severity}] Bug Report: {feedback.TrackingNumber}";
+                        string body = $"A new {feedback.Severity} bug has been reported.\n\n" +
+                                      $"Tracking Number: {feedback.TrackingNumber}\n" +
+                                      $"Title: {feedback.Title}\n" +
+                                      $"Submitted By: {feedback.UserID}\n" +
+                                      $"Window: {feedback.WindowForm}\n\n" +
+                                      $"Description:\n{feedback.Description}";
+                                      
+                        _emailService.SendNotification(subject, body, feedback.Category ?? "All");
+                    }
 
                     return Model_Dao_Result<string>.Success(data: result.Data.TrackingNumber);
                 }
@@ -174,6 +207,12 @@ namespace MTM_WIP_Application_Winforms.Services
         }
 
         /// <inheritdoc/>
+        public async Task<Model_Dao_Result<DataTable>> GetAllAsync(Dictionary<string, object> filters)
+        {
+            return await _feedbackDao.GetAllAsync(filters);
+        }
+
+        /// <inheritdoc/>
         public async Task<Model_Dao_Result<DataTable>> GetUserSubmissionsAsync(int userId)
         {
             return await _feedbackDao.GetByUserIdAsync(userId);
@@ -183,7 +222,7 @@ namespace MTM_WIP_Application_Winforms.Services
         public async Task<Model_Dao_Result<Model_UserFeedback>> GetSubmissionAsync(int feedbackId)
         {
             var result = await _feedbackDao.GetByIdAsync(feedbackId);
-            if (!result.IsSuccess) return Model_Dao_Result<Model_UserFeedback>.Failure(result.ErrorMessage);
+            if (!result.IsSuccess || result.Data == null) return Model_Dao_Result<Model_UserFeedback>.Failure(result.ErrorMessage ?? "Feedback not found");
 
             try
             {
@@ -256,10 +295,38 @@ namespace MTM_WIP_Application_Winforms.Services
         /// <inheritdoc/>
         public async Task<Model_Dao_Result<bool>> UpdateStatusAsync(int feedbackId, string newStatus, int? assignedDeveloperId, string? notes, int modifiedByUserId)
         {
+            // Get old status for logging (FR-037)
+            string oldStatus = "Unknown";
+            int? oldDevId = null;
+
+            var current = await GetSubmissionAsync(feedbackId);
+            if (current.IsSuccess && current.Data != null) 
+            {
+                oldStatus = current.Data.Status;
+                oldDevId = current.Data.AssignedToDeveloperID;
+            }
+
             var result = await _feedbackDao.UpdateStatusAsync(feedbackId, newStatus, assignedDeveloperId, notes, modifiedByUserId);
             if (result.IsSuccess)
             {
-                LoggingUtility.Log(Enum_LogLevel.Information, "Feedback", $"Feedback {feedbackId} status updated to {newStatus}", modifiedByUserId.ToString());
+                // T032.1 & T032.2: Log assignment change
+                if (assignedDeveloperId.HasValue && assignedDeveloperId != oldDevId)
+                {
+                    LoggingUtility.Log(Enum_LogLevel.Information, "Feedback", $"Feedback {feedbackId} assigned to DevID: {assignedDeveloperId}", modifiedByUserId.ToString());
+                }
+
+                // T032.3: Log resolution
+                if (oldStatus != "Resolved" && newStatus == "Resolved")
+                {
+                    LoggingUtility.Log(Enum_LogLevel.Information, "Feedback", $"Feedback {feedbackId} marked Resolved by UserID: {modifiedByUserId}", modifiedByUserId.ToString());
+                }
+
+                // General status change log
+                if (oldStatus != newStatus)
+                {
+                    LoggingUtility.Log(Enum_LogLevel.Information, "Feedback", $"Feedback {feedbackId} status updated from {oldStatus} to {newStatus}.", modifiedByUserId.ToString());
+                }
+
                 return Model_Dao_Result<bool>.Success(true);
             }
             return Model_Dao_Result<bool>.Failure(result.ErrorMessage);
@@ -304,7 +371,68 @@ namespace MTM_WIP_Application_Winforms.Services
         #endregion
 
         #region Helpers
-        // Helper methods
+        
+        private async Task<Model_Dao_Result<bool>> ValidateFeedbackAsync(Model_UserFeedback feedback)
+        {
+            // T027.1 Description max length
+            if (!string.IsNullOrEmpty(feedback.Description) && feedback.Description.Length > 50000)
+            {
+                string msg = "Description exceeds 50,000 characters.";
+                Service_ErrorHandler.HandleValidationError(msg, "Description", nameof(SubmitFeedbackAsync));
+                return Model_Dao_Result<bool>.Failure(msg);
+            }
+            
+            // T027.2 Required fields
+            if (string.IsNullOrWhiteSpace(feedback.Description))
+            {
+                 string msg = "Description is required.";
+                 Service_ErrorHandler.HandleValidationError(msg, "Description", nameof(SubmitFeedbackAsync));
+                 return Model_Dao_Result<bool>.Failure(msg);
+            }
+            
+            if (feedback.FeedbackType == "Bug Report" && string.IsNullOrWhiteSpace(feedback.Severity))
+            {
+                 string msg = "Severity is required for Bug Reports.";
+                 Service_ErrorHandler.HandleValidationError(msg, "Severity", nameof(SubmitFeedbackAsync));
+                 return Model_Dao_Result<bool>.Failure(msg);
+            }
+
+            if (feedback.FeedbackType == "Suggestion" && string.IsNullOrWhiteSpace(feedback.Title))
+            {
+                 string msg = "Title is required for Suggestions.";
+                 Service_ErrorHandler.HandleValidationError(msg, "Title", nameof(SubmitFeedbackAsync));
+                 return Model_Dao_Result<bool>.Failure(msg);
+            }
+            
+            // T027.3 Dropdown validity (WindowForm)
+            if (!string.IsNullOrEmpty(feedback.WindowForm) && feedback.WindowForm != "Unknown")
+            {
+                var mappingsResult = await _windowMappingDao.GetAllAsync(true);
+                if (mappingsResult.IsSuccess && mappingsResult.Data != null)
+                {
+                    bool exists = false;
+                    foreach (DataRow row in mappingsResult.Data.Rows)
+                    {
+                        if (row["CodebaseName"].ToString() == feedback.WindowForm || 
+                            row["UserFriendlyName"].ToString() == feedback.WindowForm)
+                        {
+                            exists = true;
+                            break;
+                        }
+                    }
+                    
+                    if (!exists)
+                    {
+                        string msg = $"Invalid Window/Form: {feedback.WindowForm}";
+                        Service_ErrorHandler.HandleValidationError(msg, "WindowForm", nameof(SubmitFeedbackAsync));
+                        return Model_Dao_Result<bool>.Failure(msg);
+                    }
+                }
+            }
+
+            return Model_Dao_Result<bool>.Success(true);
+        }
+
         #endregion
     }
 }

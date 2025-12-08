@@ -9,7 +9,7 @@
       "TopicId": "viewing-logs",
       "Title": "Viewing Logs",
       "Summary": "How to access and read application logs.",
-      "Content": "<h2>Viewing Logs</h2><p>Application logs provide a detailed history of system events and errors.</p><h3>Accessing Logs</h3><ol><li>Go to <strong>Menu > View > Application Logs</strong>.</li><li>The log viewer will open, displaying the most recent entries.</li></ol><h3>Filtering Logs</h3><p>You can filter logs by:</p><ul><li><strong>Level:</strong> Info, Warning, Error.</li><li><strong>Date:</strong> Specific day or range.</li><li><strong>Message:</strong> Text search within the log message.</li></ul>",
+      "Content": "<h2>Viewing Logs</h2><p>Application logs provide a detailed history of system events and errors.</p><h3>Accessing Logs</h3><ol><li>Go to <strong>Development > View Application Logs</strong>.</li><li>The log viewer will open, displaying the most recent entries.</li></ol><h3>Filtering Logs</h3><p>You can filter logs by:</p><ul><li><strong>Level:</strong> Info, Warning, Error.</li><li><strong>Date:</strong> Specific day or range.</li><li><strong>Message:</strong> Text search within the log message.</li></ul>",
       "Keywords": ["logs", "history", "events", "debug"],
       "LastUpdated": "2025-12-07T10:00:00"
     },
@@ -17,7 +17,7 @@
       "TopicId": "error-reports",
       "Title": "Error Reports",
       "Summary": "Understanding and managing error reports.",
-      "Content": "<h2>Error Reports</h2><p>When the application encounters a critical error, it generates an error report.</p><h3>Viewing Reports</h3><ol><li>Go to <strong>Menu > View > Error Reports</strong>.</li><li>Select a report to view its details, including the stack trace and system state at the time of the error.</li></ol><h3>Submitting Reports</h3><p>You can export error reports to send to the development team for analysis.</p>",
+      "Content": "<h2>Error Reports</h2><p>When the application encounters a critical error, it generates an error report.</p><h3>Viewing Reports</h3><ol><li>Go to <strong>Development > View Error Reports</strong>.</li><li>Select a report to view its details, including the stack trace and system state at the time of the error.</li></ol><h3>Submitting Reports</h3><p>You can export error reports to send to the development team for analysis.</p>",
       "Keywords": ["error", "crash", "bug", "report"],
       "LastUpdated": "2025-12-07T10:00:00"
     },
@@ -25,7 +25,7 @@
       "TopicId": "database-connection",
       "Title": "Database Connection Issues",
       "Summary": "Resolving connection problems.",
-      "Content": "<h2>Database Connection Issues</h2><p>If you cannot connect to the database, try these steps:</p><ol><li>Check that you are connected to the network.</li><li>Verify that the MySQL server is running (contact IT if unsure).</li><li>Restart the application.</li><li>If the problem persists, check the application logs (<strong>Menu > View > Application Logs</strong>).</li></ol><h3>Connection Status</h3><p>The status bar at the bottom of the main window shows the database connection status. Look for a green indicator.</p>",
+      "Content": "<h2>Database Connection Issues</h2><p>If you cannot connect to the database, try these steps:</p><ol><li>Check that you are connected to the network.</li><li>Verify that the MySQL server is running (contact IT if unsure).</li><li>Restart the application.</li><li>If the problem persists, check the application logs (<strong>Development > View Application Logs</strong>).</li></ol><h3>Connection Status</h3><p>The status bar at the bottom of the main window shows the database connection status. Look for a green indicator.</p>",
       "Keywords": ["database", "connection", "network", "error"],
       "LastUpdated": "2025-12-07T10:00:00"
     },

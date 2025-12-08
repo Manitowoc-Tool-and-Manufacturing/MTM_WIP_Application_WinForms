@@ -109,6 +109,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             MainForm_MenuStrip_Development_ViewErrorReports = new ToolStripMenuItem();
             MainForm_MenuStrip_Development_ViewApplicationLogs = new ToolStripMenuItem();
             MainForm_MenuStrip_Development_SyncReports = new ToolStripMenuItem();
+            MainForm_MenuStrip_Development_DeveloperTools = new ToolStripMenuItem();
             MainForm_MenuStrip_Help = new ToolStripMenuItem();
             MainForm_MenuStrip_Help_ViewHelp = new ToolStripMenuItem();
             MainForm_MenuStrip_Help_ViewReleaseNotes = new ToolStripMenuItem();
@@ -291,7 +292,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             // 
             // MainForm_MenuStrip_Development
             // 
-            MainForm_MenuStrip_Development.DropDownItems.AddRange(new ToolStripItem[] { MainForm_MenuStrip_Development_ViewErrorReports, MainForm_MenuStrip_Development_ViewApplicationLogs, MainForm_MenuStrip_Development_SyncReports });
+            MainForm_MenuStrip_Development.DropDownItems.AddRange(new ToolStripItem[] { MainForm_MenuStrip_Development_ViewErrorReports, MainForm_MenuStrip_Development_ViewApplicationLogs, MainForm_MenuStrip_Development_SyncReports, MainForm_MenuStrip_Development_DeveloperTools });
             MainForm_MenuStrip_Development.Name = "MainForm_MenuStrip_Development";
             MainForm_MenuStrip_Development.Size = new Size(90, 24);
             MainForm_MenuStrip_Development.Text = "Development";
@@ -317,6 +318,13 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             MainForm_MenuStrip_Development_SyncReports.Size = new Size(278, 22);
             MainForm_MenuStrip_Development_SyncReports.Text = "🔄 Sync Pending Error Reports";
             MainForm_MenuStrip_Development_SyncReports.Click += MainForm_MenuStrip_Development_SyncReports_Click;
+            // 
+            // MainForm_MenuStrip_Development_DeveloperTools
+            // 
+            MainForm_MenuStrip_Development_DeveloperTools.Name = "MainForm_MenuStrip_Development_DeveloperTools";
+            MainForm_MenuStrip_Development_DeveloperTools.Size = new Size(278, 22);
+            MainForm_MenuStrip_Development_DeveloperTools.Text = "🛠 Developer Tools";
+            MainForm_MenuStrip_Development_DeveloperTools.Click += MainForm_MenuStrip_Development_DeveloperTools_Click;
             // 
             // MainForm_MenuStrip_Help
             // 
@@ -634,6 +642,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
         private ToolStripMenuItem MainForm_MenuStrip_Development_ViewErrorReports;
         private ToolStripMenuItem MainForm_MenuStrip_Development_ViewApplicationLogs;
         private ToolStripMenuItem MainForm_MenuStrip_Development_SyncReports;
+        private ToolStripMenuItem MainForm_MenuStrip_Development_DeveloperTools;
         private ToolStripMenuItem MainForm_MenuStrip_Help;
         private ToolStripMenuItem MainForm_MenuStrip_Help_ViewHelp;
         private ToolStripMenuItem MainForm_MenuStrip_Help_ViewReleaseNotes;
