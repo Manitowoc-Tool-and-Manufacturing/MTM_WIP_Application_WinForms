@@ -787,7 +787,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
         #region Button Clicks
 
-        private async void Control_InventoryTab_Button_Help_Click(object sender, EventArgs e)
+        private void Control_InventoryTab_Button_Help_Click(object sender, EventArgs e)
         {
             Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
             {

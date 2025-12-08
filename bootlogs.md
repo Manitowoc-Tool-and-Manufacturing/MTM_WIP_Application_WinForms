@@ -260,8 +260,8 @@ Running VersionChecker...
 [23:25:45.055] [MEDIUM] ✅ DB PROCEDURE COMPLETE: log_changelog_Get_Current (59ms) - 1 rows
 [23:25:45.056] [MEDIUM]   ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (54ms)
 [23:25:45.057] [HIGH  ] ⏱️ PERFORMANCE COMPLETE: SP_log_changelog_Get_Current (62ms)
-Database version retrieved: 6.4.0.0
-Version labels updated - App: 6.4.0.0, DB: 6.4.0.0
+Database version retrieved: 6.4.0.1
+Version labels updated - App: 6.4.0.1, DB: 6.4.0.1
 [23:25:45.062] [HIGH  ] ✅ PROCEDURE usr_settings_Get (12ms) - Status: 1
 [23:25:45.063] [MEDIUM] ✅ DB PROCEDURE COMPLETE: usr_settings_Get (12ms) - 1 rows
 [23:25:45.064] [MEDIUM] ⬅️ EXITING Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync (12ms)
