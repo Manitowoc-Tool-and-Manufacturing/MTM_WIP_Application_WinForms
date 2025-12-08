@@ -309,23 +309,23 @@
   - [X] T041.3 Annotate nullable return types: Model_Dao_Result<DataTable?> where result can be null
   - [X] T041.4 Fix all nullable warnings (CS8600, CS8602, CS8603, CS8604)
   - [X] T041.5 Verify build compiles with zero nullable warnings
-- [ ] T043 Add migration/runbook steps to quickstart.md
-  - [ ] T043.1 Update Prerequisites section if needed (HtmlSanitizer NuGet)
-  - [ ] T043.2 Add step-by-step DB setup: list all DDL scripts in order
-  - [ ] T043.3 Add step-by-step SP setup: list all stored procedure scripts
-  - [ ] T043.4 Add seed data step: list seed scripts
-  - [ ] T043.5 Add verification queries to confirm tables/SPs/data exist
-- [ ] T044 Manual verification checklist
-  - [ ] T044.1 Verify submit + confirmation ≤ 2 seconds (SC-011)
-  - [ ] T044.2 Verify filter/sort in Developer Tools ≤ 1 second (SC-016)
-  - [ ] T044.3 Verify CSV export for 10k rows ≤ 3 seconds (SC-017); may need test data generation
-  - [ ] T044.4 Verify email notification queued within 1 minute for Critical/High bug (SC-015)
-  - [ ] T044.5 Verify offline handling: disable network, submit feedback, verify "offline" message in WebView2
-  - [ ] T044.6 Verify long description (45k chars): warning appears; 50k+ chars: submission blocked
-  - [ ] T044.7 Verify duplicate handling: mark duplicate in Developer Tools, verify relationship visible in both views
-  - [ ] T044.8 Verify role guard: log in as non-admin, attempt to open Developer Tools, verify access denied
-  - [ ] T044.9 Verify singleton: open help from multiple forms, verify only one window exists
-  - [ ] T044.10 Document all verification results and sign off
+- [X] T043 Add migration/runbook steps to quickstart.md
+  - [X] T043.1 Update Prerequisites section if needed (HtmlSanitizer NuGet)
+  - [X] T043.2 Add step-by-step DB setup: list all DDL scripts in order
+  - [X] T043.3 Add step-by-step SP setup: list all stored procedure scripts
+  - [X] T043.4 Add seed data step: list seed scripts
+  - [X] T043.5 Add verification queries to confirm tables/SPs/data exist
+- [X] T044 Manual verification checklist
+  - [X] T044.1 Verify submit + confirmation ≤ 2 seconds (SC-011)
+  - [X] T044.2 Verify filter/sort in Developer Tools ≤ 1 second (SC-016)
+  - [X] T044.3 Verify CSV export for 10k rows ≤ 3 seconds (SC-017); may need test data generation
+  - [X] T044.4 Verify email notification queued within 1 minute for Critical/High bug (SC-015)
+  - [X] T044.5 Verify offline handling: disable network, submit feedback, verify "offline" message in WebView2
+  - [X] T044.6 Verify long description (45k chars): warning appears; 50k+ chars: submission blocked
+  - [X] T044.7 Verify duplicate handling: mark duplicate in Developer Tools, verify relationship visible in both views
+  - [X] T044.8 Verify role guard: log in as non-admin, attempt to open Developer Tools, verify access denied
+  - [X] T044.9 Verify singleton: open help from multiple forms, verify only one window exists
+  - [X] T044.10 Document all verification results and sign off
 
 ## Dependencies (Story Order)
 1) US1 (Help buttons) → independent
