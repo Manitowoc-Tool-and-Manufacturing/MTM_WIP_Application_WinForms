@@ -8,7 +8,8 @@
 
 | Date | Version | Summary | What to do |
 | --- | --- | --- | --- |
-| [Dec 06, 2025](#latest-update---december-06-2025-version-640) | [6.4.0](#latest-update---december-06-2025-version-640) | New Infor Visual Dashboard with Receiving Analytics, Inventory Audit, and Die Tool Discovery. | Check out the new Dashboard tab! |
+| [Dec 08, 2025](#latest-update---december-08-2025-version-641) | [6.4.1](#latest-update---december-08-2025-version-641) | Print Preview sorting and reliability improvements. | Try the new "Sort By" dropdown in Print Preview! |
+| [Dec 06, 2025](#previous-update---december-06-2025-version-640) | [6.4.0](#previous-update---december-06-2025-version-640) | New Infor Visual Dashboard with Receiving Analytics, Inventory Audit, and Die Tool Discovery. | Check out the new Dashboard tab! |
 | [Nov 23, 2025](#previous-update---november-23-2025-version-635) | [6.3.5](#previous-update---november-23-2025-version-635) | QuickButtons visual improvements and theme system refinements. | Nothing—enjoy the clearer buttons! |
 | [Nov 23, 2025](#previous-update---november-23-2025-version-634) | [6.3.4](#previous-update---november-23-2025-version-634) | Startup architecture modernization and service refactoring. | Nothing—internal improvements. |
 | [Nov 23, 2025](#previous-update---november-23-2025-version-633) | [6.3.3](#previous-update---november-23-2025-version-633) | System reliability improvements and error report management tools. | Nothing—automatic improvement. |
@@ -39,7 +40,31 @@
 
 ---
 
-## Latest Update - December 06, 2025 (Version 6.4.0)
+## Latest Update - December 08, 2025 (Version 6.4.1)
+
+**What Changed**: We've added the ability to **sort your print previews** by any column and improved the reliability of printing large reports.
+**Do I Need To Do Anything?**: No, the new "Sort By" option will appear automatically in the Print Preview window.
+
+---
+
+### 🎯 What This Means For You
+
+#### Print Preview Sorting
+
+**What's new**:
+- **Sort By Dropdown**: A new dropdown menu in the Print Preview sidebar allows you to sort the report by any visible column.
+- **Smart Sorting**: Sorting applies to the entire report, not just the current page, so your data is always organized exactly how you want it.
+- **Color Preservation**: Row colors (like error highlighting) stay with the correct rows even after sorting.
+
+#### Reliability Improvements
+
+**What's fixed**:
+- **Large Reports**: Fixed an issue where generating previews for very large reports could cause the application to time out or crash.
+- **Smoother Experience**: The print preview generation is now more robust and handles delays gracefully.
+
+---
+
+## Previous Update - December 06, 2025 (Version 6.4.0)
 
 **What Changed**: We've introduced a powerful new **Infor Visual Dashboard** that brings together Receiving Analytics, Inventory Audit, Die Tool Discovery, and more into one convenient place.
 **Do I Need To Do Anything?**: No, but you should explore the new Dashboard tab to see the new tools available to you.

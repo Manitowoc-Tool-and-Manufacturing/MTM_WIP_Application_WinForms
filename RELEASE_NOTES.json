@@ -1,5 +1,11 @@
 [
   {
+    "Version": "6.4.1",
+    "Date": "December 08, 2025",
+    "Summary": "Print Preview sorting and reliability improvements.",
+    "Details": "<h3>Print Preview Improvements</h3><p><strong>What's new</strong>:</p><ul><li><strong>Sort By Dropdown</strong>: You can now sort your print previews by any visible column using the new dropdown menu.</li><li><strong>Smart Sorting</strong>: Sorting applies to the entire dataset, ensuring your report is organized exactly how you need it.</li><li><strong>Reliability</strong>: Fixed issues where large reports could cause timeouts or crashes.</li></ul>"
+  },
+  {
     "Version": "6.4.0",
     "Date": "December 06, 2025",
     "Summary": "New Infor Visual Dashboard with Receiving Analytics, Inventory Audit, and Die Tool Discovery.",
