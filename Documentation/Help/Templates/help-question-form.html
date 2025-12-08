@@ -1,0 +1,99 @@
+<div class="feedback-form-container">
+    <h1>Ask a Question</h1>
+    <form id="questionForm">
+        <div class="form-group">
+            <label for="category">Question Category <span class="required">*</span></label>
+            <select id="category" required aria-required="true">
+                <option value="HowTo">How To...</option>
+                <option value="Process">Business Process</option>
+                <option value="Technical">Technical / Error</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="windowForm">Related Window (Optional)</label>
+            <select id="windowForm">
+                <option value="">Select a window...</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="priority">Priority <span class="required">*</span></label>
+            <select id="priority" required aria-required="true">
+                <option value="Low">Low - When convenient</option>
+                <option value="Medium">Medium - Need answer soon</option>
+                <option value="High">High - Blocking work</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="question">Question <span class="required">*</span></label>
+            <textarea id="question" required aria-required="true" maxlength="50000" rows="5" placeholder="What would you like to know?"></textarea>
+            <div class="char-counter"><span id="descCount">0</span>/50000</div>
+        </div>
+        
+        <div class="form-actions">
+            <button type="button" onclick="submitQuestion()" class="btn-primary">Submit Question</button>
+            <button type="button" onclick="window.history.back()" class="btn-secondary">Cancel</button>
+        </div>
+    </form>
+</div>
+
+<style>
+    .feedback-form-container { max-width: 800px; margin: 0 auto; }
+    .form-group { margin-bottom: 20px; }
+    label { display: block; margin-bottom: 5px; font-weight: 600; }
+    .required { color: #d9534f; }
+    input[type="text"], select, textarea { width: 100%; padding: 8px; border: 1px solid var(--card-border); border-radius: 4px; background-color: var(--bg-color); color: var(--text-color); font-family: inherit; }
+    textarea { resize: vertical; }
+    .char-counter { text-align: right; font-size: 12px; color: var(--text-color); opacity: 0.7; margin-top: 2px; }
+    .form-actions { margin-top: 30px; display: flex; gap: 10px; }
+    button { padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; font-family: inherit; }
+    .btn-primary { background-color: var(--link-color); color: white; }
+    .btn-secondary { background-color: var(--sidebar-bg); color: var(--text-color); border: 1px solid var(--sidebar-border); }
+    .btn-primary:hover { opacity: 0.9; }
+    .btn-secondary:hover { background-color: var(--sidebar-border); }
+</style>
+
+<script>
+    function submitQuestion() {
+        const data = {
+            type: 'Question',
+            category: document.getElementById('category').value,
+            windowForm: document.getElementById('windowForm').value,
+            priority: document.getElementById('priority').value,
+            description: document.getElementById('question').value,
+            title: 'Question: ' + document.getElementById('category').value // Auto-generate title
+        };
+        
+        if (!data.category || !data.priority || !data.description) {
+            alert('Please fill in all required fields.');
+            return;
+        }
+        
+        window.chrome.webview.postMessage(JSON.stringify({type: 'submitFeedback', data: data}));
+    }
+    
+    document.getElementById('question').addEventListener('input', function() {
+        document.getElementById('descCount').textContent = this.value.length;
+    });
+
+    window.chrome.webview.postMessage(JSON.stringify({type: 'getWindowMappings'}));
+
+    window.populateWindowMappings = function(mappings) {
+        const select = document.getElementById('windowForm');
+        select.innerHTML = '<option value="">Select a window...</option>';
+        mappings.forEach(m => {
+            const option = document.createElement('option');
+            option.value = m.CodebaseName;
+            option.textContent = m.UserFriendlyName;
+            select.appendChild(option);
+        });
+    };
+    
+    window.onFeedbackSubmitted = function(feedbackId) {
+        alert('Question submitted successfully! ID: ' + feedbackId);
+        window.location.href = 'help://support/submissions';
+    };
+</script>

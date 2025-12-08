@@ -2633,15 +2633,11 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         {
             MainForm_Button_Help_AdvancedInventorySingle.Click += (s, e) => 
             {
-                var helpForm = new HelpViewerForm();
-                helpForm.Show();
-                helpForm.ShowHelp("advanced-inventory-operations", "advanced-inventory-overview");
+                HelpViewerForm.GetInstance().BringToFrontAndNavigate("advanced-inventory-operations", "advanced-inventory-overview");
             };
             MainForm_Button_Help_AdvancedInventoryMulti.Click += (s, e) =>
             {
-                var helpForm = new HelpViewerForm();
-                helpForm.Show();
-                helpForm.ShowHelp("advanced-inventory-operations", "advanced-inventory-overview");
+                HelpViewerForm.GetInstance().BringToFrontAndNavigate("advanced-inventory-operations", "advanced-inventory-overview");
             };
         }
 

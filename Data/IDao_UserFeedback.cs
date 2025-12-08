@@ -63,5 +63,12 @@ namespace MTM_WIP_Application_Winforms.Data
         /// <param name="filters">Dictionary of filter parameters.</param>
         /// <returns>DataTable containing export data.</returns>
         Task<Model_Dao_Result<DataTable>> ExportToCsvAsync(Dictionary<string, object>? filters = null);
+
+        /// <summary>
+        /// Generates the next tracking number for a feedback type.
+        /// </summary>
+        /// <param name="feedbackType">The feedback type.</param>
+        /// <returns>The generated tracking number.</returns>
+        Task<Model_Dao_Result<string>> GetTrackingNumberAsync(string feedbackType);
     }
 }

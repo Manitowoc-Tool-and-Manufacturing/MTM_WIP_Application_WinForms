@@ -1710,9 +1710,7 @@ public partial class PrintForm : ThemedForm
         PrintForm_Button_Help.Anchor = AnchorStyles.Top | AnchorStyles.Right;
         PrintForm_Button_Help.Click += (s, e) => 
         {
-            var helpForm = new HelpViewerForm();
-            helpForm.Show();
-            helpForm.ShowHelp("print-operations", "print-overview");
+            HelpViewerForm.GetInstance().BringToFrontAndNavigate("print-operations", "print-overview");
         };
         
         PrintForm_Panel_Main.Controls.Add(PrintForm_Button_Help);

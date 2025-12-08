@@ -185,7 +185,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Database_TextBox_Server.Font = new Font("Segoe UI Emoji", 11F);
             Control_Database_TextBox_Server.Location = new Point(68, 30);
             Control_Database_TextBox_Server.Name = "Control_Database_TextBox_Server";
-            Control_Database_TextBox_Server.PlaceholderText = "Enter MySQL server address (e.g., localhost or IP)";
+            Control_Database_TextBox_Server.PlaceholderText = "Enter MySQL server address (e.g., 172.16.1.104 or IP)";
             Control_Database_TextBox_Server.Size = new Size(443, 27);
             Control_Database_TextBox_Server.TabIndex = 2;
             // 

@@ -120,9 +120,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
         Form_AnalyticsViewer_Button_Help.Anchor = AnchorStyles.Top | AnchorStyles.Right;
         Form_AnalyticsViewer_Button_Help.Click += (s, e) => 
         {
-            var helpForm = new HelpViewerForm();
-            helpForm.Show();
-            helpForm.ShowHelp("analytics-reporting", "analytics-data");
+            HelpViewerForm.GetInstance().BringToFrontAndNavigate("analytics-reporting", "analytics-data");
         };
         
         this.Controls.Add(Form_AnalyticsViewer_Button_Help);

@@ -392,9 +392,7 @@ public partial class Form_QuickButtonEdit : ThemedForm
         Form_QuickButtonEdit_Button_Help.Anchor = AnchorStyles.Top | AnchorStyles.Right;
         Form_QuickButtonEdit_Button_Help.Click += (s, e) => 
         {
-            var helpForm = new HelpViewerForm();
-            helpForm.Show();
-            helpForm.ShowHelp("settings-management", "quick-buttons");
+            HelpViewerForm.GetInstance().BringToFrontAndNavigate("settings-management", "quick-buttons");
         };
         
         this.Controls.Add(Form_QuickButtonEdit_Button_Help);

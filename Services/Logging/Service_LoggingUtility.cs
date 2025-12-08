@@ -324,12 +324,12 @@ internal static class LoggingUtility
 
     #region LoggingMethods
 
-/// <summary>
-/// The Log function in C# is used to output a message to a log file or console.
-/// </summary>
-/// <param name="message">The `message` parameter in the `Log` method is a string that represents the
-/// information or data that you want to log or output. When you call this method, you would pass a
-/// string message as an argument to be logged or displayed.</param>
+    /// <summary>
+    /// The Log function in C# is used to output a message to a log file or console.
+    /// </summary>
+    /// <param name="message">The `message` parameter in the `Log` method is a string that represents the
+    /// information or data that you want to log or output. When you call this method, you would pass a
+    /// string message as an argument to be logged or displayed.</param>
     public static void Log(string message)
     {
         var timestamp = DateTime.Now;
@@ -344,7 +344,47 @@ internal static class LoggingUtility
         }
     }
 
-/// <summary>
+    /// <summary>
+    /// Logs a message with a specific severity level, source, and optional details/exception.
+    /// </summary>
+    /// <param name="level">The severity level.</param>
+    /// <param name="source">The source component.</param>
+    /// <param name="message">The message to log.</param>
+    /// <param name="details">Optional details.</param>
+    /// <param name="ex">Optional exception.</param>
+    public static void Log(Enum_LogLevel level, string source, string message, string? details = null, Exception? ex = null)
+    {
+        var timestamp = DateTime.Now;
+        string levelStr = level.ToString().ToUpper();
+        
+        string fullDetails = details ?? string.Empty;
+        if (ex != null)
+        {
+            fullDetails += $"\nException: {ex.Message}\nStack Trace: {ex.StackTrace}";
+        }
+
+        var csvEntry = FormatCsvEntry(timestamp, levelStr, source, message, string.IsNullOrWhiteSpace(fullDetails) ? null : fullDetails);
+
+        // Output to Debug console
+        Debug.WriteLine($"{timestamp:yyyy-MM-dd HH:mm:ss} - [{levelStr}] {source} - {message}");
+        if (ex != null)
+        {
+            Debug.WriteLine($"Exception: {ex.Message}");
+        }
+
+        lock (LogLock)
+        {
+            // Route errors to app error log if it's an Error or Critical
+            if (level == Enum_LogLevel.Error || level == Enum_LogLevel.Critical)
+            {
+                FlushLogEntryToDisk(_appErrorLogFile, csvEntry);
+            }
+            else
+            {
+                FlushLogEntryToDisk(_normalLogFile, csvEntry);
+            }
+        }
+    }/// <summary>
 /// This C# function logs application errors along with the exception details.
 /// </summary>
 /// <param name="Exception">The parameter `ex` in the `LogApplicationError` method is of type

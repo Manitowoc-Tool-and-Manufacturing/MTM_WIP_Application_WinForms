@@ -1,0 +1,137 @@
+<div class="feedback-form-container">
+    <h1>Report an Inconsistency</h1>
+    <form id="inconsistencyForm">
+        <div class="form-group">
+            <label for="inconsistencyType">Inconsistency Type <span class="required">*</span></label>
+            <select id="inconsistencyType" required aria-required="true">
+                <option value="Data">Data Mismatch</option>
+                <option value="UI">UI/Layout Mismatch</option>
+                <option value="Behavior">Behavior Mismatch</option>
+                <option value="Terminology">Terminology Mismatch</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="windowForm">Window / Form <span class="required">*</span></label>
+            <select id="windowForm" required aria-required="true">
+                <option value="">Select a window...</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="activeSection">Active Section</label>
+            <select id="activeSection">
+                <option value="">Select a section...</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="description">Description <span class="required">*</span></label>
+            <textarea id="description" required aria-required="true" maxlength="50000" rows="5" placeholder="Describe the inconsistency..."></textarea>
+            <div class="char-counter"><span id="descCount">0</span>/50000</div>
+        </div>
+        
+        <div class="form-group">
+            <label for="location1">Location 1 (Where you saw it first)</label>
+            <input type="text" id="location1" placeholder="e.g., Inventory Grid">
+        </div>
+        
+        <div class="form-group">
+            <label for="location2">Location 2 (Where it differs)</label>
+            <input type="text" id="location2" placeholder="e.g., Part Details">
+        </div>
+        
+        <div class="form-group">
+            <label for="expected">Expected Consistency</label>
+            <textarea id="expected" rows="3" placeholder="How should they match?"></textarea>
+        </div>
+        
+        <div class="form-actions">
+            <button type="button" onclick="submitInconsistency()" class="btn-primary">Submit Report</button>
+            <button type="button" onclick="window.history.back()" class="btn-secondary">Cancel</button>
+        </div>
+    </form>
+</div>
+
+<style>
+    .feedback-form-container { max-width: 800px; margin: 0 auto; }
+    .form-group { margin-bottom: 20px; }
+    label { display: block; margin-bottom: 5px; font-weight: 600; }
+    .required { color: #d9534f; }
+    input[type="text"], select, textarea { width: 100%; padding: 8px; border: 1px solid var(--card-border); border-radius: 4px; background-color: var(--bg-color); color: var(--text-color); font-family: inherit; }
+    textarea { resize: vertical; }
+    .char-counter { text-align: right; font-size: 12px; color: var(--text-color); opacity: 0.7; margin-top: 2px; }
+    .form-actions { margin-top: 30px; display: flex; gap: 10px; }
+    button { padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; font-family: inherit; }
+    .btn-primary { background-color: var(--link-color); color: white; }
+    .btn-secondary { background-color: var(--sidebar-bg); color: var(--text-color); border: 1px solid var(--sidebar-border); }
+    .btn-primary:hover { opacity: 0.9; }
+    .btn-secondary:hover { background-color: var(--sidebar-border); }
+</style>
+
+<script>
+    function submitInconsistency() {
+        const data = {
+            type: 'Inconsistency',
+            category: document.getElementById('inconsistencyType').value,
+            windowForm: document.getElementById('windowForm').value,
+            activeSection: document.getElementById('activeSection').value,
+            description: document.getElementById('description').value,
+            location1: document.getElementById('location1').value,
+            location2: document.getElementById('location2').value,
+            expectedConsistency: document.getElementById('expected').value,
+            title: 'Inconsistency: ' + document.getElementById('inconsistencyType').value // Auto-generate title
+        };
+        
+        if (!data.category || !data.windowForm || !data.description) {
+            alert('Please fill in all required fields.');
+            return;
+        }
+        
+        window.chrome.webview.postMessage(JSON.stringify({type: 'submitFeedback', data: data}));
+    }
+    
+    document.getElementById('description').addEventListener('input', function() {
+        document.getElementById('descCount').textContent = this.value.length;
+    });
+
+    window.chrome.webview.postMessage(JSON.stringify({type: 'getWindowMappings'}));
+
+    document.getElementById('windowForm').addEventListener('change', function() {
+        const selectedOption = this.options[this.selectedIndex];
+        const id = selectedOption.getAttribute('data-id');
+        if (id) {
+            window.chrome.webview.postMessage(JSON.stringify({type: 'getControlMappings', windowFormMappingId: id}));
+        } else {
+            document.getElementById('activeSection').innerHTML = '<option value="">Select a section...</option>';
+        }
+    });
+
+    window.populateWindowMappings = function(mappings) {
+        const select = document.getElementById('windowForm');
+        select.innerHTML = '<option value="">Select a window...</option>';
+        mappings.forEach(m => {
+            const option = document.createElement('option');
+            option.value = m.CodebaseName;
+            option.setAttribute('data-id', m.MappingID);
+            option.textContent = m.UserFriendlyName;
+            select.appendChild(option);
+        });
+    };
+
+    window.populateControlMappings = function(mappings) {
+        const select = document.getElementById('activeSection');
+        select.innerHTML = '<option value="">Select a section...</option>';
+        mappings.forEach(m => {
+            const option = document.createElement('option');
+            option.value = m.CodebaseName;
+            option.textContent = m.UserFriendlyName;
+            select.appendChild(option);
+        });
+    };
+    
+    window.onFeedbackSubmitted = function(feedbackId) {
+        alert('Inconsistency report submitted successfully! ID: ' + feedbackId);
+        window.location.href = 'help://support/submissions';
+    };
+</script>

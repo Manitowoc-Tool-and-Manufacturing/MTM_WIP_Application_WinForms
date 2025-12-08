@@ -157,5 +157,30 @@ namespace MTM_WIP_Application_Winforms.Data
                 "md_feedback_ExportToCsv",
                 parameters);
         }
+
+        /// <inheritdoc/>
+        public async Task<Model_Dao_Result<string>> GetTrackingNumberAsync(string feedbackType)
+        {
+            var parameters = new Dictionary<string, object>
+            {
+                { "FeedbackType", feedbackType },
+                { "Year", DateTime.Now.Year }
+            };
+
+            var outputParams = new List<string> { "TrackingNumber" };
+
+            var result = await Helper_Database_StoredProcedure.ExecuteWithCustomOutputAsync(
+                Model_Application_Variables.ConnectionString,
+                "sys_tracking_number_GetNext",
+                parameters,
+                outputParams);
+
+            if (result.IsSuccess && result.Data != null && result.Data.TryGetValue("TrackingNumber", out var trackingNumber))
+            {
+                return Model_Dao_Result<string>.Success(data: trackingNumber?.ToString() ?? string.Empty);
+            }
+
+            return Model_Dao_Result<string>.Failure(result.ErrorMessage);
+        }
     }
 }

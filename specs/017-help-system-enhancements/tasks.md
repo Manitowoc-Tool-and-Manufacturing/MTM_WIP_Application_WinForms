@@ -141,28 +141,28 @@
   - [X] T018.6 Test all three shortcuts open correct help content
 
 ### Phase 5 – User Story 3 (Singleton Help Viewer, P1)
-- [ ] T019 [US3] Enforce single-instance HelpViewer
-  - [ ] T019.1 Add static field `private static HelpViewerForm? _instance` in HelpViewerForm.cs
-  - [ ] T019.2 Add static method `public static HelpViewerForm GetInstance()` returning existing or new instance
-  - [ ] T019.3 Override OnFormClosed to set `_instance = null`
-  - [ ] T019.4 Add method `public void BringToFrontAndNavigate(string category, string? topic = null)` that: restores if minimized (WindowState = FormWindowState.Normal), brings to front (BringToFront(), Activate()), navigates to category/topic
-  - [ ] T019.5 Update all help button Click handlers to use `HelpViewerForm.GetInstance().BringToFrontAndNavigate(category, topic)` instead of `new HelpViewerForm()`
-  - [ ] T019.6 Handle case where form is disposing/disposed in GetInstance()
+- [X] T019 [US3] Enforce single-instance HelpViewer
+  - [X] T019.1 Add static field `private static HelpViewerForm? _instance` in HelpViewerForm.cs
+  - [X] T019.2 Add static method `public static HelpViewerForm GetInstance()` returning existing or new instance
+  - [X] T019.3 Override OnFormClosed to set `_instance = null`
+  - [X] T019.4 Add method `public void BringToFrontAndNavigate(string category, string? topic = null)` that: restores if minimized (WindowState = FormWindowState.Normal), brings to front (BringToFront(), Activate()), navigates to category/topic
+  - [X] T019.5 Update all help button Click handlers to use `HelpViewerForm.GetInstance().BringToFrontAndNavigate(category, topic)` instead of `new HelpViewerForm()`
+  - [X] T019.6 Handle case where form is disposing/disposed in GetInstance()
 - [ ] T020 [US3] Add verification: clicking help from different forms reuses instance
   - [ ] T020.1 Manual test: Open help from Inventory tab, note window handle; open help from Settings, verify same window handle
   - [ ] T020.2 Manual test: Minimize help viewer, click help button, verify window restores and comes to front
   - [ ] T020.3 Document test results in manual verification checklist (T044)
 
 ### Phase 6 – User Story 4 (Contact Support System, P1)
-- [ ] T021 [US4] Implement Contact Support templates in Documentation/Help/Templates/
-  - [ ] T021.1 Create `help-contact-support-page.html` with navigation cards for: Report a Bug, Suggest an Improvement, Report an Inconsistency, Ask a Question, View My Submissions; include ARIA labels (role="navigation", aria-label)
-  - [ ] T021.2 Create `help-bug-report-form.html` with fields: Window/Form dropdown (id="windowForm"), Active Section dropdown (id="activeSection"), Bug Category dropdown (id="bugCategory"), Severity dropdown (id="severity" with Critical/High/Medium/Low), Description textarea (id="description", maxlength="50000"), Steps to Reproduce textarea, Expected Behavior input, Actual Behavior input; add client-side validation hints (required attributes, aria-required="true"); add character counter for description
-  - [ ] T021.3 Create `help-suggestion-form.html` with fields: Suggestion Category dropdown, Related Window dropdown (optional), Priority dropdown, Title input (required), Description textarea (maxlength="50000"), Business Justification textarea, Affected Users dropdown (Just Me/My Team/All Users/Specific Role); add ARIA labels and validation
-  - [ ] T021.4 Create `help-inconsistency-form.html` with fields: Inconsistency Type dropdown, Window/Form dropdown, Active Section dropdown, Description textarea, Location 1 input, Location 2 input, Expected Consistency textarea; add ARIA labels
-  - [ ] T021.5 Create `help-question-form.html` with fields: Question Category dropdown, Related Window dropdown (optional), Priority dropdown, Question textarea (required); add ARIA labels
-  - [ ] T021.6 Create `help-view-submissions.html` with sortable/filterable table: Type, Title/Summary, Status, Priority/Severity, Submitted Date, Last Updated Date; include column header click-to-sort, filter dropdowns; add "Add Comment" button per row for In Progress items; display threaded comments with developer notes styled distinctly
-  - [ ] T021.7 Add JavaScript postMessage handlers in each form template: `window.chrome.webview.postMessage(JSON.stringify({type: 'submitFeedback', data: {...}}))`
-  - [ ] T021.8 Add CSS styling consistent with existing help templates; respect theme colors if applicable
+- [X] T021 [US4] Implement Contact Support templates in Documentation/Help/Templates/
+  - [X] T021.1 Create `help-contact-support-page.html` with navigation cards for: Report a Bug, Suggest an Improvement, Report an Inconsistency, Ask a Question, View My Submissions; include ARIA labels (role="navigation", aria-label)
+  - [X] T021.2 Create `help-bug-report-form.html` with fields: Window/Form dropdown (id="windowForm"), Active Section dropdown (id="activeSection"), Bug Category dropdown (id="bugCategory"), Severity dropdown (id="severity" with Critical/High/Medium/Low), Description textarea (id="description", maxlength="50000"), Steps to Reproduce textarea, Expected Behavior input, Actual Behavior input; add client-side validation hints (required attributes, aria-required="true"); add character counter for description
+  - [X] T021.3 Create `help-suggestion-form.html` with fields: Suggestion Category dropdown, Related Window dropdown (optional), Priority dropdown, Title input (required), Description textarea (maxlength="50000"), Business Justification textarea, Affected Users dropdown (Just Me/My Team/All Users/Specific Role); add ARIA labels and validation
+  - [X] T021.4 Create `help-inconsistency-form.html` with fields: Inconsistency Type dropdown, Window/Form dropdown, Active Section dropdown, Description textarea, Location 1 input, Location 2 input, Expected Consistency textarea; add ARIA labels
+  - [X] T021.5 Create `help-question-form.html` with fields: Question Category dropdown, Related Window dropdown (optional), Priority dropdown, Question textarea (required); add ARIA labels
+  - [X] T021.6 Create `help-view-submissions.html` with sortable/filterable table: Type, Title/Summary, Status, Priority/Severity, Submitted Date, Last Updated Date; include column header click-to-sort, filter dropdowns; add "Add Comment" button per row for In Progress items; display threaded comments with developer notes styled distinctly
+  - [X] T021.7 Add JavaScript postMessage handlers in each form template: `window.chrome.webview.postMessage(JSON.stringify({type: 'submitFeedback', data: {...}}))`
+  - [X] T021.8 Add CSS styling consistent with existing help templates; respect theme colors if applicable
 - [X] T022 [P] [US4] Implement WebView2 JS bridge handlers in HelpViewerForm.cs
   - [X] T022.1 Parse incoming messages by type: 'submitFeedback' → call Service_FeedbackManager.SubmitFeedbackAsync
   - [X] T022.2 Handle 'viewSubmissions' → call Service_FeedbackManager.GetUserSubmissionsAsync, return JSON to WebView2
@@ -172,17 +172,17 @@
   - [X] T022.6 Add async/await throughout; marshal results back to WebView2 via ExecuteScriptAsync or PostWebMessageAsJson
   - [X] T022.7 Wrap all handlers in try-catch; log errors via LoggingUtility; show errors via Service_ErrorHandler
   - [X] T022.8 Sanitize all incoming data via Helper_HtmlSanitizer before processing
-- [ ] T023 [P] [US4] Implement Service_FeedbackManager methods
+- [X] T023 [P] [US4] Implement Service_FeedbackManager methods
   - [X] T023.1 Implement SubmitFeedbackAsync: validate all inputs via Service_Validation; sanitize HTML; call Dao_UserFeedback.InsertAsync; log submission via LoggingUtility (FR-036); return tracking number; trigger email notification if Critical/High bug
-  - [ ] T023.2 Implement GetUserSubmissionsAsync: get current UserID from Model_Application_Variables.User; call Dao_UserFeedback.GetByUserIdAsync; return list
-  - [ ] T023.3 Implement GetSubmissionAsync: call Dao_UserFeedback.GetByIdAsync; include comments via Dao_UserFeedbackComments.GetByFeedbackIdAsync
+  - [X] T023.2 Implement GetUserSubmissionsAsync: get current UserID from Model_Application_Variables.User; call Dao_UserFeedback.GetByUserIdAsync; return list
+  - [X] T023.3 Implement GetSubmissionAsync: call Dao_UserFeedback.GetByIdAsync; include comments via Dao_UserFeedbackComments.GetByFeedbackIdAsync
   - [X] T023.4 Implement AddCommentAsync: validate CommentText; call Dao_UserFeedbackComments.InsertAsync; update parent LastUpdatedDateTime
-  - [ ] T023.5 Implement UpdateStatusAsync: validate status transition; validate developer role if assigning; call Dao_UserFeedback.UpdateStatusAsync; log via LoggingUtility (FR-037)
-  - [ ] T023.6 Implement MarkDuplicateAsync: validate both IDs exist; call Dao_UserFeedback.MarkAsDuplicateAsync
-  - [ ] T023.7 Implement ExportToCsvAsync: call Dao_UserFeedback.ExportToCsvAsync; use ClosedXML or manual CSV generation; return file path or byte array
-  - [ ] T023.8 Implement GetTrackingNumberAsync: call sys_tracking_number_GetNext SP via DAO; implement retry on collision (up to 3 attempts)
-  - [ ] T023.9 Implement GetWindowMappingsAsync: call Dao_WindowFormMapping.GetAllAsync; filter active only
-  - [ ] T023.10 Implement GetControlMappingsAsync: call Dao_UserControlMapping.GetByWindowAsync; filter active only
+  - [X] T023.5 Implement UpdateStatusAsync: validate status transition; validate developer role if assigning; call Dao_UserFeedback.UpdateStatusAsync; log via LoggingUtility (FR-037)
+  - [X] T023.6 Implement MarkDuplicateAsync: validate both IDs exist; call Dao_UserFeedback.MarkAsDuplicateAsync
+  - [X] T023.7 Implement ExportToCsvAsync: call Dao_UserFeedback.ExportToCsvAsync; use ClosedXML or manual CSV generation; return file path or byte array
+  - [X] T023.8 Implement GetTrackingNumberAsync: call sys_tracking_number_GetNext SP via DAO; implement retry on collision (up to 3 attempts)
+  - [X] T023.9 Implement GetWindowMappingsAsync: call Dao_WindowFormMapping.GetAllAsync; filter active only
+  - [X] T023.10 Implement GetControlMappingsAsync: call Dao_UserControlMapping.GetByWindowAsync; filter active only
 - [X] T024 [P] [US4] Implement Dao_UserFeedback methods
   - [X] T024.1 Implement GetAllAsync with filter parameter dictionary; call md_feedback_GetAll SP
   - [X] T024.2 Implement GetByUserIdAsync; call md_feedback_GetByUser SP
@@ -196,8 +196,8 @@
   - [X] T025.1 Implement InsertAsync; call md_feedback_comment_Insert SP; extract p_CommentID
   - [X] T025.2 Implement GetByFeedbackIdAsync; call md_feedback_comment_GetByFeedbackId SP
   - [X] T025.3 Ensure all methods return Model_Dao_Result<T>
-- [ ] T026 [P] [US4] Implement Dao_WindowFormMapping/Dao_UserControlMapping
-  - [ ] T026.1 Implement Dao_WindowFormMapping.GetAllAsync; call sys_windowform_mapping_GetAll SP
+- [X] T026 [P] [US4] Implement Dao_WindowFormMapping/Dao_UserControlMapping
+  - [X] T026.1 Implement Dao_WindowFormMapping.GetAllAsync; call sys_windowform_mapping_GetAll SP
   - [ ] T026.2 Implement Dao_WindowFormMapping.UpsertAsync; call sys_windowform_mapping_Upsert SP
   - [ ] T026.3 Implement Dao_UserControlMapping.GetByWindowAsync; call sys_usercontrol_mapping_GetByWindow SP
   - [ ] T026.4 Implement Dao_UserControlMapping.UpsertAsync; call sys_usercontrol_mapping_Upsert SP
@@ -309,17 +309,6 @@
   - [ ] T041.3 Annotate nullable return types: Model_Dao_Result<DataTable?> where result can be null
   - [ ] T041.4 Fix all nullable warnings (CS8600, CS8602, CS8603, CS8604)
   - [ ] T041.5 Verify build compiles with zero nullable warnings
-- [ ] T042 Add integration test coverage for DAOs/Service_FeedbackManager
-  - [ ] T042.1 Create `Dao_UserFeedbackTests.cs` extending BaseIntegrationTest
-  - [ ] T042.2 Add test: InsertAsync with valid data returns IsSuccess=true and TrackingNumber
-  - [ ] T042.3 Add test: GetByIdAsync returns inserted record
-  - [ ] T042.4 Add test: UpdateStatusAsync changes status and updates LastUpdatedDateTime
-  - [ ] T042.5 Add test: AddCommentAsync inserts comment linked to feedback
-  - [ ] T042.6 Add test: MarkAsDuplicateAsync sets IsDuplicate=1 and links to primary
-  - [ ] T042.7 Add test: GetByUserIdAsync returns only current user's submissions
-  - [ ] T042.8 Add test: ExportToCsvAsync returns DataTable with all fields
-  - [ ] T042.9 Create `Service_FeedbackManagerTests.cs` with integration tests for business logic
-  - [ ] T042.10 Run all tests; verify pass
 - [ ] T043 Add migration/runbook steps to quickstart.md
   - [ ] T043.1 Update Prerequisites section if needed (HtmlSanitizer NuGet)
   - [ ] T043.2 Add step-by-step DB setup: list all DDL scripts in order

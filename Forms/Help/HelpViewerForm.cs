@@ -8,6 +8,7 @@ using System.Text.Json;
 using MTM_WIP_Application_Winforms.Models.Entities;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Data;
+using System.Data;
 
 namespace MTM_WIP_Application_Winforms.Forms.Help
 {
@@ -18,6 +19,8 @@ namespace MTM_WIP_Application_Winforms.Forms.Help
     {
         private readonly IHelpSystem _helpSystem;
         private readonly Service_HelpTemplateEngine _templateEngine;
+        private readonly IService_FeedbackManager _feedbackManager;
+        private static HelpViewerForm? _instance;
         private bool _isWebViewInitialized = false;
         private string? _pendingCategoryId;
         private string? _pendingTopicId;
@@ -30,8 +33,47 @@ namespace MTM_WIP_Application_Winforms.Forms.Help
             InitializeComponent();
             _helpSystem = new Service_HelpSystem();
             _templateEngine = new Service_HelpTemplateEngine();
+            _feedbackManager = new Service_FeedbackManager();
 
             this.Load += async (s, e) => await InitializeWebViewAsync();
+        }
+
+        /// <summary>
+        /// Gets the singleton instance of the HelpViewerForm.
+        /// Creates a new instance if one does not exist or is disposed.
+        /// </summary>
+        /// <returns>The singleton HelpViewerForm instance.</returns>
+        public static HelpViewerForm GetInstance()
+        {
+            if (_instance == null || _instance.IsDisposed)
+            {
+                _instance = new HelpViewerForm();
+            }
+            return _instance;
+        }
+
+        /// <summary>
+        /// Brings the form to the front and navigates to the specified category and topic.
+        /// </summary>
+        /// <param name="category">The category ID.</param>
+        /// <param name="topic">The topic ID (optional).</param>
+        public void BringToFrontAndNavigate(string category, string? topic = null)
+        {
+            if (this.WindowState == FormWindowState.Minimized)
+            {
+                this.WindowState = FormWindowState.Normal;
+            }
+            this.Show();
+            this.BringToFront();
+            this.Activate();
+            this.ShowHelp(category, topic);
+        }
+
+        /// <inheritdoc/>
+        protected override void OnFormClosed(FormClosedEventArgs e)
+        {
+            base.OnFormClosed(e);
+            _instance = null;
         }
 
         /// <summary>
@@ -131,55 +173,25 @@ namespace MTM_WIP_Application_Winforms.Forms.Help
         {
             try
             {
-                string json = e.TryGetWebMessageAsString();
+                // Robustly handle both string and object messages
+                string json = e.WebMessageAsJson;
                 if (string.IsNullOrEmpty(json)) return;
 
                 using JsonDocument doc = JsonDocument.Parse(json);
                 JsonElement root = doc.RootElement;
 
-                if (root.TryGetProperty("type", out JsonElement typeElement))
+                // If the message was sent as a string (JSON.stringify), it comes as a JSON string
+                if (root.ValueKind == JsonValueKind.String)
                 {
-                    string type = typeElement.GetString() ?? string.Empty;
-                    LoggingUtility.Log($"WebView message received: {type}");
-
-                    switch (type)
-                    {
-                        case "search":
-                            if (root.TryGetProperty("query", out JsonElement queryElement))
-                            {
-                                PerformSearch(queryElement.GetString() ?? string.Empty);
-                            }
-                            break;
-
-                        case "submitFeedback":
-                            if (root.TryGetProperty("data", out JsonElement dataElement))
-                            {
-                                HandleFeedbackSubmission(dataElement);
-                            }
-                            break;
-
-                        case "viewSubmissions":
-                            HandleViewSubmissions();
-                            break;
-
-                        case "addComment":
-                            if (root.TryGetProperty("data", out JsonElement commentData))
-                            {
-                                HandleAddComment(commentData);
-                            }
-                            break;
-
-                        case "getWindowMappings":
-                            HandleGetWindowMappings();
-                            break;
-
-                        case "getControlMappings":
-                            if (root.TryGetProperty("windowId", out JsonElement windowIdElement))
-                            {
-                                HandleGetControlMappings(windowIdElement.GetString());
-                            }
-                            break;
-                    }
+                    string innerJson = root.GetString() ?? string.Empty;
+                    if (string.IsNullOrEmpty(innerJson)) return;
+                    
+                    using JsonDocument innerDoc = JsonDocument.Parse(innerJson);
+                    ProcessWebMessage(innerDoc.RootElement);
+                }
+                else if (root.ValueKind == JsonValueKind.Object)
+                {
+                    ProcessWebMessage(root);
                 }
             }
             catch (Exception ex)
@@ -189,10 +201,93 @@ namespace MTM_WIP_Application_Winforms.Forms.Help
             }
         }
 
-        private void HandleViewSubmissions()
+        private void ProcessWebMessage(JsonElement root)
         {
-            // Scaffolding for Phase 6
-            LoggingUtility.Log("View submissions requested (scaffolding)");
+            if (root.TryGetProperty("type", out JsonElement typeElement))
+            {
+                string type = typeElement.GetString() ?? string.Empty;
+                LoggingUtility.Log($"WebView message received: {type}");
+
+                switch (type)
+                {
+                    case "search":
+                        if (root.TryGetProperty("query", out JsonElement queryElement))
+                        {
+                            PerformSearch(queryElement.GetString() ?? string.Empty);
+                        }
+                        break;
+
+                    case "submitFeedback":
+                        if (root.TryGetProperty("data", out JsonElement dataElement))
+                        {
+                            HandleFeedbackSubmission(dataElement);
+                        }
+                        break;
+
+                    case "viewSubmissions":
+                        HandleViewSubmissions();
+                        break;
+
+                    case "addComment":
+                        if (root.TryGetProperty("data", out JsonElement commentData))
+                        {
+                            HandleAddComment(commentData);
+                        }
+                        break;
+
+                    case "getWindowMappings":
+                        HandleGetWindowMappings();
+                        break;
+
+                    case "getControlMappings":
+                        // Handle both 'windowId' (legacy/spec) and 'windowFormMappingId' (actual JS)
+                        if (root.TryGetProperty("windowId", out JsonElement windowIdElement))
+                        {
+                            HandleGetControlMappings(windowIdElement.GetString());
+                        }
+                        else if (root.TryGetProperty("windowFormMappingId", out JsonElement mappingIdElement))
+                        {
+                            HandleGetControlMappings(mappingIdElement.GetString());
+                        }
+                        break;
+                }
+            }
+        }
+
+        private async void HandleViewSubmissions()
+        {
+            try
+            {
+                int userId = 0;
+                var userResult = await Dao_System.GetUserIdByNameAsync(Model_Application_Variables.User);
+                if (userResult.IsSuccess) userId = userResult.Data;
+
+                var result = await _feedbackManager.GetUserSubmissionsAsync(userId);
+                if (result.IsSuccess)
+                {
+                    var submissions = new List<Dictionary<string, object>>();
+                    foreach (DataRow row in result.Data.Rows)
+                    {
+                        var dict = new Dictionary<string, object>();
+                        foreach (DataColumn col in result.Data.Columns)
+                        {
+                            dict[col.ColumnName] = row[col];
+                        }
+                        submissions.Add(dict);
+                    }
+
+                    string json = JsonSerializer.Serialize(submissions);
+                    await webView.CoreWebView2.ExecuteScriptAsync($"if(typeof onSubmissionsLoaded === 'function') {{ onSubmissionsLoaded({json}); }}");
+                }
+                else
+                {
+                    Service_ErrorHandler.ShowUserError($"Failed to load submissions: {result.ErrorMessage}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: nameof(HandleViewSubmissions), controlName: this.Name);
+            }
         }
 
         private async void HandleAddComment(JsonElement data)
@@ -208,19 +303,10 @@ namespace MTM_WIP_Application_Winforms.Forms.Help
                 var userResult = await Dao_System.GetUserIdByNameAsync(Model_Application_Variables.User);
                 if (userResult.IsSuccess) userId = userResult.Data;
 
-                var commentModel = new Model_UserFeedbackComment
-                {
-                    FeedbackID = feedbackId,
-                    UserID = userId,
-                    CommentText = comment!,
-                    IsInternalNote = false,
-                    CommentDateTime = DateTime.Now
-                };
-
-                var result = await _helpSystem.AddCommentAsync(commentModel);
+                var result = await _feedbackManager.AddCommentAsync(feedbackId, userId, comment!, false);
                 if (result.IsSuccess)
                 {
-                    await webView.CoreWebView2.ExecuteScriptAsync("alert('Comment added!');");
+                    await webView.CoreWebView2.ExecuteScriptAsync("alert('Comment added!'); if(typeof refreshSubmissions === 'function') { refreshSubmissions(); }");
                 }
                 else
                 {
@@ -235,16 +321,61 @@ namespace MTM_WIP_Application_Winforms.Forms.Help
             }
         }
 
-        private void HandleGetWindowMappings()
+        private async void HandleGetWindowMappings()
         {
-            // Scaffolding for Phase 6
-            LoggingUtility.Log("Get window mappings requested (scaffolding)");
+            try
+            {
+                var result = await _feedbackManager.GetWindowMappingsAsync();
+                if (result.IsSuccess)
+                {
+                    var mappings = new List<Dictionary<string, object>>();
+                    foreach (DataRow row in result.Data.Rows)
+                    {
+                        var dict = new Dictionary<string, object>();
+                        foreach (DataColumn col in result.Data.Columns)
+                        {
+                            dict[col.ColumnName] = row[col];
+                        }
+                        mappings.Add(dict);
+                    }
+                    string json = JsonSerializer.Serialize(mappings);
+                    await webView.CoreWebView2.ExecuteScriptAsync($"if(typeof onWindowMappingsLoaded === 'function') {{ onWindowMappingsLoaded({json}); }}");
+                }
+            }
+            catch (Exception ex)
+            {
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low, callerName: nameof(HandleGetWindowMappings));
+            }
         }
 
-        private void HandleGetControlMappings(string? windowId)
+        private async void HandleGetControlMappings(string? windowIdStr)
         {
-            // Scaffolding for Phase 6
-            LoggingUtility.Log($"Get control mappings requested for {windowId} (scaffolding)");
+            try
+            {
+                if (int.TryParse(windowIdStr, out int windowId))
+                {
+                    var result = await _feedbackManager.GetControlMappingsAsync(windowId);
+                    if (result.IsSuccess)
+                    {
+                        var mappings = new List<Dictionary<string, object>>();
+                        foreach (DataRow row in result.Data.Rows)
+                        {
+                            var dict = new Dictionary<string, object>();
+                            foreach (DataColumn col in result.Data.Columns)
+                            {
+                                dict[col.ColumnName] = row[col];
+                            }
+                            mappings.Add(dict);
+                        }
+                        string json = JsonSerializer.Serialize(mappings);
+                        await webView.CoreWebView2.ExecuteScriptAsync($"if(typeof onControlMappingsLoaded === 'function') {{ onControlMappingsLoaded({json}); }}");
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low, callerName: nameof(HandleGetControlMappings));
+            }
         }
 
         /// <summary>
@@ -253,60 +384,130 @@ namespace MTM_WIP_Application_Winforms.Forms.Help
         /// <param name="data">The feedback data.</param>
         private async void HandleFeedbackSubmission(JsonElement data)
         {
+            // Clone the data to ensure it persists across async calls (JsonDocument disposal)
+            JsonElement safeData = data.Clone();
+
             try
             {
-                string? topicId = data.TryGetProperty("topicId", out var t) ? t.GetString() : string.Empty;
-                bool isHelpful = data.TryGetProperty("isHelpful", out var h) && h.GetBoolean();
-                string? comment = data.TryGetProperty("comment", out var c) ? c.GetString() : null;
-                string? categoryId = data.TryGetProperty("categoryId", out var cat) ? cat.GetString() : null;
+                // Check if this is a legacy "Help Feedback" (isHelpful) or new Contact Support
+                bool isLegacy = safeData.TryGetProperty("isHelpful", out _);
 
-                // Get User ID
                 int userId = 0;
                 var userResult = await Dao_System.GetUserIdByNameAsync(Model_Application_Variables.User);
-                if (userResult.IsSuccess)
+                if (userResult.IsSuccess) userId = userResult.Data;
+
+                Model_UserFeedback feedback;
+
+                if (isLegacy)
                 {
-                    userId = userResult.Data;
+                    string? topicId = safeData.TryGetProperty("topicId", out var t) ? t.GetString() : string.Empty;
+                    bool isHelpful = safeData.TryGetProperty("isHelpful", out var h) && h.GetBoolean();
+                    string? comment = safeData.TryGetProperty("comment", out var c) ? c.GetString() : null;
+                    string? categoryId = safeData.TryGetProperty("categoryId", out var cat) ? cat.GetString() : null;
+
+                    feedback = new Model_UserFeedback
+                    {
+                        FeedbackType = "HelpSystem",
+                        UserID = userId,
+                        ActiveSection = topicId,
+                        Category = categoryId,
+                        Title = $"Help Feedback: {topicId}",
+                        Description = isHelpful ? "User found this helpful." : "User did not find this helpful.",
+                        Status = "New",
+                        SubmissionDateTime = DateTime.Now,
+                        Severity = "Low",
+                        Priority = "Low"
+                    };
+                    
+                    // Append comment to description if present for legacy
+                    if (!string.IsNullOrEmpty(comment))
+                    {
+                         feedback.Description += $"\nComment: {comment}";
+                    }
                 }
                 else
                 {
-                    Service_ErrorHandler.ShowUserError("Could not identify current user for feedback submission.");
-                    return;
+                    // New Contact Support forms
+                    // Map fields based on what's available
+                    feedback = new Model_UserFeedback
+                    {
+                        UserID = userId,
+                        SubmissionDateTime = DateTime.Now,
+                        Status = "New"
+                    };
+
+                    if (safeData.TryGetProperty("bugCategory", out _))
+                    {
+                        feedback.FeedbackType = "Bug Report";
+                        feedback.Category = safeData.GetProperty("bugCategory").GetString();
+                        feedback.Severity = safeData.GetProperty("severity").GetString();
+                        feedback.Priority = feedback.Severity; // Default priority to severity
+                        feedback.ActiveSection = safeData.TryGetProperty("activeSection", out var s) ? s.GetString() : null;
+                        
+                        string windowForm = safeData.TryGetProperty("windowForm", out var w) ? w.GetString() ?? "Unknown" : "Unknown";
+                        feedback.Title = $"Bug: {feedback.Category} in {windowForm}";
+                        
+                        string desc = safeData.GetProperty("description").GetString() ?? "";
+                        string steps = safeData.TryGetProperty("stepsToReproduce", out var st) ? st.GetString() ?? "" : "";
+                        string expected = safeData.TryGetProperty("expectedBehavior", out var ex) ? ex.GetString() ?? "" : "";
+                        string actual = safeData.TryGetProperty("actualBehavior", out var ac) ? ac.GetString() ?? "" : "";
+                        
+                        feedback.Description = $"Description:\n{desc}\n\nSteps to Reproduce:\n{steps}\n\nExpected:\n{expected}\n\nActual:\n{actual}";
+                    }
+                    else if (safeData.TryGetProperty("suggestionCategory", out _))
+                    {
+                        feedback.FeedbackType = "Suggestion";
+                        feedback.Category = safeData.GetProperty("suggestionCategory").GetString();
+                        feedback.Priority = safeData.GetProperty("priority").GetString();
+                        feedback.Title = safeData.GetProperty("title").GetString();
+                        
+                        string desc = safeData.GetProperty("description").GetString() ?? "";
+                        string justification = safeData.TryGetProperty("businessJustification", out var bj) ? bj.GetString() ?? "" : "";
+                        string affected = safeData.TryGetProperty("affectedUsers", out var au) ? au.GetString() ?? "" : "";
+                        
+                        feedback.Description = $"Description:\n{desc}\n\nJustification:\n{justification}\n\nAffected Users:\n{affected}";
+                    }
+                    else if (safeData.TryGetProperty("inconsistencyType", out _))
+                    {
+                        feedback.FeedbackType = "Inconsistency";
+                        feedback.Category = safeData.GetProperty("inconsistencyType").GetString();
+                        feedback.ActiveSection = safeData.TryGetProperty("activeSection", out var s) ? s.GetString() : null;
+                        feedback.Title = $"Inconsistency: {feedback.Category}";
+                        feedback.Severity = "Low";
+                        feedback.Priority = "Low";
+
+                        string desc = safeData.GetProperty("description").GetString() ?? "";
+                        string loc1 = safeData.TryGetProperty("location1", out var l1) ? l1.GetString() ?? "" : "";
+                        string loc2 = safeData.TryGetProperty("location2", out var l2) ? l2.GetString() ?? "" : "";
+                        string expected = safeData.TryGetProperty("expectedConsistency", out var ec) ? ec.GetString() ?? "" : "";
+
+                        feedback.Description = $"Description:\n{desc}\n\nLocation 1:\n{loc1}\n\nLocation 2:\n{loc2}\n\nExpected:\n{expected}";
+                    }
+                    else if (safeData.TryGetProperty("questionCategory", out _))
+                    {
+                        feedback.FeedbackType = "Question";
+                        feedback.Category = safeData.GetProperty("questionCategory").GetString();
+                        feedback.Priority = safeData.GetProperty("priority").GetString();
+                        feedback.Title = $"Question: {feedback.Category}";
+                        feedback.Severity = "Low";
+                        
+                        feedback.Description = safeData.GetProperty("question").GetString();
+                    }
+                    else
+                    {
+                        // Fallback
+                        feedback.FeedbackType = "General";
+                        feedback.Title = "General Feedback";
+                        feedback.Description = "No details provided.";
+                    }
                 }
 
-                var feedback = new Model_UserFeedback
+                var result = await _feedbackManager.SubmitFeedbackAsync(feedback);
+
+                if (result.IsSuccess)
                 {
-                    FeedbackType = "HelpSystem",
-                    UserID = userId,
-                    ActiveSection = topicId,
-                    Category = categoryId,
-                    Title = $"Help Feedback: {topicId}",
-                    Description = isHelpful ? "User found this helpful." : "User did not find this helpful.",
-                    Status = "New",
-                    SubmissionDateTime = DateTime.Now,
-                    Severity = "Low",
-                    Priority = "Low"
-                };
-
-                var result = await _helpSystem.SubmitFeedbackAsync(feedback);
-
-                if (result.IsSuccess && result.Data != null)
-                {
-                    // If there is a comment, add it
-                    if (!string.IsNullOrEmpty(comment))
-                    {
-                        var commentModel = new Model_UserFeedbackComment
-                        {
-                            FeedbackID = result.Data.FeedbackID,
-                            UserID = userId,
-                            CommentText = comment!,
-                            IsInternalNote = false,
-                            CommentDateTime = DateTime.Now
-                        };
-                        await _helpSystem.AddCommentAsync(commentModel);
-                    }
-
-                    // Notify UI of success and pass back the FeedbackID
-                    await webView.CoreWebView2.ExecuteScriptAsync($"if(typeof onFeedbackSubmitted === 'function') {{ onFeedbackSubmitted({result.Data.FeedbackID}); }} else {{ alert('Thank you for your feedback!'); }}");
+                    string trackingNumber = result.Data;
+                    await webView.CoreWebView2.ExecuteScriptAsync($"if(typeof onFeedbackSubmitted === 'function') {{ onFeedbackSubmitted('{trackingNumber}'); }} else {{ alert('Feedback submitted! Tracking #: {trackingNumber}'); }}");
                 }
                 else
                 {
@@ -396,6 +597,41 @@ namespace MTM_WIP_Application_Winforms.Forms.Help
                         if (topic != null)
                         {
                             string html = _templateEngine.GenerateTopicHtml(category, topic);
+                            webView.NavigateToString(html);
+                        }
+                    }
+                }
+                else if (type == "support")
+                {
+                    if (parts.Length == 1)
+                    {
+                        string html = _templateEngine.GenerateContactSupportHtml();
+                        webView.NavigateToString(html);
+                    }
+                    else if (parts.Length > 1)
+                    {
+                        string subType = parts[1];
+                        string html = "";
+                        switch (subType)
+                        {
+                            case "bug":
+                                html = _templateEngine.GenerateBugReportFormHtml();
+                                break;
+                            case "suggestion":
+                                html = _templateEngine.GenerateSuggestionFormHtml();
+                                break;
+                            case "inconsistency":
+                                html = _templateEngine.GenerateInconsistencyFormHtml();
+                                break;
+                            case "question":
+                                html = _templateEngine.GenerateQuestionFormHtml();
+                                break;
+                            case "submissions":
+                                html = _templateEngine.GenerateViewSubmissionsHtml();
+                                break;
+                        }
+                        if (!string.IsNullOrEmpty(html))
+                        {
                             webView.NavigateToString(html);
                         }
                     }

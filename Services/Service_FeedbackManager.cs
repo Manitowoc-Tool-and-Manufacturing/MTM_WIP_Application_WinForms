@@ -1,6 +1,8 @@
 using MTM_WIP_Application_Winforms.Data;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Models.Entities;
+using MTM_WIP_Application_Winforms.Helpers;
+using MTM_WIP_Application_Winforms.Services.Logging;
 using System.Data;
 
 namespace MTM_WIP_Application_Winforms.Services
@@ -45,12 +47,12 @@ namespace MTM_WIP_Application_Winforms.Services
         /// Updates the status of a feedback submission.
         /// </summary>
         /// <param name="feedbackId">The feedback ID.</param>
-        /// <param name="newStatus">The new status ID.</param>
+        /// <param name="newStatus">The new status.</param>
         /// <param name="assignedDeveloperId">Optional developer ID.</param>
         /// <param name="notes">Optional developer notes.</param>
         /// <param name="modifiedByUserId">ID of the user making the change.</param>
         /// <returns>True if successful.</returns>
-        Task<Model_Dao_Result<bool>> UpdateStatusAsync(int feedbackId, int newStatus, string? assignedDeveloperId, string? notes, string modifiedByUserId);
+        Task<Model_Dao_Result<bool>> UpdateStatusAsync(int feedbackId, string newStatus, int? assignedDeveloperId, string? notes, int modifiedByUserId);
 
         /// <summary>
         /// Marks a feedback submission as a duplicate.
@@ -59,7 +61,7 @@ namespace MTM_WIP_Application_Winforms.Services
         /// <param name="duplicateOfId">The original feedback ID.</param>
         /// <param name="modifiedByUserId">ID of the user making the change.</param>
         /// <returns>True if successful.</returns>
-        Task<Model_Dao_Result<bool>> MarkDuplicateAsync(int feedbackId, int duplicateOfId, string modifiedByUserId);
+        Task<Model_Dao_Result<bool>> MarkDuplicateAsync(int feedbackId, int duplicateOfId, int modifiedByUserId);
 
         /// <summary>
         /// Exports feedback data to CSV.
@@ -105,6 +107,17 @@ namespace MTM_WIP_Application_Winforms.Services
 
         #region Constructors
 
+        /// <summary>
+        /// Default constructor for legacy support.
+        /// </summary>
+        public Service_FeedbackManager() : this(
+            new Dao_UserFeedback(),
+            new Dao_UserFeedbackComments(),
+            new Dao_WindowFormMapping(),
+            new Dao_UserControlMapping())
+        {
+        }
+
         public Service_FeedbackManager(
             IDao_UserFeedback feedbackDao,
             IDao_UserFeedbackComments commentsDao,
@@ -124,71 +137,168 @@ namespace MTM_WIP_Application_Winforms.Services
         /// <inheritdoc/>
         public async Task<Model_Dao_Result<string>> SubmitFeedbackAsync(Model_UserFeedback feedback)
         {
-            // TODO: Implement T023.1
-            throw new NotImplementedException();
+            try
+            {
+                // Validate inputs
+                if (string.IsNullOrEmpty(feedback.Title)) return Model_Dao_Result<string>.Failure("Title is required.");
+                if (string.IsNullOrEmpty(feedback.Description)) return Model_Dao_Result<string>.Failure("Description is required.");
+                
+                // Sanitize HTML
+                feedback.Description = Helper_HtmlSanitizer.Sanitize(feedback.Description);
+                if (!string.IsNullOrEmpty(feedback.StepsToReproduce)) feedback.StepsToReproduce = Helper_HtmlSanitizer.Sanitize(feedback.StepsToReproduce);
+                if (!string.IsNullOrEmpty(feedback.ExpectedBehavior)) feedback.ExpectedBehavior = Helper_HtmlSanitizer.Sanitize(feedback.ExpectedBehavior);
+                if (!string.IsNullOrEmpty(feedback.ActualBehavior)) feedback.ActualBehavior = Helper_HtmlSanitizer.Sanitize(feedback.ActualBehavior);
+                if (!string.IsNullOrEmpty(feedback.BusinessJustification)) feedback.BusinessJustification = Helper_HtmlSanitizer.Sanitize(feedback.BusinessJustification);
+                if (!string.IsNullOrEmpty(feedback.ExpectedConsistency)) feedback.ExpectedConsistency = Helper_HtmlSanitizer.Sanitize(feedback.ExpectedConsistency);
+
+                // Insert
+                var result = await _feedbackDao.InsertAsync(feedback);
+                
+                if (result.IsSuccess)
+                {
+                    LoggingUtility.Log(Enum_LogLevel.Information, "Feedback", $"Feedback submitted: {result.Data.TrackingNumber}", feedback.UserID.ToString());
+                    
+                    // TODO: Trigger email notification if Critical/High bug (Phase 7)
+                    // if (feedback.Severity == "Critical" || feedback.Severity == "High") { ... }
+
+                    return Model_Dao_Result<string>.Success(data: result.Data.TrackingNumber);
+                }
+                
+                return Model_Dao_Result<string>.Failure(result.ErrorMessage);
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.Log(Enum_LogLevel.Error, "Feedback", "Error submitting feedback", feedback.UserID.ToString(), ex);
+                return Model_Dao_Result<string>.Failure($"Error submitting feedback: {ex.Message}");
+            }
         }
 
         /// <inheritdoc/>
         public async Task<Model_Dao_Result<DataTable>> GetUserSubmissionsAsync(int userId)
         {
-            // TODO: Implement T023.2
-            throw new NotImplementedException();
+            return await _feedbackDao.GetByUserIdAsync(userId);
         }
 
         /// <inheritdoc/>
         public async Task<Model_Dao_Result<Model_UserFeedback>> GetSubmissionAsync(int feedbackId)
         {
-            // TODO: Implement T023.3
-            throw new NotImplementedException();
+            var result = await _feedbackDao.GetByIdAsync(feedbackId);
+            if (!result.IsSuccess) return Model_Dao_Result<Model_UserFeedback>.Failure(result.ErrorMessage);
+
+            try
+            {
+                var row = result.Data;
+                var model = new Model_UserFeedback
+                {
+                    FeedbackID = Convert.ToInt32(row["FeedbackID"]),
+                    FeedbackType = row["FeedbackType"].ToString() ?? string.Empty,
+                    TrackingNumber = row["TrackingNumber"].ToString() ?? string.Empty,
+                    UserID = Convert.ToInt32(row["UserID"]),
+                    SubmissionDateTime = Convert.ToDateTime(row["SubmissionDateTime"]),
+                    Title = row["Title"].ToString() ?? string.Empty,
+                    Description = row["Description"].ToString() ?? string.Empty,
+                    Status = row["Status"].ToString() ?? string.Empty,
+                    Category = row["Category"] != DBNull.Value ? row["Category"].ToString() : null,
+                    Severity = row["Severity"] != DBNull.Value ? row["Severity"].ToString() : null,
+                    Priority = row["Priority"] != DBNull.Value ? row["Priority"].ToString() : null,
+                    WindowForm = row["WindowForm"] != DBNull.Value ? row["WindowForm"].ToString() : null,
+                    ActiveSection = row["ActiveSection"] != DBNull.Value ? row["ActiveSection"].ToString() : null,
+                    StepsToReproduce = row["StepsToReproduce"] != DBNull.Value ? row["StepsToReproduce"].ToString() : null,
+                    ExpectedBehavior = row["ExpectedBehavior"] != DBNull.Value ? row["ExpectedBehavior"].ToString() : null,
+                    ActualBehavior = row["ActualBehavior"] != DBNull.Value ? row["ActualBehavior"].ToString() : null,
+                    BusinessJustification = row["BusinessJustification"] != DBNull.Value ? row["BusinessJustification"].ToString() : null,
+                    AffectedUsers = row["AffectedUsers"] != DBNull.Value ? row["AffectedUsers"].ToString() : null,
+                    Location1 = row["Location1"] != DBNull.Value ? row["Location1"].ToString() : null,
+                    Location2 = row["Location2"] != DBNull.Value ? row["Location2"].ToString() : null,
+                    ExpectedConsistency = row["ExpectedConsistency"] != DBNull.Value ? row["ExpectedConsistency"].ToString() : null,
+                    LastUpdatedDateTime = Convert.ToDateTime(row["LastUpdatedDateTime"]),
+                    IsDuplicate = Convert.ToBoolean(row["IsDuplicate"]),
+                    DuplicateOfFeedbackID = row["DuplicateOfFeedbackID"] != DBNull.Value ? Convert.ToInt32(row["DuplicateOfFeedbackID"]) : null
+                };
+
+                // Get comments
+                var commentsResult = await _commentsDao.GetByFeedbackIdAsync(feedbackId);
+                if (commentsResult.IsSuccess && commentsResult.Data != null)
+                {
+                    foreach (DataRow commentRow in commentsResult.Data.Rows)
+                    {
+                        model.Comments.Add(new Model_UserFeedbackComments
+                        {
+                            CommentID = Convert.ToInt32(commentRow["CommentID"]),
+                            FeedbackID = Convert.ToInt32(commentRow["FeedbackID"]),
+                            UserID = Convert.ToInt32(commentRow["UserID"]),
+                            CommentText = commentRow["CommentText"].ToString() ?? string.Empty,
+                            CommentDateTime = Convert.ToDateTime(commentRow["CommentDateTime"]),
+                            IsInternalNote = Convert.ToBoolean(commentRow["IsInternalNote"]),
+                            UserFullName = commentRow.Table.Columns.Contains("UserFullName") ? commentRow["UserFullName"].ToString() : null
+                        });
+                    }
+                }
+                
+                return Model_Dao_Result<Model_UserFeedback>.Success(model);
+            }
+            catch (Exception ex)
+            {
+                 return Model_Dao_Result<Model_UserFeedback>.Failure($"Error mapping feedback: {ex.Message}");
+            }
         }
 
         /// <inheritdoc/>
         public async Task<Model_Dao_Result<int>> AddCommentAsync(int feedbackId, int userId, string commentText, bool isInternalNote)
         {
-            // TODO: Implement T023.4
-            throw new NotImplementedException();
+            if (string.IsNullOrWhiteSpace(commentText)) return Model_Dao_Result<int>.Failure("Comment text is required.");
+            
+            commentText = Helper_HtmlSanitizer.Sanitize(commentText);
+            
+            return await _commentsDao.InsertAsync(feedbackId, userId, commentText, isInternalNote);
         }
 
         /// <inheritdoc/>
-        public async Task<Model_Dao_Result<bool>> UpdateStatusAsync(int feedbackId, int newStatus, string? assignedDeveloperId, string? notes, string modifiedByUserId)
+        public async Task<Model_Dao_Result<bool>> UpdateStatusAsync(int feedbackId, string newStatus, int? assignedDeveloperId, string? notes, int modifiedByUserId)
         {
-            // TODO: Implement T023.5
-            throw new NotImplementedException();
+            var result = await _feedbackDao.UpdateStatusAsync(feedbackId, newStatus, assignedDeveloperId, notes, modifiedByUserId);
+            if (result.IsSuccess)
+            {
+                LoggingUtility.Log(Enum_LogLevel.Information, "Feedback", $"Feedback {feedbackId} status updated to {newStatus}", modifiedByUserId.ToString());
+                return Model_Dao_Result<bool>.Success(true);
+            }
+            return Model_Dao_Result<bool>.Failure(result.ErrorMessage);
         }
 
         /// <inheritdoc/>
-        public async Task<Model_Dao_Result<bool>> MarkDuplicateAsync(int feedbackId, int duplicateOfId, string modifiedByUserId)
+        public async Task<Model_Dao_Result<bool>> MarkDuplicateAsync(int feedbackId, int duplicateOfId, int modifiedByUserId)
         {
-            // TODO: Implement T023.6
-            throw new NotImplementedException();
+            var result = await _feedbackDao.MarkAsDuplicateAsync(feedbackId, duplicateOfId, modifiedByUserId);
+            if (result.IsSuccess)
+            {
+                LoggingUtility.Log(Enum_LogLevel.Information, "Feedback", $"Feedback {feedbackId} marked as duplicate of {duplicateOfId}", modifiedByUserId.ToString());
+                return Model_Dao_Result<bool>.Success(true);
+            }
+            return Model_Dao_Result<bool>.Failure(result.ErrorMessage);
         }
 
         /// <inheritdoc/>
         public async Task<Model_Dao_Result<DataTable>> ExportToCsvAsync(Dictionary<string, object> filters)
         {
-            // TODO: Implement T023.7
-            throw new NotImplementedException();
+            return await _feedbackDao.ExportToCsvAsync(filters);
         }
 
         /// <inheritdoc/>
         public async Task<Model_Dao_Result<string>> GetTrackingNumberAsync(string feedbackType)
         {
-            // TODO: Implement T023.8
-            throw new NotImplementedException();
+            return await _feedbackDao.GetTrackingNumberAsync(feedbackType);
         }
 
         /// <inheritdoc/>
         public async Task<Model_Dao_Result<DataTable>> GetWindowMappingsAsync()
         {
-            // TODO: Implement T023.9
-            throw new NotImplementedException();
+            return await _windowMappingDao.GetAllAsync(false);
         }
 
         /// <inheritdoc/>
         public async Task<Model_Dao_Result<DataTable>> GetControlMappingsAsync(int windowFormMappingId)
         {
-            // TODO: Implement T023.10
-            throw new NotImplementedException();
+            return await _controlMappingDao.GetByWindowAsync(windowFormMappingId, false);
         }
 
         #endregion

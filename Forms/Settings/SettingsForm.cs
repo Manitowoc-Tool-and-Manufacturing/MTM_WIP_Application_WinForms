@@ -601,9 +601,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
             {
                 helpButton.Click += (s, e) =>
                 {
-                    var helpForm = new HelpViewerForm();
-                    helpForm.Show();
-                    helpForm.ShowHelp(category, topic);
+                    HelpViewerForm.GetInstance().BringToFrontAndNavigate(category, topic);
                 };
             }
         }

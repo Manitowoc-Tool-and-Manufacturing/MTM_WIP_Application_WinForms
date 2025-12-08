@@ -716,9 +716,7 @@ internal partial class Transactions : ThemedForm
         Transactions_Button_Help.Anchor = AnchorStyles.Top | AnchorStyles.Right;
         Transactions_Button_Help.Click += (s, e) => 
         {
-            var helpForm = new HelpViewerForm();
-            helpForm.Show();
-            helpForm.ShowHelp("transaction-history", "transaction-overview");
+            HelpViewerForm.GetInstance().BringToFrontAndNavigate("transaction-history", "transaction-overview");
         };
         
         Transactions_Panel_Main.Controls.Add(Transactions_Button_Help);

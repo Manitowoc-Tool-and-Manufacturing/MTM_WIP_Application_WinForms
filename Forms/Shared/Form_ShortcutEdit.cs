@@ -103,9 +103,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
         Form_ShortcutEdit_Button_Help.Anchor = AnchorStyles.Top | AnchorStyles.Right;
         Form_ShortcutEdit_Button_Help.Click += (s, e) => 
         {
-            var helpForm = new HelpViewerForm();
-            helpForm.Show();
-            helpForm.ShowHelp("settings-management", "shortcuts");
+            HelpViewerForm.GetInstance().BringToFrontAndNavigate("settings-management", "shortcuts");
         };
         
         this.Controls.Add(Form_ShortcutEdit_Button_Help);

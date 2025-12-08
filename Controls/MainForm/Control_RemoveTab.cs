@@ -1384,9 +1384,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         {
             MainForm_Button_Help_Remove.Click += (s, e) => 
             {
-                var helpForm = new HelpViewerForm();
-                helpForm.Show();
-                helpForm.ShowHelp("remove-operations", "remove-overview");
+                HelpViewerForm.GetInstance().BringToFrontAndNavigate("remove-operations", "remove-overview");
             };            
         }
 

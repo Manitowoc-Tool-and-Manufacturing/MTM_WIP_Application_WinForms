@@ -1138,9 +1138,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         {
             MainForm_Button_Help_AdvancedRemove.Click += (s, e) => 
             {
-                var helpForm = new HelpViewerForm();
-                helpForm.Show();
-                helpForm.ShowHelp("advanced-remove-operations", "advanced-remove-overview");
+                HelpViewerForm.GetInstance().BringToFrontAndNavigate("advanced-remove-operations", "advanced-remove-overview");
             };
         }
 

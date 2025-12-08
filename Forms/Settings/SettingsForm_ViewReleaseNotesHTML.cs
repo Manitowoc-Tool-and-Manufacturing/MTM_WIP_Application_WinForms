@@ -144,9 +144,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
         Form_ReleaseNotes_Button_Help.Anchor = AnchorStyles.Top | AnchorStyles.Right;
         Form_ReleaseNotes_Button_Help.Click += (s, e) => 
         {
-            var helpForm = new HelpViewerForm();
-            helpForm.Show();
-            helpForm.ShowHelp("getting-started", "release-notes");
+            HelpViewerForm.GetInstance().BringToFrontAndNavigate("getting-started", "release-notes");
         };
         
         panelTop.Controls.Add(Form_ReleaseNotes_Button_Help);

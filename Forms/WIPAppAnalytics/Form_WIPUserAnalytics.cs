@@ -233,9 +233,7 @@ DATA REFRESH:
         Form_WIPUserAnalytics_Button_Help.Anchor = AnchorStyles.Top | AnchorStyles.Right;
         Form_WIPUserAnalytics_Button_Help.Click += (s, e) => 
         {
-            var helpForm = new HelpViewerForm();
-            helpForm.Show();
-            helpForm.ShowHelp("analytics-reporting", "analytics-overview");
+            HelpViewerForm.GetInstance().BringToFrontAndNavigate("analytics-reporting", "analytics-overview");
         };
         
         this.Controls.Add(Form_WIPUserAnalytics_Button_Help);

@@ -1,0 +1,129 @@
+<div class="submissions-container">
+    <h1>My Submissions</h1>
+    
+    <div class="controls">
+        <button onclick="window.location.href='help://support'" class="btn-secondary">Back to Support</button>
+        <button onclick="refreshSubmissions()" class="btn-secondary">Refresh</button>
+    </div>
+
+    <div class="table-container">
+        <table id="submissionsTable">
+            <thead>
+                <tr>
+                    <th onclick="sortTable(0)">Type</th>
+                    <th onclick="sortTable(1)">Title</th>
+                    <th onclick="sortTable(2)">Status</th>
+                    <th onclick="sortTable(3)">Priority</th>
+                    <th onclick="sortTable(4)">Submitted</th>
+                    <th onclick="sortTable(5)">Last Updated</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Populated by JS -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<style>
+    .submissions-container { max-width: 1000px; margin: 0 auto; }
+    .controls { margin-bottom: 20px; display: flex; gap: 10px; }
+    .table-container { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; background-color: var(--card-bg); border: 1px solid var(--card-border); }
+    th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--card-border); }
+    th { background-color: var(--sidebar-bg); cursor: pointer; font-weight: 600; }
+    th:hover { background-color: var(--sidebar-border); }
+    tr:hover { background-color: var(--card-hover); }
+    
+    .status-badge { padding: 4px 8px; border-radius: 12px; font-size: 12px; font-weight: 600; }
+    .status-New { background-color: #e3f2fd; color: #0d47a1; }
+    .status-InReview { background-color: #fff3e0; color: #e65100; }
+    .status-InProgress { background-color: #e8f5e9; color: #1b5e20; }
+    .status-Resolved { background-color: #f3e5f5; color: #4a148c; }
+    .status-Closed { background-color: #eeeeee; color: #616161; }
+    
+    .btn-secondary { padding: 8px 16px; border: 1px solid var(--sidebar-border); background-color: var(--sidebar-bg); color: var(--text-color); border-radius: 4px; cursor: pointer; }
+    .btn-secondary:hover { background-color: var(--sidebar-border); }
+    .btn-sm { padding: 4px 8px; font-size: 12px; }
+</style>
+
+<script>
+    function refreshSubmissions() {
+        window.chrome.webview.postMessage(JSON.stringify({type: 'viewSubmissions'}));
+    }
+
+    window.populateSubmissions = function(submissions) {
+        const tbody = document.querySelector('#submissionsTable tbody');
+        tbody.innerHTML = '';
+        
+        if (submissions.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="7" style="text-align:center">No submissions found.</td></tr>';
+            return;
+        }
+
+        submissions.forEach(s => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${s.FeedbackType}</td>
+                <td>${s.Title}</td>
+                <td><span class="status-badge status-${s.Status.replace(' ', '')}">${s.Status}</span></td>
+                <td>${s.Priority || s.Severity || '-'}</td>
+                <td>${new Date(s.SubmissionDateTime).toLocaleDateString()}</td>
+                <td>${new Date(s.LastUpdatedDateTime).toLocaleDateString()}</td>
+                <td>
+                    <button class="btn-secondary btn-sm" onclick="viewDetails(${s.FeedbackID})">Details</button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+    };
+
+    function viewDetails(id) {
+        // Navigate to details page (not implemented yet, or maybe show modal?)
+        // For now, let's assume we navigate to a details view
+        // window.location.href = 'help://support/details/' + id;
+        alert('Details view not implemented yet for ID: ' + id);
+    }
+
+    function sortTable(n) {
+        // Simple sort implementation
+        var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+        table = document.getElementById("submissionsTable");
+        switching = true;
+        dir = "asc";
+        while (switching) {
+            switching = false;
+            rows = table.rows;
+            for (i = 1; i < (rows.length - 1); i++) {
+                shouldSwitch = false;
+                x = rows[i].getElementsByTagName("TD")[n];
+                y = rows[i + 1].getElementsByTagName("TD")[n];
+                if (dir == "asc") {
+                    if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                } else if (dir == "desc") {
+                    if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                }
+            }
+            if (shouldSwitch) {
+                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                switching = true;
+                switchcount ++;
+            } else {
+                if (switchcount == 0 && dir == "asc") {
+                    dir = "desc";
+                    switching = true;
+                }
+            }
+        }
+    }
+
+    // Initial load
+    refreshSubmissions();
+</script>

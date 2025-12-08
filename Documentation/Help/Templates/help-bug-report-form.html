@@ -1,0 +1,246 @@
+<div class="feedback-form-container">
+    <h1>Report a Bug</h1>
+    <form id="bugForm">
+        <div class="form-group">
+            <label for="windowForm">Window / Form <span class="required">*</span></label>
+            <select id="windowForm" required aria-required="true">
+                <option value="">Select a window...</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="activeSection">Active Section</label>
+            <select id="activeSection">
+                <option value="">Select a section...</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="bugCategory">Category <span class="required">*</span></label>
+            <select id="bugCategory" required aria-required="true">
+                <option value="UI">User Interface</option>
+                <option value="Data">Data / Calculation</option>
+                <option value="Crash">Crash / Error</option>
+                <option value="Performance">Performance</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="severity">Severity <span class="required">*</span></label>
+            <select id="severity" required aria-required="true">
+                <option value="Low">Low - Cosmetic or minor annoyance</option>
+                <option value="Medium">Medium - Feature partially broken</option>
+                <option value="High">High - Feature completely broken</option>
+                <option value="Critical">Critical - Data loss or system crash</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="title">Title <span class="required">*</span></label>
+            <input type="text" id="title" required aria-required="true" maxlength="200">
+        </div>
+
+        <div class="form-group">
+            <label for="description">Description <span class="required">*</span></label>
+            <textarea id="description" required aria-required="true" maxlength="50000" rows="5"></textarea>
+            <div class="char-counter"><span id="descCount">0</span>/50000</div>
+        </div>
+        
+        <div class="form-group">
+            <label for="steps">Steps to Reproduce</label>
+            <textarea id="steps" rows="4"></textarea>
+        </div>
+        
+        <div class="form-group">
+            <label for="expected">Expected Behavior</label>
+            <textarea id="expected" rows="3"></textarea>
+        </div>
+        
+        <div class="form-group">
+            <label for="actual">Actual Behavior</label>
+            <textarea id="actual" rows="3"></textarea>
+        </div>
+        
+        <div class="form-actions">
+            <button type="button" onclick="submitBug()" class="btn-primary">Submit Bug Report</button>
+            <button type="button" onclick="window.history.back()" class="btn-secondary">Cancel</button>
+        </div>
+    </form>
+</div>
+
+<style>
+    .feedback-form-container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    .form-group {
+        margin-bottom: 20px;
+    }
+    label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 600;
+    }
+    .required {
+        color: #d9534f;
+    }
+    input[type="text"], select, textarea {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid var(--card-border);
+        border-radius: 4px;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        font-family: inherit;
+    }
+    textarea {
+        resize: vertical;
+    }
+    .char-counter {
+        text-align: right;
+        font-size: 12px;
+        color: var(--text-color);
+        opacity: 0.7;
+        margin-top: 2px;
+    }
+    .form-actions {
+        margin-top: 30px;
+        display: flex;
+        gap: 10px;
+    }
+    button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: 600;
+        font-family: inherit;
+    }
+    .btn-primary {
+        background-color: var(--link-color);
+        color: white;
+    }
+    .btn-secondary {
+        background-color: var(--sidebar-bg);
+        color: var(--text-color);
+        border: 1px solid var(--sidebar-border);
+    }
+    .btn-primary:hover {
+        opacity: 0.9;
+    }
+    .btn-secondary:hover {
+        background-color: var(--sidebar-border);
+    }
+</style>
+
+<script>
+    function submitBug() {
+        const data = {
+            type: 'Bug',
+            windowForm: document.getElementById('windowForm').value,
+            activeSection: document.getElementById('activeSection').value,
+            category: document.getElementById('bugCategory').value,
+            severity: document.getElementById('severity').value,
+            title: document.getElementById('title').value,
+            description: document.getElementById('description').value,
+            steps: document.getElementById('steps').value,
+            expected: document.getElementById('expected').value,
+            actual: document.getElementById('actual').value
+        };
+        
+        if (!data.windowForm || !data.category || !data.severity || !data.title || !data.description) {
+            alert('Please fill in all required fields.');
+            return;
+        }
+        
+        window.chrome.webview.postMessage(JSON.stringify({type: 'submitFeedback', data: data}));
+    }
+    
+    document.getElementById('description').addEventListener('input', function() {
+        document.getElementById('descCount').textContent = this.value.length;
+    });
+
+    // Request mappings
+    window.chrome.webview.postMessage(JSON.stringify({type: 'getWindowMappings'}));
+
+    // Listen for mappings response (handled by HelpViewerForm injecting script or event)
+    // For now, we assume HelpViewerForm will call a function or we poll?
+    // Actually, T022.4 says "return JSON for dropdown population".
+    // The HelpViewerForm likely executes script to populate.
+    
+    function populateWindowMappings(mappings) {
+        const select = document.getElementById('windowForm');
+        select.innerHTML = '<option value="">Select a window...</option>';
+        mappings.forEach(m => {
+            const option = document.createElement('option');
+            option.value = m.CodebaseName;
+            option.textContent = m.UserFriendlyName;
+            select.appendChild(option);
+        });
+    }
+
+    function populateControlMappings(mappings) {
+        const select = document.getElementById('activeSection');
+        select.innerHTML = '<option value="">Select a section...</option>';
+        mappings.forEach(m => {
+            const option = document.createElement('option');
+            option.value = m.CodebaseName;
+            option.textContent = m.UserFriendlyName;
+            select.appendChild(option);
+        });
+    }
+
+    document.getElementById('windowForm').addEventListener('change', function() {
+        const mappingId = this.value; // Wait, value is CodebaseName. We might need ID.
+        // The mappings returned should probably include ID.
+        // Let's assume populateWindowMappings receives objects with ID.
+        // But wait, the value set above is CodebaseName.
+        // We need to find the ID from the list (if we stored it) or pass CodebaseName to get controls?
+        // T022.5 says "call Service_FeedbackManager.GetControlMappingsAsync with windowFormMappingId".
+        // So we need the ID.
+        
+        // Let's adjust populateWindowMappings to store ID in value or data attribute.
+        // But wait, the submitBug uses value. The backend expects CodebaseName or ID?
+        // T005.1 md_feedback_Insert takes WindowForm (varchar). So CodebaseName is fine for submission.
+        // But for getting controls, we need ID.
+        
+        // I'll use data attribute for ID.
+        const selectedOption = this.options[this.selectedIndex];
+        const id = selectedOption.getAttribute('data-id');
+        if (id) {
+            window.chrome.webview.postMessage(JSON.stringify({type: 'getControlMappings', windowFormMappingId: id}));
+        } else {
+            document.getElementById('activeSection').innerHTML = '<option value="">Select a section...</option>';
+        }
+    });
+    
+    // Redefine populateWindowMappings to handle ID
+    window.populateWindowMappings = function(mappings) {
+        const select = document.getElementById('windowForm');
+        select.innerHTML = '<option value="">Select a window...</option>';
+        mappings.forEach(m => {
+            const option = document.createElement('option');
+            option.value = m.CodebaseName;
+            option.setAttribute('data-id', m.MappingID);
+            option.textContent = m.UserFriendlyName;
+            select.appendChild(option);
+        });
+    };
+
+    window.populateControlMappings = function(mappings) {
+        const select = document.getElementById('activeSection');
+        select.innerHTML = '<option value="">Select a section...</option>';
+        mappings.forEach(m => {
+            const option = document.createElement('option');
+            option.value = m.CodebaseName;
+            option.textContent = m.UserFriendlyName;
+            select.appendChild(option);
+        });
+    };
+    
+    window.onFeedbackSubmitted = function(feedbackId) {
+        alert('Feedback submitted successfully! ID: ' + feedbackId);
+        window.location.href = 'help://support/submissions';
+    };
+</script>

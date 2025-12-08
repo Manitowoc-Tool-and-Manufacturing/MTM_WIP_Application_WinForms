@@ -495,9 +495,7 @@ internal partial class TransactionLifecycleForm : ThemedForm
         TransactionLifecycleForm_Button_Help.Anchor = AnchorStyles.Top | AnchorStyles.Right;
         TransactionLifecycleForm_Button_Help.Click += (s, e) => 
         {
-            var helpForm = new HelpViewerForm();
-            helpForm.Show();
-            helpForm.ShowHelp("transaction-history", "lifecycle");
+            HelpViewerForm.GetInstance().BringToFrontAndNavigate("transaction-history", "lifecycle");
         };
         
         this.Controls.Add(TransactionLifecycleForm_Button_Help);

@@ -14,6 +14,12 @@ namespace MTM_WIP_Application_Winforms.Services.Help
         private const string BaseTemplatePath = "Documentation/Help/Templates/help-base-template.html";
         private const string TopicCardTemplatePath = "Documentation/Help/Templates/topic-card-template.html";
         private const string SearchBoxTemplatePath = "Documentation/Help/Templates/search-box-template.html";
+        private const string ContactSupportTemplatePath = "Documentation/Help/Templates/help-contact-support-page.html";
+        private const string BugReportTemplatePath = "Documentation/Help/Templates/help-bug-report-form.html";
+        private const string SuggestionTemplatePath = "Documentation/Help/Templates/help-suggestion-form.html";
+        private const string InconsistencyTemplatePath = "Documentation/Help/Templates/help-inconsistency-form.html";
+        private const string QuestionTemplatePath = "Documentation/Help/Templates/help-question-form.html";
+        private const string ViewSubmissionsTemplatePath = "Documentation/Help/Templates/help-view-submissions.html";
 
         /// <summary>
         /// Generates the HTML for the Index page (category cards).
@@ -38,6 +44,42 @@ namespace MTM_WIP_Application_Winforms.Services.Help
             sb.Append("</div>");
 
             return WrapInBaseTemplate("Help Index", sb.ToString(), string.Empty);
+        }
+
+        public string GenerateContactSupportHtml()
+        {
+            string content = File.ReadAllText(ContactSupportTemplatePath);
+            return WrapInBaseTemplate("Contact Support", content, string.Empty);
+        }
+
+        public string GenerateBugReportFormHtml()
+        {
+            string content = File.ReadAllText(BugReportTemplatePath);
+            return WrapInBaseTemplate("Report a Bug", content, string.Empty);
+        }
+
+        public string GenerateSuggestionFormHtml()
+        {
+            string content = File.ReadAllText(SuggestionTemplatePath);
+            return WrapInBaseTemplate("Suggest Improvement", content, string.Empty);
+        }
+
+        public string GenerateInconsistencyFormHtml()
+        {
+            string content = File.ReadAllText(InconsistencyTemplatePath);
+            return WrapInBaseTemplate("Report Inconsistency", content, string.Empty);
+        }
+
+        public string GenerateQuestionFormHtml()
+        {
+            string content = File.ReadAllText(QuestionTemplatePath);
+            return WrapInBaseTemplate("Ask a Question", content, string.Empty);
+        }
+
+        public string GenerateViewSubmissionsHtml()
+        {
+            string content = File.ReadAllText(ViewSubmissionsTemplatePath);
+            return WrapInBaseTemplate("My Submissions", content, string.Empty);
         }
 
         /// <summary>

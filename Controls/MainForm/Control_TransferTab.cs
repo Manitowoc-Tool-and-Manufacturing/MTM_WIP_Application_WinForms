@@ -1743,9 +1743,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         {
             MainForm_Button_Help_Transfer.Click += (s, e) => 
             {
-                var helpForm = new HelpViewerForm();
-                helpForm.Show();
-                helpForm.ShowHelp("transfer-operations", "transfer-overview");
+                HelpViewerForm.GetInstance().BringToFrontAndNavigate("transfer-operations", "transfer-overview");
             };
         }
 

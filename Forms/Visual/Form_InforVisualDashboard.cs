@@ -481,9 +481,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
         Form_InforVisualDashboard_Button_Help.Anchor = AnchorStyles.Top | AnchorStyles.Right;
         Form_InforVisualDashboard_Button_Help.Click += (s, e) => 
         {
-            var helpForm = new HelpViewerForm();
-            helpForm.Show();
-            helpForm.ShowHelp("infor-visual-integration", "visual-dashboard-overview");
+            HelpViewerForm.GetInstance().BringToFrontAndNavigate("infor-visual-integration", "visual-dashboard-overview");
         };
         
         this.Controls.Add(Form_InforVisualDashboard_Button_Help);

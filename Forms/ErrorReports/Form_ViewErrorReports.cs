@@ -109,9 +109,7 @@ namespace MTM_WIP_Application_Winforms.Forms.ErrorReports
         {
             Form_ViewErrorReports_Button_Help.Click += (s, e) => 
             {
-                var helpForm = new HelpViewerForm();
-                helpForm.Show();
-                helpForm.ShowHelp("admin-tools", "error-reports");
+                HelpViewerForm.GetInstance().BringToFrontAndNavigate("admin-tools", "error-reports");
             };
         }
 

@@ -42,5 +42,10 @@ namespace MTM_WIP_Application_Winforms.Models.Entities
         public DateTime? ResolutionDateTime { get; set; }
         public bool IsDuplicate { get; set; }
         public int? DuplicateOfFeedbackID { get; set; }
+        
+        /// <summary>
+        /// List of comments associated with this feedback.
+        /// </summary>
+        public List<Model_UserFeedbackComments> Comments { get; set; } = new();
     }
 }

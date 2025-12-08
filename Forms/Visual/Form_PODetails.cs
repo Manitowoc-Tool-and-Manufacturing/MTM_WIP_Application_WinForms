@@ -167,9 +167,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
         Form_PODetails_Button_Help.Anchor = AnchorStyles.Top | AnchorStyles.Right;
         Form_PODetails_Button_Help.Click += (s, e) => 
         {
-            var helpForm = new HelpViewerForm();
-            helpForm.Show();
-            helpForm.ShowHelp("infor-visual-integration", "po-details");
+            HelpViewerForm.GetInstance().BringToFrontAndNavigate("infor-visual-integration", "po-details");
         };
         
         this.Controls.Add(Form_PODetails_Button_Help);

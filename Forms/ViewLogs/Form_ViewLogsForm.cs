@@ -1931,9 +1931,7 @@ public partial class ViewApplicationLogsForm : ThemedForm
         ViewApplicationLogsForm_Button_Help.Anchor = AnchorStyles.Top | AnchorStyles.Right;
         ViewApplicationLogsForm_Button_Help.Click += (s, e) => 
         {
-            var helpForm = new HelpViewerForm();
-            helpForm.Show();
-            helpForm.ShowHelp("admin-tools", "logs");
+            HelpViewerForm.GetInstance().BringToFrontAndNavigate("admin-tools", "logs");
         };
         
         this.Controls.Add(ViewApplicationLogsForm_Button_Help);
