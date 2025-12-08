@@ -2,8 +2,6 @@ using System.Data;
 using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Models.Entities;
-using MTM_WIP_Application_Winforms.Services.Logging;
-using MySql.Data.MySqlClient;
 
 namespace MTM_WIP_Application_Winforms.Data
 {

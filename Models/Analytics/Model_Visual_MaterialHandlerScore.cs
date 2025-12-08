@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace MTM_WIP_Application_Winforms.Models.Analytics
 {
     /// <summary>

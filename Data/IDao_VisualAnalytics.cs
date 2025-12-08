@@ -1,6 +1,3 @@
-using System;
-using System.Data;
-using System.Threading.Tasks;
 using MTM_WIP_Application_Winforms.Models.Analytics;
 using MTM_WIP_Application_Winforms.Models;
 

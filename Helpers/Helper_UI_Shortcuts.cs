@@ -1,6 +1,4 @@
-﻿using MTM_WIP_Application_Winforms.Core;
-using MTM_WIP_Application_Winforms.Forms.MainForm;
-using MTM_WIP_Application_Winforms.Services;
+﻿using MTM_WIP_Application_Winforms.Services;
 
 namespace MTM_WIP_Application_Winforms.Helpers;
 

@@ -1,13 +1,7 @@
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.IO;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using Microsoft.Web.WebView2.Core;
 using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Services;
-using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Forms.Help;
 using Newtonsoft.Json;
 

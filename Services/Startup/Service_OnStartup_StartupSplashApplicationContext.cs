@@ -1,8 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using MTM_WIP_Application_Winforms.Controls.MainForm;
-using MTM_WIP_Application_Winforms.Core;
-using MTM_WIP_Application_Winforms.Core.Theming.Interfaces;
-using MTM_WIP_Application_Winforms.Data;
+﻿using MTM_WIP_Application_Winforms.Controls.MainForm;
 using MTM_WIP_Application_Winforms.Forms.MainForm;
 using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Forms.Splash;
@@ -98,7 +94,7 @@ namespace MTM_WIP_Application_Winforms.Services.Startup
                     _splashScreen?.UpdateProgress(p.percent, p.message);
                 });
 
-                var result = await Service_OnStartup_AppLifecycle.ExecuteStartupSequenceAsync(progressReporter, async () => 
+                var result = await Service_OnStartup_AppLifecycle.ExecuteStartupSequenceAsync(progressReporter, () => 
                 {
                     using var loginForm = new Form_SharedLogin();
                     // Show dialog on top of splash screen
@@ -107,12 +103,12 @@ namespace MTM_WIP_Application_Winforms.Services.Startup
                     {
                         Model_Application_Variables.User = loginForm.ValidatedUsername;
                         LoggingUtility.Log($"[Startup] Shared workstation login successful. User: {Model_Application_Variables.User}");
-                        return true;
+                        return Task.FromResult(true);
                     }
                     else
                     {
                         LoggingUtility.Log("[Startup] Shared workstation login cancelled/failed. Exiting.");
-                        return false;
+                        return Task.FromResult(false);
                     }
                 });
 

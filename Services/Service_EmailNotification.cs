@@ -1,4 +1,3 @@
-using System.Net.Mail;
 using MTM_WIP_Application_Winforms.Data;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services.Logging;

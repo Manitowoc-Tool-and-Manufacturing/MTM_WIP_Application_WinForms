@@ -1,14 +1,9 @@
-using System;
 using System.Data;
 using Microsoft.Data.SqlClient;
-using System.IO;
 using System.Reflection;
-using System.Threading.Tasks;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services.Logging;
-using System.Configuration;
 using ConfigurationManager = System.Configuration.ConfigurationManager;
-using System.Linq;
 
 namespace MTM_WIP_Application_Winforms.Services.Visual
 {

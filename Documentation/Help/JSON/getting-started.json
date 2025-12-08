@@ -9,7 +9,7 @@
       "TopicId": "overview",
       "Title": "Application Overview",
       "Summary": "Introduction to the main features and interface.",
-      "Content": "<h2>Welcome to MTM WIP Application</h2>{{component:alert type=\"info\"}}This documentation has been updated for version 6.4.0.2.{{/component:alert}}<p>This application helps you track Work In Progress (WIP) inventory, manage transactions, and generate reports.</p><h3>Key Features</h3><ul><li><strong>Real-time Inventory:</strong> Track parts, locations, and quantities instantly.</li><li><strong>Barcode Scanning:</strong> Use scanners for fast and accurate data entry.</li><li><strong>Infor Visual Integration:</strong> Seamlessly sync data with the ERP system.</li><li><strong>Customizable Interface:</strong> Choose themes and shortcuts that work for you.</li></ul><h3>Example Code</h3>{{component:code language=\"csharp\"}}// Example of how to use the API\nvar result = await Dao_Inventory.GetAllAsync();{{/component:code}}",
+      "Content": "<h2>Welcome to MTM WIP Application</h2>{{component:alert type=\"info\"}}This documentation has been updated for version 6.4.0.3.{{/component:alert}}<p>This application helps you track Work In Progress (WIP) inventory, manage transactions, and generate reports.</p><h3>Key Features</h3><ul><li><strong>Real-time Inventory:</strong> Track parts, locations, and quantities instantly.</li><li><strong>Barcode Scanning:</strong> Use scanners for fast and accurate data entry.</li><li><strong>Infor Visual Integration:</strong> Seamlessly sync data with the ERP system.</li><li><strong>Customizable Interface:</strong> Choose themes and shortcuts that work for you.</li></ul><h3>Example Code</h3>{{component:code language=\"csharp\"}}// Example of how to use the API\nvar result = await Dao_Inventory.GetAllAsync();{{/component:code}}",
       "Keywords": ["intro", "basics", "welcome"],
       "LastUpdated": "2025-12-07T10:00:00"
     },
@@ -41,7 +41,7 @@
       "TopicId": "about-application",
       "Title": "About the Application",
       "Summary": "Version and copyright information.",
-      "Content": "<h2>About MTM WIP Application</h2><p><strong>Version:</strong> 6.4.0.2</p><p><strong>Copyright:</strong> © 2025 Manitowoc Tool and Manufacturing</p><p>This application is designed to streamline WIP inventory tracking and management.</p>",
+      "Content": "<h2>About MTM WIP Application</h2><p><strong>Version:</strong> 6.4.0.3</p><p><strong>Copyright:</strong> © 2025 Manitowoc Tool and Manufacturing</p><p>This application is designed to streamline WIP inventory tracking and management.</p>",
       "Keywords": ["about", "version", "copyright"],
       "LastUpdated": "2025-12-07T10:00:00"
     },

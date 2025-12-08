@@ -1,13 +1,7 @@
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
 using MTM_WIP_Application_Winforms.Data;
 using MTM_WIP_Application_Winforms.Models.Analytics;
 using MTM_WIP_Application_Winforms.Models;
-using MTM_WIP_Application_Winforms.Services;
-using MTM_WIP_Application_Winforms.Helpers;
 using Newtonsoft.Json;
 
 namespace MTM_WIP_Application_Winforms.Services.Analytics

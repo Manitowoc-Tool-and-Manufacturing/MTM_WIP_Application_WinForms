@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 namespace MTM_WIP_Application_Winforms.Models
 {
     public class Model_ReceivingAnalytics

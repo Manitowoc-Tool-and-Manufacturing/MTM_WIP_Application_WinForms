@@ -1,6 +1,5 @@
 using System.Diagnostics;
 using System.Media;
-using MTM_WIP_Application_Winforms.Controls.Addons;
 using MTM_WIP_Application_Winforms.Core;
 using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Services.Database;

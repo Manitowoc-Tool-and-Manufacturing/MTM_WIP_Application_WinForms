@@ -14,7 +14,6 @@ using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
 using MTM_WIP_Application_Winforms.Services.Database;
 using Timer = System.Windows.Forms.Timer;
-using System.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ConfigurationManager = System.Configuration.ConfigurationManager;
 

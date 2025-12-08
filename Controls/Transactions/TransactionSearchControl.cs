@@ -1,4 +1,3 @@
-using MTM_WIP_Application_Winforms.Components.Shared;
 using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Services.Logging;

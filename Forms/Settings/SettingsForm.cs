@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using MTM_WIP_Application_Winforms.Controls.SettingsForm;
 using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Helpers;

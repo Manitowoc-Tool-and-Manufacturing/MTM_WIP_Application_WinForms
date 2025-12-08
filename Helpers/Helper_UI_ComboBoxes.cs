@@ -4,7 +4,6 @@ using System.Reflection;
 using MTM_WIP_Application_Winforms.Controls.MainForm;
 using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Models;
-using MySql.Data.MySqlClient;
 using MethodInvoker = System.Windows.Forms.MethodInvoker;
 
 namespace MTM_WIP_Application_Winforms.Helpers

@@ -1,6 +1,5 @@
 using System.Diagnostics;
 using MTM_WIP_Application_Winforms.Models;
-using MTM_WIP_Application_Winforms.Services;
 
 /// <summary>
 /// Provides system-level initialization services for the application startup process.

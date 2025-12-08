@@ -5,12 +5,8 @@ using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
 using MTM_WIP_Application_Winforms.Services.Visual;
 using MTM_WIP_Application_Winforms.Services.Analytics;
-using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Data;
-using MTM_WIP_Application_Winforms.Models.Analytics;
-using MTM_WIP_Application_Winforms.Models.Enums;
 using Newtonsoft.Json;
-using MTM_WIP_Application_Winforms.Services.Logging;
 
 namespace MTM_WIP_Application_Winforms.Controls.Visual
 {
