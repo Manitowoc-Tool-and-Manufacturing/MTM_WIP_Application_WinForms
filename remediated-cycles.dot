@@ -1,0 +1,47 @@
+digraph RemediatedCycles {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor="#e6f3ff"];
+    
+    // New Components
+    "Helper_LogPath" [shape=ellipse, fillcolor="#daffda", label="Helper_LogPath\n(New/Extracted)"];
+
+    subgraph cluster_startup {
+        label = "Startup Orchestration (Linear Flow)";
+        style = solid;
+        color = blue;
+        
+        "Service_OnStartup_AppLifecycle" [label="Service_OnStartup_AppLifecycle\n(Orchestrator)", fillcolor="#ffd700"];
+        
+        "Service_OnStartup_AppLifecycle" -> "Service_OnStartup_Database" [label="1. Validate"];
+        "Service_OnStartup_AppLifecycle" -> "Service_OnStartup_User" [label="2. Validate"];
+        "Service_OnStartup_AppLifecycle" -> "Service_OnStartup_AppDataCleaner" [label="3. Cleanup"];
+        "Service_OnStartup_AppLifecycle" -> "Service_Onstartup_StartupSplashApplicationContext" [label="Updates Status"];
+        
+        // No back-references
+    }
+
+    subgraph cluster_logging {
+        label = "Logging Infrastructure (Decoupled)";
+        style = solid;
+        color = green;
+        
+        "LoggingUtility" -> "Helper_LogPath" [label="Get Path"];
+        
+        // LoggingUtility no longer calls AppDataCleaner
+        // LoggingUtility no longer calls Helper_Database_Variables
+    }
+
+    subgraph cluster_helpers {
+        label = "Helpers & Services";
+        style = dotted;
+        
+        "Service_OnStartup_AppDataCleaner" -> "LoggingUtility" [label="Logs Actions"];
+        "Service_OnStartup_Database" -> "LoggingUtility" [label="Logs Actions"];
+        "Service_OnStartup_User" -> "LoggingUtility" [label="Logs Actions"];
+        
+        "Service_OnStartup_Database" -> "Helper_Database_Variables" [label="Get Conn String"];
+        
+        // Helper_Database_Variables throws exceptions instead of logging directly
+        // "Helper_Database_Variables" -> "LoggingUtility" [style=invis]; 
+    }
+}

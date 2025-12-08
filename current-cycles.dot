@@ -1,0 +1,37 @@
+digraph CurrentCycles {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=lightgrey];
+    
+    subgraph cluster_startup {
+        label = "Startup Cycle (High Complexity)";
+        style = dashed;
+        color = red;
+        
+        "Service_OnStartup_AppLifecycle" -> "Service_Onstartup_StartupSplashApplicationContext";
+        "Service_Onstartup_StartupSplashApplicationContext" -> "Service_OnStartup_User";
+        "Service_OnStartup_User" -> "Service_OnStartup_Database";
+        "Service_OnStartup_Database" -> "Service_OnStartup_AppLifecycle" [color=red, penwidth=2, label="Cycle"];
+        
+        // Additional cross-links mentioned in report
+        "Service_OnStartup_AppLifecycle" -> "Service_OnStartup_User";
+        "Service_OnStartup_Database" -> "Service_Onstartup_StartupSplashApplicationContext";
+    }
+
+    subgraph cluster_logging_cleaner {
+        label = "Logging & Cleaner Cycle";
+        style = dashed;
+        color = orange;
+        
+        "LoggingUtility" -> "Service_OnStartup_AppDataCleaner" [label="Calls DeleteDirectory"];
+        "Service_OnStartup_AppDataCleaner" -> "LoggingUtility" [color=red, penwidth=2, label="Logs Errors"];
+    }
+
+    subgraph cluster_logging_vars {
+        label = "Logging & DB Variables Cycle";
+        style = dashed;
+        color = orange;
+        
+        "LoggingUtility" -> "Helper_Database_Variables" [label="GetLogFilePathAsync"];
+        "Helper_Database_Variables" -> "LoggingUtility" [color=red, penwidth=2, label="Logs Errors"];
+    }
+}
