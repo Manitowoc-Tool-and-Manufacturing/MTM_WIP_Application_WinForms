@@ -24,6 +24,8 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         /// </summary>
         public event EventHandler<string>? StatusMessageChanged;
 
+        public event EventHandler? BackToHomeRequested;
+
         #endregion
 
         #region Constructors
@@ -31,6 +33,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         public Control_Database()
         {
             InitializeComponent();
+            Control_Database_Button_Home.Click += (_, _) => BackToHomeRequested?.Invoke(this, EventArgs.Empty);
         }
 
         #endregion

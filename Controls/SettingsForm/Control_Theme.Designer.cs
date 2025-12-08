@@ -43,6 +43,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Themes_CheckBox_EnableAnimations = new CheckBox();
             Control_Themes_CheckBox_EnableTheming = new CheckBox();
             tableLayoutPanel2 = new TableLayoutPanel();
+            Control_Themes_Button_Home = new Button();
             SettingsForm_Button_Help_Theme = new Button();
             tableLayoutPanel3 = new TableLayoutPanel();
             Control_Themes_GroupBox_Main.SuspendLayout();
@@ -60,7 +61,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Themes_GroupBox_Main.Dock = DockStyle.Fill;
             Control_Themes_GroupBox_Main.Location = new Point(3, 3);
             Control_Themes_GroupBox_Main.Name = "Control_Themes_GroupBox_Main";
-            Control_Themes_GroupBox_Main.Size = new Size(594, 51);
+            Control_Themes_GroupBox_Main.Size = new Size(624, 51);
             Control_Themes_GroupBox_Main.TabIndex = 3;
             Control_Themes_GroupBox_Main.TabStop = false;
             Control_Themes_GroupBox_Main.Text = "Select A Theme";
@@ -78,7 +79,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Themes_TableLayout_Main.Name = "Control_Themes_TableLayout_Main";
             Control_Themes_TableLayout_Main.RowCount = 1;
             Control_Themes_TableLayout_Main.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            Control_Themes_TableLayout_Main.Size = new Size(588, 29);
+            Control_Themes_TableLayout_Main.Size = new Size(618, 29);
             Control_Themes_TableLayout_Main.TabIndex = 3;
             // 
             // Control_Themes_ComboBox_Theme
@@ -88,14 +89,22 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Themes_ComboBox_Theme.FormattingEnabled = true;
             Control_Themes_ComboBox_Theme.Location = new Point(3, 3);
             Control_Themes_ComboBox_Theme.Name = "Control_Themes_ComboBox_Theme";
-            Control_Themes_ComboBox_Theme.Size = new Size(501, 23);
+            Control_Themes_ComboBox_Theme.Size = new Size(506, 23);
             Control_Themes_ComboBox_Theme.TabIndex = 1;
             // 
             // Control_Themes_Button_Preview
             // 
-            Control_Themes_Button_Preview.Location = new Point(510, 3);
+            Control_Themes_Button_Preview.AutoSize = true;
+            Control_Themes_Button_Preview.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_Themes_Button_Preview.BackColor = Color.FromArgb(200, 200, 200);
+            Control_Themes_Button_Preview.FlatStyle = FlatStyle.Flat;
+            Control_Themes_Button_Preview.Font = new Font("Segoe UI Semibold", 8.75F);
+            Control_Themes_Button_Preview.ForeColor = Color.Black;
+            Control_Themes_Button_Preview.Location = new Point(515, 3);
+            Control_Themes_Button_Preview.MaximumSize = new Size(0, 23);
+            Control_Themes_Button_Preview.MinimumSize = new Size(100, 23);
             Control_Themes_Button_Preview.Name = "Control_Themes_Button_Preview";
-            Control_Themes_Button_Preview.Size = new Size(75, 23);
+            Control_Themes_Button_Preview.Size = new Size(100, 23);
             Control_Themes_Button_Preview.TabIndex = 2;
             Control_Themes_Button_Preview.Text = "Preview";
             Control_Themes_Button_Preview.UseVisualStyleBackColor = true;
@@ -112,6 +121,12 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             // Control_Themes_Button_Save
             // 
+            Control_Themes_Button_Save.AutoSize = true;
+            Control_Themes_Button_Save.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_Themes_Button_Save.BackColor = Color.FromArgb(200, 200, 200);
+            Control_Themes_Button_Save.FlatStyle = FlatStyle.Flat;
+            Control_Themes_Button_Save.Font = new Font("Segoe UI Semibold", 10F);
+            Control_Themes_Button_Save.ForeColor = Color.Black;
             Control_Themes_Button_Save.Location = new Point(3, 3);
             Control_Themes_Button_Save.MaximumSize = new Size(100, 32);
             Control_Themes_Button_Save.MinimumSize = new Size(100, 32);
@@ -128,7 +143,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             groupBox1.Dock = DockStyle.Fill;
             groupBox1.Location = new Point(3, 60);
             groupBox1.Name = "groupBox1";
-            groupBox1.Size = new Size(594, 97);
+            groupBox1.Size = new Size(624, 97);
             groupBox1.TabIndex = 7;
             groupBox1.TabStop = false;
             groupBox1.Text = "UI Settings";
@@ -148,7 +163,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
-            tableLayoutPanel1.Size = new Size(588, 75);
+            tableLayoutPanel1.Size = new Size(618, 75);
             tableLayoutPanel1.TabIndex = 0;
             // 
             // Control_Themes_CheckBox_AutoExpandPanels
@@ -159,7 +174,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Themes_CheckBox_AutoExpandPanels.Dock = DockStyle.Fill;
             Control_Themes_CheckBox_AutoExpandPanels.Location = new Point(3, 53);
             Control_Themes_CheckBox_AutoExpandPanels.Name = "Control_Themes_CheckBox_AutoExpandPanels";
-            Control_Themes_CheckBox_AutoExpandPanels.Size = new Size(582, 19);
+            Control_Themes_CheckBox_AutoExpandPanels.Size = new Size(612, 19);
             Control_Themes_CheckBox_AutoExpandPanels.TabIndex = 5;
             Control_Themes_CheckBox_AutoExpandPanels.Text = "Auto-Expand Panels on Reset/Search";
             Control_Themes_CheckBox_AutoExpandPanels.UseVisualStyleBackColor = true;
@@ -172,7 +187,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Themes_CheckBox_EnableAnimations.Dock = DockStyle.Fill;
             Control_Themes_CheckBox_EnableAnimations.Location = new Point(3, 28);
             Control_Themes_CheckBox_EnableAnimations.Name = "Control_Themes_CheckBox_EnableAnimations";
-            Control_Themes_CheckBox_EnableAnimations.Size = new Size(582, 19);
+            Control_Themes_CheckBox_EnableAnimations.Size = new Size(612, 19);
             Control_Themes_CheckBox_EnableAnimations.TabIndex = 4;
             Control_Themes_CheckBox_EnableAnimations.Text = "Enable UI Animations";
             Control_Themes_CheckBox_EnableAnimations.UseVisualStyleBackColor = true;
@@ -185,7 +200,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Themes_CheckBox_EnableTheming.Dock = DockStyle.Fill;
             Control_Themes_CheckBox_EnableTheming.Location = new Point(3, 3);
             Control_Themes_CheckBox_EnableTheming.Name = "Control_Themes_CheckBox_EnableTheming";
-            Control_Themes_CheckBox_EnableTheming.Size = new Size(582, 19);
+            Control_Themes_CheckBox_EnableTheming.Size = new Size(612, 19);
             Control_Themes_CheckBox_EnableTheming.TabIndex = 0;
             Control_Themes_CheckBox_EnableTheming.Text = "Enable Theme System (colors only, DPI scaling always on)";
             Control_Themes_CheckBox_EnableTheming.UseVisualStyleBackColor = true;
@@ -194,25 +209,38 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // tableLayoutPanel2
             // 
             tableLayoutPanel2.AutoSize = true;
-            tableLayoutPanel2.ColumnCount = 3;
+            tableLayoutPanel2.ColumnCount = 4;
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle());
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle());
             tableLayoutPanel2.Controls.Add(Control_Themes_Button_Save, 0, 0);
-            tableLayoutPanel2.Controls.Add(SettingsForm_Button_Help_Theme, 2, 0);
+            tableLayoutPanel2.Controls.Add(SettingsForm_Button_Help_Theme, 3, 0);
+            tableLayoutPanel2.Controls.Add(Control_Themes_Button_Home, 2, 0);
             tableLayoutPanel2.Dock = DockStyle.Fill;
-            tableLayoutPanel2.Location = new Point(3, 163);
+            tableLayoutPanel2.Location = new Point(3, 171);
             tableLayoutPanel2.Name = "tableLayoutPanel2";
             tableLayoutPanel2.RowCount = 1;
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel2.Size = new Size(594, 38);
+            tableLayoutPanel2.Size = new Size(624, 38);
             tableLayoutPanel2.TabIndex = 8;
+            // 
+            // Control_Themes_Button_Home
+            // 
+            Control_Themes_Button_Home.AutoSize = true;
+            Control_Themes_Button_Home.Location = new Point(444, 3);
+            Control_Themes_Button_Home.MaximumSize = new Size(0, 32);
+            Control_Themes_Button_Home.MinimumSize = new Size(0, 32);
+            Control_Themes_Button_Home.Name = "Control_Themes_Button_Home";
+            Control_Themes_Button_Home.Size = new Size(139, 32);
+            Control_Themes_Button_Home.TabIndex = 4;
+            Control_Themes_Button_Home.Text = "🏠 Back to Home";
             // 
             // SettingsForm_Button_Help_Theme
             // 
             SettingsForm_Button_Help_Theme.AutoSize = true;
             SettingsForm_Button_Help_Theme.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            SettingsForm_Button_Help_Theme.Location = new Point(559, 3);
+            SettingsForm_Button_Help_Theme.Location = new Point(589, 3);
             SettingsForm_Button_Help_Theme.MaximumSize = new Size(32, 32);
             SettingsForm_Button_Help_Theme.MinimumSize = new Size(32, 32);
             SettingsForm_Button_Help_Theme.Name = "SettingsForm_Button_Help_Theme";
@@ -237,7 +265,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             tableLayoutPanel3.RowStyles.Add(new RowStyle());
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             tableLayoutPanel3.RowStyles.Add(new RowStyle());
-            tableLayoutPanel3.Size = new Size(600, 204);
+            tableLayoutPanel3.Size = new Size(630, 212);
             tableLayoutPanel3.TabIndex = 9;
             // 
             // Control_Theme
@@ -247,10 +275,11 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             AutoSize = true;
             Controls.Add(tableLayoutPanel3);
             Name = "Control_Theme";
-            Size = new Size(600, 204);
+            Size = new Size(630, 212);
             Control_Themes_GroupBox_Main.ResumeLayout(false);
             Control_Themes_GroupBox_Main.PerformLayout();
             Control_Themes_TableLayout_Main.ResumeLayout(false);
+            Control_Themes_TableLayout_Main.PerformLayout();
             groupBox1.ResumeLayout(false);
             groupBox1.PerformLayout();
             tableLayoutPanel1.ResumeLayout(false);
@@ -277,6 +306,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         private CheckBox Control_Themes_CheckBox_EnableTheming;
         private TableLayoutPanel tableLayoutPanel2;
         private Button SettingsForm_Button_Help_Theme;
+        private Button Control_Themes_Button_Home;
         private TableLayoutPanel tableLayoutPanel3;
     }
 }

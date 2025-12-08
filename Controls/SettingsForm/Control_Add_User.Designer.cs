@@ -478,7 +478,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Add_User_CheckBox_ViewHidePasswords.Dock = DockStyle.Fill;
             Control_Add_User_CheckBox_ViewHidePasswords.Location = new Point(3, 3);
             Control_Add_User_CheckBox_ViewHidePasswords.Name = "Control_Add_User_CheckBox_ViewHidePasswords";
-            Control_Add_User_CheckBox_ViewHidePasswords.Size = new Size(141, 23);
+            Control_Add_User_CheckBox_ViewHidePasswords.Size = new Size(141, 32);
             Control_Add_User_CheckBox_ViewHidePasswords.TabIndex = 2;
             Control_Add_User_CheckBox_ViewHidePasswords.TabStop = false;
             Control_Add_User_CheckBox_ViewHidePasswords.Text = "Show Password Fields";
@@ -486,23 +486,31 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             // Control_Add_User_Button_Clear
             // 
+            Control_Add_User_Button_Clear.BackColor = Color.FromArgb(96, 94, 92);
+            Control_Add_User_Button_Clear.FlatStyle = FlatStyle.Flat;
+            Control_Add_User_Button_Clear.Font = new Font("Segoe UI Semibold", 10F, FontStyle.Bold);
+            Control_Add_User_Button_Clear.ForeColor = Color.White;
             Control_Add_User_Button_Clear.Location = new Point(320, 3);
             Control_Add_User_Button_Clear.Name = "Control_Add_User_Button_Clear";
-            Control_Add_User_Button_Clear.Size = new Size(75, 23);
+            Control_Add_User_Button_Clear.Size = new Size(75, 32);
             Control_Add_User_Button_Clear.TabIndex = 1;
             Control_Add_User_Button_Clear.TabStop = false;
             Control_Add_User_Button_Clear.Text = "Clear";
-            Control_Add_User_Button_Clear.UseVisualStyleBackColor = true;
+            Control_Add_User_Button_Clear.UseVisualStyleBackColor = false;
             Control_Add_User_Button_Clear.Click += Control_Add_User_Button_Clear_Click;
             // 
             // Control_Add_User_Button_Save
             // 
+            Control_Add_User_Button_Save.BackColor = Color.FromArgb(16, 124, 16);
+            Control_Add_User_Button_Save.FlatStyle = FlatStyle.Flat;
+            Control_Add_User_Button_Save.Font = new Font("Segoe UI Semibold", 10F, FontStyle.Bold);
+            Control_Add_User_Button_Save.ForeColor = Color.White;
             Control_Add_User_Button_Save.Location = new Point(401, 3);
             Control_Add_User_Button_Save.Name = "Control_Add_User_Button_Save";
-            Control_Add_User_Button_Save.Size = new Size(75, 23);
+            Control_Add_User_Button_Save.Size = new Size(75, 32);
             Control_Add_User_Button_Save.TabIndex = 0;
-            Control_Add_User_Button_Save.Text = "Save";
-            Control_Add_User_Button_Save.UseVisualStyleBackColor = true;
+            Control_Add_User_Button_Save.Text = "💾 Save";
+            Control_Add_User_Button_Save.UseVisualStyleBackColor = false;
             Control_Add_User_Button_Save.Click += Control_Add_User_Button_Save_Click;
             // 
             // Control_Add_User_TableLayoutPanel_Buttons
@@ -523,7 +531,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Add_User_TableLayoutPanel_Buttons.Name = "Control_Add_User_TableLayoutPanel_Buttons";
             Control_Add_User_TableLayoutPanel_Buttons.RowCount = 1;
             Control_Add_User_TableLayoutPanel_Buttons.RowStyles.Add(new RowStyle());
-            Control_Add_User_TableLayoutPanel_Buttons.Size = new Size(479, 29);
+            Control_Add_User_TableLayoutPanel_Buttons.Size = new Size(479, 38);
             Control_Add_User_TableLayoutPanel_Buttons.TabIndex = 3;
             // 
             // Control_Add_User_TableLayoutPanel_Master
@@ -545,7 +553,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Add_User_TableLayoutPanel_Master.RowStyles.Add(new RowStyle());
             Control_Add_User_TableLayoutPanel_Master.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             Control_Add_User_TableLayoutPanel_Master.RowStyles.Add(new RowStyle());
-            Control_Add_User_TableLayoutPanel_Master.Size = new Size(485, 388);
+            Control_Add_User_TableLayoutPanel_Master.Size = new Size(485, 397);
             Control_Add_User_TableLayoutPanel_Master.TabIndex = 17;
             // 
             // Control_Add_User
@@ -553,10 +561,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
             AutoSize = true;
-            AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Controls.Add(Control_Add_User_TableLayoutPanel_Master);
             Name = "Control_Add_User";
-            Size = new Size(485, 388);
+            Size = new Size(485, 397);
             Control_Add_User_GroupBox_UserInfo.ResumeLayout(false);
             Control_Add_User_GroupBox_UserInfo.PerformLayout();
             Control_Add_User_TableLayout_UserInfo.ResumeLayout(false);

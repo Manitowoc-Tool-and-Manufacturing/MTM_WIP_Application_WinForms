@@ -118,7 +118,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_LocationManagement_Button_RemoveConfirm.Text = "Remove";
             Control_LocationManagement_Button_RemoveCancel.Text = "Cancel";
             Control_LocationManagement_Button_Back.Text = "← Back to Selection";
-            Control_LocationManagement_Button_Home.Text = "Home";
+            Control_LocationManagement_Button_Home.Text = "🏠 Back to Home";
             
             // Labels
             Control_LocationManagement_Label_AddIssuedBy.Text = "Issued By";
@@ -235,7 +235,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // Hide home, show cards container and back button
             Control_LocationManagement_Panel_Home.Visible = false;
             Control_LocationManagement_TableLayoutPanel_Cards.Visible = true;
-            Control_LocationManagement_TableLayoutPanel_BackButton.Visible = true;
+            Control_LocationManagement_TableLayout_BackButton.Visible = true;
             Control_LocationManagement_Button_Back.Visible = true;
             
             // Hide all cards first
@@ -271,7 +271,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // Show home, hide cards and back button
             Control_LocationManagement_Panel_Home.Visible = true;
             Control_LocationManagement_TableLayoutPanel_Cards.Visible = false;
-            Control_LocationManagement_TableLayoutPanel_BackButton.Visible = true;
+            Control_LocationManagement_TableLayout_BackButton.Visible = true;
             Control_LocationManagement_Button_Back.Visible = false;
         }
 

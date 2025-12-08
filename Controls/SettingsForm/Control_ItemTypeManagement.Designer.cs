@@ -156,11 +156,11 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_ItemTypeManagement_TableLayout_BackButton = new TableLayoutPanel();
             Control_ItemTypeManagement_Button_Back = new Button();
             Control_ItemTypeManagement_Button_Home = new Button();
+            SettingsForm_Button_Help_ItemTypes = new Button();
             Control_ItemTypeManagement_Label_AddIssuedBy = new Label();
             Control_ItemTypeManagement_Label_AddIssuedByValue = new Label();
             Control_ItemTypeManagement_Label_EditIssuedBy = new Label();
             Control_ItemTypeManagement_Label_EditIssuedByValue = new Label();
-            SettingsForm_Button_Help_ItemTypes = new Button();
             Control_ItemTypeManagement_TableLayout_Main.SuspendLayout();
             Control_ItemTypeManagement_Panel_Container.SuspendLayout();
             Control_ItemTypeManagement_Panel_Home.SuspendLayout();
@@ -197,7 +197,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_ItemTypeManagement_TableLayout_Main.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_ItemTypeManagement_TableLayout_Main.ColumnCount = 1;
             Control_ItemTypeManagement_TableLayout_Main.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            Control_ItemTypeManagement_TableLayout_Main.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 20F));
             Control_ItemTypeManagement_TableLayout_Main.Controls.Add(Control_ItemTypeManagement_Label_Header, 0, 0);
             Control_ItemTypeManagement_TableLayout_Main.Controls.Add(Control_ItemTypeManagement_Label_Subtitle, 0, 1);
             Control_ItemTypeManagement_TableLayout_Main.Controls.Add(Control_ItemTypeManagement_Panel_Container, 0, 2);
@@ -535,7 +534,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_ItemTypeManagement_Panel_AddCard.Dock = DockStyle.Fill;
             Control_ItemTypeManagement_Panel_AddCard.Location = new Point(3, 3);
             Control_ItemTypeManagement_Panel_AddCard.Name = "Control_ItemTypeManagement_Panel_AddCard";
-            Control_ItemTypeManagement_Panel_AddCard.Size = new Size(440, 175);
+            Control_ItemTypeManagement_Panel_AddCard.Size = new Size(440, 184);
             Control_ItemTypeManagement_Panel_AddCard.TabIndex = 0;
             // 
             // Control_ItemTypeManagement_TableLayout_Add
@@ -553,7 +552,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_ItemTypeManagement_TableLayout_Add.RowCount = 2;
             Control_ItemTypeManagement_TableLayout_Add.RowStyles.Add(new RowStyle());
             Control_ItemTypeManagement_TableLayout_Add.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            Control_ItemTypeManagement_TableLayout_Add.Size = new Size(438, 173);
+            Control_ItemTypeManagement_TableLayout_Add.Size = new Size(438, 182);
             Control_ItemTypeManagement_TableLayout_Add.TabIndex = 0;
             // 
             // Control_ItemTypeManagement_TableLayout_AddHeader
@@ -614,7 +613,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_ItemTypeManagement_TableLayout_AddContent.RowCount = 2;
             Control_ItemTypeManagement_TableLayout_AddContent.RowStyles.Add(new RowStyle());
             Control_ItemTypeManagement_TableLayout_AddContent.RowStyles.Add(new RowStyle());
-            Control_ItemTypeManagement_TableLayout_AddContent.Size = new Size(400, 72);
+            Control_ItemTypeManagement_TableLayout_AddContent.Size = new Size(400, 81);
             Control_ItemTypeManagement_TableLayout_AddContent.TabIndex = 2;
             // 
             // Control_ItemTypeManagement_TextBox_AddItemType
@@ -649,22 +648,34 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_ItemTypeManagement_TableLayout_AddActions.Name = "Control_ItemTypeManagement_TableLayout_AddActions";
             Control_ItemTypeManagement_TableLayout_AddActions.RowCount = 1;
             Control_ItemTypeManagement_TableLayout_AddActions.RowStyles.Add(new RowStyle());
-            Control_ItemTypeManagement_TableLayout_AddActions.Size = new Size(394, 29);
+            Control_ItemTypeManagement_TableLayout_AddActions.Size = new Size(394, 38);
             Control_ItemTypeManagement_TableLayout_AddActions.TabIndex = 1;
             // 
             // Control_ItemTypeManagement_Button_AddSave
             // 
+            Control_ItemTypeManagement_Button_AddSave.BackColor = Color.FromArgb(16, 124, 16);
+            Control_ItemTypeManagement_Button_AddSave.FlatStyle = FlatStyle.Flat;
+            Control_ItemTypeManagement_Button_AddSave.Font = new Font("Segoe UI Semibold", 10F);
+            Control_ItemTypeManagement_Button_AddSave.ForeColor = Color.White;
             Control_ItemTypeManagement_Button_AddSave.Location = new Point(3, 3);
             Control_ItemTypeManagement_Button_AddSave.Name = "Control_ItemTypeManagement_Button_AddSave";
-            Control_ItemTypeManagement_Button_AddSave.Size = new Size(75, 23);
+            Control_ItemTypeManagement_Button_AddSave.Size = new Size(100, 32);
             Control_ItemTypeManagement_Button_AddSave.TabIndex = 0;
+            Control_ItemTypeManagement_Button_AddSave.Text = "💾 Save";
+            Control_ItemTypeManagement_Button_AddSave.UseVisualStyleBackColor = false;
             // 
             // Control_ItemTypeManagement_Button_AddClear
             // 
-            Control_ItemTypeManagement_Button_AddClear.Location = new Point(316, 3);
+            Control_ItemTypeManagement_Button_AddClear.BackColor = Color.FromArgb(96, 94, 92);
+            Control_ItemTypeManagement_Button_AddClear.FlatStyle = FlatStyle.Flat;
+            Control_ItemTypeManagement_Button_AddClear.Font = new Font("Segoe UI Semibold", 10F);
+            Control_ItemTypeManagement_Button_AddClear.ForeColor = Color.White;
+            Control_ItemTypeManagement_Button_AddClear.Location = new Point(291, 3);
             Control_ItemTypeManagement_Button_AddClear.Name = "Control_ItemTypeManagement_Button_AddClear";
-            Control_ItemTypeManagement_Button_AddClear.Size = new Size(75, 23);
+            Control_ItemTypeManagement_Button_AddClear.Size = new Size(100, 32);
             Control_ItemTypeManagement_Button_AddClear.TabIndex = 1;
+            Control_ItemTypeManagement_Button_AddClear.Text = "Clear";
+            Control_ItemTypeManagement_Button_AddClear.UseVisualStyleBackColor = false;
             // 
             // Control_ItemTypeManagement_Panel_EditCard
             // 
@@ -673,9 +684,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_ItemTypeManagement_Panel_EditCard.BorderStyle = BorderStyle.FixedSingle;
             Control_ItemTypeManagement_Panel_EditCard.Controls.Add(Control_ItemTypeManagement_TableLayout_Edit);
             Control_ItemTypeManagement_Panel_EditCard.Dock = DockStyle.Fill;
-            Control_ItemTypeManagement_Panel_EditCard.Location = new Point(3, 184);
+            Control_ItemTypeManagement_Panel_EditCard.Location = new Point(3, 193);
             Control_ItemTypeManagement_Panel_EditCard.Name = "Control_ItemTypeManagement_Panel_EditCard";
-            Control_ItemTypeManagement_Panel_EditCard.Size = new Size(440, 226);
+            Control_ItemTypeManagement_Panel_EditCard.Size = new Size(440, 235);
             Control_ItemTypeManagement_Panel_EditCard.TabIndex = 1;
             // 
             // Control_ItemTypeManagement_TableLayout_Edit
@@ -693,7 +704,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_ItemTypeManagement_TableLayout_Edit.RowCount = 2;
             Control_ItemTypeManagement_TableLayout_Edit.RowStyles.Add(new RowStyle());
             Control_ItemTypeManagement_TableLayout_Edit.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            Control_ItemTypeManagement_TableLayout_Edit.Size = new Size(438, 224);
+            Control_ItemTypeManagement_TableLayout_Edit.Size = new Size(438, 233);
             Control_ItemTypeManagement_TableLayout_Edit.TabIndex = 0;
             // 
             // Control_ItemTypeManagement_TableLayout_EditHeader
@@ -756,7 +767,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_ItemTypeManagement_TableLayout_EditContent.RowStyles.Add(new RowStyle());
             Control_ItemTypeManagement_TableLayout_EditContent.RowStyles.Add(new RowStyle());
             Control_ItemTypeManagement_TableLayout_EditContent.RowStyles.Add(new RowStyle());
-            Control_ItemTypeManagement_TableLayout_EditContent.Size = new Size(400, 123);
+            Control_ItemTypeManagement_TableLayout_EditContent.Size = new Size(400, 132);
             Control_ItemTypeManagement_TableLayout_EditContent.TabIndex = 2;
             // 
             // Control_ItemTypeManagement_Suggestion_EditSelectItemType
@@ -812,22 +823,34 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_ItemTypeManagement_TableLayout_EditActions.Name = "Control_ItemTypeManagement_TableLayout_EditActions";
             Control_ItemTypeManagement_TableLayout_EditActions.RowCount = 1;
             Control_ItemTypeManagement_TableLayout_EditActions.RowStyles.Add(new RowStyle());
-            Control_ItemTypeManagement_TableLayout_EditActions.Size = new Size(394, 29);
+            Control_ItemTypeManagement_TableLayout_EditActions.Size = new Size(394, 38);
             Control_ItemTypeManagement_TableLayout_EditActions.TabIndex = 2;
             // 
             // Control_ItemTypeManagement_Button_EditSave
             // 
+            Control_ItemTypeManagement_Button_EditSave.BackColor = Color.FromArgb(16, 124, 16);
+            Control_ItemTypeManagement_Button_EditSave.FlatStyle = FlatStyle.Flat;
+            Control_ItemTypeManagement_Button_EditSave.Font = new Font("Segoe UI Semibold", 10F);
+            Control_ItemTypeManagement_Button_EditSave.ForeColor = Color.White;
             Control_ItemTypeManagement_Button_EditSave.Location = new Point(3, 3);
             Control_ItemTypeManagement_Button_EditSave.Name = "Control_ItemTypeManagement_Button_EditSave";
-            Control_ItemTypeManagement_Button_EditSave.Size = new Size(75, 23);
+            Control_ItemTypeManagement_Button_EditSave.Size = new Size(100, 32);
             Control_ItemTypeManagement_Button_EditSave.TabIndex = 0;
+            Control_ItemTypeManagement_Button_EditSave.Text = "💾 Save";
+            Control_ItemTypeManagement_Button_EditSave.UseVisualStyleBackColor = false;
             // 
             // Control_ItemTypeManagement_Button_EditReset
             // 
-            Control_ItemTypeManagement_Button_EditReset.Location = new Point(316, 3);
+            Control_ItemTypeManagement_Button_EditReset.BackColor = Color.FromArgb(96, 94, 92);
+            Control_ItemTypeManagement_Button_EditReset.FlatStyle = FlatStyle.Flat;
+            Control_ItemTypeManagement_Button_EditReset.Font = new Font("Segoe UI Semibold", 10F);
+            Control_ItemTypeManagement_Button_EditReset.ForeColor = Color.White;
+            Control_ItemTypeManagement_Button_EditReset.Location = new Point(291, 3);
             Control_ItemTypeManagement_Button_EditReset.Name = "Control_ItemTypeManagement_Button_EditReset";
-            Control_ItemTypeManagement_Button_EditReset.Size = new Size(75, 23);
+            Control_ItemTypeManagement_Button_EditReset.Size = new Size(100, 32);
             Control_ItemTypeManagement_Button_EditReset.TabIndex = 1;
+            Control_ItemTypeManagement_Button_EditReset.Text = "Reset";
+            Control_ItemTypeManagement_Button_EditReset.UseVisualStyleBackColor = false;
             // 
             // Control_ItemTypeManagement_Panel_RemoveCard
             // 
@@ -835,9 +858,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_ItemTypeManagement_Panel_RemoveCard.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_ItemTypeManagement_Panel_RemoveCard.Controls.Add(Control_ItemTypeManagement_TableLayout_Remove);
             Control_ItemTypeManagement_Panel_RemoveCard.Dock = DockStyle.Fill;
-            Control_ItemTypeManagement_Panel_RemoveCard.Location = new Point(3, 416);
+            Control_ItemTypeManagement_Panel_RemoveCard.Location = new Point(3, 434);
             Control_ItemTypeManagement_Panel_RemoveCard.Name = "Control_ItemTypeManagement_Panel_RemoveCard";
-            Control_ItemTypeManagement_Panel_RemoveCard.Size = new Size(440, 252);
+            Control_ItemTypeManagement_Panel_RemoveCard.Size = new Size(440, 261);
             Control_ItemTypeManagement_Panel_RemoveCard.TabIndex = 2;
             // 
             // Control_ItemTypeManagement_TableLayout_Remove
@@ -855,7 +878,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_ItemTypeManagement_TableLayout_Remove.RowCount = 2;
             Control_ItemTypeManagement_TableLayout_Remove.RowStyles.Add(new RowStyle());
             Control_ItemTypeManagement_TableLayout_Remove.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            Control_ItemTypeManagement_TableLayout_Remove.Size = new Size(440, 252);
+            Control_ItemTypeManagement_TableLayout_Remove.Size = new Size(440, 261);
             Control_ItemTypeManagement_TableLayout_Remove.TabIndex = 0;
             // 
             // Control_ItemTypeManagement_TableLayout_RemoveContent
@@ -878,7 +901,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_ItemTypeManagement_TableLayout_RemoveContent.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             Control_ItemTypeManagement_TableLayout_RemoveContent.RowStyles.Add(new RowStyle());
             Control_ItemTypeManagement_TableLayout_RemoveContent.RowStyles.Add(new RowStyle());
-            Control_ItemTypeManagement_TableLayout_RemoveContent.Size = new Size(402, 151);
+            Control_ItemTypeManagement_TableLayout_RemoveContent.Size = new Size(402, 160);
             Control_ItemTypeManagement_TableLayout_RemoveContent.TabIndex = 2;
             // 
             // Control_ItemTypeManagement_Suggestion_RemoveSelectItemType
@@ -994,22 +1017,34 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_ItemTypeManagement_TableLayout_RemoveActions.Name = "Control_ItemTypeManagement_TableLayout_RemoveActions";
             Control_ItemTypeManagement_TableLayout_RemoveActions.RowCount = 1;
             Control_ItemTypeManagement_TableLayout_RemoveActions.RowStyles.Add(new RowStyle());
-            Control_ItemTypeManagement_TableLayout_RemoveActions.Size = new Size(396, 29);
+            Control_ItemTypeManagement_TableLayout_RemoveActions.Size = new Size(396, 38);
             Control_ItemTypeManagement_TableLayout_RemoveActions.TabIndex = 3;
             // 
             // Control_ItemTypeManagement_Button_RemoveConfirm
             // 
+            Control_ItemTypeManagement_Button_RemoveConfirm.BackColor = Color.FromArgb(231, 76, 60);
+            Control_ItemTypeManagement_Button_RemoveConfirm.FlatStyle = FlatStyle.Flat;
+            Control_ItemTypeManagement_Button_RemoveConfirm.Font = new Font("Segoe UI Semibold", 10F);
+            Control_ItemTypeManagement_Button_RemoveConfirm.ForeColor = Color.White;
             Control_ItemTypeManagement_Button_RemoveConfirm.Location = new Point(3, 3);
             Control_ItemTypeManagement_Button_RemoveConfirm.Name = "Control_ItemTypeManagement_Button_RemoveConfirm";
-            Control_ItemTypeManagement_Button_RemoveConfirm.Size = new Size(75, 23);
+            Control_ItemTypeManagement_Button_RemoveConfirm.Size = new Size(180, 32);
             Control_ItemTypeManagement_Button_RemoveConfirm.TabIndex = 0;
+            Control_ItemTypeManagement_Button_RemoveConfirm.Text = "🗑️ Remove Item Type";
+            Control_ItemTypeManagement_Button_RemoveConfirm.UseVisualStyleBackColor = false;
             // 
             // Control_ItemTypeManagement_Button_RemoveCancel
             // 
-            Control_ItemTypeManagement_Button_RemoveCancel.Location = new Point(318, 3);
+            Control_ItemTypeManagement_Button_RemoveCancel.BackColor = Color.FromArgb(96, 94, 92);
+            Control_ItemTypeManagement_Button_RemoveCancel.FlatStyle = FlatStyle.Flat;
+            Control_ItemTypeManagement_Button_RemoveCancel.Font = new Font("Segoe UI Semibold", 10F);
+            Control_ItemTypeManagement_Button_RemoveCancel.ForeColor = Color.White;
+            Control_ItemTypeManagement_Button_RemoveCancel.Location = new Point(293, 3);
             Control_ItemTypeManagement_Button_RemoveCancel.Name = "Control_ItemTypeManagement_Button_RemoveCancel";
-            Control_ItemTypeManagement_Button_RemoveCancel.Size = new Size(75, 23);
+            Control_ItemTypeManagement_Button_RemoveCancel.Size = new Size(100, 32);
             Control_ItemTypeManagement_Button_RemoveCancel.TabIndex = 1;
+            Control_ItemTypeManagement_Button_RemoveCancel.Text = "Cancel";
+            Control_ItemTypeManagement_Button_RemoveCancel.UseVisualStyleBackColor = false;
             // 
             // Control_ItemTypeManagement_TableLayout_RemoveHeader
             // 
@@ -1057,7 +1092,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // Control_ItemTypeManagement_TableLayout_BackButton
             // 
             Control_ItemTypeManagement_TableLayout_BackButton.AutoSize = true;
-            Control_ItemTypeManagement_TableLayout_BackButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_ItemTypeManagement_TableLayout_BackButton.ColumnCount = 4;
             Control_ItemTypeManagement_TableLayout_BackButton.ColumnStyles.Add(new ColumnStyle());
             Control_ItemTypeManagement_TableLayout_BackButton.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
@@ -1071,32 +1105,58 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_ItemTypeManagement_TableLayout_BackButton.Name = "Control_ItemTypeManagement_TableLayout_BackButton";
             Control_ItemTypeManagement_TableLayout_BackButton.RowStyles.Add(new RowStyle());
             Control_ItemTypeManagement_TableLayout_BackButton.Size = new Size(446, 38);
-            Control_ItemTypeManagement_TableLayout_BackButton.TabIndex = 2;
+            Control_ItemTypeManagement_TableLayout_BackButton.TabIndex = 3;
             // 
             // Control_ItemTypeManagement_Button_Back
             // 
             Control_ItemTypeManagement_Button_Back.AutoSize = true;
+            Control_ItemTypeManagement_Button_Back.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_ItemTypeManagement_Button_Back.BackColor = Color.FromArgb(96, 94, 92);
+            Control_ItemTypeManagement_Button_Back.Dock = DockStyle.Fill;
+            Control_ItemTypeManagement_Button_Back.FlatStyle = FlatStyle.Flat;
+            Control_ItemTypeManagement_Button_Back.Font = new Font("Segoe UI Semibold", 10F);
+            Control_ItemTypeManagement_Button_Back.ForeColor = Color.White;
             Control_ItemTypeManagement_Button_Back.Location = new Point(3, 3);
             Control_ItemTypeManagement_Button_Back.MaximumSize = new Size(0, 32);
-            Control_ItemTypeManagement_Button_Back.MinimumSize = new Size(0, 32);
+            Control_ItemTypeManagement_Button_Back.MinimumSize = new Size(100, 32);
             Control_ItemTypeManagement_Button_Back.Name = "Control_ItemTypeManagement_Button_Back";
-            Control_ItemTypeManagement_Button_Back.Padding = new Padding(16, 6, 16, 6);
-            Control_ItemTypeManagement_Button_Back.Size = new Size(152, 32);
+            Control_ItemTypeManagement_Button_Back.Size = new Size(145, 32);
             Control_ItemTypeManagement_Button_Back.TabIndex = 0;
             Control_ItemTypeManagement_Button_Back.Text = "← Back to Selection";
+            Control_ItemTypeManagement_Button_Back.UseVisualStyleBackColor = false;
             Control_ItemTypeManagement_Button_Back.Visible = false;
             // 
             // Control_ItemTypeManagement_Button_Home
             // 
             Control_ItemTypeManagement_Button_Home.AutoSize = true;
-            Control_ItemTypeManagement_Button_Home.Location = new Point(266, 3);
+            Control_ItemTypeManagement_Button_Home.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_ItemTypeManagement_Button_Home.BackColor = Color.FromArgb(0, 120, 212);
+            Control_ItemTypeManagement_Button_Home.Dock = DockStyle.Fill;
+            Control_ItemTypeManagement_Button_Home.FlatStyle = FlatStyle.Flat;
+            Control_ItemTypeManagement_Button_Home.Font = new Font("Segoe UI Semibold", 10F);
+            Control_ItemTypeManagement_Button_Home.ForeColor = Color.White;
+            Control_ItemTypeManagement_Button_Home.Location = new Point(274, 3);
             Control_ItemTypeManagement_Button_Home.MaximumSize = new Size(0, 32);
-            Control_ItemTypeManagement_Button_Home.MinimumSize = new Size(0, 32);
+            Control_ItemTypeManagement_Button_Home.MinimumSize = new Size(100, 32);
             Control_ItemTypeManagement_Button_Home.Name = "Control_ItemTypeManagement_Button_Home";
-            Control_ItemTypeManagement_Button_Home.Padding = new Padding(16, 6, 16, 6);
-            Control_ItemTypeManagement_Button_Home.Size = new Size(139, 32);
+            Control_ItemTypeManagement_Button_Home.Size = new Size(131, 32);
             Control_ItemTypeManagement_Button_Home.TabIndex = 1;
             Control_ItemTypeManagement_Button_Home.Text = "🏠 Back to Home";
+            Control_ItemTypeManagement_Button_Home.UseVisualStyleBackColor = false;
+            // 
+            // SettingsForm_Button_Help_ItemTypes
+            // 
+            SettingsForm_Button_Help_ItemTypes.AutoSize = true;
+            SettingsForm_Button_Help_ItemTypes.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            SettingsForm_Button_Help_ItemTypes.Dock = DockStyle.Fill;
+            SettingsForm_Button_Help_ItemTypes.Location = new Point(411, 3);
+            SettingsForm_Button_Help_ItemTypes.MaximumSize = new Size(32, 32);
+            SettingsForm_Button_Help_ItemTypes.MinimumSize = new Size(32, 32);
+            SettingsForm_Button_Help_ItemTypes.Name = "SettingsForm_Button_Help_ItemTypes";
+            SettingsForm_Button_Help_ItemTypes.Size = new Size(32, 32);
+            SettingsForm_Button_Help_ItemTypes.TabIndex = 14;
+            SettingsForm_Button_Help_ItemTypes.Text = "?";
+            SettingsForm_Button_Help_ItemTypes.UseVisualStyleBackColor = true;
             // 
             // Control_ItemTypeManagement_Label_AddIssuedBy
             // 
@@ -1125,20 +1185,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_ItemTypeManagement_Label_EditIssuedByValue.Name = "Control_ItemTypeManagement_Label_EditIssuedByValue";
             Control_ItemTypeManagement_Label_EditIssuedByValue.Size = new Size(100, 23);
             Control_ItemTypeManagement_Label_EditIssuedByValue.TabIndex = 0;
-            // 
-            // SettingsForm_Button_Help_ItemTypes
-            // 
-            SettingsForm_Button_Help_ItemTypes.AutoSize = true;
-            SettingsForm_Button_Help_ItemTypes.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            SettingsForm_Button_Help_ItemTypes.Dock = DockStyle.Fill;
-            SettingsForm_Button_Help_ItemTypes.Location = new Point(411, 3);
-            SettingsForm_Button_Help_ItemTypes.MaximumSize = new Size(32, 32);
-            SettingsForm_Button_Help_ItemTypes.MinimumSize = new Size(32, 32);
-            SettingsForm_Button_Help_ItemTypes.Name = "SettingsForm_Button_Help_ItemTypes";
-            SettingsForm_Button_Help_ItemTypes.Size = new Size(32, 32);
-            SettingsForm_Button_Help_ItemTypes.TabIndex = 14;
-            SettingsForm_Button_Help_ItemTypes.Text = "?";
-            SettingsForm_Button_Help_ItemTypes.UseVisualStyleBackColor = true;
             // 
             // Control_ItemTypeManagement
             // 

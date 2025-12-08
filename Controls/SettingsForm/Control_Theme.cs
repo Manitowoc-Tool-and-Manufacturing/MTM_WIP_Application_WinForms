@@ -13,6 +13,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
     {
         public event EventHandler? ThemeChanged;
         public event EventHandler<string>? StatusMessageChanged;
+        public event EventHandler? BackToHomeRequested;
 
         public Control_Theme()
         {
@@ -20,6 +21,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
 
             Control_Themes_Button_Save.Click += SaveButton_Click;
             Control_Themes_Button_Preview.Click += PreviewButton_Click;
+            Control_Themes_Button_Home.Click += (_, _) => BackToHomeRequested?.Invoke(this, EventArgs.Empty);
             LoadThemeSettingsAsync();
         }
 

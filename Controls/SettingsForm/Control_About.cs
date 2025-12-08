@@ -14,6 +14,8 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
     {
         #region Fields
 
+        public event EventHandler? BackToHomeRequested;
+
         #endregion
 
         #region Constructors
@@ -24,6 +26,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
         public Control_About()
         {
             InitializeComponent();
+            Control_About_Button_Home.Click += (_, _) => BackToHomeRequested?.Invoke(this, EventArgs.Empty);
             Control_About_LoadControl();
         }
 
@@ -41,7 +44,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 Control_About_Label_AppInfo_Version.Text = $"Version: {version?.ToString() ?? "Unknown"}";
                 
                 // Copyright and Owner are static in designer, but can be dynamic if needed
-                Control_About_Label_AppInfo_Copyright.Text = $"Copyright © {DateTime.Now.Year}";
+                Control_About_Label_AppInfo_Copyright.Text = $"Copyright Manitowoc Tool and Manufacturing© {DateTime.Now.Year}";
             }
             catch (Exception ex)
             {

@@ -491,7 +491,7 @@
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
-            ClientSize = new Size(825, 575);
+            ClientSize = new Size(825, 675);
             Controls.Add(SettingsForm_SplitContainer_Main);
             FormBorderStyle = FormBorderStyle.FixedDialog;
             Icon = (Icon)resources.GetObject("$this.Icon");

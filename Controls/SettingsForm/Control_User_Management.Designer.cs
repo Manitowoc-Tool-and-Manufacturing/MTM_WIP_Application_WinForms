@@ -500,12 +500,12 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_User_Management_TableLayout_BackButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_User_Management_TableLayout_BackButton.ColumnCount = 4;
             Control_User_Management_TableLayout_BackButton.ColumnStyles.Add(new ColumnStyle());
-            Control_User_Management_TableLayout_BackButton.ColumnStyles.Add(new ColumnStyle());
             Control_User_Management_TableLayout_BackButton.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             Control_User_Management_TableLayout_BackButton.ColumnStyles.Add(new ColumnStyle());
+            Control_User_Management_TableLayout_BackButton.ColumnStyles.Add(new ColumnStyle());
             Control_User_Management_TableLayout_BackButton.Controls.Add(Control_User_Management_Button_Back, 0, 0);
-            Control_User_Management_TableLayout_BackButton.Controls.Add(Control_User_Management_Button_Home, 1, 0);
             Control_User_Management_TableLayout_BackButton.Controls.Add(SettingsForm_Button_Help_Users, 3, 0);
+            Control_User_Management_TableLayout_BackButton.Controls.Add(Control_User_Management_Button_Home, 2, 0);
             Control_User_Management_TableLayout_BackButton.Dock = DockStyle.Fill;
             Control_User_Management_TableLayout_BackButton.Location = new Point(3, 453);
             Control_User_Management_TableLayout_BackButton.Name = "Control_User_Management_TableLayout_BackButton";
@@ -518,12 +518,12 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             Control_User_Management_Button_Back.AutoSize = true;
             Control_User_Management_Button_Back.FlatStyle = FlatStyle.Flat;
-            Control_User_Management_Button_Back.Font = new Font("Segoe UI Emoji", 10F);
+            Control_User_Management_Button_Back.Font = new Font("Segoe UI Semibold", 10F, FontStyle.Bold);
             Control_User_Management_Button_Back.Location = new Point(3, 3);
             Control_User_Management_Button_Back.Name = "Control_User_Management_Button_Back";
-            Control_User_Management_Button_Back.Size = new Size(65, 31);
+            Control_User_Management_Button_Back.Size = new Size(145, 32);
             Control_User_Management_Button_Back.TabIndex = 0;
-            Control_User_Management_Button_Back.Text = "← Back";
+            Control_User_Management_Button_Back.Text = "← Back to Selection";
             Control_User_Management_Button_Back.UseVisualStyleBackColor = true;
             Control_User_Management_Button_Back.Visible = false;
             // 
@@ -531,12 +531,12 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             Control_User_Management_Button_Home.AutoSize = true;
             Control_User_Management_Button_Home.FlatStyle = FlatStyle.Flat;
-            Control_User_Management_Button_Home.Font = new Font("Segoe UI Emoji", 10F);
-            Control_User_Management_Button_Home.Location = new Point(74, 3);
+            Control_User_Management_Button_Home.Font = new Font("Segoe UI Semibold", 10F, FontStyle.Bold);
+            Control_User_Management_Button_Home.Location = new Point(351, 3);
             Control_User_Management_Button_Home.Name = "Control_User_Management_Button_Home";
-            Control_User_Management_Button_Home.Size = new Size(81, 31);
+            Control_User_Management_Button_Home.Size = new Size(132, 32);
             Control_User_Management_Button_Home.TabIndex = 1;
-            Control_User_Management_Button_Home.Text = "🏠 Home";
+            Control_User_Management_Button_Home.Text = "🏠 Back to Home";
             Control_User_Management_Button_Home.UseVisualStyleBackColor = true;
             // 
             // SettingsForm_Button_Help_Users

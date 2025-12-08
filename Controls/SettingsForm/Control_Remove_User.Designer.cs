@@ -71,11 +71,16 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             // RemoveUserControl_Button_Remove
             // 
+            RemoveUserControl_Button_Remove.BackColor = Color.FromArgb(231, 76, 60);
+            RemoveUserControl_Button_Remove.FlatStyle = FlatStyle.Flat;
+            RemoveUserControl_Button_Remove.Font = new Font("Segoe UI Semibold", 10F, FontStyle.Bold);
+            RemoveUserControl_Button_Remove.ForeColor = Color.White;
             RemoveUserControl_Button_Remove.Location = new Point(370, 20);
             RemoveUserControl_Button_Remove.Name = "RemoveUserControl_Button_Remove";
-            RemoveUserControl_Button_Remove.Size = new Size(120, 23);
+            RemoveUserControl_Button_Remove.Size = new Size(140, 32);
             RemoveUserControl_Button_Remove.TabIndex = 2;
-            RemoveUserControl_Button_Remove.Text = "Remove User";
+            RemoveUserControl_Button_Remove.Text = "🗑️ Remove User";
+            RemoveUserControl_Button_Remove.UseVisualStyleBackColor = false;
             // 
             // RemoveUserControl_GroupBox_UserInfo
             // 

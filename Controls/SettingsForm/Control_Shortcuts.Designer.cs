@@ -36,6 +36,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Shortcuts_TableLayout_Bottom = new TableLayoutPanel();
             Control_Shortcuts_Button_Home = new Button();
             Control_Shortcuts_Button_Reset = new Button();
+            SettingsForm_Button_Help_Shortcuts = new Button();
             Control_Shortcuts_Panel_ScrollContainer = new FlowLayoutPanel();
             Control_Shortcuts_TableLayout_ScrollContainer = new TableLayoutPanel();
             Control_Shortcuts_FlowLayoutPanel_Cards = new FlowLayoutPanel();
@@ -48,7 +49,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Shortcuts_Card_General = new Control_SettingsCollapsibleCard();
             Control_Shortcuts_Card_Navigation = new Control_SettingsCollapsibleCard();
             Control_Shortcuts_Card_Transactions = new Control_SettingsCollapsibleCard();
-            SettingsForm_Button_Help_Shortcuts = new Button();
             Control_Shortcuts_GroupBox_Main.SuspendLayout();
             Control_Shortcuts_TableLayout_Main.SuspendLayout();
             Control_Shortcuts_TableLayout_Bottom.SuspendLayout();
@@ -93,12 +93,12 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Shortcuts_TableLayout_Bottom.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_Shortcuts_TableLayout_Bottom.ColumnCount = 4;
             Control_Shortcuts_TableLayout_Bottom.ColumnStyles.Add(new ColumnStyle());
-            Control_Shortcuts_TableLayout_Bottom.ColumnStyles.Add(new ColumnStyle());
             Control_Shortcuts_TableLayout_Bottom.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             Control_Shortcuts_TableLayout_Bottom.ColumnStyles.Add(new ColumnStyle());
-            Control_Shortcuts_TableLayout_Bottom.Controls.Add(Control_Shortcuts_Button_Home, 0, 0);
-            Control_Shortcuts_TableLayout_Bottom.Controls.Add(Control_Shortcuts_Button_Reset, 1, 0);
+            Control_Shortcuts_TableLayout_Bottom.ColumnStyles.Add(new ColumnStyle());
+            Control_Shortcuts_TableLayout_Bottom.Controls.Add(Control_Shortcuts_Button_Reset, 0, 0);
             Control_Shortcuts_TableLayout_Bottom.Controls.Add(SettingsForm_Button_Help_Shortcuts, 3, 0);
+            Control_Shortcuts_TableLayout_Bottom.Controls.Add(Control_Shortcuts_Button_Home, 2, 0);
             Control_Shortcuts_TableLayout_Bottom.Dock = DockStyle.Fill;
             Control_Shortcuts_TableLayout_Bottom.Location = new Point(3, 651);
             Control_Shortcuts_TableLayout_Bottom.Name = "Control_Shortcuts_TableLayout_Bottom";
@@ -111,29 +111,50 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             // 
             Control_Shortcuts_Button_Home.AutoSize = true;
             Control_Shortcuts_Button_Home.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            Control_Shortcuts_Button_Home.Dock = DockStyle.Fill;
-            Control_Shortcuts_Button_Home.Location = new Point(3, 3);
-            Control_Shortcuts_Button_Home.MaximumSize = new Size(150, 32);
-            Control_Shortcuts_Button_Home.MinimumSize = new Size(150, 32);
+            Control_Shortcuts_Button_Home.BackColor = Color.FromArgb(0, 120, 212);
+            Control_Shortcuts_Button_Home.Cursor = Cursors.Hand;
+            Control_Shortcuts_Button_Home.FlatStyle = FlatStyle.Flat;
+            Control_Shortcuts_Button_Home.Font = new Font("Segoe UI Semibold", 10F);
+            Control_Shortcuts_Button_Home.ForeColor = Color.White;
+            Control_Shortcuts_Button_Home.Location = new Point(348, 3);
+            Control_Shortcuts_Button_Home.MaximumSize = new Size(0, 32);
+            Control_Shortcuts_Button_Home.MinimumSize = new Size(100, 32);
             Control_Shortcuts_Button_Home.Name = "Control_Shortcuts_Button_Home";
-            Control_Shortcuts_Button_Home.Size = new Size(150, 32);
+            Control_Shortcuts_Button_Home.Size = new Size(131, 32);
             Control_Shortcuts_Button_Home.TabIndex = 1;
-            Control_Shortcuts_Button_Home.Text = "Home";
-            Control_Shortcuts_Button_Home.UseVisualStyleBackColor = true;
+            Control_Shortcuts_Button_Home.Text = "🏠 Back to Home";
+            Control_Shortcuts_Button_Home.UseVisualStyleBackColor = false;
             // 
             // Control_Shortcuts_Button_Reset
             // 
             Control_Shortcuts_Button_Reset.AutoSize = true;
             Control_Shortcuts_Button_Reset.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            Control_Shortcuts_Button_Reset.Dock = DockStyle.Fill;
-            Control_Shortcuts_Button_Reset.Location = new Point(159, 3);
-            Control_Shortcuts_Button_Reset.MaximumSize = new Size(150, 32);
-            Control_Shortcuts_Button_Reset.MinimumSize = new Size(150, 32);
+            Control_Shortcuts_Button_Reset.BackColor = Color.FromArgb(200, 200, 200);
+            Control_Shortcuts_Button_Reset.FlatStyle = FlatStyle.Flat;
+            Control_Shortcuts_Button_Reset.Font = new Font("Segoe UI Semibold", 10F);
+            Control_Shortcuts_Button_Reset.ForeColor = Color.Black;
+            Control_Shortcuts_Button_Reset.Location = new Point(3, 3);
+            Control_Shortcuts_Button_Reset.MaximumSize = new Size(0, 32);
+            Control_Shortcuts_Button_Reset.MinimumSize = new Size(100, 32);
             Control_Shortcuts_Button_Reset.Name = "Control_Shortcuts_Button_Reset";
-            Control_Shortcuts_Button_Reset.Size = new Size(150, 32);
+            Control_Shortcuts_Button_Reset.Size = new Size(100, 32);
             Control_Shortcuts_Button_Reset.TabIndex = 0;
             Control_Shortcuts_Button_Reset.Text = "Reset All";
             Control_Shortcuts_Button_Reset.UseVisualStyleBackColor = true;
+            // 
+            // SettingsForm_Button_Help_Shortcuts
+            // 
+            SettingsForm_Button_Help_Shortcuts.AutoSize = true;
+            SettingsForm_Button_Help_Shortcuts.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            SettingsForm_Button_Help_Shortcuts.Dock = DockStyle.Fill;
+            SettingsForm_Button_Help_Shortcuts.Location = new Point(485, 3);
+            SettingsForm_Button_Help_Shortcuts.MaximumSize = new Size(32, 32);
+            SettingsForm_Button_Help_Shortcuts.MinimumSize = new Size(32, 32);
+            SettingsForm_Button_Help_Shortcuts.Name = "SettingsForm_Button_Help_Shortcuts";
+            SettingsForm_Button_Help_Shortcuts.Size = new Size(32, 32);
+            SettingsForm_Button_Help_Shortcuts.TabIndex = 12;
+            SettingsForm_Button_Help_Shortcuts.Text = "?";
+            SettingsForm_Button_Help_Shortcuts.UseVisualStyleBackColor = true;
             // 
             // Control_Shortcuts_Panel_ScrollContainer
             // 
@@ -317,20 +338,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_Shortcuts_Card_Transactions.Padding = new Padding(1);
             Control_Shortcuts_Card_Transactions.Size = new Size(442, 64);
             Control_Shortcuts_Card_Transactions.TabIndex = 16;
-            // 
-            // SettingsForm_Button_Help_Shortcuts
-            // 
-            SettingsForm_Button_Help_Shortcuts.AutoSize = true;
-            SettingsForm_Button_Help_Shortcuts.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            SettingsForm_Button_Help_Shortcuts.Dock = DockStyle.Fill;
-            SettingsForm_Button_Help_Shortcuts.Location = new Point(485, 3);
-            SettingsForm_Button_Help_Shortcuts.MaximumSize = new Size(32, 32);
-            SettingsForm_Button_Help_Shortcuts.MinimumSize = new Size(32, 32);
-            SettingsForm_Button_Help_Shortcuts.Name = "SettingsForm_Button_Help_Shortcuts";
-            SettingsForm_Button_Help_Shortcuts.Size = new Size(32, 32);
-            SettingsForm_Button_Help_Shortcuts.TabIndex = 12;
-            SettingsForm_Button_Help_Shortcuts.Text = "?";
-            SettingsForm_Button_Help_Shortcuts.UseVisualStyleBackColor = true;
             // 
             // Control_Shortcuts
             // 

@@ -116,7 +116,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_OperationManagement_Button_RemoveConfirm.Text = "Remove";
             Control_OperationManagement_Button_RemoveCancel.Text = "Cancel";
             Control_OperationManagement_Button_Back.Text = "← Back to Selection";
-            Control_OperationManagement_Button_Home.Text = "Home";
+            Control_OperationManagement_Button_Home.Text = "🏠 Back to Home";
             
             // Labels
             Control_OperationManagement_Label_AddIssuedBy.Text = "Issued By";

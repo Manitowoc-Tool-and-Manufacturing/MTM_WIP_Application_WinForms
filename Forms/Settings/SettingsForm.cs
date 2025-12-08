@@ -55,7 +55,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
 
             _settingsPanels = new Dictionary<string, Panel>
             {
-                ["Home"] = SettingsForm_Panel_Home,
+                ["🏠 Back to Home"] = SettingsForm_Panel_Home,
                 ["Database"] = SettingsForm_Panel_Database,
                 ["User Management"] = SettingsForm_Panel_AddUser,
                 ["Part Numbers"] = SettingsForm_Panel_PartNumbers,
@@ -89,7 +89,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
             
             SettingsForm_TreeView_Category.Nodes.Clear();
 
-            TreeNode homeNode = SettingsForm_TreeView_Category.Nodes.Add("Home", "Home");
+            TreeNode homeNode = SettingsForm_TreeView_Category.Nodes.Add("🏠 Back to Home", "🏠 Back to Home");
             TreeNode databaseNode = SettingsForm_TreeView_Category.Nodes.Add("Database", "Database");
 
             SettingsForm_TreeView_Category.Nodes.Add("User Management", "User Management");
@@ -127,7 +127,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
             }
 
             InitializeCategoryTreeView();
-            ShowPanel("Home");
+            ShowPanel("🏠 Back to Home");
 
             // Wire up events
             SettingsForm_Control_Home.NavigationRequested += (s, args) =>
@@ -143,7 +143,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
                 HasChanges = true;
             };
             SettingsForm_Control_Shortcuts.StatusMessageChanged += (s, message) => { UpdateStatus(message); };
-            SettingsForm_Control_Shortcuts.RequestNavigationHome += (_, _) => ShowPanel("Home");
+            SettingsForm_Control_Shortcuts.RequestNavigationHome += (_, _) => ShowPanel("🏠 Back to Home");
 
             SettingsForm_Control_Theme.ThemeChanged += (s, args) =>
             {
@@ -151,6 +151,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
                 HasChanges = true;
             };
             SettingsForm_Control_Theme.StatusMessageChanged += (s, message) => { UpdateStatus(message); };
+            SettingsForm_Control_Theme.BackToHomeRequested += (_, _) => ShowPanel("🏠 Back to Home");
 
             SettingsForm_Control_Database.DatabaseSettingsUpdated += (s, args) =>
             {
@@ -158,8 +159,9 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
                 HasChanges = true;
             };
             SettingsForm_Control_Database.StatusMessageChanged += (s, message) => { UpdateStatus(message); };
+            SettingsForm_Control_Database.BackToHomeRequested += (_, _) => ShowPanel("🏠 Back to Home");
 
-            SettingsForm_Control_UserManagement.BackToHomeRequested += (_, _) => ShowPanel("Home");
+            SettingsForm_Control_UserManagement.BackToHomeRequested += (_, _) => ShowPanel("🏠 Back to Home");
             SettingsForm_Control_UserManagement.UserListChanged += (_, _) =>
             {
                 UpdateStatus("User list updated successfully.");
@@ -171,7 +173,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
                 UpdateStatus("Part numbers updated successfully.");
                 HasChanges = true;
             };
-            SettingsForm_Control_PartManagement.BackToHomeRequested += (_, _) => ShowPanel("Home");
+            SettingsForm_Control_PartManagement.BackToHomeRequested += (_, _) => ShowPanel("🏠 Back to Home");
 
             SettingsForm_Control_OperationManagement.SetProgressControls(SettingsForm_ProgressBar, SettingsForm_StatusText);
             SettingsForm_Control_OperationManagement.OperationListChanged += (_, _) =>
@@ -180,7 +182,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
                 HasChanges = true;
             };
             SettingsForm_Control_OperationManagement.StatusMessageChanged += (_, message) => UpdateStatus(message);
-            SettingsForm_Control_OperationManagement.BackToHomeRequested += (_, _) => ShowPanel("Home");
+            SettingsForm_Control_OperationManagement.BackToHomeRequested += (_, _) => ShowPanel("🏠 Back to Home");
             SettingsForm_Panel_EditOperation.Visible = false;
             SettingsForm_Panel_RemoveOperation.Visible = false;
 
@@ -189,7 +191,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
                 UpdateStatus("Locations updated successfully.");
                 HasChanges = true;
             };
-            SettingsForm_Control_LocationManagement.BackToHomeRequested += (_, _) => ShowPanel("Home");
+            SettingsForm_Control_LocationManagement.BackToHomeRequested += (_, _) => ShowPanel("🏠 Back to Home");
             SettingsForm_Panel_EditLocation.Visible = false;
             SettingsForm_Panel_RemoveLocation.Visible = false;
 
@@ -200,9 +202,11 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
                 HasChanges = true;
             };
             SettingsForm_Control_ItemTypeManagement.StatusMessageChanged += (_, message) => UpdateStatus(message);
-            SettingsForm_Control_ItemTypeManagement.BackToHomeRequested += (_, _) => ShowPanel("Home");
+            SettingsForm_Control_ItemTypeManagement.BackToHomeRequested += (_, _) => ShowPanel("🏠 Back to Home");
             SettingsForm_Panel_EditItemType.Visible = false;
             SettingsForm_Panel_RemoveItemType.Visible = false;
+
+            SettingsForm_Control_About.BackToHomeRequested += (_, _) => ShowPanel("🏠 Back to Home");
 
             ApplyPrivileges();
         }
@@ -577,20 +581,20 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
 
         private void InitializeHelpButtons()
         {
-            ApplyHelpButton(SettingsForm_Panel_Home, "SettingsForm_Button_Help_General", "settings-general", "general-overview");
-            ApplyHelpButton(SettingsForm_Panel_Database, "SettingsForm_Button_Help_Database", "settings-database", "database-overview");
-            ApplyHelpButton(SettingsForm_Panel_Theme, "SettingsForm_Button_Help_Theme", "settings-theme", "theme-overview");
-            ApplyHelpButton(SettingsForm_Panel_AddUser, "SettingsForm_Button_Help_Users", "settings-users", "users-overview");
-            ApplyHelpButton(SettingsForm_Panel_Shortcuts, "SettingsForm_Button_Help_Shortcuts", "settings-shortcuts", "shortcuts-overview");
-            ApplyHelpButton(SettingsForm_Panel_About, "SettingsForm_Button_Help_About", "settings-about", "about-overview");
+            ApplyHelpButton("SettingsForm_Button_Help_General", "settings-general", "general-overview");
+            ApplyHelpButton("SettingsForm_Button_Help_Database", "settings-database", "database-overview");
+            ApplyHelpButton("SettingsForm_Button_Help_Theme", "settings-theme", "theme-overview");
+            ApplyHelpButton("SettingsForm_Button_Help_Users", "settings-users", "users-overview");
+            ApplyHelpButton("SettingsForm_Button_Help_Shortcuts", "settings-shortcuts", "shortcuts-overview");
+            ApplyHelpButton("SettingsForm_Button_Help_About", "settings-about", "about-overview");
             
-            ApplyHelpButton(SettingsForm_Panel_PartNumbers, "SettingsForm_Button_Help_PartNumbers", "settings-management", "part-number-overview");
-            ApplyHelpButton(SettingsForm_Panel_AddOperation, "SettingsForm_Button_Help_Operations", "settings-management", "operation-overview");
-            ApplyHelpButton(SettingsForm_Panel_AddLocation, "SettingsForm_Button_Help_Locations", "settings-management", "location-overview");
-            ApplyHelpButton(SettingsForm_Panel_AddItemType, "SettingsForm_Button_Help_ItemTypes", "settings-management", "item-type-overview");
+            ApplyHelpButton("SettingsForm_Button_Help_PartNumbers", "settings-management", "part-number-overview");
+            ApplyHelpButton("SettingsForm_Button_Help_Operations", "settings-management", "operation-overview");
+            ApplyHelpButton("SettingsForm_Button_Help_Locations", "settings-management", "location-overview");
+            ApplyHelpButton("SettingsForm_Button_Help_ItemTypes", "settings-management", "item-type-overview");
         }
 
-        private void ApplyHelpButton(Panel panel, string buttonName, string category, string topic)
+        private void ApplyHelpButton(string buttonName, string category, string topic)
         {
             var helpButton = Controls.Find(buttonName, true).FirstOrDefault() as Button;
             if (helpButton != null)

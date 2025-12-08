@@ -158,6 +158,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_PartIDManagement_CheckBox_EditRequiresColorCode = new CheckBox();
             Control_PartIDManagement_Suggestion_EditNewPartNumber = new Component_SuggestionTextBoxWithLabel();
             Control_PartIDManagement_TableLayoutPanel_BackButton = new TableLayoutPanel();
+            SettingsForm_Button_Help_PartNumbers = new Button();
             Control_PartManagement_Button_Home = new Button();
             Control_PartIDManagement_Button_Back = new Button();
             Control_PartIDManagement_Label_Header = new Label();
@@ -166,7 +167,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_PartIDManagement_Label_AddIssuedByValue = new Label();
             Control_PartIDManagement_Label_EditIssuedBy = new Label();
             Control_PartIDManagement_Label_EditIssuedByValue = new Label();
-            SettingsForm_Button_Help_PartNumbers = new Button();
             Control_PartIDManagement_TableLayout_Main.SuspendLayout();
             Control_PartIDManagement_Panel_Container.SuspendLayout();
             Control_PartIDManagement_Panel_Home.SuspendLayout();
@@ -1038,14 +1038,31 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_PartIDManagement_TableLayoutPanel_EditActions.TabIndex = 6;
             // 
             // Control_PartIDManagement_Button_EditSave
-            // 
+            //
+
+            Control_PartIDManagement_Button_EditSave.AutoSize = true;
+            Control_PartIDManagement_Button_EditSave.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_PartIDManagement_Button_EditSave.BackColor = Color.FromArgb(0, 120, 212);
+            Control_PartIDManagement_Button_EditSave.Cursor = Cursors.Hand;
+            Control_PartIDManagement_Button_EditSave.Dock = DockStyle.Fill;
+            Control_PartIDManagement_Button_EditSave.FlatStyle = FlatStyle.Flat;
+            Control_PartIDManagement_Button_EditSave.Font = new Font("Segoe UI Semibold", 10F);
+            Control_PartIDManagement_Button_EditSave.ForeColor = Color.White;
             Control_PartIDManagement_Button_EditSave.Location = new Point(3, 3);
             Control_PartIDManagement_Button_EditSave.Name = "Control_PartIDManagement_Button_EditSave";
             Control_PartIDManagement_Button_EditSave.Size = new Size(75, 23);
             Control_PartIDManagement_Button_EditSave.TabIndex = 1;
             // 
             // Control_PartIDManagement_Button_EditReset
-            // 
+            //
+            Control_PartIDManagement_Button_EditReset.AutoSize = true;
+            Control_PartIDManagement_Button_EditReset.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_PartIDManagement_Button_EditReset.BackColor = Color.FromArgb(200, 200, 200);
+            Control_PartIDManagement_Button_EditReset.Cursor = Cursors.Hand;
+            Control_PartIDManagement_Button_EditReset.Dock = DockStyle.Fill;
+            Control_PartIDManagement_Button_EditReset.FlatStyle = FlatStyle.Flat;
+            Control_PartIDManagement_Button_EditReset.Font = new Font("Segoe UI Semibold", 10F);
+            Control_PartIDManagement_Button_EditReset.ForeColor = Color.Black;
             Control_PartIDManagement_Button_EditReset.Location = new Point(316, 3);
             Control_PartIDManagement_Button_EditReset.Name = "Control_PartIDManagement_Button_EditReset";
             Control_PartIDManagement_Button_EditReset.Size = new Size(75, 23);
@@ -1129,29 +1146,57 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_PartIDManagement_TableLayoutPanel_BackButton.Size = new Size(446, 38);
             Control_PartIDManagement_TableLayoutPanel_BackButton.TabIndex = 3;
             // 
+            // SettingsForm_Button_Help_PartNumbers
+            // 
+            SettingsForm_Button_Help_PartNumbers.AutoSize = true;
+            SettingsForm_Button_Help_PartNumbers.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            SettingsForm_Button_Help_PartNumbers.Dock = DockStyle.Fill;
+            SettingsForm_Button_Help_PartNumbers.Location = new Point(411, 3);
+            SettingsForm_Button_Help_PartNumbers.MaximumSize = new Size(32, 32);
+            SettingsForm_Button_Help_PartNumbers.MinimumSize = new Size(32, 32);
+            SettingsForm_Button_Help_PartNumbers.Name = "SettingsForm_Button_Help_PartNumbers";
+            SettingsForm_Button_Help_PartNumbers.Size = new Size(32, 32);
+            SettingsForm_Button_Help_PartNumbers.TabIndex = 17;
+            SettingsForm_Button_Help_PartNumbers.Text = "?";
+            SettingsForm_Button_Help_PartNumbers.UseVisualStyleBackColor = true;
+            // 
             // Control_PartManagement_Button_Home
             // 
             Control_PartManagement_Button_Home.AutoSize = true;
-            Control_PartManagement_Button_Home.Location = new Point(266, 3);
+            Control_PartManagement_Button_Home.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_PartManagement_Button_Home.BackColor = Color.FromArgb(0, 120, 212);
+            Control_PartManagement_Button_Home.Cursor = Cursors.Hand;
+            Control_PartManagement_Button_Home.Dock = DockStyle.Fill;
+            Control_PartManagement_Button_Home.FlatStyle = FlatStyle.Flat;
+            Control_PartManagement_Button_Home.Font = new Font("Segoe UI Semibold", 10F);
+            Control_PartManagement_Button_Home.ForeColor = Color.White;
+            Control_PartManagement_Button_Home.Location = new Point(274, 3);
             Control_PartManagement_Button_Home.MaximumSize = new Size(0, 32);
             Control_PartManagement_Button_Home.MinimumSize = new Size(0, 32);
             Control_PartManagement_Button_Home.Name = "Control_PartManagement_Button_Home";
-            Control_PartManagement_Button_Home.Padding = new Padding(16, 6, 16, 6);
-            Control_PartManagement_Button_Home.Size = new Size(139, 32);
+            Control_PartManagement_Button_Home.Size = new Size(131, 32);
             Control_PartManagement_Button_Home.TabIndex = 2;
             Control_PartManagement_Button_Home.Text = "🏠 Back to Home";
+            Control_PartManagement_Button_Home.UseVisualStyleBackColor = false;
             // 
             // Control_PartIDManagement_Button_Back
             // 
             Control_PartIDManagement_Button_Back.AutoSize = true;
+            Control_PartIDManagement_Button_Back.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            Control_PartIDManagement_Button_Back.BackColor = Color.FromArgb(96, 94, 92);
+            Control_PartIDManagement_Button_Back.Cursor = Cursors.Hand;
+            Control_PartIDManagement_Button_Back.Dock = DockStyle.Fill;
+            Control_PartIDManagement_Button_Back.FlatStyle = FlatStyle.Flat;
+            Control_PartIDManagement_Button_Back.Font = new Font("Segoe UI Semibold", 10F);
+            Control_PartIDManagement_Button_Back.ForeColor = Color.White;
             Control_PartIDManagement_Button_Back.Location = new Point(3, 3);
             Control_PartIDManagement_Button_Back.MaximumSize = new Size(0, 32);
             Control_PartIDManagement_Button_Back.MinimumSize = new Size(0, 32);
             Control_PartIDManagement_Button_Back.Name = "Control_PartIDManagement_Button_Back";
-            Control_PartIDManagement_Button_Back.Padding = new Padding(16, 6, 16, 6);
-            Control_PartIDManagement_Button_Back.Size = new Size(152, 32);
+            Control_PartIDManagement_Button_Back.Size = new Size(145, 32);
             Control_PartIDManagement_Button_Back.TabIndex = 0;
             Control_PartIDManagement_Button_Back.Text = "← Back to Selection";
+            Control_PartIDManagement_Button_Back.UseVisualStyleBackColor = false;
             Control_PartIDManagement_Button_Back.Visible = false;
             // 
             // Control_PartIDManagement_Label_Header
@@ -1209,20 +1254,6 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_PartIDManagement_Label_EditIssuedByValue.Name = "Control_PartIDManagement_Label_EditIssuedByValue";
             Control_PartIDManagement_Label_EditIssuedByValue.Size = new Size(100, 23);
             Control_PartIDManagement_Label_EditIssuedByValue.TabIndex = 0;
-            // 
-            // SettingsForm_Button_Help_PartNumbers
-            // 
-            SettingsForm_Button_Help_PartNumbers.AutoSize = true;
-            SettingsForm_Button_Help_PartNumbers.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            SettingsForm_Button_Help_PartNumbers.Dock = DockStyle.Fill;
-            SettingsForm_Button_Help_PartNumbers.Location = new Point(411, 3);
-            SettingsForm_Button_Help_PartNumbers.MaximumSize = new Size(32, 32);
-            SettingsForm_Button_Help_PartNumbers.MinimumSize = new Size(32, 32);
-            SettingsForm_Button_Help_PartNumbers.Name = "SettingsForm_Button_Help_PartNumbers";
-            SettingsForm_Button_Help_PartNumbers.Size = new Size(32, 32);
-            SettingsForm_Button_Help_PartNumbers.TabIndex = 17;
-            SettingsForm_Button_Help_PartNumbers.Text = "?";
-            SettingsForm_Button_Help_PartNumbers.UseVisualStyleBackColor = true;
             // 
             // Control_PartIDManagement
             // 

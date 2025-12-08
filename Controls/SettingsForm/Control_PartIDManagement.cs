@@ -120,7 +120,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
             Control_PartIDManagement_Button_RemoveConfirm.Text = "Remove";
             Control_PartIDManagement_Button_RemoveCancel.Text = "Cancel";
             Control_PartIDManagement_Button_Back.Text = "← Back to Selection";
-            Control_PartManagement_Button_Home.Text = "Home";
+            Control_PartManagement_Button_Home.Text = "🏠 Back to Home";
             
             // Labels
             Control_PartIDManagement_Label_AddIssuedBy.Text = "Issued By";
