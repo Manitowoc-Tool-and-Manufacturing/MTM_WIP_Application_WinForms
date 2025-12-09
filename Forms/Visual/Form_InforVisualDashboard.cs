@@ -135,6 +135,12 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             if (category == Enum_VisualDashboardCategory.MaterialHandlerAnalytics_General ||
                 category == Enum_VisualDashboardCategory.MaterialHandlerAnalytics_Team)
             {
+                if (!Model_Application_Variables.UserTypeAdmin)
+                {
+                    Service_ErrorHandler.ShowUserError("Access denied. You do not have permission to view this page.");
+                    return;
+                }
+
                 try
                 {
                     ShowMaterialHandlerAnalyticsControl();

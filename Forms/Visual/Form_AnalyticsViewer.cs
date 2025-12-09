@@ -3,6 +3,7 @@ using Microsoft.Web.WebView2.Core;
 using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Services;
 using MTM_WIP_Application_Winforms.Forms.Help;
+using MTM_WIP_Application_Winforms.Models;
 using Newtonsoft.Json;
 
 namespace MTM_WIP_Application_Winforms.Forms.Visual
@@ -22,6 +23,16 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             _analyticsData = data;
             _htmlTemplateName = htmlTemplateName;
             InitializeWebView();
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+            if (!Model_Application_Variables.UserTypeAdmin)
+            {
+                Service_ErrorHandler.ShowUserError("Access denied. You do not have permission to view this page.");
+                this.Close();
+            }
         }
 
         private async void InitializeWebView()
