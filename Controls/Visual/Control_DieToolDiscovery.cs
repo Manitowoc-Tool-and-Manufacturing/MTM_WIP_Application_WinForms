@@ -27,6 +27,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         public Control_DieToolDiscovery()
         {
             InitializeComponent();
+            this.MinimumSize = new Size(800, 500);
 
             // Wire up Search button
             Control_DieToolDiscovery_Button_Search.Click -= btnSearch_Click;

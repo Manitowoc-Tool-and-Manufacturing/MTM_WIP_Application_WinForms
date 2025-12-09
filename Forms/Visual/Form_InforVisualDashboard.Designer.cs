@@ -24,8 +24,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             // 
             // InforVisualDashboard_Panel_Content
             // 
-            InforVisualDashboard_Panel_Content.AutoSize = true;
-            InforVisualDashboard_Panel_Content.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            InforVisualDashboard_Panel_Content.AutoSize = false;
             InforVisualDashboard_Panel_Content.BorderStyle = BorderStyle.FixedSingle;
             InforVisualDashboard_Panel_Content.Controls.Add(InforVisualDashboard_Control_EmptyState);
             InforVisualDashboard_Panel_Content.Dock = DockStyle.Fill;
@@ -51,8 +50,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             // 
             // InforVisualDashboard_TableLayout_Main
             // 
-            InforVisualDashboard_TableLayout_Main.AutoSize = true;
-            InforVisualDashboard_TableLayout_Main.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            InforVisualDashboard_TableLayout_Main.AutoSize = false;
             InforVisualDashboard_TableLayout_Main.ColumnCount = 2;
             InforVisualDashboard_TableLayout_Main.ColumnStyles.Add(new ColumnStyle());
             InforVisualDashboard_TableLayout_Main.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
@@ -192,8 +190,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
-            AutoSize = true;
-            AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            AutoSize = false;
             ClientSize = new Size(803, 436);
             Controls.Add(InforVisualDashboard_TableLayout_Main);
             Icon = (Icon)resources.GetObject("$this.Icon");

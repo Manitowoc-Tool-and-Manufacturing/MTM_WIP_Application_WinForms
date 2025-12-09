@@ -25,6 +25,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         public Control_InventoryAudit()
         {
             InitializeComponent();
+            this.MinimumSize = new Size(600, 400);
             _visualService = Program.ServiceProvider?.GetService(typeof(IService_VisualDatabase)) as IService_VisualDatabase;
 
             // Initialize Search By options

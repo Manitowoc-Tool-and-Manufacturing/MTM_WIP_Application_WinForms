@@ -287,6 +287,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             EnsureDieToolDiscoveryControl();
             HideAllCustomControls(_controlDieToolDiscovery);
             _controlDieToolDiscovery!.Visible = true;
+            ResizeFormToFitControl(_controlDieToolDiscovery);
             CenterFormOnScreen();
         }
 
@@ -296,6 +297,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             EnsureReceivingAnalyticsControl();
             HideAllCustomControls(_controlReceivingAnalytics);
             _controlReceivingAnalytics!.Visible = true;
+            ResizeFormToFitControl(_controlReceivingAnalytics);
             CenterFormOnScreen();
         }
 
@@ -305,6 +307,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             EnsureVisualInventoryControl();
             HideAllCustomControls(_controlVisualInventory);
             _controlVisualInventory!.Visible = true;
+            ResizeFormToFitControl(_controlVisualInventory);
             CenterFormOnScreen();
         }
 
@@ -314,6 +317,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             EnsureInventoryAuditControl();
             HideAllCustomControls(_controlInventoryAudit);
             _controlInventoryAudit!.Visible = true;
+            ResizeFormToFitControl(_controlInventoryAudit);
             CenterFormOnScreen();
         }
 
@@ -323,7 +327,24 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             EnsureVisualUserAnalyticsControl();
             HideAllCustomControls(_controlVisualUserAnalytics);
             _controlVisualUserAnalytics!.Visible = true;
+            ResizeFormToFitControl(_controlVisualUserAnalytics);
             CenterFormOnScreen();
+        }
+
+        private void ResizeFormToFitControl(Control control)
+        {
+            // Calculate required size based on control's MinimumSize
+            // Add padding for navigation panel (approx 160px) and window borders
+            int navWidth = InforVisualDashboard_Panel_Navigation.Width + 20; // +20 for margins/borders
+            int requiredWidth = navWidth + control.MinimumSize.Width;
+            int requiredHeight = Math.Max(control.MinimumSize.Height, 450); // Ensure at least 450 height
+
+            // Respect Form's MinimumSize
+            requiredWidth = Math.Max(requiredWidth, this.MinimumSize.Width);
+            requiredHeight = Math.Max(requiredHeight, this.MinimumSize.Height);
+
+            // Set the size
+            this.ClientSize = new Size(requiredWidth, requiredHeight);
         }
 
         private void HideGenericControls()
@@ -371,7 +392,11 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
                 return;
             }
 
-            _controlDieToolDiscovery = new Control_DieToolDiscovery { Dock = DockStyle.Fill };
+            _controlDieToolDiscovery = new Control_DieToolDiscovery 
+            { 
+                Dock = DockStyle.Fill,
+                AutoSize = false
+            };
             InforVisualDashboard_Panel_Content.Controls.Add(_controlDieToolDiscovery);
             _controlDieToolDiscovery.BringToFront();
         }
@@ -383,7 +408,11 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
                 return;
             }
 
-            _controlReceivingAnalytics = new Control_ReceivingAnalytics { Dock = DockStyle.Fill };
+            _controlReceivingAnalytics = new Control_ReceivingAnalytics 
+            { 
+                Dock = DockStyle.Fill,
+                AutoSize = false
+            };
             InforVisualDashboard_Panel_Content.Controls.Add(_controlReceivingAnalytics);
             _controlReceivingAnalytics.BringToFront();
         }
@@ -395,7 +424,11 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
                 return;
             }
 
-            _controlVisualInventory = new Control_VisualInventory { Dock = DockStyle.Fill };
+            _controlVisualInventory = new Control_VisualInventory 
+            { 
+                Dock = DockStyle.Fill,
+                AutoSize = false
+            };
             InforVisualDashboard_Panel_Content.Controls.Add(_controlVisualInventory);
             _controlVisualInventory.BringToFront();
         }
@@ -407,7 +440,11 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
                 return;
             }
 
-            _controlInventoryAudit = new Control_InventoryAudit { Dock = DockStyle.Fill };
+            _controlInventoryAudit = new Control_InventoryAudit 
+            { 
+                Dock = DockStyle.Fill,
+                AutoSize = false
+            };
             InforVisualDashboard_Panel_Content.Controls.Add(_controlInventoryAudit);
             _controlInventoryAudit.BringToFront();
         }
@@ -419,7 +456,11 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
                 return;
             }
 
-            _controlVisualUserAnalytics = new Control_VisualUserAnalytics { Dock = DockStyle.Fill };
+            _controlVisualUserAnalytics = new Control_VisualUserAnalytics 
+            { 
+                Dock = DockStyle.Fill,
+                AutoSize = false
+            };
             InforVisualDashboard_Panel_Content.Controls.Add(_controlVisualUserAnalytics);
             _controlVisualUserAnalytics.BringToFront();
         }

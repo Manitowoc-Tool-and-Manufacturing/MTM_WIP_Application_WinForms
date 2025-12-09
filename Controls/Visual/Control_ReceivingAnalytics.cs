@@ -41,6 +41,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         public Control_ReceivingAnalytics()
         {
             InitializeComponent();
+            this.MinimumSize = new Size(1100, 700);
             _visualService = Program.ServiceProvider?.GetService<IService_VisualDatabase>();
 
             // Initialize Animation Controls

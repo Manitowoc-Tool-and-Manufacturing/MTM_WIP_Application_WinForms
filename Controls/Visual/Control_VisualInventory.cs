@@ -27,6 +27,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         public Control_VisualInventory()
         {
             InitializeComponent();
+            this.MinimumSize = new Size(600, 400);
             _visualService = Program.ServiceProvider?.GetService<IService_VisualDatabase>();
 
             InitializeSuggestionBoxes();

@@ -24,6 +24,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         public Control_VisualUserAnalytics()
         {
             InitializeComponent();
+            this.MinimumSize = new Size(800, 600);
             _visualService = Program.ServiceProvider?.GetService<IService_VisualDatabase>();
             _daoVisualAnalytics = Program.ServiceProvider?.GetService<IDao_VisualAnalytics>();
             _userShiftLogicService = Program.ServiceProvider?.GetService<IService_UserShiftLogic>();
