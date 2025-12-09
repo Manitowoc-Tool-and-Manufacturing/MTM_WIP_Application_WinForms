@@ -65,7 +65,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_VisualInventory_TableLayoutPanel_Main.RowStyles.Add(new RowStyle());
             Control_VisualInventory_TableLayoutPanel_Main.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             Control_VisualInventory_TableLayoutPanel_Main.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            Control_VisualInventory_TableLayoutPanel_Main.Size = new Size(782, 399);
+            Control_VisualInventory_TableLayoutPanel_Main.Size = new Size(277, 149);
             Control_VisualInventory_TableLayoutPanel_Main.TabIndex = 0;
             // 
             // Control_VisualInventory_TableLayoutPanel_Search
@@ -82,11 +82,13 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_VisualInventory_TableLayoutPanel_Search.RowCount = 2;
             Control_VisualInventory_TableLayoutPanel_Search.RowStyles.Add(new RowStyle());
             Control_VisualInventory_TableLayoutPanel_Search.RowStyles.Add(new RowStyle());
-            Control_VisualInventory_TableLayoutPanel_Search.Size = new Size(776, 137);
+            Control_VisualInventory_TableLayoutPanel_Search.Size = new Size(271, 137);
             Control_VisualInventory_TableLayoutPanel_Search.TabIndex = 0;
             // 
             // tableLayoutPanel1
             // 
+            tableLayoutPanel1.AutoSize = true;
+            tableLayoutPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             tableLayoutPanel1.ColumnCount = 1;
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
             tableLayoutPanel1.Controls.Add(Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse, 0, 2);
@@ -99,7 +101,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
             tableLayoutPanel1.RowStyles.Add(new RowStyle());
-            tableLayoutPanel1.Size = new Size(770, 87);
+            tableLayoutPanel1.Size = new Size(265, 87);
             tableLayoutPanel1.TabIndex = 5;
             // 
             // Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse
@@ -116,7 +118,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse.Name = "Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse";
             Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse.PlaceholderText = "Enter Warehouse (002)";
             Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse.ShowValidationColor = false;
-            Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse.Size = new Size(764, 23);
+            Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse.Size = new Size(259, 23);
             Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse.TabIndex = 1;
             Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse.ValidatorType = null;
             Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse.Visible = false;
@@ -135,7 +137,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber.Name = "Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber";
             Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber.PlaceholderText = "Enter Part Number";
             Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber.ShowValidationColor = false;
-            Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber.Size = new Size(764, 23);
+            Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber.Size = new Size(259, 23);
             Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber.TabIndex = 0;
             Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber.ValidatorType = null;
             // 
@@ -153,12 +155,14 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_VisualInventory_SuggestionTextBoxWithLabel_Location.Name = "Control_VisualInventory_SuggestionTextBoxWithLabel_Location";
             Control_VisualInventory_SuggestionTextBoxWithLabel_Location.PlaceholderText = "Enter Location";
             Control_VisualInventory_SuggestionTextBoxWithLabel_Location.ShowValidationColor = false;
-            Control_VisualInventory_SuggestionTextBoxWithLabel_Location.Size = new Size(764, 23);
+            Control_VisualInventory_SuggestionTextBoxWithLabel_Location.Size = new Size(259, 23);
             Control_VisualInventory_SuggestionTextBoxWithLabel_Location.TabIndex = 2;
             Control_VisualInventory_SuggestionTextBoxWithLabel_Location.ValidatorType = null;
             // 
             // tableLayoutPanel2
             // 
+            tableLayoutPanel2.AutoSize = true;
+            tableLayoutPanel2.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             tableLayoutPanel2.ColumnCount = 3;
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle());
@@ -171,7 +175,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             tableLayoutPanel2.Name = "tableLayoutPanel2";
             tableLayoutPanel2.RowCount = 1;
             tableLayoutPanel2.RowStyles.Add(new RowStyle());
-            tableLayoutPanel2.Size = new Size(770, 38);
+            tableLayoutPanel2.Size = new Size(265, 38);
             tableLayoutPanel2.TabIndex = 6;
             // 
             // Control_VisualInventory_Button_Search
@@ -180,7 +184,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_VisualInventory_Button_Search.Dock = DockStyle.Fill;
             Control_VisualInventory_Button_Search.FlatStyle = FlatStyle.Flat;
             Control_VisualInventory_Button_Search.ForeColor = Color.White;
-            Control_VisualInventory_Button_Search.Location = new Point(592, 3);
+            Control_VisualInventory_Button_Search.Location = new Point(87, 3);
             Control_VisualInventory_Button_Search.MaximumSize = new Size(0, 32);
             Control_VisualInventory_Button_Search.MinimumSize = new Size(0, 32);
             Control_VisualInventory_Button_Search.Name = "Control_VisualInventory_Button_Search";
@@ -191,6 +195,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             // 
             // Control_VisualInventory_CheckBox_NonZeroOnly
             // 
+            Control_VisualInventory_CheckBox_NonZeroOnly.AutoSize = true;
             Control_VisualInventory_CheckBox_NonZeroOnly.Checked = true;
             Control_VisualInventory_CheckBox_NonZeroOnly.CheckState = CheckState.Checked;
             Control_VisualInventory_CheckBox_NonZeroOnly.Dock = DockStyle.Fill;
@@ -198,7 +203,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_VisualInventory_CheckBox_NonZeroOnly.MaximumSize = new Size(0, 32);
             Control_VisualInventory_CheckBox_NonZeroOnly.MinimumSize = new Size(0, 32);
             Control_VisualInventory_CheckBox_NonZeroOnly.Name = "Control_VisualInventory_CheckBox_NonZeroOnly";
-            Control_VisualInventory_CheckBox_NonZeroOnly.Size = new Size(583, 32);
+            Control_VisualInventory_CheckBox_NonZeroOnly.Size = new Size(78, 32);
             Control_VisualInventory_CheckBox_NonZeroOnly.TabIndex = 3;
             Control_VisualInventory_CheckBox_NonZeroOnly.Text = "Non-Zero";
             Control_VisualInventory_CheckBox_NonZeroOnly.UseVisualStyleBackColor = true;
@@ -209,7 +214,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_VisualInventory_Button_Export.Dock = DockStyle.Fill;
             Control_VisualInventory_Button_Export.FlatStyle = FlatStyle.Flat;
             Control_VisualInventory_Button_Export.ForeColor = Color.White;
-            Control_VisualInventory_Button_Export.Location = new Point(672, 3);
+            Control_VisualInventory_Button_Export.Location = new Point(167, 3);
             Control_VisualInventory_Button_Export.MaximumSize = new Size(0, 32);
             Control_VisualInventory_Button_Export.MinimumSize = new Size(0, 32);
             Control_VisualInventory_Button_Export.Name = "Control_VisualInventory_Button_Export";
@@ -220,11 +225,13 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             // 
             // panel1
             // 
+            panel1.AutoSize = true;
+            panel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             panel1.Controls.Add(Control_VisualInventory_DataGridView_Results);
             panel1.Dock = DockStyle.Fill;
             panel1.Location = new Point(3, 146);
             panel1.Name = "panel1";
-            panel1.Size = new Size(776, 250);
+            panel1.Size = new Size(271, 1);
             panel1.TabIndex = 1;
             // 
             // Control_VisualInventory_DataGridView_Results
@@ -238,7 +245,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_VisualInventory_DataGridView_Results.Location = new Point(0, 0);
             Control_VisualInventory_DataGridView_Results.Name = "Control_VisualInventory_DataGridView_Results";
             Control_VisualInventory_DataGridView_Results.ReadOnly = true;
-            Control_VisualInventory_DataGridView_Results.Size = new Size(776, 250);
+            Control_VisualInventory_DataGridView_Results.Size = new Size(271, 1);
             Control_VisualInventory_DataGridView_Results.TabIndex = 2;
             // 
             // Control_VisualInventory
@@ -248,14 +255,17 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             AutoSize = true;
             AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Controls.Add(Control_VisualInventory_TableLayoutPanel_Main);
+            MaximumSize = new Size(950, 550);
             Name = "Control_VisualInventory";
-            Size = new Size(782, 399);
+            Size = new Size(277, 149);
             Control_VisualInventory_TableLayoutPanel_Main.ResumeLayout(false);
             Control_VisualInventory_TableLayoutPanel_Main.PerformLayout();
             Control_VisualInventory_TableLayoutPanel_Search.ResumeLayout(false);
+            Control_VisualInventory_TableLayoutPanel_Search.PerformLayout();
             tableLayoutPanel1.ResumeLayout(false);
             tableLayoutPanel1.PerformLayout();
             tableLayoutPanel2.ResumeLayout(false);
+            tableLayoutPanel2.PerformLayout();
             panel1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)Control_VisualInventory_DataGridView_Results).EndInit();
             ResumeLayout(false);

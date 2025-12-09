@@ -33,6 +33,11 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         {
             Control_VisualUserAnalytics_TableLayout_Main = new TableLayoutPanel();
             Control_VisualUserAnalytics_TableLayout_Content = new TableLayoutPanel();
+            tableLayoutPanel1 = new TableLayoutPanel();
+            Control_VisualUserAnalytics_RadioButton_Custom = new RadioButton();
+            Control_VisualUserAnalytics_RadioButton_Month = new RadioButton();
+            Control_VisualUserAnalytics_RadioButton_Week = new RadioButton();
+            Control_VisualUserAnalytics_RadioButton_Today = new RadioButton();
             Control_VisualUserAnalytics_Label_StartDate = new Label();
             Control_VisualUserAnalytics_DateTimePicker_StartDate = new DateTimePicker();
             Control_VisualUserAnalytics_Label_EndDate = new Label();
@@ -43,21 +48,16 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_VisualUserAnalytics_Label_UserCount = new Label();
             Control_VisualUserAnalytics_GroupBox_Instructions = new GroupBox();
             Control_VisualUserAnalytics_CheckedListBox_Instructions = new CheckedListBox();
-            Control_VisualUserAnalytics_CheckedListBox_Users = new CheckedListBox();
-            tableLayoutPanel1 = new TableLayoutPanel();
-            Control_VisualUserAnalytics_RadioButton_Today = new RadioButton();
-            Control_VisualUserAnalytics_RadioButton_Week = new RadioButton();
-            Control_VisualUserAnalytics_RadioButton_Month = new RadioButton();
-            Control_VisualUserAnalytics_RadioButton_Custom = new RadioButton();
             tableLayoutPanel2 = new TableLayoutPanel();
-            Control_VisualUserAnalytics_CheckBox_Shift1 = new CheckBox();
-            Control_VisualUserAnalytics_CheckBox_Shift2 = new CheckBox();
-            Control_VisualUserAnalytics_CheckBox_Shift3 = new CheckBox();
             Control_VisualUserAnalytics_CheckBox_ShiftWeekend = new CheckBox();
+            Control_VisualUserAnalytics_CheckBox_Shift3 = new CheckBox();
+            Control_VisualUserAnalytics_CheckBox_Shift2 = new CheckBox();
+            Control_VisualUserAnalytics_CheckBox_Shift1 = new CheckBox();
+            Control_VisualUserAnalytics_CheckedListBox_Users = new CheckedListBox();
             Control_VisualUserAnalytics_TableLayout_Main.SuspendLayout();
             Control_VisualUserAnalytics_TableLayout_Content.SuspendLayout();
-            Control_VisualUserAnalytics_GroupBox_Instructions.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
+            Control_VisualUserAnalytics_GroupBox_Instructions.SuspendLayout();
             tableLayoutPanel2.SuspendLayout();
             SuspendLayout();
             // 
@@ -114,6 +114,79 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_VisualUserAnalytics_TableLayout_Content.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             Control_VisualUserAnalytics_TableLayout_Content.Size = new Size(767, 255);
             Control_VisualUserAnalytics_TableLayout_Content.TabIndex = 4;
+            // 
+            // tableLayoutPanel1
+            // 
+            tableLayoutPanel1.AutoSize = true;
+            tableLayoutPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            tableLayoutPanel1.ColumnCount = 6;
+            Control_VisualUserAnalytics_TableLayout_Content.SetColumnSpan(tableLayoutPanel1, 2);
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel1.Controls.Add(Control_VisualUserAnalytics_RadioButton_Custom, 4, 0);
+            tableLayoutPanel1.Controls.Add(Control_VisualUserAnalytics_RadioButton_Month, 3, 0);
+            tableLayoutPanel1.Controls.Add(Control_VisualUserAnalytics_RadioButton_Week, 2, 0);
+            tableLayoutPanel1.Controls.Add(Control_VisualUserAnalytics_RadioButton_Today, 1, 0);
+            tableLayoutPanel1.Dock = DockStyle.Fill;
+            tableLayoutPanel1.Location = new Point(3, 61);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 1;
+            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel1.Size = new Size(376, 25);
+            tableLayoutPanel1.TabIndex = 15;
+            // 
+            // Control_VisualUserAnalytics_RadioButton_Custom
+            // 
+            Control_VisualUserAnalytics_RadioButton_Custom.AutoSize = true;
+            Control_VisualUserAnalytics_RadioButton_Custom.Dock = DockStyle.Fill;
+            Control_VisualUserAnalytics_RadioButton_Custom.Location = new Point(278, 3);
+            Control_VisualUserAnalytics_RadioButton_Custom.Name = "Control_VisualUserAnalytics_RadioButton_Custom";
+            Control_VisualUserAnalytics_RadioButton_Custom.Size = new Size(67, 19);
+            Control_VisualUserAnalytics_RadioButton_Custom.TabIndex = 6;
+            Control_VisualUserAnalytics_RadioButton_Custom.TabStop = true;
+            Control_VisualUserAnalytics_RadioButton_Custom.Text = "Custom";
+            Control_VisualUserAnalytics_RadioButton_Custom.UseVisualStyleBackColor = true;
+            // 
+            // Control_VisualUserAnalytics_RadioButton_Month
+            // 
+            Control_VisualUserAnalytics_RadioButton_Month.AutoSize = true;
+            Control_VisualUserAnalytics_RadioButton_Month.Checked = true;
+            Control_VisualUserAnalytics_RadioButton_Month.Dock = DockStyle.Fill;
+            Control_VisualUserAnalytics_RadioButton_Month.Location = new Point(183, 3);
+            Control_VisualUserAnalytics_RadioButton_Month.Name = "Control_VisualUserAnalytics_RadioButton_Month";
+            Control_VisualUserAnalytics_RadioButton_Month.Size = new Size(89, 19);
+            Control_VisualUserAnalytics_RadioButton_Month.TabIndex = 5;
+            Control_VisualUserAnalytics_RadioButton_Month.TabStop = true;
+            Control_VisualUserAnalytics_RadioButton_Month.Text = "Last 30 Days";
+            Control_VisualUserAnalytics_RadioButton_Month.UseVisualStyleBackColor = true;
+            // 
+            // Control_VisualUserAnalytics_RadioButton_Week
+            // 
+            Control_VisualUserAnalytics_RadioButton_Week.AutoSize = true;
+            Control_VisualUserAnalytics_RadioButton_Week.Dock = DockStyle.Fill;
+            Control_VisualUserAnalytics_RadioButton_Week.Location = new Point(94, 3);
+            Control_VisualUserAnalytics_RadioButton_Week.Name = "Control_VisualUserAnalytics_RadioButton_Week";
+            Control_VisualUserAnalytics_RadioButton_Week.Size = new Size(83, 19);
+            Control_VisualUserAnalytics_RadioButton_Week.TabIndex = 4;
+            Control_VisualUserAnalytics_RadioButton_Week.TabStop = true;
+            Control_VisualUserAnalytics_RadioButton_Week.Text = "Last 7 Days";
+            Control_VisualUserAnalytics_RadioButton_Week.UseVisualStyleBackColor = true;
+            // 
+            // Control_VisualUserAnalytics_RadioButton_Today
+            // 
+            Control_VisualUserAnalytics_RadioButton_Today.AutoSize = true;
+            Control_VisualUserAnalytics_RadioButton_Today.Dock = DockStyle.Fill;
+            Control_VisualUserAnalytics_RadioButton_Today.Location = new Point(31, 3);
+            Control_VisualUserAnalytics_RadioButton_Today.Name = "Control_VisualUserAnalytics_RadioButton_Today";
+            Control_VisualUserAnalytics_RadioButton_Today.Size = new Size(57, 19);
+            Control_VisualUserAnalytics_RadioButton_Today.TabIndex = 3;
+            Control_VisualUserAnalytics_RadioButton_Today.TabStop = true;
+            Control_VisualUserAnalytics_RadioButton_Today.Text = "Today";
+            Control_VisualUserAnalytics_RadioButton_Today.UseVisualStyleBackColor = true;
             // 
             // Control_VisualUserAnalytics_Label_StartDate
             // 
@@ -227,89 +300,6 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_VisualUserAnalytics_CheckedListBox_Instructions.Size = new Size(379, 233);
             Control_VisualUserAnalytics_CheckedListBox_Instructions.TabIndex = 0;
             // 
-            // Control_VisualUserAnalytics_CheckedListBox_Users
-            // 
-            Control_VisualUserAnalytics_CheckedListBox_Users.Dock = DockStyle.Fill;
-            Control_VisualUserAnalytics_CheckedListBox_Users.FormattingEnabled = true;
-            Control_VisualUserAnalytics_CheckedListBox_Users.Location = new Point(16, 277);
-            Control_VisualUserAnalytics_CheckedListBox_Users.Margin = new Padding(6);
-            Control_VisualUserAnalytics_CheckedListBox_Users.Name = "Control_VisualUserAnalytics_CheckedListBox_Users";
-            Control_VisualUserAnalytics_CheckedListBox_Users.Size = new Size(768, 307);
-            Control_VisualUserAnalytics_CheckedListBox_Users.TabIndex = 14;
-            // 
-            // tableLayoutPanel1
-            // 
-            tableLayoutPanel1.AutoSize = true;
-            tableLayoutPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            tableLayoutPanel1.ColumnCount = 6;
-            Control_VisualUserAnalytics_TableLayout_Content.SetColumnSpan(tableLayoutPanel1, 2);
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tableLayoutPanel1.Controls.Add(Control_VisualUserAnalytics_RadioButton_Custom, 4, 0);
-            tableLayoutPanel1.Controls.Add(Control_VisualUserAnalytics_RadioButton_Month, 3, 0);
-            tableLayoutPanel1.Controls.Add(Control_VisualUserAnalytics_RadioButton_Week, 2, 0);
-            tableLayoutPanel1.Controls.Add(Control_VisualUserAnalytics_RadioButton_Today, 1, 0);
-            tableLayoutPanel1.Dock = DockStyle.Fill;
-            tableLayoutPanel1.Location = new Point(3, 61);
-            tableLayoutPanel1.Name = "tableLayoutPanel1";
-            tableLayoutPanel1.RowCount = 1;
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.Size = new Size(376, 25);
-            tableLayoutPanel1.TabIndex = 15;
-            // 
-            // Control_VisualUserAnalytics_RadioButton_Today
-            // 
-            Control_VisualUserAnalytics_RadioButton_Today.AutoSize = true;
-            Control_VisualUserAnalytics_RadioButton_Today.Dock = DockStyle.Fill;
-            Control_VisualUserAnalytics_RadioButton_Today.Location = new Point(31, 3);
-            Control_VisualUserAnalytics_RadioButton_Today.Name = "Control_VisualUserAnalytics_RadioButton_Today";
-            Control_VisualUserAnalytics_RadioButton_Today.Size = new Size(57, 19);
-            Control_VisualUserAnalytics_RadioButton_Today.TabIndex = 3;
-            Control_VisualUserAnalytics_RadioButton_Today.TabStop = true;
-            Control_VisualUserAnalytics_RadioButton_Today.Text = "Today";
-            Control_VisualUserAnalytics_RadioButton_Today.UseVisualStyleBackColor = true;
-            // 
-            // Control_VisualUserAnalytics_RadioButton_Week
-            // 
-            Control_VisualUserAnalytics_RadioButton_Week.AutoSize = true;
-            Control_VisualUserAnalytics_RadioButton_Week.Dock = DockStyle.Fill;
-            Control_VisualUserAnalytics_RadioButton_Week.Location = new Point(94, 3);
-            Control_VisualUserAnalytics_RadioButton_Week.Name = "Control_VisualUserAnalytics_RadioButton_Week";
-            Control_VisualUserAnalytics_RadioButton_Week.Size = new Size(83, 19);
-            Control_VisualUserAnalytics_RadioButton_Week.TabIndex = 4;
-            Control_VisualUserAnalytics_RadioButton_Week.TabStop = true;
-            Control_VisualUserAnalytics_RadioButton_Week.Text = "Last 7 Days";
-            Control_VisualUserAnalytics_RadioButton_Week.UseVisualStyleBackColor = true;
-            // 
-            // Control_VisualUserAnalytics_RadioButton_Month
-            // 
-            Control_VisualUserAnalytics_RadioButton_Month.AutoSize = true;
-            Control_VisualUserAnalytics_RadioButton_Month.Checked = true;
-            Control_VisualUserAnalytics_RadioButton_Month.Dock = DockStyle.Fill;
-            Control_VisualUserAnalytics_RadioButton_Month.Location = new Point(183, 3);
-            Control_VisualUserAnalytics_RadioButton_Month.Name = "Control_VisualUserAnalytics_RadioButton_Month";
-            Control_VisualUserAnalytics_RadioButton_Month.Size = new Size(89, 19);
-            Control_VisualUserAnalytics_RadioButton_Month.TabIndex = 5;
-            Control_VisualUserAnalytics_RadioButton_Month.TabStop = true;
-            Control_VisualUserAnalytics_RadioButton_Month.Text = "Last 30 Days";
-            Control_VisualUserAnalytics_RadioButton_Month.UseVisualStyleBackColor = true;
-            // 
-            // Control_VisualUserAnalytics_RadioButton_Custom
-            // 
-            Control_VisualUserAnalytics_RadioButton_Custom.AutoSize = true;
-            Control_VisualUserAnalytics_RadioButton_Custom.Dock = DockStyle.Fill;
-            Control_VisualUserAnalytics_RadioButton_Custom.Location = new Point(278, 3);
-            Control_VisualUserAnalytics_RadioButton_Custom.Name = "Control_VisualUserAnalytics_RadioButton_Custom";
-            Control_VisualUserAnalytics_RadioButton_Custom.Size = new Size(67, 19);
-            Control_VisualUserAnalytics_RadioButton_Custom.TabIndex = 6;
-            Control_VisualUserAnalytics_RadioButton_Custom.TabStop = true;
-            Control_VisualUserAnalytics_RadioButton_Custom.Text = "Custom";
-            Control_VisualUserAnalytics_RadioButton_Custom.UseVisualStyleBackColor = true;
-            // 
             // tableLayoutPanel2
             // 
             tableLayoutPanel2.AutoSize = true;
@@ -334,31 +324,18 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             tableLayoutPanel2.Size = new Size(376, 25);
             tableLayoutPanel2.TabIndex = 16;
             // 
-            // Control_VisualUserAnalytics_CheckBox_Shift1
+            // Control_VisualUserAnalytics_CheckBox_ShiftWeekend
             // 
-            Control_VisualUserAnalytics_CheckBox_Shift1.AutoSize = true;
-            Control_VisualUserAnalytics_CheckBox_Shift1.Checked = true;
-            Control_VisualUserAnalytics_CheckBox_Shift1.CheckState = CheckState.Checked;
-            Control_VisualUserAnalytics_CheckBox_Shift1.Dock = DockStyle.Fill;
-            Control_VisualUserAnalytics_CheckBox_Shift1.Location = new Point(53, 3);
-            Control_VisualUserAnalytics_CheckBox_Shift1.Name = "Control_VisualUserAnalytics_CheckBox_Shift1";
-            Control_VisualUserAnalytics_CheckBox_Shift1.Size = new Size(59, 19);
-            Control_VisualUserAnalytics_CheckBox_Shift1.TabIndex = 7;
-            Control_VisualUserAnalytics_CheckBox_Shift1.Text = "Shift 1";
-            Control_VisualUserAnalytics_CheckBox_Shift1.UseVisualStyleBackColor = true;
-            // 
-            // Control_VisualUserAnalytics_CheckBox_Shift2
-            // 
-            Control_VisualUserAnalytics_CheckBox_Shift2.AutoSize = true;
-            Control_VisualUserAnalytics_CheckBox_Shift2.Checked = true;
-            Control_VisualUserAnalytics_CheckBox_Shift2.CheckState = CheckState.Checked;
-            Control_VisualUserAnalytics_CheckBox_Shift2.Dock = DockStyle.Fill;
-            Control_VisualUserAnalytics_CheckBox_Shift2.Location = new Point(118, 3);
-            Control_VisualUserAnalytics_CheckBox_Shift2.Name = "Control_VisualUserAnalytics_CheckBox_Shift2";
-            Control_VisualUserAnalytics_CheckBox_Shift2.Size = new Size(59, 19);
-            Control_VisualUserAnalytics_CheckBox_Shift2.TabIndex = 8;
-            Control_VisualUserAnalytics_CheckBox_Shift2.Text = "Shift 2";
-            Control_VisualUserAnalytics_CheckBox_Shift2.UseVisualStyleBackColor = true;
+            Control_VisualUserAnalytics_CheckBox_ShiftWeekend.AutoSize = true;
+            Control_VisualUserAnalytics_CheckBox_ShiftWeekend.Checked = true;
+            Control_VisualUserAnalytics_CheckBox_ShiftWeekend.CheckState = CheckState.Checked;
+            Control_VisualUserAnalytics_CheckBox_ShiftWeekend.Dock = DockStyle.Fill;
+            Control_VisualUserAnalytics_CheckBox_ShiftWeekend.Location = new Point(248, 3);
+            Control_VisualUserAnalytics_CheckBox_ShiftWeekend.Name = "Control_VisualUserAnalytics_CheckBox_ShiftWeekend";
+            Control_VisualUserAnalytics_CheckBox_ShiftWeekend.Size = new Size(75, 19);
+            Control_VisualUserAnalytics_CheckBox_ShiftWeekend.TabIndex = 10;
+            Control_VisualUserAnalytics_CheckBox_ShiftWeekend.Text = "Weekend";
+            Control_VisualUserAnalytics_CheckBox_ShiftWeekend.UseVisualStyleBackColor = true;
             // 
             // Control_VisualUserAnalytics_CheckBox_Shift3
             // 
@@ -373,18 +350,41 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_VisualUserAnalytics_CheckBox_Shift3.Text = "Shift 3";
             Control_VisualUserAnalytics_CheckBox_Shift3.UseVisualStyleBackColor = true;
             // 
-            // Control_VisualUserAnalytics_CheckBox_ShiftWeekend
+            // Control_VisualUserAnalytics_CheckBox_Shift2
             // 
-            Control_VisualUserAnalytics_CheckBox_ShiftWeekend.AutoSize = true;
-            Control_VisualUserAnalytics_CheckBox_ShiftWeekend.Checked = true;
-            Control_VisualUserAnalytics_CheckBox_ShiftWeekend.CheckState = CheckState.Checked;
-            Control_VisualUserAnalytics_CheckBox_ShiftWeekend.Dock = DockStyle.Fill;
-            Control_VisualUserAnalytics_CheckBox_ShiftWeekend.Location = new Point(248, 3);
-            Control_VisualUserAnalytics_CheckBox_ShiftWeekend.Name = "Control_VisualUserAnalytics_CheckBox_ShiftWeekend";
-            Control_VisualUserAnalytics_CheckBox_ShiftWeekend.Size = new Size(75, 19);
-            Control_VisualUserAnalytics_CheckBox_ShiftWeekend.TabIndex = 10;
-            Control_VisualUserAnalytics_CheckBox_ShiftWeekend.Text = "Weekend";
-            Control_VisualUserAnalytics_CheckBox_ShiftWeekend.UseVisualStyleBackColor = true;
+            Control_VisualUserAnalytics_CheckBox_Shift2.AutoSize = true;
+            Control_VisualUserAnalytics_CheckBox_Shift2.Checked = true;
+            Control_VisualUserAnalytics_CheckBox_Shift2.CheckState = CheckState.Checked;
+            Control_VisualUserAnalytics_CheckBox_Shift2.Dock = DockStyle.Fill;
+            Control_VisualUserAnalytics_CheckBox_Shift2.Location = new Point(118, 3);
+            Control_VisualUserAnalytics_CheckBox_Shift2.Name = "Control_VisualUserAnalytics_CheckBox_Shift2";
+            Control_VisualUserAnalytics_CheckBox_Shift2.Size = new Size(59, 19);
+            Control_VisualUserAnalytics_CheckBox_Shift2.TabIndex = 8;
+            Control_VisualUserAnalytics_CheckBox_Shift2.Text = "Shift 2";
+            Control_VisualUserAnalytics_CheckBox_Shift2.UseVisualStyleBackColor = true;
+            // 
+            // Control_VisualUserAnalytics_CheckBox_Shift1
+            // 
+            Control_VisualUserAnalytics_CheckBox_Shift1.AutoSize = true;
+            Control_VisualUserAnalytics_CheckBox_Shift1.Checked = true;
+            Control_VisualUserAnalytics_CheckBox_Shift1.CheckState = CheckState.Checked;
+            Control_VisualUserAnalytics_CheckBox_Shift1.Dock = DockStyle.Fill;
+            Control_VisualUserAnalytics_CheckBox_Shift1.Location = new Point(53, 3);
+            Control_VisualUserAnalytics_CheckBox_Shift1.Name = "Control_VisualUserAnalytics_CheckBox_Shift1";
+            Control_VisualUserAnalytics_CheckBox_Shift1.Size = new Size(59, 19);
+            Control_VisualUserAnalytics_CheckBox_Shift1.TabIndex = 7;
+            Control_VisualUserAnalytics_CheckBox_Shift1.Text = "Shift 1";
+            Control_VisualUserAnalytics_CheckBox_Shift1.UseVisualStyleBackColor = true;
+            // 
+            // Control_VisualUserAnalytics_CheckedListBox_Users
+            // 
+            Control_VisualUserAnalytics_CheckedListBox_Users.Dock = DockStyle.Fill;
+            Control_VisualUserAnalytics_CheckedListBox_Users.FormattingEnabled = true;
+            Control_VisualUserAnalytics_CheckedListBox_Users.Location = new Point(16, 277);
+            Control_VisualUserAnalytics_CheckedListBox_Users.Margin = new Padding(6);
+            Control_VisualUserAnalytics_CheckedListBox_Users.Name = "Control_VisualUserAnalytics_CheckedListBox_Users";
+            Control_VisualUserAnalytics_CheckedListBox_Users.Size = new Size(768, 307);
+            Control_VisualUserAnalytics_CheckedListBox_Users.TabIndex = 14;
             // 
             // Control_VisualUserAnalytics
             // 
@@ -393,6 +393,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             AutoSize = true;
             AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Controls.Add(Control_VisualUserAnalytics_TableLayout_Main);
+            MaximumSize = new Size(800, 600);
             MinimumSize = new Size(800, 600);
             Name = "Control_VisualUserAnalytics";
             Size = new Size(800, 600);
@@ -400,9 +401,9 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_VisualUserAnalytics_TableLayout_Main.PerformLayout();
             Control_VisualUserAnalytics_TableLayout_Content.ResumeLayout(false);
             Control_VisualUserAnalytics_TableLayout_Content.PerformLayout();
-            Control_VisualUserAnalytics_GroupBox_Instructions.ResumeLayout(false);
             tableLayoutPanel1.ResumeLayout(false);
             tableLayoutPanel1.PerformLayout();
+            Control_VisualUserAnalytics_GroupBox_Instructions.ResumeLayout(false);
             tableLayoutPanel2.ResumeLayout(false);
             tableLayoutPanel2.PerformLayout();
             ResumeLayout(false);

@@ -458,7 +458,7 @@ namespace MTM_WIP_Application_Winforms.Services.Maintenance
                 var dbName = "mtm_wip_application_winforms";
                 var user = "root";
                 var pass = "root"; // Should come from config ideally
-                var host = "172.16.1.104";
+                var host = "localhost";
                 var port = "3306";
 
                 var fileName = $"backup_{dbName}_{DateTime.Now:yyyyMMdd_HHmmss}.sql";

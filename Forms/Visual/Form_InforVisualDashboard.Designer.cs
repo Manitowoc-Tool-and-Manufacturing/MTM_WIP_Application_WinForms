@@ -30,15 +30,15 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             InforVisualDashboard_Panel_Content.Controls.Add(InforVisualDashboard_Control_EmptyState);
             InforVisualDashboard_Panel_Content.Dock = DockStyle.Fill;
             InforVisualDashboard_Panel_Content.Location = new Point(160, 3);
-            InforVisualDashboard_Panel_Content.MinimumSize = new Size(800, 600);
             InforVisualDashboard_Panel_Content.Name = "InforVisualDashboard_Panel_Content";
-            InforVisualDashboard_Panel_Content.Size = new Size(861, 762);
+            InforVisualDashboard_Panel_Content.Size = new Size(640, 430);
             InforVisualDashboard_Panel_Content.TabIndex = 0;
             // 
             // InforVisualDashboard_Control_EmptyState
             // 
             InforVisualDashboard_Control_EmptyState.Action = null;
             InforVisualDashboard_Control_EmptyState.ActionText = "Retry";
+            InforVisualDashboard_Control_EmptyState.AutoSize = true;
             InforVisualDashboard_Control_EmptyState.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             InforVisualDashboard_Control_EmptyState.Dock = DockStyle.Fill;
             InforVisualDashboard_Control_EmptyState.Image = null;
@@ -46,7 +46,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             InforVisualDashboard_Control_EmptyState.Margin = new Padding(6);
             InforVisualDashboard_Control_EmptyState.Message = "Select a category to view data.";
             InforVisualDashboard_Control_EmptyState.Name = "InforVisualDashboard_Control_EmptyState";
-            InforVisualDashboard_Control_EmptyState.Size = new Size(859, 760);
+            InforVisualDashboard_Control_EmptyState.Size = new Size(638, 428);
             InforVisualDashboard_Control_EmptyState.TabIndex = 1;
             // 
             // InforVisualDashboard_TableLayout_Main
@@ -60,11 +60,10 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             InforVisualDashboard_TableLayout_Main.Controls.Add(InforVisualDashboard_Panel_Content, 1, 0);
             InforVisualDashboard_TableLayout_Main.Dock = DockStyle.Fill;
             InforVisualDashboard_TableLayout_Main.Location = new Point(0, 0);
-            InforVisualDashboard_TableLayout_Main.MinimumSize = new Size(1024, 768);
             InforVisualDashboard_TableLayout_Main.Name = "InforVisualDashboard_TableLayout_Main";
             InforVisualDashboard_TableLayout_Main.RowCount = 1;
-            InforVisualDashboard_TableLayout_Main.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            InforVisualDashboard_TableLayout_Main.Size = new Size(1024, 768);
+            InforVisualDashboard_TableLayout_Main.RowStyles.Add(new RowStyle());
+            InforVisualDashboard_TableLayout_Main.Size = new Size(803, 436);
             InforVisualDashboard_TableLayout_Main.TabIndex = 5;
             // 
             // InforVisualDashboard_Panel_Navigation
@@ -74,7 +73,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             InforVisualDashboard_Panel_Navigation.Dock = DockStyle.Fill;
             InforVisualDashboard_Panel_Navigation.Location = new Point(3, 3);
             InforVisualDashboard_Panel_Navigation.Name = "InforVisualDashboard_Panel_Navigation";
-            InforVisualDashboard_Panel_Navigation.Size = new Size(151, 762);
+            InforVisualDashboard_Panel_Navigation.Size = new Size(151, 430);
             InforVisualDashboard_Panel_Navigation.TabIndex = 3;
             // 
             // InforVisualDashboard_TableLayout_Navigation
@@ -101,7 +100,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             InforVisualDashboard_TableLayout_Navigation.RowStyles.Add(new RowStyle());
             InforVisualDashboard_TableLayout_Navigation.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             InforVisualDashboard_TableLayout_Navigation.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            InforVisualDashboard_TableLayout_Navigation.Size = new Size(149, 760);
+            InforVisualDashboard_TableLayout_Navigation.Size = new Size(149, 428);
             InforVisualDashboard_TableLayout_Navigation.TabIndex = 0;
             // 
             // InforVisualDashboard_Button_Inventory
@@ -145,6 +144,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             InforVisualDashboard_Button_Shipping.Text = "Shipping Department";
             InforVisualDashboard_Button_Shipping.TextAlign = ContentAlignment.MiddleLeft;
             InforVisualDashboard_Button_Shipping.UseVisualStyleBackColor = false;
+            InforVisualDashboard_Button_Shipping.Visible = false;
             // 
             // InforVisualDashboard_Button_InventoryAuditing
             // 
@@ -194,14 +194,15 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             AutoScaleMode = AutoScaleMode.Dpi;
             AutoSize = true;
             AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            ClientSize = new Size(1024, 768);
+            ClientSize = new Size(803, 436);
             Controls.Add(InforVisualDashboard_TableLayout_Main);
             Icon = (Icon)resources.GetObject("$this.Icon");
-            MinimumSize = new Size(1024, 768);
+            MinimumSize = new Size(500, 400);
             Name = "Form_InforVisualDashboard";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Infor Visual Dashboard";
             InforVisualDashboard_Panel_Content.ResumeLayout(false);
+            InforVisualDashboard_Panel_Content.PerformLayout();
             InforVisualDashboard_TableLayout_Main.ResumeLayout(false);
             InforVisualDashboard_TableLayout_Main.PerformLayout();
             InforVisualDashboard_Panel_Navigation.ResumeLayout(false);

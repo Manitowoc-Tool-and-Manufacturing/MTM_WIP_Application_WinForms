@@ -70,11 +70,13 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_InventoryAudit_TableLayout_Main.Name = "Control_InventoryAudit_TableLayout_Main";
             Control_InventoryAudit_TableLayout_Main.RowCount = 1;
             Control_InventoryAudit_TableLayout_Main.RowStyles.Add(new RowStyle());
-            Control_InventoryAudit_TableLayout_Main.Size = new Size(800, 600);
+            Control_InventoryAudit_TableLayout_Main.Size = new Size(354, 231);
             Control_InventoryAudit_TableLayout_Main.TabIndex = 0;
             // 
             // Control_InventoryAudit_TableLayout_Lifecycle
             // 
+            Control_InventoryAudit_TableLayout_Lifecycle.AutoSize = true;
+            Control_InventoryAudit_TableLayout_Lifecycle.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_InventoryAudit_TableLayout_Lifecycle.ColumnCount = 1;
             Control_InventoryAudit_TableLayout_Lifecycle.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             Control_InventoryAudit_TableLayout_Lifecycle.Controls.Add(Control_InventoryAudit_SuggestionTextBox_SearchBy, 0, 0);
@@ -94,7 +96,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_InventoryAudit_TableLayout_Lifecycle.RowStyles.Add(new RowStyle());
             Control_InventoryAudit_TableLayout_Lifecycle.RowStyles.Add(new RowStyle());
             Control_InventoryAudit_TableLayout_Lifecycle.RowStyles.Add(new RowStyle());
-            Control_InventoryAudit_TableLayout_Lifecycle.Size = new Size(794, 594);
+            Control_InventoryAudit_TableLayout_Lifecycle.Size = new Size(348, 225);
             Control_InventoryAudit_TableLayout_Lifecycle.TabIndex = 1;
             // 
             // Control_InventoryAudit_SuggestionTextBox_SearchBy
@@ -106,12 +108,12 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_InventoryAudit_SuggestionTextBox_SearchBy.LabelVisibility = Enum_LabelVisibility.Hidden;
             Control_InventoryAudit_SuggestionTextBox_SearchBy.Location = new Point(13, 13);
             Control_InventoryAudit_SuggestionTextBox_SearchBy.MaxLength = 130;
-            Control_InventoryAudit_SuggestionTextBox_SearchBy.MinimumSize = new Size(0, 23);
+            Control_InventoryAudit_SuggestionTextBox_SearchBy.MinimumSize = new Size(100, 23);
             Control_InventoryAudit_SuggestionTextBox_SearchBy.MinLength = 130;
             Control_InventoryAudit_SuggestionTextBox_SearchBy.Name = "Control_InventoryAudit_SuggestionTextBox_SearchBy";
             Control_InventoryAudit_SuggestionTextBox_SearchBy.PlaceholderText = "Enter Search Filter";
             Control_InventoryAudit_SuggestionTextBox_SearchBy.ShowValidationColor = false;
-            Control_InventoryAudit_SuggestionTextBox_SearchBy.Size = new Size(768, 23);
+            Control_InventoryAudit_SuggestionTextBox_SearchBy.Size = new Size(322, 23);
             Control_InventoryAudit_SuggestionTextBox_SearchBy.TabIndex = 1;
             Control_InventoryAudit_SuggestionTextBox_SearchBy.ValidatorType = null;
             Control_InventoryAudit_SuggestionTextBox_SearchBy.Visible = false;
@@ -125,12 +127,12 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_InventoryAudit_SuggestionTextBox_LifecyclePart.LabelVisibility = Enum_LabelVisibility.Hidden;
             Control_InventoryAudit_SuggestionTextBox_LifecyclePart.Location = new Point(13, 42);
             Control_InventoryAudit_SuggestionTextBox_LifecyclePart.MaxLength = 130;
-            Control_InventoryAudit_SuggestionTextBox_LifecyclePart.MinimumSize = new Size(0, 23);
+            Control_InventoryAudit_SuggestionTextBox_LifecyclePart.MinimumSize = new Size(100, 23);
             Control_InventoryAudit_SuggestionTextBox_LifecyclePart.MinLength = 130;
             Control_InventoryAudit_SuggestionTextBox_LifecyclePart.Name = "Control_InventoryAudit_SuggestionTextBox_LifecyclePart";
             Control_InventoryAudit_SuggestionTextBox_LifecyclePart.PlaceholderText = "Enter Part Number";
             Control_InventoryAudit_SuggestionTextBox_LifecyclePart.ShowValidationColor = false;
-            Control_InventoryAudit_SuggestionTextBox_LifecyclePart.Size = new Size(768, 23);
+            Control_InventoryAudit_SuggestionTextBox_LifecyclePart.Size = new Size(322, 23);
             Control_InventoryAudit_SuggestionTextBox_LifecyclePart.TabIndex = 2;
             Control_InventoryAudit_SuggestionTextBox_LifecyclePart.ValidatorType = null;
             // 
@@ -152,7 +154,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_InventoryAudit_TableLayout_Dates.RowCount = 2;
             Control_InventoryAudit_TableLayout_Dates.RowStyles.Add(new RowStyle());
             Control_InventoryAudit_TableLayout_Dates.RowStyles.Add(new RowStyle());
-            Control_InventoryAudit_TableLayout_Dates.Size = new Size(768, 52);
+            Control_InventoryAudit_TableLayout_Dates.Size = new Size(322, 52);
             Control_InventoryAudit_TableLayout_Dates.TabIndex = 1;
             // 
             // Control_InventoryAudit_Label_StartDate
@@ -164,7 +166,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_InventoryAudit_Label_StartDate.Location = new Point(3, 3);
             Control_InventoryAudit_Label_StartDate.Margin = new Padding(3);
             Control_InventoryAudit_Label_StartDate.Name = "Control_InventoryAudit_Label_StartDate";
-            Control_InventoryAudit_Label_StartDate.Size = new Size(762, 17);
+            Control_InventoryAudit_Label_StartDate.Size = new Size(316, 17);
             Control_InventoryAudit_Label_StartDate.TabIndex = 0;
             Control_InventoryAudit_Label_StartDate.Text = "📅 Date Range";
             Control_InventoryAudit_Label_StartDate.TextAlign = ContentAlignment.MiddleLeft;
@@ -174,15 +176,17 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_InventoryAudit_DateTimePicker_StartDate.Dock = DockStyle.Fill;
             Control_InventoryAudit_DateTimePicker_StartDate.Format = DateTimePickerFormat.Short;
             Control_InventoryAudit_DateTimePicker_StartDate.Location = new Point(3, 26);
+            Control_InventoryAudit_DateTimePicker_StartDate.MaximumSize = new Size(0, 23);
+            Control_InventoryAudit_DateTimePicker_StartDate.MinimumSize = new Size(100, 23);
             Control_InventoryAudit_DateTimePicker_StartDate.Name = "Control_InventoryAudit_DateTimePicker_StartDate";
-            Control_InventoryAudit_DateTimePicker_StartDate.Size = new Size(364, 23);
+            Control_InventoryAudit_DateTimePicker_StartDate.Size = new Size(141, 23);
             Control_InventoryAudit_DateTimePicker_StartDate.TabIndex = 7;
             // 
             // Control_InventoryAudit_Label_EndDate
             // 
             Control_InventoryAudit_Label_EndDate.AutoSize = true;
             Control_InventoryAudit_Label_EndDate.Dock = DockStyle.Fill;
-            Control_InventoryAudit_Label_EndDate.Location = new Point(373, 26);
+            Control_InventoryAudit_Label_EndDate.Location = new Point(150, 26);
             Control_InventoryAudit_Label_EndDate.Margin = new Padding(3);
             Control_InventoryAudit_Label_EndDate.Name = "Control_InventoryAudit_Label_EndDate";
             Control_InventoryAudit_Label_EndDate.Size = new Size(20, 23);
@@ -194,9 +198,11 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             // 
             Control_InventoryAudit_DateTimePicker_EndDate.Dock = DockStyle.Fill;
             Control_InventoryAudit_DateTimePicker_EndDate.Format = DateTimePickerFormat.Short;
-            Control_InventoryAudit_DateTimePicker_EndDate.Location = new Point(399, 26);
+            Control_InventoryAudit_DateTimePicker_EndDate.Location = new Point(176, 26);
+            Control_InventoryAudit_DateTimePicker_EndDate.MaximumSize = new Size(0, 23);
+            Control_InventoryAudit_DateTimePicker_EndDate.MinimumSize = new Size(100, 23);
             Control_InventoryAudit_DateTimePicker_EndDate.Name = "Control_InventoryAudit_DateTimePicker_EndDate";
-            Control_InventoryAudit_DateTimePicker_EndDate.Size = new Size(366, 23);
+            Control_InventoryAudit_DateTimePicker_EndDate.Size = new Size(143, 23);
             Control_InventoryAudit_DateTimePicker_EndDate.TabIndex = 8;
             // 
             // Control_InventoryAudit_TableLayout_Buttons
@@ -214,7 +220,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_InventoryAudit_TableLayout_Buttons.Name = "Control_InventoryAudit_TableLayout_Buttons";
             Control_InventoryAudit_TableLayout_Buttons.RowCount = 1;
             Control_InventoryAudit_TableLayout_Buttons.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            Control_InventoryAudit_TableLayout_Buttons.Size = new Size(768, 46);
+            Control_InventoryAudit_TableLayout_Buttons.Size = new Size(322, 46);
             Control_InventoryAudit_TableLayout_Buttons.TabIndex = 2;
             // 
             // Control_InventoryAudit_Button_Export
@@ -248,12 +254,13 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             // 
             // Control_InventoryAudit_Panel_Results
             // 
+            Control_InventoryAudit_Panel_Results.AutoSize = true;
+            Control_InventoryAudit_Panel_Results.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Control_InventoryAudit_Panel_Results.Controls.Add(Control_InventoryAudit_DataGridView_Results);
             Control_InventoryAudit_Panel_Results.Dock = DockStyle.Fill;
             Control_InventoryAudit_Panel_Results.Location = new Point(13, 212);
-            Control_InventoryAudit_Panel_Results.MinimumSize = new Size(762, 300);
             Control_InventoryAudit_Panel_Results.Name = "Control_InventoryAudit_Panel_Results";
-            Control_InventoryAudit_Panel_Results.Size = new Size(768, 369);
+            Control_InventoryAudit_Panel_Results.Size = new Size(322, 1);
             Control_InventoryAudit_Panel_Results.TabIndex = 4;
             // 
             // Control_InventoryAudit_DataGridView_Results
@@ -267,7 +274,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_InventoryAudit_DataGridView_Results.Name = "Control_InventoryAudit_DataGridView_Results";
             Control_InventoryAudit_DataGridView_Results.ReadOnly = true;
             Control_InventoryAudit_DataGridView_Results.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            Control_InventoryAudit_DataGridView_Results.Size = new Size(768, 369);
+            Control_InventoryAudit_DataGridView_Results.Size = new Size(322, 1);
             Control_InventoryAudit_DataGridView_Results.TabIndex = 10;
             // 
             // tableLayoutPanel1
@@ -290,13 +297,13 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 1;
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.Size = new Size(768, 25);
+            tableLayoutPanel1.Size = new Size(322, 25);
             tableLayoutPanel1.TabIndex = 5;
             // 
             // Control_InventoryAudit_RadioButton_Custom
             // 
             Control_InventoryAudit_RadioButton_Custom.AutoSize = true;
-            Control_InventoryAudit_RadioButton_Custom.Location = new Point(474, 3);
+            Control_InventoryAudit_RadioButton_Custom.Location = new Point(251, 3);
             Control_InventoryAudit_RadioButton_Custom.Name = "Control_InventoryAudit_RadioButton_Custom";
             Control_InventoryAudit_RadioButton_Custom.Size = new Size(67, 19);
             Control_InventoryAudit_RadioButton_Custom.TabIndex = 6;
@@ -308,7 +315,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             // 
             Control_InventoryAudit_RadioButton_Month.AutoSize = true;
             Control_InventoryAudit_RadioButton_Month.Checked = true;
-            Control_InventoryAudit_RadioButton_Month.Location = new Point(379, 3);
+            Control_InventoryAudit_RadioButton_Month.Location = new Point(156, 3);
             Control_InventoryAudit_RadioButton_Month.Name = "Control_InventoryAudit_RadioButton_Month";
             Control_InventoryAudit_RadioButton_Month.Size = new Size(89, 19);
             Control_InventoryAudit_RadioButton_Month.TabIndex = 5;
@@ -319,7 +326,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             // Control_InventoryAudit_RadioButton_Week
             // 
             Control_InventoryAudit_RadioButton_Week.AutoSize = true;
-            Control_InventoryAudit_RadioButton_Week.Location = new Point(290, 3);
+            Control_InventoryAudit_RadioButton_Week.Location = new Point(67, 3);
             Control_InventoryAudit_RadioButton_Week.Name = "Control_InventoryAudit_RadioButton_Week";
             Control_InventoryAudit_RadioButton_Week.Size = new Size(83, 19);
             Control_InventoryAudit_RadioButton_Week.TabIndex = 4;
@@ -330,7 +337,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             // Control_InventoryAudit_RadioButton_Today
             // 
             Control_InventoryAudit_RadioButton_Today.AutoSize = true;
-            Control_InventoryAudit_RadioButton_Today.Location = new Point(227, 3);
+            Control_InventoryAudit_RadioButton_Today.Location = new Point(4, 3);
             Control_InventoryAudit_RadioButton_Today.Name = "Control_InventoryAudit_RadioButton_Today";
             Control_InventoryAudit_RadioButton_Today.Size = new Size(57, 19);
             Control_InventoryAudit_RadioButton_Today.TabIndex = 3;
@@ -345,10 +352,11 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             AutoSize = true;
             AutoSizeMode = AutoSizeMode.GrowAndShrink;
             Controls.Add(Control_InventoryAudit_TableLayout_Main);
-            MinimumSize = new Size(800, 600);
+            MaximumSize = new Size(950, 550);
             Name = "Control_InventoryAudit";
-            Size = new Size(800, 600);
+            Size = new Size(354, 231);
             Control_InventoryAudit_TableLayout_Main.ResumeLayout(false);
+            Control_InventoryAudit_TableLayout_Main.PerformLayout();
             Control_InventoryAudit_TableLayout_Lifecycle.ResumeLayout(false);
             Control_InventoryAudit_TableLayout_Lifecycle.PerformLayout();
             Control_InventoryAudit_TableLayout_Dates.ResumeLayout(false);
