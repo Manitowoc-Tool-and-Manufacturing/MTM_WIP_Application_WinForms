@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feature Specification Questionnaire - MTM WIP Application</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #2563eb;
+            --primary-hover: #1d4ed8;
+            --success-color: #059669;
+            --warning-color: #d97706;
+            --danger-color: #dc2626;
+            --bg-primary: #ffffff;
+            --bg-secondary: #f3f4f6;
+            --bg-tertiary: #e5e7eb;
+            --text-primary: #111827;
+            --text-secondary: #6b7280;
+            --border-color: #d1d5db;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem 1rem;
+            color: var(--text-primary);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--bg-primary);
+            border-radius: 16px;
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2.5rem 2rem;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+            line-height: 1.6;
+        }
+
+        .progress-container {
+            background: var(--bg-secondary);
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: var(--bg-tertiary);
+            border-radius: 999px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--success-color));
+            border-radius: 999px;
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        .progress-text {
+            margin-top: 0.75rem;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .content {
+            padding: 2rem;
+        }
+
+        .section {
+            margin-bottom: 3rem;
+        }
+
+        .section-header {
+            background: var(--bg-secondary);
+            padding: 1rem 1.5rem;
+            margin: 0 -2rem 2rem -2rem;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .section-header h2 {
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .section-header p {
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .question {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 1.75rem;
+            margin-bottom: 2rem;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .question:hover {
+            border-color: var(--primary-color);
+            box-shadow: var(--shadow-md);
+        }
+
+        .question.answered {
+            border-color: var(--success-color);
+            background: #f0fdf4;
+        }
+
+        .question-header {
+            margin-bottom: 1.25rem;
+        }
+
+        .question-number {
+            display: inline-block;
+            background: var(--primary-color);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+        }
+
+        .question-text {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+            line-height: 1.5;
+        }
+
+        .question-reason {
+            background: #fef3c7;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            border-left: 3px solid var(--warning-color);
+            margin-bottom: 1.25rem;
+        }
+
+        .question-reason strong {
+            color: var(--warning-color);
+            font-size: 0.9rem;
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        .question-reason p {
+            color: #78350f;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .options {
+            margin-bottom: 1.5rem;
+        }
+
+        .option {
+            display: flex;
+            align-items: flex-start;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .option:hover {
+            border-color: var(--primary-color);
+            background: #eff6ff;
+        }
+
+        .option.selected {
+            border-color: var(--primary-color);
+            background: #dbeafe;
+        }
+
+        .option.suggested {
+            border-color: var(--success-color);
+            background: #f0fdf4;
+        }
+
+        .option.selected.suggested {
+            background: #d1fae5;
+        }
+
+        .option input[type="radio"] {
+            margin-right: 0.75rem;
+            margin-top: 0.25rem;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .option-label {
+            flex: 1;
+            cursor: pointer;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .suggested-badge {
+            background: var(--success-color);
+            color: white;
+            padding: 0.25rem 0.65rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+
+        .reasoning-box {
+            background: #ecfdf5;
+            border: 1px solid #a7f3d0;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 0.75rem;
+            display: none;
+        }
+
+        .option.suggested .reasoning-box {
+            display: block;
+        }
+
+        .reasoning-box p {
+            color: #065f46;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .custom-answer {
+            margin-top: 1.5rem;
+        }
+
+        .custom-answer label {
+            display: block;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .custom-answer textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            resize: vertical;
+            min-height: 80px;
+            transition: border-color 0.2s ease;
+        }
+
+        .custom-answer textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .custom-answer .hint {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            font-style: italic;
+        }
+
+        .merged-preview {
+            background: #f0f9ff;
+            border: 2px solid #0ea5e9;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .merged-preview.show {
+            display: block;
+        }
+
+        .merged-preview strong {
+            color: #0369a1;
+            font-size: 0.9rem;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .merged-preview p {
+            color: #0c4a6e;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 2px solid var(--border-color);
+        }
+
+        .btn {
+            flex: 1;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-primary:disabled {
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--text-primary);
+            border: 2px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .summary-section {
+            display: none;
+            background: var(--bg-secondary);
+            padding: 2rem;
+            border-radius: 12px;
+            margin-top: 2rem;
+        }
+
+        .summary-section.show {
+            display: block;
+        }
+
+        .summary-header {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .summary-item {
+            background: white;
+            padding: 1.25rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .summary-question {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .summary-answer {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .summary-answer .base-answer {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .summary-answer .custom-details {
+            color: var(--primary-color);
+            font-style: italic;
+            margin-top: 0.25rem;
+        }
+
+        .export-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .toast {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            background: var(--success-color);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: var(--shadow-lg);
+            display: none;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem 0.5rem;
+            }
+
+            .container {
+                border-radius: 8px;
+            }
+
+            .header {
+                padding: 1.5rem 1rem;
+            }
+
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            .content {
+                padding: 1rem;
+            }
+
+            .section-header {
+                margin: 0 -1rem 1.5rem -1rem;
+                padding: 0.75rem 1rem;
+            }
+
+            .question {
+                padding: 1.25rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .export-buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Feature Specification Questionnaire</h1>
+            <p>Help us understand your feature requirements by answering these questions in plain language.</p>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text" id="progressText">0 of 0 questions answered</div>
+        </div>
+
+        <div class="content">
+            <form id="questionnaireForm">
+                <!-- Questions will be inserted here by JavaScript -->
+            </form>
+
+            <div class="summary-section" id="summarySection">
+                <h2 class="summary-header">Your Responses Summary</h2>
+                <div id="summaryContent"></div>
+                <div class="export-buttons">
+                    <button type="button" class="btn btn-primary" onclick="exportAsText()">
+                        📄 Copy as Text
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="exportAsJSON()">
+                        📦 Export as JSON
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast">Response saved!</div>
+
+    <script>
+        // Question data structure
+        const questionData = {
+            sections: [
+                {
+                    id: 'overview',
+                    title: 'Feature Overview',
+                    description: 'Let\'s start with the basics about your feature.',
+                    questions: [
+                        {
+                            id: 'feature-name',
+                            text: 'What would you like to call this feature?',
+                            reason: 'A clear name helps everyone on the team understand what we\'re building.',
+                            options: [
+                                { value: 'inventory-search', label: 'Inventory Search & Filter' },
+                                { value: 'report-generator', label: 'Report Generator' },
+                                { value: 'user-management', label: 'User Management' },
+                                { value: 'data-export', label: 'Data Export Tool' },
+                                { value: 'custom', label: 'Something else (describe below)' }
+                            ],
+                            customPlaceholder: 'e.g., "Advanced Transaction History Viewer"'
+                        },
+                        {
+                            id: 'feature-purpose',
+                            text: 'In simple terms, what problem does this feature solve for users?',
+                            reason: 'Understanding the "why" ensures we build something that truly helps.',
+                            options: [
+                                { value: 'find-info', label: 'Users need to find information quickly', suggested: true },
+                                { value: 'automate-task', label: 'Users need to automate a repetitive task' },
+                                { value: 'track-changes', label: 'Users need to track changes or history' },
+                                { value: 'generate-reports', label: 'Users need to create reports or exports' },
+                                { value: 'collaborate', label: 'Users need to share or collaborate on data' }
+                            ],
+                            suggestedReason: 'Most features exist to help users access information more efficiently.',
+                            customPlaceholder: 'e.g., "Users spend too much time manually counting inventory items"'
+                        },
+                        {
+                            id: 'target-users',
+                            text: 'Who will use this feature most often?',
+                            reason: 'Different users have different needs and technical comfort levels.',
+                            options: [
+                                { value: 'operators', label: 'Floor operators and production staff', suggested: true },
+                                { value: 'managers', label: 'Supervisors and managers' },
+                                { value: 'admin', label: 'System administrators' },
+                                { value: 'warehouse', label: 'Warehouse and shipping staff' },
+                                { value: 'everyone', label: 'All users' }
+                            ],
+                            suggestedReason: 'Floor operators are the primary users of the WIP system.',
+                            customPlaceholder: 'e.g., "Quality control inspectors during shift changes"'
+                        }
+                    ]
+                },
+                {
+                    id: 'user-workflow',
+                    title: 'How Users Will Work',
+                    description: 'Help us understand the step-by-step process users will follow.',
+                    questions: [
+                        {
+                            id: 'feature-trigger',
+                            text: 'How do users start using this feature?',
+                            reason: 'We need to make the feature easy to discover and access.',
+                            options: [
+                                { value: 'menu-button', label: 'Click a button or menu item', suggested: true },
+                                { value: 'right-click', label: 'Right-click on existing data' },
+                                { value: 'keyboard-shortcut', label: 'Press a keyboard shortcut' },
+                                { value: 'auto-trigger', label: 'Automatically when certain conditions are met' },
+                                { value: 'help-decide', label: 'I need help deciding' }
+                            ],
+                            suggestedReason: 'Buttons and menu items are the most intuitive way to access features.',
+                            customPlaceholder: 'e.g., "From the main dashboard, click the new \'Search\' tab"'
+                        },
+                        {
+                            id: 'user-input',
+                            text: 'What information do users need to provide?',
+                            reason: 'This helps us design the right input fields and validation.',
+                            options: [
+                                { value: 'search-criteria', label: 'Search terms or filter criteria', suggested: true },
+                                { value: 'selections', label: 'Select from dropdown lists' },
+                                { value: 'dates-ranges', label: 'Date ranges or time periods' },
+                                { value: 'file-upload', label: 'Upload a file' },
+                                { value: 'minimal', label: 'Very minimal input - mostly automatic' }
+                            ],
+                            suggestedReason: 'Search and filter are common patterns users understand.',
+                            customPlaceholder: 'e.g., "Part number and optional operation code"'
+                        },
+                        {
+                            id: 'expected-result',
+                            text: 'What should users see after using the feature?',
+                            reason: 'Clear expectations help us design effective results displays.',
+                            options: [
+                                { value: 'data-list', label: 'A list or table of matching data', suggested: true },
+                                { value: 'summary-report', label: 'A summary or report' },
+                                { value: 'confirmation', label: 'A confirmation that something was saved or updated' },
+                                { value: 'export-file', label: 'A downloadable file (Excel, PDF, etc.)' },
+                                { value: 'next-screen', label: 'Move to the next step or screen' }
+                            ],
+                            suggestedReason: 'Users typically expect to see relevant data they can review.',
+                            customPlaceholder: 'e.g., "A graph showing inventory levels over time"'
+                        },
+                        {
+                            id: 'user-actions',
+                            text: 'What can users do with the results?',
+                            reason: 'Understanding next steps helps us build a complete workflow.',
+                            options: [
+                                { value: 'view-details', label: 'View more details about selected items' },
+                                { value: 'export-data', label: 'Export or print the results', suggested: true },
+                                { value: 'edit-data', label: 'Edit or update the data' },
+                                { value: 'share-results', label: 'Share results with others' },
+                                { value: 'nothing-more', label: 'Just view - no further actions needed' }
+                            ],
+                            suggestedReason: 'Export capability is frequently requested by users.',
+                            customPlaceholder: 'e.g., "Email the report to their supervisor"'
+                        }
+                    ]
+                },
+                {
+                    id: 'data-requirements',
+                    title: 'Data & Information',
+                    description: 'What data does this feature need to work with?',
+                    questions: [
+                        {
+                            id: 'data-source',
+                            text: 'Where does the data come from?',
+                            reason: 'We need to know which existing data to work with.',
+                            options: [
+                                { value: 'inventory', label: 'Inventory/WIP records', suggested: true },
+                                { value: 'transactions', label: 'Transaction history' },
+                                { value: 'users', label: 'User information' },
+                                { value: 'parts-ops', label: 'Parts and operations' },
+                                { value: 'multiple', label: 'Multiple sources combined' }
+                            ],
+                            suggestedReason: 'Most features work with core inventory data.',
+                            customPlaceholder: 'e.g., "Historical shipping records from the last 6 months"'
+                        },
+                        {
+                            id: 'data-freshness',
+                            text: 'How current does the data need to be?',
+                            reason: 'This affects whether we load data once or refresh it frequently.',
+                            options: [
+                                { value: 'real-time', label: 'Real-time (always current)' },
+                                { value: 'refresh-button', label: 'Current when user clicks refresh', suggested: true },
+                                { value: 'daily', label: 'Updated daily is fine' },
+                                { value: 'historical', label: 'Historical data doesn\'t change' },
+                                { value: 'help-decide', label: 'I need help deciding' }
+                            ],
+                            suggestedReason: 'Refresh on demand balances performance with data accuracy.',
+                            customPlaceholder: 'e.g., "Must update every 5 minutes automatically"'
+                        },
+                        {
+                            id: 'data-filtering',
+                            text: 'How should users narrow down the data they see?',
+                            reason: 'Good filtering makes large datasets manageable.',
+                            options: [
+                                { value: 'search-box', label: 'Type in a search box', suggested: true },
+                                { value: 'dropdown-filters', label: 'Select from dropdown filters' },
+                                { value: 'date-range', label: 'Pick a date range' },
+                                { value: 'advanced-filters', label: 'Combination of multiple filters' },
+                                { value: 'no-filter', label: 'Show all data - no filtering needed' }
+                            ],
+                            suggestedReason: 'Search boxes are intuitive and flexible for users.',
+                            customPlaceholder: 'e.g., "Filter by location, part type, and status all at once"'
+                        }
+                    ]
+                },
+                {
+                    id: 'error-handling',
+                    title: 'When Things Go Wrong',
+                    description: 'How should the system respond to problems or mistakes?',
+                    questions: [
+                        {
+                            id: 'no-results',
+                            text: 'What should happen if no data matches what the user searched for?',
+                            reason: 'Empty results can be confusing - we want to guide users helpfully.',
+                            options: [
+                                { value: 'friendly-message', label: 'Show a friendly "no results" message with suggestions', suggested: true },
+                                { value: 'similar-results', label: 'Show similar or partial matches' },
+                                { value: 'blank-screen', label: 'Just show an empty list' },
+                                { value: 'error-message', label: 'Show an error message' },
+                                { value: 'help-decide', label: 'I need help deciding' }
+                            ],
+                            suggestedReason: 'Helpful messages reduce user frustration and support requests.',
+                            customPlaceholder: 'e.g., "Suggest they try searching with fewer filters"'
+                        },
+                        {
+                            id: 'invalid-input',
+                            text: 'What should happen if users enter invalid information?',
+                            reason: 'Clear validation helps users succeed without getting stuck.',
+                            options: [
+                                { value: 'inline-validation', label: 'Show a helpful message next to the field immediately', suggested: true },
+                                { value: 'popup-error', label: 'Show a popup when they try to continue' },
+                                { value: 'disable-button', label: 'Disable the submit button until input is valid' },
+                                { value: 'highlight-field', label: 'Highlight the field in red' },
+                                { value: 'auto-correct', label: 'Try to automatically correct the input' }
+                            ],
+                            suggestedReason: 'Immediate, inline feedback is most user-friendly.',
+                            customPlaceholder: 'e.g., "Show autocomplete suggestions as they type"'
+                        },
+                        {
+                            id: 'system-error',
+                            text: 'What should happen if the system encounters a technical error?',
+                            reason: 'Technical problems are rare but need graceful handling.',
+                            options: [
+                                { value: 'friendly-retry', label: 'Show a friendly message with option to retry', suggested: true },
+                                { value: 'notify-admin', label: 'Show message and notify administrators' },
+                                { value: 'log-continue', label: 'Log the error but let user continue' },
+                                { value: 'technical-details', label: 'Show technical error details' },
+                                { value: 'help-decide', label: 'I need help deciding' }
+                            ],
+                            suggestedReason: 'Users appreciate being able to retry without losing their work.',
+                            customPlaceholder: 'e.g., "Automatically retry 3 times before showing error"'
+                        }
+                    ]
+                },
+                {
+                    id: 'performance',
+                    title: 'Speed & Performance',
+                    description: 'How fast should this feature respond?',
+                    questions: [
+                        {
+                            id: 'response-time',
+                            text: 'How quickly should results appear after a user takes action?',
+                            reason: 'Response time affects user satisfaction and workflow efficiency.',
+                            options: [
+                                { value: 'instant', label: 'Instantly (less than 1 second)' },
+                                { value: 'few-seconds', label: 'Within a few seconds (1-3 seconds)', suggested: true },
+                                { value: 'acceptable-wait', label: 'Acceptable to wait 5-10 seconds' },
+                                { value: 'background', label: 'Can run in background while user works' },
+                                { value: 'help-decide', label: 'I need help deciding' }
+                            ],
+                            suggestedReason: '1-3 seconds feels responsive without requiring complex optimization.',
+                            customPlaceholder: 'e.g., "Under 500 milliseconds for small datasets"'
+                        },
+                        {
+                            id: 'large-datasets',
+                            text: 'If dealing with lots of data, how should the system handle it?',
+                            reason: 'Large amounts of data need special handling to stay responsive.',
+                            options: [
+                                { value: 'pagination', label: 'Show data in pages (e.g., 50 items at a time)', suggested: true },
+                                { value: 'lazy-load', label: 'Load more as user scrolls' },
+                                { value: 'load-all', label: 'Load everything at once' },
+                                { value: 'limit-results', label: 'Limit to most recent or relevant results' },
+                                { value: 'not-applicable', label: 'Won\'t have large datasets' }
+                            ],
+                            suggestedReason: 'Pagination is familiar and works well for most users.',
+                            customPlaceholder: 'e.g., "Virtual scrolling for smooth performance with 10,000+ rows"'
+                        }
+                    ]
+                },
+                {
+                    id: 'special-requirements',
+                    title: 'Special Requirements',
+                    description: 'Any unique needs or constraints for this feature?',
+                    questions: [
+                        {
+                            id: 'access-control',
+                            text: 'Should access to this feature be restricted?',
+                            reason: 'Security and permissions ensure the right people use the right features.',
+                            options: [
+                                { value: 'all-users', label: 'All users can access it', suggested: true },
+                                { value: 'supervisors-only', label: 'Only supervisors and above' },
+                                { value: 'specific-roles', label: 'Specific user roles only' },
+                                { value: 'configurable', label: 'Should be configurable by administrators' },
+                                { value: 'help-decide', label: 'I need help deciding' }
+                            ],
+                            suggestedReason: 'Most features benefit all users unless they involve sensitive operations.',
+                            customPlaceholder: 'e.g., "Anyone can view, but only managers can export"'
+                        },
+                        {
+                            id: 'mobile-usage',
+                            text: 'Will users need to access this on mobile devices or tablets?',
+                            reason: 'Mobile support requires responsive design considerations.',
+                            options: [
+                                { value: 'desktop-only', label: 'Desktop computers only', suggested: true },
+                                { value: 'tablet-support', label: 'Tablets should work' },
+                                { value: 'full-mobile', label: 'Full mobile phone support needed' },
+                                { value: 'nice-to-have', label: 'Mobile would be nice but not required' },
+                                { value: 'help-decide', label: 'I need help deciding' }
+                            ],
+                            suggestedReason: 'Desktop is the primary platform for WIP application.',
+                            customPlaceholder: 'e.g., "Tablets used in warehouse need basic functionality"'
+                        },
+                        {
+                            id: 'existing-integration',
+                            text: 'Does this need to work with any existing features?',
+                            reason: 'Integration points help us maintain consistency across the application.',
+                            options: [
+                                { value: 'standalone', label: 'Standalone feature - no integration needed' },
+                                { value: 'inventory-tab', label: 'Integrate with main inventory screen', suggested: true },
+                                { value: 'transactions', label: 'Work with transaction history' },
+                                { value: 'quick-buttons', label: 'Accessible from Quick Buttons' },
+                                { value: 'multiple', label: 'Multiple integration points' }
+                            ],
+                            suggestedReason: 'Most features connect to the main inventory workflow.',
+                            customPlaceholder: 'e.g., "Should appear as a new tab next to Advanced Inventory"'
+                        }
+                    ]
+                }
+            ]
+        };
+
+        // State management
+        let responses = {};
+        let totalQuestions = 0;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadFromLocalStorage();
+            renderQuestions();
+            updateProgress();
+            setupAutoSave();
+        });
+
+        function renderQuestions() {
+            const form = document.getElementById('questionnaireForm');
+            
+            questionData.sections.forEach(section => {
+                const sectionEl = document.createElement('div');
+                sectionEl.className = 'section';
+                
+                sectionEl.innerHTML = `
+                    <div class="section-header">
+                        <h2>${section.title}</h2>
+                        <p>${section.description}</p>
+                    </div>
+                `;
+                
+                section.questions.forEach((question, qIndex) => {
+                    totalQuestions++;
+                    const questionEl = createQuestionElement(section.id, question, qIndex);
+                    sectionEl.appendChild(questionEl);
+                });
+                
+                form.appendChild(sectionEl);
+            });
+            
+            // Add action buttons
+            const actionsEl = document.createElement('div');
+            actionsEl.className = 'action-buttons';
+            actionsEl.innerHTML = `
+                <button type="button" class="btn btn-secondary" onclick="resetForm()">
+                    🔄 Start Over
+                </button>
+                <button type="button" class="btn btn-primary" id="submitBtn" onclick="submitQuestionnaire()">
+                    ✅ Review My Answers
+                </button>
+            `;
+            form.appendChild(actionsEl);
+            
+            document.getElementById('progressText').textContent = `0 of ${totalQuestions} questions answered`;
+        }
+
+        function createQuestionElement(sectionId, question, index) {
+            const questionEl = document.createElement('div');
+            questionEl.className = 'question';
+            questionEl.id = `question-${sectionId}-${question.id}`;
+            
+            let optionsHTML = '';
+            question.options.forEach((option, optIndex) => {
+                const isSuggested = option.suggested || false;
+                const suggestedClass = isSuggested ? 'suggested' : '';
+                const suggestedBadge = isSuggested ? '<span class="suggested-badge">Suggested</span>' : '';
+                const reasoningBox = isSuggested && question.suggestedReason ? 
+                    `<div class="reasoning-box"><p><strong>Why suggested:</strong> ${question.suggestedReason}</p></div>` : '';
+                
+                optionsHTML += `
+                    <div class="option ${suggestedClass}" onclick="selectOption('${sectionId}', '${question.id}', ${optIndex})">
+                        <input type="radio" 
+                               name="${sectionId}-${question.id}" 
+                               id="${sectionId}-${question.id}-${optIndex}"
+                               value="${option.value}">
+                        <label class="option-label" for="${sectionId}-${question.id}-${optIndex}">
+                            ${option.label}${suggestedBadge}
+                            ${reasoningBox}
+                        </label>
+                    </div>
+                `;
+            });
+            
+            const reasonHTML = question.reason ? `
+                <div class="question-reason">
+                    <strong>Why we're asking:</strong>
+                    <p>${question.reason}</p>
+                </div>
+            ` : '';
+            
+            questionEl.innerHTML = `
+                <div class="question-header">
+                    <span class="question-number">Question ${totalQuestions}</span>
+                    <div class="question-text">${question.text}</div>
+                </div>
+                ${reasonHTML}
+                <div class="options">
+                    ${optionsHTML}
+                </div>
+                <div class="custom-answer">
+                    <label for="custom-${sectionId}-${question.id}">
+                        ✏️ Add your own details or modifications:
+                    </label>
+                    <textarea id="custom-${sectionId}-${question.id}" 
+                              placeholder="${question.customPlaceholder || 'Type your custom answer or additional details here...'}"
+                              oninput="updateCustomAnswer('${sectionId}', '${question.id}')"></textarea>
+                    <p class="hint">Your response will combine your selection above with any details you add here.</p>
+                </div>
+                <div class="merged-preview" id="preview-${sectionId}-${question.id}">
+                    <strong>📝 Your merged answer:</strong>
+                    <p id="preview-text-${sectionId}-${question.id}"></p>
+                </div>
+            `;
+            
+            return questionEl;
+        }
+
+        function selectOption(sectionId, questionId, optionIndex) {
+            const radioBtn = document.getElementById(`${sectionId}-${questionId}-${optionIndex}`);
+            radioBtn.checked = true;
+            
+            // Update option styling
+            const allOptions = document.querySelectorAll(`#question-${sectionId}-${questionId} .option`);
+            allOptions.forEach(opt => opt.classList.remove('selected'));
+            allOptions[optionIndex].classList.add('selected');
+            
+            // Mark question as answered
+            document.getElementById(`question-${sectionId}-${questionId}`).classList.add('answered');
+            
+            updateMergedAnswer(sectionId, questionId);
+            updateProgress();
+            saveToLocalStorage();
+        }
+
+        function updateCustomAnswer(sectionId, questionId) {
+            updateMergedAnswer(sectionId, questionId);
+            
+            // Mark as answered if custom text exists
+            const customText = document.getElementById(`custom-${sectionId}-${questionId}`).value.trim();
+            if (customText) {
+                document.getElementById(`question-${sectionId}-${questionId}`).classList.add('answered');
+            }
+            
+            updateProgress();
+            saveToLocalStorage();
+        }
+
+        function updateMergedAnswer(sectionId, questionId) {
+            const selectedRadio = document.querySelector(`input[name="${sectionId}-${questionId}"]:checked`);
+            const customText = document.getElementById(`custom-${sectionId}-${questionId}`).value.trim();
+            const previewEl = document.getElementById(`preview-${sectionId}-${questionId}`);
+            const previewTextEl = document.getElementById(`preview-text-${sectionId}-${questionId}`);
+            
+            let mergedAnswer = '';
+            
+            if (selectedRadio && customText) {
+                const selectedLabel = selectedRadio.nextElementSibling.textContent.replace('Suggested', '').trim();
+                mergedAnswer = `${selectedLabel}, ${customText}`;
+            } else if (selectedRadio) {
+                mergedAnswer = selectedRadio.nextElementSibling.textContent.replace('Suggested', '').trim();
+            } else if (customText) {
+                mergedAnswer = customText;
+            }
+            
+            if (mergedAnswer) {
+                previewTextEl.textContent = mergedAnswer;
+                previewEl.classList.add('show');
+                
+                // Store response
+                responses[`${sectionId}-${questionId}`] = {
+                    selectedValue: selectedRadio ? selectedRadio.value : null,
+                    selectedLabel: selectedRadio ? selectedRadio.nextElementSibling.textContent.replace('Suggested', '').trim() : null,
+                    customText: customText,
+                    mergedAnswer: mergedAnswer
+                };
+            } else {
+                previewEl.classList.remove('show');
+                delete responses[`${sectionId}-${questionId}`];
+            }
+        }
+
+        function updateProgress() {
+            const answeredCount = Object.keys(responses).length;
+            const percentage = (answeredCount / totalQuestions) * 100;
+            
+            document.getElementById('progressFill').style.width = `${percentage}%`;
+            document.getElementById('progressText').textContent = 
+                `${answeredCount} of ${totalQuestions} questions answered (${Math.round(percentage)}%)`;
+            
+            const submitBtn = document.getElementById('submitBtn');
+            if (answeredCount === totalQuestions) {
+                submitBtn.disabled = false;
+            }
+        }
+
+        function submitQuestionnaire() {
+            generateSummary();
+            document.getElementById('summarySection').classList.add('show');
+            document.getElementById('summarySection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function generateSummary() {
+            const summaryContent = document.getElementById('summaryContent');
+            summaryContent.innerHTML = '';
+            
+            let questionNumber = 1;
+            questionData.sections.forEach(section => {
+                section.questions.forEach(question => {
+                    const responseKey = `${section.id}-${question.id}`;
+                    const response = responses[responseKey];
+                    
+                    if (response) {
+                        const summaryItem = document.createElement('div');
+                        summaryItem.className = 'summary-item';
+                        
+                        let answerHTML = '';
+                        if (response.selectedLabel && response.customText) {
+                            answerHTML = `
+                                <span class="base-answer">${response.selectedLabel}</span>
+                                <div class="custom-details">+ ${response.customText}</div>
+                            `;
+                        } else if (response.selectedLabel) {
+                            answerHTML = `<span class="base-answer">${response.selectedLabel}</span>`;
+                        } else {
+                            answerHTML = `<span class="base-answer">${response.customText}</span>`;
+                        }
+                        
+                        summaryItem.innerHTML = `
+                            <div class="summary-question">
+                                Q${questionNumber}: ${question.text}
+                            </div>
+                            <div class="summary-answer">
+                                ${answerHTML}
+                            </div>
+                        `;
+                        
+                        summaryContent.appendChild(summaryItem);
+                    }
+                    questionNumber++;
+                });
+            });
+        }
+
+        function exportAsText() {
+            let text = 'FEATURE SPECIFICATION QUESTIONNAIRE RESPONSES\n';
+            text += '='.repeat(60) + '\n\n';
+            
+            let questionNumber = 1;
+            questionData.sections.forEach(section => {
+                text += `\n${section.title.toUpperCase()}\n`;
+                text += '-'.repeat(section.title.length) + '\n\n';
+                
+                section.questions.forEach(question => {
+                    const responseKey = `${section.id}-${question.id}`;
+                    const response = responses[responseKey];
+                    
+                    if (response) {
+                        text += `Q${questionNumber}: ${question.text}\n`;
+                        text += `A${questionNumber}: ${response.mergedAnswer}\n\n`;
+                    }
+                    questionNumber++;
+                });
+            });
+            
+            text += '\n' + '='.repeat(60) + '\n';
+            text += `Generated: ${new Date().toLocaleString()}\n`;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('✅ Responses copied to clipboard!');
+            });
+        }
+
+        function exportAsJSON() {
+            const exportData = {
+                metadata: {
+                    generatedAt: new Date().toISOString(),
+                    totalQuestions: totalQuestions,
+                    answeredQuestions: Object.keys(responses).length
+                },
+                responses: {}
+            };
+            
+            questionData.sections.forEach(section => {
+                section.questions.forEach(question => {
+                    const responseKey = `${section.id}-${question.id}`;
+                    if (responses[responseKey]) {
+                        exportData.responses[responseKey] = {
+                            question: question.text,
+                            ...responses[responseKey]
+                        };
+                    }
+                });
+            });
+            
+            const jsonString = JSON.stringify(exportData, null, 2);
+            const blob = new Blob([jsonString], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `feature-spec-responses-${Date.now()}.json`;
+            a.click();
+            
+            showToast('✅ JSON file downloaded!');
+        }
+
+        function resetForm() {
+            if (confirm('Are you sure you want to start over? All your answers will be cleared.')) {
+                responses = {};
+                localStorage.removeItem('questionnaireResponses');
+                location.reload();
+            }
+        }
+
+        function saveToLocalStorage() {
+            localStorage.setItem('questionnaireResponses', JSON.stringify(responses));
+            showToast('💾 Progress saved', 1000);
+        }
+
+        function loadFromLocalStorage() {
+            const saved = localStorage.getItem('questionnaireResponses');
+            if (saved) {
+                try {
+                    responses = JSON.parse(saved);
+                } catch (e) {
+                    console.error('Failed to load saved responses', e);
+                }
+            }
+        }
+
+        function setupAutoSave() {
+            // Auto-save every 30 seconds
+            setInterval(saveToLocalStorage, 30000);
+        }
+
+        function showToast(message, duration = 3000) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, duration);
+        }
+
+        // Restore saved responses after page load
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                Object.keys(responses).forEach(key => {
+                    const [sectionId, questionId] = key.split('-').slice(0, 2);
+                    const response = responses[key];
+                    
+                    if (response.selectedValue) {
+                        const radio = document.querySelector(`input[name="${sectionId}-${questionId}"][value="${response.selectedValue}"]`);
+                        if (radio) {
+                            radio.checked = true;
+                            const optionIndex = Array.from(radio.parentElement.parentElement.children).indexOf(radio.parentElement);
+                            selectOption(sectionId, questionId, optionIndex);
+                        }
+                    }
+                    
+                    if (response.customText) {
+                        const textarea = document.getElementById(`custom-${sectionId}-${questionId}`);
+                        if (textarea) {
+                            textarea.value = response.customText;
+                            updateCustomAnswer(sectionId, questionId);
+                        }
+                    }
+                });
+            }, 100);
+        });
+    </script>
+</body>
+</html>
