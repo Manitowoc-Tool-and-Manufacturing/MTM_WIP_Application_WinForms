@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quick Button Features - Clarification Questionnaire</title>
+    <style>
+        :root {
+            --primary-color: #0078d4;
+            --bg-color: #f3f2f1;
+            --card-bg: #ffffff;
+            --text-color: #323130;
+            --border-color: #e1dfdd;
+        }
+
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .question-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 15px;
+        }
+
+        .question-title {
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+
+        .why-asking {
+            background-color: #e6f2fb;
+            padding: 10px 15px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .options-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            padding: 8px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        .option-label:hover {
+            background-color: #f8f9fa;
+        }
+
+        .option-label input[type="radio"] {
+            margin-right: 12px;
+            width: 18px;
+            height: 18px;
+        }
+
+        .suggested-badge {
+            background-color: #dff6dd;
+            color: #107c10;
+            font-size: 0.8em;
+            padding: 2px 8px;
+            border-radius: 12px;
+            margin-left: 10px;
+            font-weight: 600;
+        }
+
+        .custom-input-container {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .custom-input-label {
+            display: block;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+            color: #605e5c;
+        }
+
+        .custom-input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-family: inherit;
+            box-sizing: border-box;
+        }
+
+        .reasoning {
+            margin-top: 15px;
+            font-size: 0.9em;
+            color: #605e5c;
+            font-style: italic;
+        }
+
+        .actions {
+            margin-top: 40px;
+            text-align: center;
+        }
+
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1em;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: #005a9e;
+        }
+
+        #summary-section {
+            display: none;
+            margin-top: 40px;
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .summary-item {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .summary-question {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .summary-answer {
+            color: var(--primary-color);
+        }
+
+        .copy-btn {
+            background-color: #f3f2f1;
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            margin-top: 20px;
+        }
+
+        .copy-btn:hover {
+            background-color: #e1dfdd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Quick Button Features</h1>
+            <p>Clarification Questionnaire for Implementation Details</p>
+        </header>
+
+        <form id="questionnaireForm">
+            <div id="questions-container"></div>
+            
+            <div class="actions">
+                <button type="submit">Generate Summary</button>
+            </div>
+        </form>
+
+        <div id="summary-section">
+            <h2>Response Summary</h2>
+            <div id="summary-content"></div>
+            <button class="copy-btn" onclick="copySummary()">Copy to Clipboard</button>
+            <button class="copy-btn" onclick="downloadJson()">Download JSON</button>
+        </div>
+    </div>
+
+    <script>
+        // Question Data Configuration
+        const questionData = [
+            {
+                id: 1,
+                title: "Icon Style for Action Bar & Hub",
+                why: "Ensures visual consistency with the rest of the application and meets branding requirements.",
+                options: [
+                    { text: "FontAwesome Icons (Modern, Scalable)", suggested: true },
+                    { text: "System Icons (Standard WinForms look)", suggested: false },
+                    { text: "Custom PNG/SVG Assets (Brand specific)", suggested: false }
+                ],
+                reasoning: "FontAwesome provides a clean, modern look that scales well on high-DPI displays and is already widely used in modern .NET apps."
+            },
+            {
+                id: 2,
+                title: "Hub Form Modal Behavior",
+                why: "Determines how the user interacts with the main application while the Quick Button Manager is open.",
+                options: [
+                    { text: "Fully Modal (Blocks all interaction with main app)", suggested: true },
+                    { text: "Owner-based (Blocks input but moves with main app)", suggested: false },
+                    { text: "Non-modal (Allows interaction with main app)", suggested: false }
+                ],
+                reasoning: "Modal behavior prevents state conflicts (e.g., trying to use a button while editing it) and simplifies the user workflow."
+            },
+            {
+                id: 3,
+                title: "Reorder Drag-and-Drop Visuals",
+                why: "Affects the perceived performance and polish of the reordering interaction.",
+                options: [
+                    { text: "Ghost Image (Semi-transparent copy of the row)", suggested: true },
+                    { text: "Simple Cursor Change (Minimal visual feedback)", suggested: false },
+                    { text: "Insertion Line Only (Shows where item will drop)", suggested: false }
+                ],
+                reasoning: "A ghost image provides the most intuitive feedback for drag-and-drop operations, reducing user error."
+            },
+            {
+                id: 4,
+                title: "Remove Confirmation Safety Level",
+                why: "Balances speed of operation with prevention of accidental data loss.",
+                options: [
+                    { text: "Standard Yes/No Dialog", suggested: true },
+                    { text: "Type 'DELETE' to confirm (High safety)", suggested: false },
+                    { text: "Hold 'Confirm' button for 2 seconds", suggested: false }
+                ],
+                reasoning: "Standard dialog is sufficient for this context; typing to confirm is usually reserved for critical/irreversible system data."
+            },
+            {
+                id: 5,
+                title: "Theme Transition Effect",
+                why: "Defines the visual polish level when switching themes in the Hub.",
+                options: [
+                    { text: "Instant Switch (Performance focused)", suggested: true },
+                    { text: "Cross-fade (0.2s transition)", suggested: false }
+                ],
+                reasoning: "WinForms handles instant repainting best; animations can sometimes cause flickering on older hardware."
+            }
+        ];
+
+        // Render Questions
+        function renderQuestions() {
+            const container = document.getElementById('questions-container');
+            
+            questionData.forEach((q, index) => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                
+                let optionsHtml = q.options.map((opt, i) => `
+                    <label class="option-label">
+                        <input type="radio" name="q${q.id}" value="${opt.text}" ${opt.suggested ? 'checked' : ''}>
+                        ${opt.text}
+                        ${opt.suggested ? '<span class="suggested-badge">Suggested</span>' : ''}
+                    </label>
+                `).join('');
+
+                card.innerHTML = `
+                    <div class="question-header">
+                        <span class="question-title">Question ${index + 1}: ${q.title}</span>
+                    </div>
+                    <div class="why-asking">
+                        <strong>Why we're asking:</strong> ${q.why}
+                    </div>
+                    <div class="options-group">
+                        ${optionsHtml}
+                    </div>
+                    <div class="custom-input-container">
+                        <label class="custom-input-label">Add your own details or modifications:</label>
+                        <input type="text" class="custom-input" name="q${q.id}_custom" placeholder="Type here to add details or override selection...">
+                    </div>
+                    <div class="reasoning">
+                        <strong>Reasoning for suggestion:</strong> ${q.reasoning}
+                    </div>
+                `;
+                
+                container.appendChild(card);
+            });
+
+            // Load saved data
+            loadFromStorage();
+        }
+
+        // Handle Form Submit
+        document.getElementById('questionnaireForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            generateSummary();
+        });
+
+        // Generate Summary
+        function generateSummary() {
+            const summaryContent = document.getElementById('summary-content');
+            summaryContent.innerHTML = '';
+            const responses = [];
+
+            questionData.forEach(q => {
+                const selectedRadio = document.querySelector(`input[name="q${q.id}"]:checked`);
+                const customInput = document.querySelector(`input[name="q${q.id}_custom"]`).value;
+                
+                let finalAnswer = "No selection";
+                
+                if (selectedRadio && customInput) {
+                    finalAnswer = `${selectedRadio.value} + Details: "${customInput}"`;
+                } else if (customInput) {
+                    finalAnswer = customInput;
+                } else if (selectedRadio) {
+                    finalAnswer = selectedRadio.value;
+                }
+
+                responses.push({
+                    question: q.title,
+                    answer: finalAnswer
+                });
+
+                const item = document.createElement('div');
+                item.className = 'summary-item';
+                item.innerHTML = `
+                    <div class="summary-question">${q.title}</div>
+                    <div class="summary-answer">${finalAnswer}</div>
+                `;
+                summaryContent.appendChild(item);
+            });
+
+            document.getElementById('summary-section').style.display = 'block';
+            document.getElementById('summary-section').scrollIntoView({ behavior: 'smooth' });
+            
+            // Save to storage
+            saveToStorage();
+        }
+
+        // Auto-save functionality
+        function saveToStorage() {
+            const formData = {};
+            questionData.forEach(q => {
+                const selected = document.querySelector(`input[name="q${q.id}"]:checked`);
+                const custom = document.querySelector(`input[name="q${q.id}_custom"]`).value;
+                if (selected) formData[`q${q.id}`] = selected.value;
+                if (custom) formData[`q${q.id}_custom`] = custom;
+            });
+            localStorage.setItem('quickButtonQuestionnaire', JSON.stringify(formData));
+        }
+
+        function loadFromStorage() {
+            const saved = localStorage.getItem('quickButtonQuestionnaire');
+            if (saved) {
+                const formData = JSON.parse(saved);
+                Object.keys(formData).forEach(key => {
+                    if (key.endsWith('_custom')) {
+                        const input = document.querySelector(`input[name="${key}"]`);
+                        if (input) input.value = formData[key];
+                    } else {
+                        const radios = document.querySelectorAll(`input[name="${key}"]`);
+                        radios.forEach(r => {
+                            if (r.value === formData[key]) r.checked = true;
+                        });
+                    }
+                });
+            }
+        }
+
+        // Export functions
+        function copySummary() {
+            const text = Array.from(document.querySelectorAll('.summary-item'))
+                .map(item => {
+                    return `Q: ${item.querySelector('.summary-question').innerText}\nA: ${item.querySelector('.summary-answer').innerText}`;
+                })
+                .join('\n\n');
+            
+            navigator.clipboard.writeText(text).then(() => alert('Summary copied to clipboard!'));
+        }
+
+        function downloadJson() {
+            const responses = [];
+            questionData.forEach(q => {
+                const selectedRadio = document.querySelector(`input[name="q${q.id}"]:checked`);
+                const customInput = document.querySelector(`input[name="q${q.id}_custom"]`).value;
+                
+                let finalAnswer = null;
+                if (selectedRadio && customInput) finalAnswer = `${selectedRadio.value} + ${customInput}`;
+                else if (customInput) finalAnswer = customInput;
+                else if (selectedRadio) finalAnswer = selectedRadio.value;
+
+                responses.push({ id: q.id, question: q.title, answer: finalAnswer });
+            });
+
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(responses, null, 2));
+            const downloadAnchorNode = document.createElement('a');
+            downloadAnchorNode.setAttribute("href", dataStr);
+            downloadAnchorNode.setAttribute("download", "quick_button_responses.json");
+            document.body.appendChild(downloadAnchorNode);
+            downloadAnchorNode.click();
+            downloadAnchorNode.remove();
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', renderQuestions);
+        
+        // Add auto-save listeners
+        document.getElementById('questionnaireForm').addEventListener('change', saveToStorage);
+        document.getElementById('questionnaireForm').addEventListener('input', saveToStorage);
+    </script>
+</body>
+</html>
