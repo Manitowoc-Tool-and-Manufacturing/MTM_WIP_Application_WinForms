@@ -102,8 +102,3 @@ directories captured above]
 |-----------|------------|-------------------------------------|
 | [e.g., 4th project] | [current need] | [why 3 projects insufficient] |
 | [e.g., Repository pattern] | [specific problem] | [why direct DB access insufficient] |
-
-## Phase 5 – XML Documentation
-- Inventory every public surface area touched by this plan.
-- Produce or update XML comments (summary/param/returns/exception) that match implementation intent.
-- Call out any intentional exclusions and obtain reviewer sign-off before build.
