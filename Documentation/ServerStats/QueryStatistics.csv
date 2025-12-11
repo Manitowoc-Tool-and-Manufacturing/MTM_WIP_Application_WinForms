@@ -1,0 +1,34 @@
+uestions since startup: 933,999			
+ø per hour: 12,295			
+ø per minute: 205			
+ø per second: 3			
+Statements	#	ø per hour	%
+show master status	38	0.5	<0.01
+show slave status	38	0.5	<0.01
+show status	33	0.4	<0.01
+show table status	29	0.4	<0.01
+show keys	23	0.3	<0.01
+show warnings	22	0.3	<0.01
+show processlist	13	0.2	<0.01
+show binlogs	5	0.1	<0.01
+show grants	5	0.1	<0.01
+show plugins	3	<0.1	<0.01
+show storage engines	3	<0.1	<0.01
+truncate	3	<0.1	<0.01
+replace	2	<0.1	<0.01
+kill	1	<0.1	<0.01
+change db	406 k	5,340.30	43.43
+select	313 k	4,120.50	33.51
+call procedure	129 k	1,695.20	13.79
+insert	66,226	871.8	7.09
+get diagnostics	9,895	130.3	1.06
+set option	3,440	45.3	0.37
+show collations	2,613	34.4	0.28
+delete	1,034	13.6	0.11
+update	966	12.7	0.1
+commit	802	10.6	0.09
+begin	798	10.5	0.09
+show tables	350	4.6	0.04
+show variables	83	1.1	0.01
+show fields	66	0.9	0.01
+show create table	52	0.7	0.01

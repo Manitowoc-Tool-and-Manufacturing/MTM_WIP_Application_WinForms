@@ -1,0 +1,47 @@
+long_query_time is set to 10 seconds or more, thus only slow queries that take above 10 seconds are logged.
+Issue:long_query_time is set to 10 seconds or more, thus only slow queries that take above 10 seconds are logged.Recommendation:It is suggested to set long_query_time to a lower value, depending on your environment. Usually a value of 1-5 seconds is suggested.Justification:long_query_time is currently set to 10s.Used variable / formula:long_query_timeTest:value >= 10
+
+The slow query log is disabled.
+Issue:The slow query log is disabled.Recommendation:Enable slow query logging by setting slow_query_log to 'ON'. This will help troubleshooting badly performing queries.Justification:slow_query_log is set to 'OFF'Used variable / formula:slow_query_logTest:value == 'OFF'
+
+Too many sorts are causing temporary tables.
+Issue:Too many sorts are causing temporary tables.Recommendation:Consider increasing sort_buffer_size and/or read_rnd_buffer_size, depending on your system memory limits.Justification:32% of all sorts cause temporary tables, this value should be lower than 10%.Used variable / formula:Sort_merge_passes / (Sort_scan + Sort_range) * 100Test:value > 10
+
+Too many sorts are causing temporary tables.
+Issue:Too many sorts are causing temporary tables.Recommendation:Consider increasing sort_buffer_size and/or read_rnd_buffer_size, depending on your system memory limits.Justification:Temporary tables average: 23.52 per hour, this value should be less than 1 per hour.Used variable / formula:Sort_merge_passes / UptimeTest:value * 60 * 60 > 1
+
+There are lots of rows being sorted.
+Issue:There are lots of rows being sorted.Recommendation:While there is nothing wrong with a high amount of row sorting, you might want to make sure that the queries which require a lot of sorting use indexed columns in the ORDER BY clause, as this will result in much faster sorting.Justification:Sorted rows average: 43.95 per secondUsed variable / formula:Sort_rows / UptimeTest:value * 60 >= 1
+
+There are too many joins without indexes.
+Issue:There are too many joins without indexes.Recommendation:This means that joins are doing full table scans. Adding indexes for the columns being used in the join conditions will greatly speed up table joins.Justification:Table joins average: 36.09 per minute, this value should be less than 1 per hourUsed variable / formula:(Select_range_check + Select_scan + Select_full_join) / UptimeTest:value * 60 * 60 > 1
+
+The rate of reading the first index entry is high.
+Issue:The rate of reading the first index entry is high.Recommendation:This usually indicates frequent full index scans. Full index scans are faster than table scans but require lots of CPU cycles in big tables, if those tables that have or had high volumes of UPDATEs and DELETEs, running 'OPTIMIZE TABLE' might reduce the amount of and/or speed up full index scans. Other than that full index scans can only be reduced by rewriting queries.Justification:Index scans average: 27.9 per minute, this value should be less than 1 per hourUsed variable / formula:Handler_read_first / UptimeTest:value * 60 * 60 > 1
+
+The rate of reading data from a fixed position is high.
+Issue:The rate of reading data from a fixed position is high.Recommendation:This indicates that many queries need to sort results and/or do a full table scan, including join queries that do not use indexes. Add indexes where applicable.Justification:Rate of reading fixed position average: 43.23 per second, this value should be less than 1 per hourUsed variable / formula:Handler_read_rnd / UptimeTest:value * 60 * 60 > 1
+
+The rate of reading the next table row is high.
+Issue:The rate of reading the next table row is high.Recommendation:This indicates that many queries are doing full table scans. Add indexes where applicable.Justification:Rate of reading next table row: 111.67 per second, this value should be less than 1 per hourUsed variable / formula:Handler_read_rnd_next / UptimeTest:value * 60 * 60 > 1
+
+Many temporary tables are being written to disk instead of being kept in memory.
+Issue:Many temporary tables are being written to disk instead of being kept in memory.Recommendation:Increasing max_heap_table_size and tmp_table_size might help. However some temporary tables are always being written to disk, independent of the value of these variables. To eliminate these you will have to rewrite your queries to avoid those conditions (Within a temporary table: Presence of a BLOB or TEXT column or presence of a column bigger than 512 bytes) as mentioned in the MySQL DocumentationJustification:Rate of temporary tables being written to disk: 3.09 per minute, this value should be less than 1 per hourUsed variable / formula:Created_tmp_disk_tables / UptimeTest:value * 60 * 60 > 1
+
+MyISAM key buffer (index cache) % used is low.
+Issue:MyISAM key buffer (index cache) % used is low.Recommendation:You may need to decrease the size of key_buffer_size, re-examine your tables to see if indexes have been removed, or examine queries and expectations about what indexes are being used.Justification:max % MyISAM key buffer ever used: 0%, this value should be above 95%Used variable / formula:Key_blocks_used * key_cache_block_size / key_buffer_size * 100Test:value < 95
+
+The rate of opening tables is high.
+Issue:The rate of opening tables is high.Recommendation:Opening tables requires disk I/O which is costly. Increasing table_open_cache might avoid this.Justification:Opened table rate: 4.55 per minute, this value should be less than 10 per hourUsed variable / formula:Opened_tables / UptimeTest:value*60*60 > 10
+
+The maximum amount of used connections is getting close to the value of max_connections.
+Issue:The maximum amount of used connections is getting close to the value of max_connections.Recommendation:Increase max_connections, or decrease wait_timeout so that connections that do not close database handlers properly get killed sooner. Make sure the code closes database handlers properly.Justification:Max_used_connections is at 101% of max_connections, it should be below 80%Used variable / formula:Max_used_connections / max_connections * 100Test:value > 80
+
+Too many clients are aborted.
+Issue:Too many clients are aborted.Recommendation:Clients are usually aborted when they did not close their connection to MySQL properly. This can be due to network issues or code not closing a database handler properly. Check your network and code.Justification:20% of all clients are aborted. This value should be below 2%Used variable / formula:Aborted_clients / Connections * 100Test:value > 2
+
+Too many clients are aborted.
+Issue:Too many clients are aborted.Recommendation:Clients are usually aborted when they did not close their connection to MySQL properly. This can be due to network issues or code not closing a database handler properly. Check your network and code.Justification:Aborted client rate is at 8.03 per hour, this value should be less than 1 per hourUsed variable / formula:Aborted_clients / UptimeTest:value * 60 * 60 > 1
+
+The query cache is not enabled.
+Issue:The query cache is not enabled.Recommendation:The query cache is known to greatly improve performance if configured correctly. Enable it by setting query_cache_size to a 2 digit MiB value and setting query_cache_type to 'ON'. Note: If you are using memcached, ignore this recommendation.Justification:query_cache_size is set to 0 or query_cache_type is set to 'OFF'Used variable / formula:query_cache_sizeTest:value == 0 || query_cache_type == 'OFF' || query_cache_type == '0'
