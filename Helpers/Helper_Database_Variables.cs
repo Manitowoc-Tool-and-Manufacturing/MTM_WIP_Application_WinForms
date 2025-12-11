@@ -17,7 +17,13 @@ namespace MTM_WIP_Application_Winforms.Helpers
                 database ??= Model_Shared_Users.Database;
                 uid ??= "root";
                 password ??= "root";
-                return $"SERVER={server};DATABASE={database};UID={uid};PASSWORD={password};Allow User Variables=True;SslMode=none;AllowPublicKeyRetrieval=true;";
+                
+                // Calculate idle timeout in seconds (convert from milliseconds)
+                int idleTimeoutSeconds = Model_Application_Variables.ConnectionIdleTimeoutMs / 1000;
+                
+                return $"SERVER={server};DATABASE={database};UID={uid};PASSWORD={password};" +
+                       $"Allow User Variables=True;SslMode=none;AllowPublicKeyRetrieval=true;" +
+                       $"ConnectionIdleTimeout={idleTimeoutSeconds};Pooling=true;MinimumPoolSize=5;MaximumPoolSize=100;ConnectionReset=true;";
             }
             catch (Exception ex)
             {

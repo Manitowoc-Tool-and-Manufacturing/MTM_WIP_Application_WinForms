@@ -19,6 +19,21 @@ namespace MTM_WIP_Application_Winforms
         [STAThread]
         private static void Main(string[] args)
         {
+            // Single instance check - prevents multiple app instances
+            // See: Documentation/Single_Instance_Check.md
+            using var mutex = new Mutex(true, "Global\\MTM_WIP_Application_Winforms_SingleInstance", out bool isNewInstance);
+            
+            if (!isNewInstance)
+            {
+                // Another instance is already running
+                MessageBox.Show(
+                    "MTM WIP Application is already running.\n\nThe existing window will be brought to the front.",
+                    "Application Already Running",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+                return; // Exit this instance
+            }
+            
             try
             {
                 // Initialize debugging system first

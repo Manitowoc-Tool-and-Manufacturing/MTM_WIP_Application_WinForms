@@ -478,42 +478,36 @@ public static class Helper_Database_StoredProcedure
             });
 
             // ---------------------------------------------------------
-            // DUAL-WRITE LOGIC (Production -> Test)
+            // DUAL-WRITE LOGIC (Production -> Test) - DISABLED 2025-12-11
             // ---------------------------------------------------------
-            // If the operation was successful AND we are on Production,
-            // replicate the change to the Test database.
-            if (result.IsSuccess)
-            {
-                try
-                {
-                    var builder = new MySqlConnectionStringBuilder(connectionString);
-                    // Check if we are targeting the Production database
-                    if (builder.Database.Equals("mtm_wip_application_winforms", StringComparison.OrdinalIgnoreCase))
-                    {
-                        // Switch to Test database
-                        builder.Database = "mtm_wip_application_winforms_test";
-                        string testConnectionString = builder.ConnectionString;
-
-                        // Execute recursively against Test DB
-                        // - No progress helper (background task)
-                        // - No external connection/transaction (must be independent)
-                        await ExecuteScalarWithStatusAsync(
-                            testConnectionString,
-                            procedureName,
-                            parameters,
-                            null,
-                            null,
-                            null
-                        );
-                    }
-                }
-                catch (Exception ex)
-                {
-                    // Log replication failure but DO NOT fail the primary operation
-                    // This ensures Production stability even if Test DB is down
-                    LoggingUtility.LogApplicationError(new Exception($"Dual-write to Test Database failed for {procedureName}", ex));
-                }
-            }
+            // REASON: Reduces connection usage by 50%. Test database writes
+            // should be handled through dedicated test execution, not live mirroring.
+            // See: Documentation/Database_Connection_Improvements.md
+            // 
+            // if (result.IsSuccess)
+            // {
+            //     try
+            //     {
+            //         var builder = new MySqlConnectionStringBuilder(connectionString);
+            //         if (builder.Database.Equals("mtm_wip_application_winforms", StringComparison.OrdinalIgnoreCase))
+            //         {
+            //             builder.Database = "mtm_wip_application_winforms_test";
+            //             string testConnectionString = builder.ConnectionString;
+            //             await ExecuteScalarWithStatusAsync(
+            //                 testConnectionString,
+            //                 procedureName,
+            //                 parameters,
+            //                 null,
+            //                 null,
+            //                 null
+            //             );
+            //         }
+            //     }
+            //     catch (Exception ex)
+            //     {
+            //         LoggingUtility.LogApplicationError(new Exception($"Dual-write to Test Database failed for {procedureName}", ex));
+            //     }
+            // }
 
             return result;
         }

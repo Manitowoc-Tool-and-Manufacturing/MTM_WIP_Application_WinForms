@@ -229,6 +229,13 @@ namespace MTM_WIP_Application_Winforms.Models
         public static int CommandTimeoutSeconds { get; set; } = 30;
 
         /// <summary>
+        /// Maximum idle time before connection is closed (milliseconds).
+        /// Default: 1800000 ms (30 minutes)
+        /// See: Documentation/Connection_Timeout_30Min.md
+        /// </summary>
+        public static int ConnectionIdleTimeoutMs { get; set; } = 1800000; // 30 minutes
+
+        /// <summary>
         /// Page size for transaction viewer pagination. Default: 50 records per page
         /// </summary>
         public static int TransactionPageSize { get; set; } = 50;
