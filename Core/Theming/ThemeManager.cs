@@ -198,53 +198,17 @@ public class ThemeManager : IThemeProvider, IDisposable
         lock (_subscriberLock)
         {
             CleanupDeadReferences();
-
-            foreach (var weakRef in _subscribers.ToList()) // ToList for safe iteration
-            {
-                if (weakRef.TryGetTarget(out var form))
-                {
-                    try
-                    {
-                        // Invoke on UI thread if required
-                        if (form.InvokeRequired)
-                        {
-                            form.Invoke(() => RaiseThemeChanged(form, eventArgs));
-                        }
-                        else
-                        {
-                            RaiseThemeChanged(form, eventArgs);
-                        }
-                    }
-                    catch (ObjectDisposedException)
-                    {
-                        // Form was disposed, will be cleaned up in next cleanup
-                        _logger.LogDebug("Form '{FormName}' was disposed during notification", form.Name);
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.LogError(
-                            ex,
-                            "Error notifying form '{FormName}' of theme change",
-                            form.Name);
-                    }
-                }
-            }
         }
-    }
 
-    /// <summary>
-    /// Raises the ThemeChanged event for a specific form.
-    /// </summary>
-    private void RaiseThemeChanged(Form form, ThemeChangedEventArgs eventArgs)
-    {
         try
         {
+            // Raise event once - subscribers (ThemedForm) handle thread marshalling
             ThemeChanged?.Invoke(this, eventArgs);
-            _logger.LogDebug("Theme change notification sent to form '{FormName}'", form.Name);
+            _logger.LogDebug("Theme change notification broadcast to subscribers");
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error in ThemeChanged event handler for form '{FormName}'", form.Name);
+            _logger.LogError(ex, "Error raising ThemeChanged event");
         }
     }
 

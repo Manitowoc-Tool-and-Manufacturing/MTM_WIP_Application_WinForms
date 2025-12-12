@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Diagnostics;
+using System.Collections.Concurrent;
 using DocumentFormat.OpenXml.Vml.Office;
 using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Models;
@@ -21,6 +22,7 @@ internal static class LoggingUtility
     private static string _normalLogFile = string.Empty;
     private static readonly Lock LogLock = new();
     private static readonly HashSet<string> _filesWithHeaders = new();
+    private static readonly BlockingCollection<(string FilePath, string LogEntry)> _logQueue = new();
 
     /// <summary>
     /// Thread-local flag to prevent recursive logging in LogDatabaseError when database operations fail.
@@ -132,60 +134,61 @@ internal static class LoggingUtility
 /// The method attempts to write</param>
     private static void FlushLogEntryToDisk(string filePath, string logEntry)
     {
-        try
+        if (!string.IsNullOrEmpty(filePath))
         {
-            if (!string.IsNullOrEmpty(filePath))
-            {
-                _ = Task.Run(async () =>
-                {
-                    const int maxRetries = 5;
-                    const int delayMs = 100;
-                    int attempt = 0;
-                    while (true)
-                    {
-                        try
-                        {
-                            // Check if we need to write CSV header
-                            bool needsHeader = false;
-                            lock (LogLock)
-                            {
-                                if (!_filesWithHeaders.Contains(filePath) && !File.Exists(filePath))
-                                {
-                                    needsHeader = true;
-                                    _filesWithHeaders.Add(filePath);
-                                }
-                            }
-
-                            // Use FileStream with FileShare.Write to allow multiple processes to write
-                            await using var fs = new FileStream(filePath, FileMode.Append, FileAccess.Write, FileShare.Write);
-                            await using var writer = new StreamWriter(fs);
-
-                            // Write CSV header if this is a new file
-                            if (needsHeader)
-                            {
-                                await writer.WriteLineAsync("Timestamp,Level,Source,Message,Details");
-                            }
-
-                            await writer.WriteLineAsync(logEntry);
-                            break; // Success
-                        }
-                        catch (IOException) when (attempt < maxRetries)
-                        {
-                            attempt++;
-                            await Task.Delay(delayMs);
-                        }
-                        catch (Exception ex)
-                        {
-                            Debug.WriteLine($"[DEBUG] Failed to write log entry to file: {ex.Message}");
-                            break;
-                        }
-                    }
-                });
-            }
+            _logQueue.Add((filePath, logEntry));
         }
-        catch (Exception ex)
+    }
+
+    private static async Task ProcessLogQueue()
+    {
+        foreach (var (filePath, logEntry) in _logQueue.GetConsumingEnumerable())
         {
-            Debug.WriteLine($"[DEBUG] Failed to initiate log write operation: {ex.Message}");
+            await WriteLogEntryToFileAsync(filePath, logEntry);
+        }
+    }
+
+    private static async Task WriteLogEntryToFileAsync(string filePath, string logEntry)
+    {
+        const int maxRetries = 5;
+        const int delayMs = 100;
+        int attempt = 0;
+        while (true)
+        {
+            try
+            {
+                // Check if we need to write CSV header
+                bool needsHeader = false;
+                
+                if (!_filesWithHeaders.Contains(filePath) && !File.Exists(filePath))
+                {
+                    needsHeader = true;
+                    _filesWithHeaders.Add(filePath);
+                }
+
+                // Use FileStream with FileShare.ReadWrite to allow multiple processes to write/read
+                await using var fs = new FileStream(filePath, FileMode.Append, FileAccess.Write, FileShare.ReadWrite);
+                await using var writer = new StreamWriter(fs);
+
+                // Write CSV header if this is a new file
+                if (needsHeader)
+                {
+                    await writer.WriteLineAsync("Timestamp,Level,Source,Message,Details");
+                }
+
+                await writer.WriteLineAsync(logEntry);
+                break; // Success
+            }
+            catch (IOException) when (attempt < maxRetries)
+            {
+                attempt++;
+                await Task.Delay(delayMs);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"[DEBUG] Failed to write log entry to file: {ex.Message}");
+                break;
+            }
         }
     }
 
@@ -239,6 +242,9 @@ internal static class LoggingUtility
             Debug.WriteLine($"[DEBUG] Log directory: {_logDirectory}");
             Debug.WriteLine($"[DEBUG] Normal log file: {_normalLogFile}");
 
+            // Start background log processor
+            _ = Task.Run(ProcessLogQueue);
+
             Log("Initializing logging...");
             AppDomain.CurrentDomain.ProcessExit += OnProcessExit;
 
@@ -289,8 +295,8 @@ internal static class LoggingUtility
             return string.Empty;
         }
 
-        // If field contains comma, newline, or quote, wrap in quotes and escape internal quotes
-        if (field.Contains(',') || field.Contains('\n') || field.Contains('"'))
+        // If field contains comma, newline, carriage return, or quote, wrap in quotes and escape internal quotes
+        if (field.Contains(',') || field.Contains('\n') || field.Contains('\r') || field.Contains('"'))
         {
             return $"\"{field.Replace("\"", "\"\"")}\"";
         }

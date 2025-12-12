@@ -134,6 +134,12 @@ public class ThemedForm : Form
             return; // Theming is disabled, ignore theme changes
         }
 
+        // Prevent cross-thread operations if handle is not created
+        if (!IsHandleCreated)
+        {
+            return;
+        }
+
         if (InvokeRequired)
         {
             Invoke(() => ApplyTheme(e.NewTheme));
