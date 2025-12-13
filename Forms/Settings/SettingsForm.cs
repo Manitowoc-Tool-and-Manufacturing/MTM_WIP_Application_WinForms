@@ -424,6 +424,23 @@ namespace MTM_WIP_Application_Winforms.Forms.Settings
                     {
                         // Allow closing, then restart
                         e.Cancel = false;
+
+                        // Release the single instance mutex before restarting
+                        // This prevents the "Application Already Running" error
+                        if (Program.AppMutex != null)
+                        {
+                            try
+                            {
+                                Program.AppMutex.ReleaseMutex();
+                            }
+                            catch (ApplicationException)
+                            {
+                                // Ignore if not owned
+                            }
+                            Program.AppMutex.Dispose();
+                            Program.AppMutex = null;
+                        }
+
                         Application.Restart();
                         Application.ExitThread();
                     }
