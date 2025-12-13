@@ -18,6 +18,31 @@ $ARGUMENTS
 
 You **MUST** consider the user input before proceeding (if not empty).
 
+## Serena MCP Server Usage (RECOMMENDED)
+
+**For MTM WIP Application**: Use Serena to understand existing patterns and ensure specification alignment.
+
+**Existing Pattern Discovery**:
+```
+mcp_oraios_serena_get_symbols_overview("Data/Dao_Example.cs", depth=1)  # Understand DAO patterns
+mcp_oraios_serena_find_symbol("ExampleClass/ExampleMethod", include_body=true)  # See implementation style
+mcp_oraios_serena_search_for_pattern("Model_Dao_Result")  # Understand return type pattern
+```
+
+**Constitution Validation**:
+```
+mcp_oraios_serena_read_memory("architectural_patterns")  # Understand required patterns
+mcp_oraios_serena_read_memory("constitution")  # Understand principles
+```
+
+**Technology Verification**:
+```
+mcp_oraios_serena_list_dir(".", recursive=false)  # Understand project structure
+mcp_oraios_serena_search_for_pattern("specific_tech_pattern")  # Verify tech stack usage
+```
+
+See `.github/instructions/serena-semantic-tools.instructions.md` for complete documentation.
+
 ## Outline
 
 The text the user typed after `/speckit.specify` in the triggering message **is** the feature description. Assume you always have it available in this conversation even if `$ARGUMENTS` appears literally below. Do not ask the user to repeat it unless they provided an empty command.

@@ -10,6 +10,31 @@ $ARGUMENTS
 
 You **MUST** consider the user input before proceeding (if not empty).
 
+## Serena MCP Server Usage (REQUIRED)
+
+**For MTM WIP Application**: Use Serena for comprehensive codebase analysis and cross-reference validation.
+
+**Comprehensive Scan**:
+```
+mcp_oraios_serena_list_dir(".", recursive=true, skip_ignored_files=true)  # Full project structure
+mcp_oraios_serena_search_for_pattern("relevant_pattern", restrict_search_to_code_files=true)
+```
+
+**Cross-Reference Validation**:
+```
+mcp_oraios_serena_find_referencing_symbols("CoreMethod", file)  # Verify impact analysis complete
+mcp_oraios_serena_get_symbols_overview("affected_file.cs", depth=2)  # Deep structure analysis
+```
+
+**Memory-Based Validation**:
+```
+mcp_oraios_serena_list_memories()  # Check all available project knowledge
+mcp_oraios_serena_read_memory("architectural_patterns")  # Validate against standards
+mcp_oraios_serena_read_memory("constitution")  # Verify constitutional compliance
+```
+
+See `.github/instructions/serena-semantic-tools.instructions.md` for complete documentation.
+
 ## Goal
 
 Identify inconsistencies, duplications, ambiguities, and underspecified items across the three core artifacts (`spec.md`, `plan.md`, `tasks.md`) before implementation. This command MUST run only after `/speckit.tasks` has successfully produced a complete `tasks.md`.

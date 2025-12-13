@@ -10,6 +10,40 @@ $ARGUMENTS
 
 You **MUST** consider the user input before proceeding (if not empty).
 
+## Serena MCP Server Usage (REQUIRED)
+
+**For MTM WIP Application**: This agent MUST use Serena MCP server for efficient code navigation and editing.
+
+**Pre-Implementation Analysis**:
+```
+mcp_oraios_serena_get_symbols_overview("target_file.cs", depth=1)  # Understand structure
+mcp_oraios_serena_find_symbol("Class/Method", include_body=true)  # Get current implementation
+mcp_oraios_serena_find_referencing_symbols("Method", file)  # Find all usages before modifying
+```
+
+**Symbol-Level Editing** (preferred over file-level):
+```
+mcp_oraios_serena_replace_symbol_body("Class/Method", file, new_code)  # Replace entire method
+mcp_oraios_serena_insert_after_symbol("Class/LastMethod", file, new_method)  # Add new method
+mcp_oraios_serena_insert_before_symbol("Class/FirstMethod", file, imports)  # Add imports
+```
+
+**Constitution Validation** (after each task):
+```
+mcp_oraios_serena_search_for_pattern("MessageBox\\.Show", relative_path=modified_file)  # Should be empty
+mcp_oraios_serena_find_symbol("DaoClass/NewMethod", include_body=true)  # Verify Model_Dao_Result return
+```
+
+**Verification**:
+```
+mcp_oraios_serena_think_about_task_adherence()  # Before marking task complete
+mcp_oraios_serena_think_about_whether_you_are_done()  # At completion
+```
+
+**Token Savings**: 95% reduction (replace 10,000+ token file reads with 200-500 token symbol reads)
+
+See `.github/instructions/serena-semantic-tools.instructions.md` for complete documentation.
+
 ## Outline
 
 1. Run `.specify/scripts/powershell/check-prerequisites.ps1 -Json -RequireTasks -IncludeTasks` from repo root and parse FEATURE_DIR and AVAILABLE_DOCS list. All paths must be absolute. For single quotes in args like "I'm Groot", use escape syntax: e.g 'I'\''m Groot' (or double-quote if possible: "I'm Groot").

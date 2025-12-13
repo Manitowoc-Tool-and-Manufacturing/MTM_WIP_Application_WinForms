@@ -14,6 +14,42 @@ $ARGUMENTS
 
 You **MUST** consider the user input before proceeding (if not empty).
 
+## Serena MCP Server Usage (REQUIRED)
+
+**For MTM WIP Application**: Constitution MUST be derived from actual codebase analysis using Serena.
+
+**Comprehensive Codebase Analysis**:
+```
+mcp_oraios_serena_get_symbols_overview("Helpers/Helper_Database_StoredProcedure.cs", depth=1)
+mcp_oraios_serena_find_symbol("Helper_Database_StoredProcedure/ExecuteReaderAsync", include_body=true)
+mcp_oraios_serena_search_for_pattern("ExecuteReaderAsync")  # Find all usages
+mcp_oraios_serena_search_for_pattern("new MySqlConnection")  # Find direct connections
+mcp_oraios_serena_search_for_pattern("MessageBox\\.Show")  # Find anti-patterns
+```
+
+**DAO Pattern Validation**:
+```
+mcp_oraios_serena_list_dir("Data", recursive=false)  # Count all DAOs
+mcp_oraios_serena_get_symbols_overview("Data/Dao_Inventory.cs", depth=1)  # Verify structure
+mcp_oraios_serena_find_symbol("Dao_Inventory/GetAllAsync", include_body=true)  # Verify return pattern
+```
+
+**Architecture Exception Discovery**:
+```
+mcp_oraios_serena_find_symbol("Service_VisualDatabase/GetConnectionString", include_body=true)
+mcp_oraios_serena_find_symbol("Service_OnStartup_Database", depth=1)  # Understand exceptions
+```
+
+**Memory Validation**:
+```
+mcp_oraios_serena_list_memories()  # See what's documented
+mcp_oraios_serena_read_memory("architectural_patterns")  # Verify alignment
+```
+
+**Verification**: Constitution principles MUST be based on patterns found in actual code, not assumptions.
+
+See `.github/instructions/serena-semantic-tools.instructions.md` for complete documentation.
+
 ## Outline
 
 You are updating the project constitution at `.specify/memory/constitution.md`. This file is a TEMPLATE containing placeholder tokens in square brackets (e.g. `[PROJECT_NAME]`, `[PRINCIPLE_1_NAME]`). Your job is to (a) collect/derive concrete values, (b) fill the template precisely, and (c) propagate any amendments across dependent artifacts.

@@ -14,6 +14,31 @@ $ARGUMENTS
 
 You **MUST** consider the user input before proceeding (if not empty).
 
+## Serena MCP Server Usage (REQUIRED)
+
+**For MTM WIP Application**: Use Serena to validate specification assumptions against codebase reality.
+
+**Codebase Reality Check**:
+```
+mcp_oraios_serena_search_for_pattern("technology_pattern")  # Verify tech stack assumptions
+mcp_oraios_serena_find_symbol("ExistingClass", include_body=false)  # Check if component exists
+mcp_oraios_serena_list_dir("target_directory")  # Verify directory structure
+```
+
+**Pattern Validation**:
+```
+mcp_oraios_serena_search_for_pattern("Model_Dao_Result")  # Verify pattern is used
+mcp_oraios_serena_get_symbols_overview("Example_Dao.cs", depth=1)  # Understand existing patterns
+```
+
+**Constitution Alignment**:
+```
+mcp_oraios_serena_read_memory("architectural_patterns")  # Verify spec aligns with constitution
+mcp_oraios_serena_search_for_pattern("MessageBox\\.Show")  # Check for anti-patterns
+```
+
+See `.github/instructions/serena-semantic-tools.instructions.md` for complete documentation.
+
 ## Outline
 
 Goal: Detect and reduce ambiguity or missing decision points in the active feature specification and record the clarifications directly in the spec file.

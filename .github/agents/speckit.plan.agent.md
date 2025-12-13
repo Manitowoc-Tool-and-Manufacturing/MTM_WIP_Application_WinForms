@@ -18,6 +18,35 @@ $ARGUMENTS
 
 You **MUST** consider the user input before proceeding (if not empty).
 
+## Serena MCP Server Usage (REQUIRED)
+
+**For MTM WIP Application**: This agent MUST use Serena MCP server for efficient codebase analysis (300+ C# files).
+
+**Token Efficiency**: Serena provides 80-90% token savings vs reading entire files.
+
+**Required Tools**:
+- `mcp_oraios_serena_list_dir` - List directory contents to understand structure
+- `mcp_oraios_serena_find_file` - Find files by pattern (e.g., `Dao_*.cs`)
+- `mcp_oraios_serena_get_symbols_overview` - Get file structure without reading full content
+- `mcp_oraios_serena_find_symbol` - Read specific classes/methods only
+- `mcp_oraios_serena_find_referencing_symbols` - Find where symbols are used
+- `mcp_oraios_serena_search_for_pattern` - Regex search for patterns (e.g., `MessageBox\.Show`)
+- `mcp_oraios_serena_read_memory` - Access project knowledge (architectural_patterns, codebase_structure)
+- `mcp_oraios_serena_think_about_collected_information` - Validate findings before proceeding
+
+**Workflow Pattern**:
+1. **Discovery**: `list_dir("Data")` → `find_file("Dao_*.cs")` → `get_symbols_overview(file, depth=1)`
+2. **Analysis**: `find_symbol("Class/Method", include_body=true)` → `find_referencing_symbols("Method", file)`
+3. **Validation**: `search_for_pattern("MessageBox\\.Show")` → `read_memory("architectural_patterns")`
+4. **Verification**: `think_about_collected_information()` before generating plan
+
+**Constitution Check**: Use `search_for_pattern` to verify:
+- No `MessageBox.Show` usage (forbidden)
+- Direct `MySqlConnection`/`SqlConnection` usage limited to documented exceptions
+- All DAO methods return `Model_Dao_Result<T>`
+
+See `.github/instructions/serena-semantic-tools.instructions.md` for complete documentation.
+
 ## Outline
 
 1. **Setup**: Run `.specify/scripts/powershell/setup-plan.ps1 -Json` from repo root and parse JSON for FEATURE_SPEC, IMPL_PLAN, SPECS_DIR, BRANCH. For single quotes in args like "I'm Groot", use escape syntax: e.g 'I'\''m Groot' (or double-quote if possible: "I'm Groot").

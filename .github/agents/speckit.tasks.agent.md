@@ -19,6 +19,31 @@ $ARGUMENTS
 
 You **MUST** consider the user input before proceeding (if not empty).
 
+## Serena MCP Server Usage (REQUIRED)
+
+**For MTM WIP Application**: Use Serena to efficiently discover components needing tasks.
+
+**Component Discovery**:
+```
+mcp_oraios_serena_list_dir("Data", recursive=false)  # Identify all DAOs
+mcp_oraios_serena_list_dir("Services", recursive=false)  # Identify all services
+mcp_oraios_serena_get_symbols_overview("Data/Dao_Entity.cs", depth=1)  # List methods to implement
+```
+
+**Dependency Analysis**:
+```
+mcp_oraios_serena_find_referencing_symbols("ExistingMethod", file)  # Identify dependent tasks
+mcp_oraios_serena_search_for_pattern("Helper_Database_StoredProcedure")  # Find usage patterns
+```
+
+**Memory Context**:
+```
+mcp_oraios_serena_read_memory("task_completion_checklist")  # Load task standards
+mcp_oraios_serena_read_memory("code_style_conventions")  # Load coding standards
+```
+
+See `.github/instructions/serena-semantic-tools.instructions.md` for complete documentation.
+
 ## Outline
 
 1. **Setup**: Run `.specify/scripts/powershell/check-prerequisites.ps1 -Json` from repo root and parse FEATURE_DIR and AVAILABLE_DOCS list. All paths must be absolute. For single quotes in args like "I'm Groot", use escape syntax: e.g 'I'\''m Groot' (or double-quote if possible: "I'm Groot").

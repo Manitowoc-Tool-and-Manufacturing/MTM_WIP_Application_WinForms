@@ -31,6 +31,23 @@ $ARGUMENTS
 
 You **MUST** consider the user input before proceeding (if not empty).
 
+## Serena MCP Server Usage (OPTIONAL)
+
+**For MTM WIP Application**: Use Serena when checklist needs to reference actual codebase patterns.
+
+**Pattern Verification**:
+```
+mcp_oraios_serena_search_for_pattern("pattern_to_check")  # Verify pattern exists
+mcp_oraios_serena_read_memory("code_style_conventions")  # Load conventions for checklist items
+```
+
+**Existing Checklist Review**:
+```
+mcp_oraios_serena_list_dir("specs/feature/checklists")  # See existing checklists
+```
+
+See `.github/instructions/serena-semantic-tools.instructions.md` for complete documentation.
+
 ## Execution Steps
 
 1. **Setup**: Run `.specify/scripts/powershell/check-prerequisites.ps1 -Json` from repo root and parse JSON for FEATURE_DIR and AVAILABLE_DOCS list.
