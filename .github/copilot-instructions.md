@@ -366,5 +366,34 @@ This project follows the "MTM WIP Application Constitution" (.specify/memory/con
 4. Prioritize consistency over external best practices
 5. Follow the constitution - it's non-negotiable
 
+## Serena Semantic Tools (For Large Requests)
+
+**Serena** is available for efficient code navigation and editing, especially valuable for large codebase tasks.
+
+### When to Use Serena
+- **Exploring multiple files** - Navigate 20+ DAO files efficiently
+- **Symbol-level operations** - Find/edit specific methods without reading entire files
+- **Relationship discovery** - Find all usages of a method before modifying
+- **Pattern searches** - Find architectural violations (MessageBox.Show, direct MySQL, etc.)
+- **Token efficiency** - Reduce token usage by 80-90% for large explorations
+
+### Key Serena Tools
+- `get_symbols_overview(file, depth=1)` - Get file structure without reading all code
+- `find_symbol("Class/Method", include_body=true)` - Read specific symbols only
+- `find_referencing_symbols("Method", file)` - Find all usages before modifying
+- `replace_symbol_body("Class/Method", file, code)` - Replace methods precisely
+- `search_for_pattern("regex")` - Find patterns across codebase
+
+### Example Workflow
+```
+# Instead of reading 10 full DAO files (10,000+ tokens):
+get_symbols_overview("Data/Dao_Inventory.cs", depth=1)  # 200 tokens
+find_symbol("Dao_Inventory/GetAllAsync", include_body=true)  # 100 tokens
+# Total: 300 tokens vs 10,000+
+```
+
+**Full Documentation**: See `.github/instructions/serena-semantic-tools.instructions.md`  
+**Serena Docs**: https://oraios.github.io/serena/
+
 <!-- MANUAL ADDITIONS START -->
 <!-- MANUAL ADDITIONS END -->

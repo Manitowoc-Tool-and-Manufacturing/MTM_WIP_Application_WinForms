@@ -543,6 +543,46 @@ Detailed guidance in `.github/instructions/`:
 - `documentation.instructions.md` - XML documentation
 - And more...
 
+### Serena Semantic Coding Tools (RECOMMENDED for Large Tasks)
+
+**Serena is active** and provides IDE-like code navigation and symbol-level editing for this project.
+
+#### When to Use Serena
+- **Large codebase exploration** - Navigate 300+ files efficiently
+- **Multiple file tasks** - Explore DAOs, Services, Forms without reading entire files
+- **Refactoring** - Find all method references before modifying
+- **Architecture validation** - Search for anti-patterns across codebase
+- **Token efficiency** - Reduce token usage by 80-90%
+
+#### Essential Serena Commands
+```powershell
+# Get file structure (instead of reading entire file)
+get_symbols_overview("Data/Dao_Inventory.cs", depth=1)
+
+# Read specific method only
+find_symbol("Dao_Inventory/GetAllAsync", include_body=true)
+
+# Find where method is used before modifying
+find_referencing_symbols("GetAllAsync", "Data/Dao_Inventory.cs")
+
+# Replace method precisely
+replace_symbol_body("Dao_Inventory/GetAllAsync", "Data/Dao_Inventory.cs", new_code)
+
+# Find anti-patterns
+search_for_pattern("MessageBox\\.Show", restrict_search_to_code_files=true)
+
+# Access project knowledge
+read_memory("architectural_patterns.md")
+list_memories()
+```
+
+#### Serena Dashboard
+- **URL**: http://127.0.0.1:24282/dashboard/
+- **Monitor**: Real-time tool usage, execution queue, memory list
+
+**Full Guide**: `.github/instructions/serena-semantic-tools.instructions.md`  
+**Serena Documentation**: https://oraios.github.io/serena/
+
 ### MCP Workflow Tools
 
 If MCP server is running (`.mcp/mtm-workflow/`), additional validation tools available:
@@ -557,7 +597,7 @@ Refer to `.mcp/mtm-workflow/README.md` for full tool documentation.
 
 ---
 
-**Last Updated**: 2025-11-12
-**Project Version**: 6.4.0.3
+**Last Updated**: 2025-12-13
+**Project Version**: 6.4.1.0
 **Maintained By**: Manitowoc Tool and Manufacturing
 **For Questions**: Refer to `.github/copilot-instructions.md` for coding patterns
