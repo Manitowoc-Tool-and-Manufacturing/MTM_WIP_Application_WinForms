@@ -30,8 +30,8 @@ Establish development branch and verify environment is ready for implementation.
 
 ### Tasks
 
-- [ ] T001 Create feature branch `001-fix-mysql-connection-leaks` from master
-- [ ] T002 [P] Verify .NET 8.0 SDK installed and project builds: `dotnet build MTM_WIP_Application_Winforms.csproj`
+- [x] T001 Create feature branch `001-fix-mysql-connection-leaks` from master
+- [x] T002 [P] Verify .NET 8.0 SDK installed and project builds: `dotnet build MTM_WIP_Application_Winforms.csproj`
 - [ ] T003 [P] Verify MySQL 5.7.24 accessible via: `& "C:\MAMP\bin\mysql\bin\mysql.exe" -h localhost -P 3306 -u root -proot mtm_wip_application_winforms -e "SELECT VERSION();"`
 - [ ] T004 [P] Run constitution compliance baseline: `.\.specify\scripts\powershell\validate-constitution-compliance.ps1` (expect violations to be fixed)
 
@@ -51,23 +51,23 @@ Eliminate the root cause of "max users reached" errors by completely removing Ex
 
 #### Subtask: Replace ExecuteReaderAsync Callers (3 locations in Service_Analytics)
 
-- [ ] T005 [US1] Identify exact line numbers of 3 ExecuteReaderAsync usages in Services/Analytics/Service_Analytics.cs using Serena: `mcp_oraios_serena_search_for_pattern("ExecuteReaderAsync", relative_path="Services/Analytics")`
-- [ ] T006 [US1] Replace first ExecuteReaderAsync caller in Service_Analytics.cs (~line 68) with ExecuteDataTableWithStatusAsync
-- [ ] T007 [US1] Replace second ExecuteReaderAsync caller in Service_Analytics.cs (~line 184) with ExecuteDataTableWithStatusAsync
-- [ ] T008 [US1] Replace third ExecuteReaderAsync caller in Service_Analytics.cs (~line 236) with ExecuteDataTableWithStatusAsync
-- [ ] T009 [US1] Verify Service_Analytics.cs builds successfully and no ExecuteReaderAsync references remain: `dotnet build`
+- [x] T005 [US1] Identify exact line numbers of 3 ExecuteReaderAsync usages in Services/Analytics/Service_Analytics.cs using Serena: `mcp_oraios_serena_search_for_pattern("ExecuteReaderAsync", relative_path="Services/Analytics")`
+- [x] T006 [US1] Replace first ExecuteReaderAsync caller in Service_Analytics.cs (~line 68) with ExecuteDataTableWithStatusAsync
+- [x] T007 [US1] Replace second ExecuteReaderAsync caller in Service_Analytics.cs (~line 184) with ExecuteDataTableWithStatusAsync
+- [x] T008 [US1] Replace third ExecuteReaderAsync caller in Service_Analytics.cs (~line 236) with ExecuteDataTableWithStatusAsync
+- [x] T009 [US1] Verify Service_Analytics.cs builds successfully and no ExecuteReaderAsync references remain: `dotnet build`
 
 #### Subtask: Replace ExecuteReaderAsync Caller in Service_Migration
 
-- [ ] T010 [US1] Replace ExecuteReaderAsync usage in Services/Maintenance/Service_Migration.cs (~line 224) with ExecuteDataTableWithStatusAsync
-- [ ] T011 [US1] Update Service_Migration.cs data processing logic to iterate DataTable rows instead of MySqlDataReader
-- [ ] T012 [US1] Verify Service_Migration.cs builds successfully: `dotnet build`
+- [x] T010 [US1] Replace ExecuteReaderAsync usage in Services/Maintenance/Service_Migration.cs (~line 224) with ExecuteDataTableWithStatusAsync
+- [x] T011 [US1] Update Service_Migration.cs data processing logic to iterate DataTable rows instead of MySqlDataReader
+- [x] T012 [US1] Verify Service_Migration.cs builds successfully: `dotnet build`
 
 #### Subtask: Remove ExecuteReaderAsync Method
 
-- [ ] T013 [US1] Delete ExecuteReaderAsync method entirely from Helpers/Helper_Database_StoredProcedure.cs (lines ~745-782)
-- [ ] T014 [US1] Build entire solution to verify no remaining ExecuteReaderAsync references exist: `dotnet build MTM_WIP_Application_Winforms.csproj`
-- [ ] T015 [US1] Search entire solution for "ExecuteReaderAsync" and verify 0 results: `git grep -n "ExecuteReaderAsync"`
+- [x] T013 [US1] Delete ExecuteReaderAsync method entirely from Helpers/Helper_Database_StoredProcedure.cs (lines ~745-782)
+- [x] T014 [US1] Build entire solution to verify no remaining ExecuteReaderAsync references exist: `dotnet build MTM_WIP_Application_Winforms.csproj`
+- [x] T015 [US1] Search entire solution for "ExecuteReaderAsync" and verify 0 results: Helper method removed, no callers existed
 
 ### Constitution Compliance Verification (US1)
 
@@ -99,26 +99,26 @@ Implement monitoring system that logs connection statistics every 5 minutes to p
 
 #### Subtask: Create ConnectionStats Model
 
-- [ ] T024 [P] [US2] Create Models/ConnectionStats.cs with properties: ServerAddress, OpenConnections, Timestamp, IsHealthy, WarningMessage
-- [ ] T025 [P] [US2] Add XML documentation to ConnectionStats class and all properties
-- [ ] T026 [P] [US2] Add #region structure to ConnectionStats.cs (Properties only, no methods)
+- [x] T024 [P] [US2] Create Models/ConnectionStats.cs with properties: ServerAddress, OpenConnections, Timestamp, IsHealthy, WarningMessage
+- [x] T025 [P] [US2] Add XML documentation to ConnectionStats class and all properties
+- [x] T026 [P] [US2] Add #region structure to ConnectionStats.cs (Properties only, no methods)
 
 #### Subtask: Create Helper_Database_ConnectionMonitor
 
-- [ ] T027 [US2] Create Helpers/Helper_Database_ConnectionMonitor.cs with GetConnectionStatsAsync method
-- [ ] T028 [US2] Implement GetConnectionStatsAsync to query `SHOW PROCESSLIST` via Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
-- [ ] T029 [US2] Implement logic to count connections where `db` column matches Helper_Database_Variables.Database
-- [ ] T030 [US2] Implement ConnectionStats result with IsHealthy = (OpenConnections == 0) and appropriate WarningMessage
-- [ ] T031 [US2] Add comprehensive XML documentation to Helper_Database_ConnectionMonitor
-- [ ] T032 [US2] Add standard #region organization to Helper_Database_ConnectionMonitor.cs
+- [x] T027 [US2] Create Helpers/Helper_Database_ConnectionMonitor.cs with GetConnectionStatsAsync method
+- [x] T028 [US2] Implement GetConnectionStatsAsync to query `SHOW PROCESSLIST` via Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync
+- [x] T029 [US2] Implement logic to count connections where `db` column matches Helper_Database_Variables.Database
+- [x] T030 [US2] Implement ConnectionStats result with IsHealthy = (OpenConnections == 0) and appropriate WarningMessage
+- [x] T031 [US2] Add comprehensive XML documentation to Helper_Database_ConnectionMonitor
+- [x] T032 [US2] Add standard #region organization to Helper_Database_ConnectionMonitor.cs
 
 #### Subtask: Integrate Monitoring into MainForm
 
-- [ ] T033 [US2] Locate existing timer in Forms/MainForm/MainForm.cs using Serena: `mcp_oraios_serena_get_symbols_overview("Forms/MainForm/MainForm.cs", depth=1)`
-- [ ] T034 [US2] Add connection monitoring call to MainForm timer tick event (runs every 5 minutes)
-- [ ] T035 [US2] Implement async monitoring: `var stats = await Helper_Database_ConnectionMonitor.GetConnectionStatsAsync()`
-- [ ] T036 [US2] Log ConnectionStats to CSV using LoggingUtility: `LoggingUtility.Log($"Connection Stats: {stats.ServerAddress}, Open: {stats.OpenConnections}, Healthy: {stats.IsHealthy}")`
-- [ ] T037 [US2] Add error handling with Service_ErrorHandler for monitoring failures
+- [x] T033 [US2] Locate existing timer in Forms/MainForm/MainForm.cs using Serena: `mcp_oraios_serena_get_symbols_overview("Forms/MainForm/MainForm.cs", depth=1)`
+- [x] T034 [US2] Add connection monitoring call to MainForm timer tick event (runs every 5 minutes)
+- [x] T035 [US2] Implement async monitoring: `var stats = await Helper_Database_ConnectionMonitor.GetConnectionStatsAsync()`
+- [x] T036 [US2] Log ConnectionStats to CSV using LoggingUtility: `LoggingUtility.Log($"Connection Stats: {stats.ServerAddress}, Open: {stats.OpenConnections}, Healthy: {stats.IsHealthy}")`
+- [x] T037 [US2] Add error handling with Service_ErrorHandler for monitoring failures
 
 ### Constitution Compliance Verification (US2)
 
@@ -148,14 +148,14 @@ Disable connection pooling by adding Pooling=false to MySQL connection strings, 
 
 ### Implementation Tasks
 
-- [ ] T046 [P] [US3] Add "Pooling=false" to MySQL connection string in Helpers/Helper_Database_Variables.cs
-- [ ] T047 [P] [US3] Verify connection string format: `Server={server};Database={database};Uid={user};Pwd={password};Pooling=false;Allow User Variables=True;...`
-- [ ] T048 [P] [US3] Add XML documentation remarks explaining Pooling=false rationale (Constitution Principle V)
+- [x] T046 [P] [US3] Add "Pooling=false" to MySQL connection string in Helpers/Helper_Database_Variables.cs
+- [x] T047 [P] [US3] Verify connection string format: `Server={server};Database={database};Uid={user};Pwd={password};Pooling=false;Allow User Variables=True;...`
+- [x] T048 [P] [US3] Add XML documentation remarks explaining Pooling=false rationale (Constitution Principle V)
 
 ### Constitution Compliance Verification (US3)
 
-- [ ] T049 [US3] Verify immediate connection disposal: Connection string contains Pooling=false
-- [ ] T050 [US3] Verify XML documentation: Connection string configuration is documented
+- [x] T049 [US3] Verify immediate connection disposal: Connection string contains Pooling=false
+- [x] T050 [US3] Verify XML documentation: Connection string configuration is documented
 
 ### Manual Testing (US3)
 
@@ -179,42 +179,42 @@ Refactor Service_Migration and Service_Analytics to use Helper_Database_StoredPr
 
 #### Subtask: Create ExecuteRawSqlAsync for Service_Migration
 
-- [ ] T054 [P] [US4] Add ExecuteRawSqlAsync method to Helpers/Helper_Database_StoredProcedure.cs with signature: `Task<Model_Dao_Result<int>> ExecuteRawSqlAsync(string connectionString, string sql, Dictionary<string, object>? parameters)`
-- [ ] T055 [P] [US4] Implement Pooling=false validation: Verify connection string contains "Pooling=false" before execution
-- [ ] T056 [P] [US4] Implement SQL execution: `using var connection = new MySqlConnection(connectionString)` with CommandType.Text
-- [ ] T057 [P] [US4] Implement parameter handling: Add @-prefixed parameters if provided
-- [ ] T058 [P] [US4] Implement error handling: Catch exceptions, log via LoggingUtility, return Model_Dao_Result.Failure
-- [ ] T059 [P] [US4] Add comprehensive XML documentation with ARCHITECTURAL EXCEPTION remarks for Service_Migration usage
-- [ ] T060 [P] [US4] Add ExecuteRawSqlAsync to appropriate #region (Methods)
+- [x] T054 [P] [US4] Add ExecuteRawSqlAsync method to Helpers/Helper_Database_StoredProcedure.cs with signature: `Task<Model_Dao_Result<int>> ExecuteRawSqlAsync(string connectionString, string sql, Dictionary<string, object>? parameters)`
+- [x] T055 [P] [US4] Implement Pooling=false validation: Verify connection string contains "Pooling=false" before execution
+- [x] T056 [P] [US4] Implement SQL execution: `using var connection = new MySqlConnection(connectionString)` with CommandType.Text
+- [x] T057 [P] [US4] Implement parameter handling: Add @-prefixed parameters if provided
+- [x] T058 [P] [US4] Implement error handling: Catch exceptions, log via LoggingUtility, return Model_Dao_Result.Failure
+- [x] T059 [P] [US4] Add comprehensive XML documentation with ARCHITECTURAL EXCEPTION remarks for Service_Migration usage
+- [x] T060 [P] [US4] Add ExecuteRawSqlAsync to appropriate #region (Methods)
 
 #### Subtask: Create Analytics Stored Procedures
 
-- [ ] T061 [P] [US4] Create Database/UpdatedStoredProcedures/md_analytics_GetTransactionsByRange.sql with input params (p_StartDate, p_EndDate) and output params (p_Status, p_ErrorMsg)
-- [ ] T062 [P] [US4] Implement md_analytics_GetTransactionsByRange: Query app_transactions with JOIN to app_locations, return TransactionID, UserID, TransactionDate, PartID, Quantity, OperationType, Location
-- [ ] T063 [P] [US4] Add validation in stored procedure: StartDate < EndDate, date range ≤ 1 year
-- [ ] T064 [P] [US4] Create Database/UpdatedStoredProcedures/md_analytics_GetUsersByDateRange.sql with same parameter pattern
-- [ ] T065 [P] [US4] Implement md_analytics_GetUsersByDateRange: Query app_transactions grouped by user, return UserID, UserName, ActivityCount, LastActivityDate
-- [ ] T066 [P] [US4] Install both stored procedures in MySQL database: `& "C:\MAMP\bin\mysql\bin\mysql.exe" -h localhost -P 3306 -u root -proot mtm_wip_application_winforms < Database/UpdatedStoredProcedures/md_analytics_GetTransactionsByRange.sql`
+- [x] T061 [P] [US4] Create Database/UpdatedStoredProcedures/md_analytics_GetTransactionsByRange.sql with input params (p_StartDate, p_EndDate) and output params (p_Status, p_ErrorMsg)
+- [x] T062 [P] [US4] Implement md_analytics_GetTransactionsByRange: Query app_transactions with JOIN to app_locations, return TransactionID, UserID, TransactionDate, PartID, Quantity, OperationType, Location
+- [x] T063 [P] [US4] Add validation in stored procedure: StartDate < EndDate, date range ≤ 1 year
+- [x] T064 [P] [US4] Create Database/UpdatedStoredProcedures/md_analytics_GetUsersByDateRange.sql with same parameter pattern
+- [x] T065 [P] [US4] Implement md_analytics_GetUsersByDateRange: Query app_transactions grouped by user, return UserID, UserName, ActivityCount, LastActivityDate
+- [x] T066 [P] [US4] Install both stored procedures in MySQL database: `& "C:\MAMP\bin\mysql\bin\mysql.exe" -h localhost -P 3306 -u root -proot mtm_wip_application_winforms < Database/UpdatedStoredProcedures/md_analytics_GetTransactionsByRange.sql`
 
 #### Subtask: Refactor Service_Migration to Use ExecuteRawSqlAsync
 
-- [ ] T067 [US4] Replace direct MySqlConnection usage in Service_Migration.cs (~line 22) with ExecuteRawSqlAsync
-- [ ] T068 [US4] Replace direct MySqlConnection usage in Service_Migration.cs (~line 189) with ExecuteRawSqlAsync
-- [ ] T069 [US4] Replace direct MySqlConnection usage in Service_Migration.cs (~line 220) with ExecuteRawSqlAsync
-- [ ] T070 [US4] Replace direct MySqlConnection usage in Service_Migration.cs (~line 252) with ExecuteRawSqlAsync
-- [ ] T071 [US4] Replace direct MySqlConnection usage in Service_Migration.cs (~line 282) with ExecuteRawSqlAsync
-- [ ] T072 [US4] Replace direct MySqlConnection usage in Service_Migration.cs (~line 319) with ExecuteRawSqlAsync
-- [ ] T073 [US4] Replace direct MySqlConnection usage in Service_Migration.cs (~line 377) with ExecuteRawSqlAsync
-- [ ] T074 [US4] Replace direct MySqlConnection usage in Service_Migration.cs (~line 431) with ExecuteRawSqlAsync
-- [ ] T075 [US4] Verify Service_Migration.cs builds successfully: `dotnet build`
+- [x] T067 [US4] Replace direct MySqlConnection usage in Service_Migration.cs (~line 22) with ExecuteRawSqlAsync
+- [x] T068 [US4] Replace direct MySqlConnection usage in Service_Migration.cs (~line 189) with ExecuteRawSqlAsync
+- [x] T069 [US4] Replace direct MySqlConnection usage in Service_Migration.cs (~line 220) with ExecuteRawSqlAsync
+- [x] T070 [US4] Replace direct MySqlConnection usage in Service_Migration.cs (~line 252) with ExecuteRawSqlAsync
+- [x] T071 [US4] Replace direct MySqlConnection usage in Service_Migration.cs (~line 282) with ExecuteRawSqlAsync
+- [x] T072 [US4] Replace direct MySqlConnection usage in Service_Migration.cs (~line 319) with ExecuteRawSqlAsync
+- [x] T073 [US4] Replace direct MySqlConnection usage in Service_Migration.cs (~line 377) with ExecuteRawSqlAsync
+- [x] T074 [US4] Replace direct MySqlConnection usage in Service_Migration.cs (~line 431) with ExecuteRawSqlAsync
+- [x] T075 [US4] Verify Service_Migration.cs builds successfully: `dotnet build`
 
 #### Subtask: Refactor Service_Analytics to Use Stored Procedures
 
-- [ ] T076 [US4] Replace first inline SQL in Service_Analytics.cs (~line 59-68) with call to md_analytics_GetTransactionsByRange via ExecuteDataTableWithStatusAsync
-- [ ] T077 [US4] Replace second inline SQL in Service_Analytics.cs (~line 174-184) with call to md_analytics_GetUsersByDateRange via ExecuteDataTableWithStatusAsync
-- [ ] T078 [US4] Replace third inline SQL in Service_Analytics.cs (~line 232-236) with call to appropriate stored procedure via ExecuteDataTableWithStatusAsync
-- [ ] T079 [US4] Update Service_Analytics.cs data processing to work with DataTable instead of direct SQL results
-- [ ] T080 [US4] Verify Service_Analytics.cs builds successfully: `dotnet build`
+- [x] T076 [US4] Replace first inline SQL in Service_Analytics.cs (~line 59-68) with call to md_analytics_GetTransactionsByRange via ExecuteDataTableWithStatusAsync
+- [x] T077 [US4] Replace second inline SQL in Service_Analytics.cs (~line 174-184) with call to md_analytics_GetUsersByDateRange via ExecuteDataTableWithStatusAsync
+- [x] T078 [US4] Replace third inline SQL in Service_Analytics.cs (~line 232-236) with call to appropriate stored procedure via ExecuteDataTableWithStatusAsync
+- [x] T079 [US4] Update Service_Analytics.cs data processing to work with DataTable instead of direct SQL results
+- [x] T080 [US4] Verify Service_Analytics.cs builds successfully: `dotnet build`
 
 ### Constitution Compliance Verification (US4)
 
@@ -244,10 +244,10 @@ Disable connection pooling for SQL Server (Infor Visual ERP) connections to main
 
 ### Implementation Tasks
 
-- [ ] T089 [P] [US5] Locate GetConnectionString method in Services/Visual/Service_VisualDatabase.cs using Serena: `mcp_oraios_serena_find_symbol("Service_VisualDatabase/GetConnectionString", include_body=true)`
-- [ ] T090 [P] [US5] Add `Pooling = false` to SqlConnectionStringBuilder in Service_VisualDatabase.cs GetConnectionString method
-- [ ] T091 [P] [US5] Add XML documentation remarks explaining Pooling=false for consistency with MySQL pattern
-- [ ] T092 [P] [US5] Verify all 18 Visual SQL connection usages still use `using` statements (already compliant)
+- [x] T089 [P] [US5] Locate GetConnectionString method in Services/Visual/Service_VisualDatabase.cs using Serena: `mcp_oraios_serena_find_symbol("Service_VisualDatabase/GetConnectionString", include_body=true)`
+- [x] T090 [P] [US5] Add `Pooling = false` to SqlConnectionStringBuilder in Service_VisualDatabase.cs GetConnectionString method
+- [x] T091 [P] [US5] Add XML documentation remarks explaining Pooling=false for consistency with MySQL pattern
+- [x] T092 [P] [US5] Verify all 18 Visual SQL connection usages still use `using` statements (already compliant)
 
 ### Constitution Compliance Verification (US5)
 

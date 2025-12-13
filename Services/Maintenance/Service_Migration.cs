@@ -3,6 +3,7 @@ using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using MySql.Data.MySqlClient;
+using System.Data;
 
 namespace MTM_WIP_Application_Winforms.Services.Maintenance
 {
@@ -18,16 +19,19 @@ namespace MTM_WIP_Application_Winforms.Services.Maintenance
             {
                 LoggingUtility.Log($"[Migration] Starting script: {scriptName}");
 
-                var connectionString = Helper_Database_Variables.GetConnectionString(null, null, null, null);
-                using var connection = new MySqlConnection(connectionString);
-                await connection.OpenAsync();
+                var result = await Helper_Database_StoredProcedure.ExecuteRawSqlAsync(
+                    Helper_Database_Variables.GetConnectionString(null, null, null, null),
+                    sqlContent);
 
-                using var command = new MySqlCommand(sqlContent, connection);
-                command.CommandTimeout = 300; // 5 minutes for large migrations
-                await command.ExecuteNonQueryAsync();
-
-                LoggingUtility.Log($"[Migration] Completed script: {scriptName}");
-                return Model_Dao_Result<bool>.Success(true);
+                if (result.IsSuccess)
+                {
+                    LoggingUtility.Log($"[Migration] Completed script: {scriptName}");
+                    return Model_Dao_Result<bool>.Success(true);
+                }
+                else
+                {
+                    return Model_Dao_Result<bool>.Failure($"Migration failed for {scriptName}: {result.ErrorMessage}");
+                }
             }
             catch (Exception ex)
             {
@@ -185,15 +189,21 @@ namespace MTM_WIP_Application_Winforms.Services.Maintenance
                 var counts = new Dictionary<string, long>();
                 var tables = new[] { "inv_inventory", "inv_transaction", "md_part_ids", "md_locations", "usr_users" };
 
-                var connectionString = Helper_Database_Variables.GetConnectionString(null, null, null, null);
-                using var connection = new MySqlConnection(connectionString);
-                await connection.OpenAsync();
-
                 foreach (var table in tables)
                 {
-                    using var cmd = new MySqlCommand($"SELECT COUNT(*) FROM {table}", connection);
-                    var count = Convert.ToInt64(await cmd.ExecuteScalarAsync());
-                    counts[table] = count;
+                    var parameters = new Dictionary<string, object> { { "TableName", table } };
+                    var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
+                        Helper_Database_Variables.GetConnectionString(null, null, null, null),
+                        "md_system_GetTableRowCount", parameters);
+
+                    if (result.IsSuccess && result.Data.Rows.Count > 0)
+                    {
+                        counts[table] = Convert.ToInt64(result.Data.Rows[0]["Count"]);
+                    }
+                    else
+                    {
+                        counts[table] = -1; // Error
+                    }
                 }
 
                 return Model_Dao_Result<Dictionary<string, long>>.Success(counts);
@@ -208,28 +218,22 @@ namespace MTM_WIP_Application_Winforms.Services.Maintenance
         {
             try
             {
-                string sql = @"
-                    SELECT
-                        table_name AS `Table`,
-                        round(((data_length + index_length) / 1024 / 1024), 2) AS `SizeMB`
-                    FROM information_schema.TABLES
-                    WHERE table_schema = 'mtm_wip_application_winforms'
-                    ORDER BY (data_length + index_length) DESC;";
+                var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
+                    Helper_Database_Variables.GetConnectionString(null, null, null, null),
+                    "md_system_GetTableSizes", null);
 
-                var connectionString = Helper_Database_Variables.GetConnectionString(null, null, null, null);
-                using var connection = new MySqlConnection(connectionString);
-                await connection.OpenAsync();
-
-                using var cmd = new MySqlCommand(sql, connection);
-                using var reader = await cmd.ExecuteReaderAsync();
+                if (!result.IsSuccess)
+                {
+                    return Model_Dao_Result<List<Dictionary<string, object>>>.Failure(result.ErrorMessage);
+                }
 
                 var results = new List<Dictionary<string, object>>();
-                while (await reader.ReadAsync())
+                foreach (DataRow row in result.Data.Rows)
                 {
                     results.Add(new Dictionary<string, object>
                     {
-                        { "Table", reader["Table"] },
-                        { "SizeMB", reader["SizeMB"] }
+                        { "Table", row["Table"] },
+                        { "SizeMB", row["SizeMB"] }
                     });
                 }
 
@@ -248,18 +252,20 @@ namespace MTM_WIP_Application_Winforms.Services.Maintenance
                 var results = new Dictionary<string, string>();
                 var tables = new[] { "inv_inventory", "inv_transaction", "md_part_ids", "md_locations", "usr_users" };
 
-                var connectionString = Helper_Database_Variables.GetConnectionString(null, null, null, null);
-                using var connection = new MySqlConnection(connectionString);
-                await connection.OpenAsync();
-
                 foreach (var table in tables)
                 {
-                    using var cmd = new MySqlCommand($"CHECK TABLE {table}", connection);
-                    using var reader = await cmd.ExecuteReaderAsync();
-                    if (await reader.ReadAsync())
+                    var parameters = new Dictionary<string, object> { { "TableName", table } };
+                    var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
+                        Helper_Database_Variables.GetConnectionString(null, null, null, null),
+                        "md_system_CheckTable", parameters);
+
+                    if (result.IsSuccess && result.Data.Rows.Count > 0)
                     {
-                        // Msg_text column usually contains OK or error
-                        results[table] = reader["Msg_text"].ToString() ?? "Unknown";
+                        results[table] = result.Data.Rows[0]["Msg_text"].ToString() ?? "Unknown";
+                    }
+                    else
+                    {
+                        results[table] = result.ErrorMessage ?? "Unknown Error";
                     }
                 }
 
@@ -276,23 +282,23 @@ namespace MTM_WIP_Application_Winforms.Services.Maintenance
             try
             {
                 var connections = new List<string>();
-                string sql = "SHOW PROCESSLIST";
+                var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
+                    Helper_Database_Variables.GetConnectionString(null, null, null, null),
+                    "md_system_GetProcessList", null);
 
-                var connectionString = Helper_Database_Variables.GetConnectionString(null, null, null, null);
-                using var connection = new MySqlConnection(connectionString);
-                await connection.OpenAsync();
-
-                using var cmd = new MySqlCommand(sql, connection);
-                using var reader = await cmd.ExecuteReaderAsync();
-
-                while (await reader.ReadAsync())
+                if (!result.IsSuccess)
                 {
-                    string user = reader["User"].ToString() ?? "Unknown";
-                    string host = reader["Host"].ToString() ?? "Unknown";
-                    string db = reader["db"].ToString() ?? "None";
-                    string command = reader["Command"].ToString() ?? "Unknown";
-                    string time = reader["Time"].ToString() ?? "0";
-                    string state = reader["State"].ToString() ?? "";
+                    return Model_Dao_Result<List<string>>.Failure(result.ErrorMessage);
+                }
+
+                foreach (DataRow row in result.Data.Rows)
+                {
+                    string user = row["User"].ToString() ?? "Unknown";
+                    string host = row["Host"].ToString() ?? "Unknown";
+                    string db = row["db"].ToString() ?? "None";
+                    string command = row["Command"].ToString() ?? "Unknown";
+                    string time = row["Time"].ToString() ?? "0";
+                    string state = row["State"].ToString() ?? "";
 
                     connections.Add($"User: {user} | Host: {host} | DB: {db} | Cmd: {command} | Time: {time}s | State: {state}");
                 }
@@ -315,18 +321,25 @@ namespace MTM_WIP_Application_Winforms.Services.Maintenance
                     "md_operation_numbers", "md_item_types", "usr_users", "log_error"
                 };
 
-                var connectionString = Helper_Database_Variables.GetConnectionString(null, null, null, null);
-                using var connection = new MySqlConnection(connectionString);
-                await connection.OpenAsync();
-
                 // Check tables
                 foreach (var table in requiredTables)
                 {
-                    using var cmd = new MySqlCommand($"SHOW TABLES LIKE '{table}'", connection);
-                    var result = await cmd.ExecuteScalarAsync();
-                    if (result == null)
+                    var parameters = new Dictionary<string, object> { { "TableName", table } };
+                    var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
+                        Helper_Database_Variables.GetConnectionString(null, null, null, null),
+                        "md_system_CheckTableExists", parameters);
+
+                    if (result.IsSuccess && result.Data.Rows.Count > 0)
                     {
-                        issues.Add($"Missing Table: {table}");
+                        bool exists = Convert.ToInt32(result.Data.Rows[0]["Exists"]) > 0;
+                        if (!exists)
+                        {
+                            issues.Add($"Missing Table: {table}");
+                        }
+                    }
+                    else
+                    {
+                        issues.Add($"Error checking table: {table}");
                     }
                 }
 
@@ -341,11 +354,22 @@ namespace MTM_WIP_Application_Winforms.Services.Maintenance
                 {
                     foreach (var col in kvp.Value)
                     {
-                        using var cmd = new MySqlCommand($"SHOW COLUMNS FROM {kvp.Key} LIKE '{col}'", connection);
-                        var result = await cmd.ExecuteScalarAsync();
-                        if (result == null)
+                        var parameters = new Dictionary<string, object> { { "TableName", kvp.Key }, { "ColumnName", col } };
+                        var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
+                            Helper_Database_Variables.GetConnectionString(null, null, null, null),
+                            "md_system_CheckColumnExists", parameters);
+
+                        if (result.IsSuccess && result.Data.Rows.Count > 0)
                         {
-                            issues.Add($"Missing Column: {kvp.Key}.{col}");
+                            bool exists = Convert.ToInt32(result.Data.Rows[0]["Exists"]) > 0;
+                            if (!exists)
+                            {
+                                issues.Add($"Missing Column: {kvp.Key}.{col}");
+                            }
+                        }
+                        else
+                        {
+                            issues.Add($"Error checking column: {kvp.Key}.{col}");
                         }
                     }
                 }
@@ -373,20 +397,23 @@ namespace MTM_WIP_Application_Winforms.Services.Maintenance
                 // For local dev (MAMP), it works if permissions allow.
                 // Safer approach for client app: Read data, write file in C#.
 
-                var connectionString = Helper_Database_Variables.GetConnectionString(null, null, null, null);
-                using var connection = new MySqlConnection(connectionString);
-                await connection.OpenAsync();
+                var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
+                    Helper_Database_Variables.GetConnectionString(null, null, null, null),
+                    "md_system_GetAllErrorLogs", null);
 
-                using (var cmd = new MySqlCommand("SELECT * FROM log_error", connection))
-                using (var reader = await cmd.ExecuteReaderAsync())
+                if (!result.IsSuccess)
+                {
+                    return Model_Dao_Result<string>.Failure(result.ErrorMessage);
+                }
+
                 using (var writer = new StreamWriter(fullPath))
                 {
                     // Write header
                     await writer.WriteLineAsync("ErrorID,Timestamp,User,Message,StackTrace,Source");
 
-                    while (await reader.ReadAsync())
+                    foreach (DataRow row in result.Data.Rows)
                     {
-                        var line = $"{reader["ErrorID"]},{reader["Timestamp"]},{reader["User"]},\"{reader["Message"]}\",\"{reader["StackTrace"]}\",{reader["Source"]}";
+                        var line = $"{row["ErrorID"]},{row["Timestamp"]},{row["User"]},\"{row["Message"]}\",\"{row["StackTrace"]}\",{row["Source"]}";
                         await writer.WriteLineAsync(line);
                     }
                 }
@@ -427,14 +454,9 @@ namespace MTM_WIP_Application_Winforms.Services.Maintenance
         {
             try
             {
-                var connectionString = Helper_Database_Variables.GetConnectionString(null, null, null, null);
-                using var connection = new MySqlConnection(connectionString);
-                await connection.OpenAsync();
-
-                using var command = new MySqlCommand(sql, connection);
-                int rows = await command.ExecuteNonQueryAsync();
-
-                return Model_Dao_Result<int>.Success(rows, "Operation completed", rows);
+                return await Helper_Database_StoredProcedure.ExecuteRawSqlAsync(
+                    Helper_Database_Variables.GetConnectionString(null, null, null, null),
+                    sql);
             }
             catch (Exception ex)
             {

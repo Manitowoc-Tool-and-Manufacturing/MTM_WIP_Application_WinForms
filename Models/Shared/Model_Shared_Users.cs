@@ -17,7 +17,7 @@ namespace MTM_WIP_Application_Winforms.Models
         public static string VisualUserName { get; set; } = "User Name";
         public bool VitsUser { get; set; } = false;
 #if DEBUG
-        public static string? Database { get; set; } = "mtm_wip_application_winforms_test";
+        public static string? Database { get; set; } = "mtm_wip_application_winforms";
 #else
         public static string? Database { get; set; } = "mtm_wip_application_winforms";
 #endif

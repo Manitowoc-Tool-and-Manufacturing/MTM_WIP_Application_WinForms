@@ -26,6 +26,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
         #region Fields
 
         private Timer? _connectionStrengthTimer;
+        private Timer? _connectionMonitorTimer;
         public Helper_Control_MySqlSignal ConnectionStrengthChecker = null!;
         private Helper_StoredProcedureProgress? _progressHelper;
         private Form_ViewErrorReports? _viewErrorReportsForm;
@@ -230,6 +231,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                 Service_DebugTracer.TraceUIAction("CONNECTION_STRENGTH_SETUP", nameof(MainForm),
                     new Dictionary<string, object> { ["Phase"] = "START" });
                 MainForm_OnStartup_SetupConnectionStrengthControl();
+                MainForm_OnStartup_SetupConnectionMonitor();
                 Debug.WriteLine("[DEBUG] [MainForm.ctor] ConnectionStrengthControl setup complete.");
 
                 Service_DebugTracer.TraceUIAction("EVENTS_WIREUP", nameof(MainForm),
@@ -761,6 +763,37 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                 LoggingUtility.LogApplicationError(ex);
                 await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
                     nameof(MainForm_OnStartup_SetupConnectionStrengthControl));
+            }
+        }
+
+        private void MainForm_OnStartup_SetupConnectionMonitor()
+        {
+            try
+            {
+                // 5 minutes = 300,000 ms
+                _connectionMonitorTimer = new Timer { Interval = 300000 };
+                _connectionMonitorTimer.Tick += async (s, e) =>
+                {
+                    try
+                    {
+                        var stats = await Helper_Database_ConnectionMonitor.GetConnectionStatsAsync();
+                        LoggingUtility.Log($"[ConnectionMonitor] Server: {stats.ServerAddress}, Open: {stats.OpenConnections}, Healthy: {stats.IsHealthy}");
+                        
+                        if (!stats.IsHealthy)
+                        {
+                            LoggingUtility.Log($"[ConnectionMonitor] WARNING: {stats.WarningMessage}");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        LoggingUtility.LogApplicationError(ex);
+                    }
+                };
+                _connectionMonitorTimer.Start();
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
             }
         }
 

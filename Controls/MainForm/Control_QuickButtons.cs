@@ -19,6 +19,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         public static Forms.MainForm.MainForm? MainFormInstance { get; set; }
         private Helper_StoredProcedureProgress? _progressHelper;
         private readonly IShortcutService? _shortcutService;
+        private Task? _shortcutInitializationTask;
 
         #endregion
 
@@ -57,7 +58,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             if (_shortcutService != null && !string.IsNullOrEmpty(Model_Application_Variables.User))
             {
                 // Initialize asynchronously
-                _ = _shortcutService.InitializeAsync(Model_Application_Variables.User);
+                _shortcutInitializationTask = _shortcutService.InitializeAsync(Model_Application_Variables.User);
             }
 
             // Add padding to the main control as requested
@@ -97,7 +98,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     TabIndex = i + 1,
                     TabStop = false,
                     ContextMenuStrip = Control_QuickButtons_ContextMenu,
-                    HotkeyText = hotkeyText
+                    HotkeyText = hotkeyText,
+                    Visible = false // Hide initially to prevent placeholder flicker
                 };
 
                 btn.Click += QuickButton_Click;
@@ -204,6 +206,11 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         {
             try
             {
+                // Ensure shortcuts are initialized
+                if (_shortcutInitializationTask != null)
+                {
+                    await _shortcutInitializationTask;
+                }
 
                 Service_DebugTracer.TraceMethodEntry(new Dictionary<string, object>
                 {

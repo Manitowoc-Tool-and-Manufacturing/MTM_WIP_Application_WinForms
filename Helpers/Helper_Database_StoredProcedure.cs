@@ -491,7 +491,7 @@ public static class Helper_Database_StoredProcedure
             //         var builder = new MySqlConnectionStringBuilder(connectionString);
             //         if (builder.Database.Equals("mtm_wip_application_winforms", StringComparison.OrdinalIgnoreCase))
             //         {
-            //             builder.Database = "mtm_wip_application_winforms_test";
+            //             builder.Database = "mtm_wip_application_winforms";
             //             string testConnectionString = builder.ConnectionString;
             //             await ExecuteScalarWithStatusAsync(
             //                 testConnectionString,
@@ -732,53 +732,76 @@ public static class Helper_Database_StoredProcedure
     }
 
     /// <summary>
-    /// Execute stored procedure and return MySqlDataReader for streaming large result sets (no Model_Dao_Result wrapper)
+    /// Executes raw SQL (DDL/DML) for database migrations while maintaining centralized access pattern.
     /// </summary>
-    /// <param name="connectionString">Database connection string</param>
-    /// <param name="procedureName">Stored procedure name</param>
-    /// <param name="parameters">Input parameters (WITHOUT prefix - prefixes added automatically)</param>
-    /// <param name="commandType">Command type (usually StoredProcedure)</param>
-    /// <returns>MySqlDataReader for reading results</returns>
+    /// <param name="connectionString">Database connection string (must contain "Pooling=false")</param>
+    /// <param name="sql">Raw SQL statement (ALTER TABLE, CREATE INDEX, INSERT, UPDATE, etc.)</param>
+    /// <param name="parameters">Optional parameters for parameterized queries (uses @-prefix)</param>
+    /// <returns>
+    /// Model_Dao_Result with rows affected count.
+    /// Check IsSuccess before accessing Data.
+    /// ErrorMessage contains user-friendly message on failure.
+    /// </returns>
     /// <remarks>
-    /// IMPORTANT: Caller is responsible for disposing the reader and its underlying connection.
-    /// This method intentionally does NOT wrap the result in Model_Dao_Result to allow streaming.
+    /// ARCHITECTURAL EXCEPTION: This method provides controlled exception to "stored procedures only" rule.
+    /// Should ONLY be used by Service_Migration for schema changes that cannot be done via stored procedures
+    /// (ALTER TABLE, CREATE INDEX, etc.). All other database operations must use stored procedures.
+    /// 
+    /// Enforces Pooling=false to ensure immediate connection disposal per Constitution Principle V.
     /// </remarks>
-    public static async Task<MySqlDataReader> ExecuteReaderAsync(
+    public static async Task<Model_Dao_Result<int>> ExecuteRawSqlAsync(
         string connectionString,
-        string procedureName,
-        Dictionary<string, object>? parameters = null,
-        CommandType commandType = CommandType.StoredProcedure)
+        string sql,
+        Dictionary<string, object>? parameters = null)
     {
-        var connection = new MySqlConnection(connectionString);
+        // Validate connection string contains Pooling=false
+        if (!connectionString.Contains("Pooling=false", StringComparison.OrdinalIgnoreCase))
+        {
+            string errorMsg = "ExecuteRawSqlAsync requires Pooling=false in connection string for immediate disposal";
+            LoggingUtility.Log(errorMsg);
+            return Model_Dao_Result<int>.Failure(errorMsg);
+        }
+
+        // Validate SQL is not empty
+        if (string.IsNullOrWhiteSpace(sql))
+        {
+            return Model_Dao_Result<int>.Failure("SQL statement cannot be empty");
+        }
 
         try
         {
+            using var connection = new MySqlConnection(connectionString);
             await connection.OpenAsync();
 
-            using var command = new MySqlCommand(procedureName, connection)
+            using var command = new MySqlCommand(sql, connection)
             {
-                CommandType = commandType,
+                CommandType = CommandType.Text,
                 CommandTimeout = Model_Application_Variables.CommandTimeoutSeconds
             };
 
-            // Add input parameters with automatic prefix detection
-            AddParametersWithPrefixDetection(command, procedureName, parameters);
+            // Add parameters if provided (using @-prefix)
+            if (parameters != null)
+            {
+                foreach (var param in parameters)
+                {
+                    command.Parameters.AddWithValue($"@{param.Key}", param.Value ?? DBNull.Value);
+                }
+            }
 
-            return await command.ExecuteReaderAsync(CommandBehavior.CloseConnection);
+            int rowsAffected = await command.ExecuteNonQueryAsync();
+            LoggingUtility.Log($"ExecuteRawSqlAsync: {rowsAffected} rows affected");
+            
+            return Model_Dao_Result<int>.Success(rowsAffected);
         }
         catch (Exception ex)
         {
-            connection.Dispose();
-
-            // Re-throw with user-friendly message for connection errors
-            if (IsConnectionRelatedError(ex))
-            {
-                string userFriendlyMessage = GetUserFriendlyConnectionError(ex, procedureName);
-                LoggingUtility.LogDatabaseError(ex);
-                throw new InvalidOperationException(userFriendlyMessage, ex);
-            }
-
-            throw;
+            LoggingUtility.LogDatabaseError(ex);
+            
+            string userMessage = IsConnectionRelatedError(ex)
+                ? GetUserFriendlyConnectionError(ex, "ExecuteRawSqlAsync")
+                : $"Database error during raw SQL execution: {ex.Message}";
+            
+            return Model_Dao_Result<int>.Failure(userMessage, ex);
         }
     }
 

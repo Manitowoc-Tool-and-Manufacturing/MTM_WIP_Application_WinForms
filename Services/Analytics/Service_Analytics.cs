@@ -4,6 +4,7 @@ using MTM_WIP_Application_Winforms.Models;
 using MySql.Data.MySqlClient;
 using MTM_WIP_Application_Winforms.Services.Logging;
 using Newtonsoft.Json;
+using MTM_WIP_Application_Winforms.Helpers;
 
 namespace MTM_WIP_Application_Winforms.Services.Analytics
 {
@@ -56,44 +57,50 @@ namespace MTM_WIP_Application_Winforms.Services.Analytics
                 var transactions = new List<Model_Transactions_Core>();
                 var usersTable = new DataTable();
 
-                await using (var connection = new MySqlConnection(Model_Application_Variables.ConnectionString))
+                var parameters = new Dictionary<string, object>
                 {
-                    await connection.OpenAsync().ConfigureAwait(false);
+                    { "StartDate", start },
+                    { "EndDate", end }
+                };
 
-                    using (var cmd = new MySqlCommand(SqlTransactionsByRange, connection))
-                    {
-                        cmd.Parameters.AddWithValue("@Start", start);
-                        cmd.Parameters.AddWithValue("@End", end);
+                var transactionsResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
+                    Model_Application_Variables.ConnectionString,
+                    "md_analytics_GetTransactionsByRange", parameters);
 
-                        using (var reader = await cmd.ExecuteReaderAsync().ConfigureAwait(false))
-                        {
-                            while (await reader.ReadAsync().ConfigureAwait(false))
-                            {
-                                transactions.Add(new Model_Transactions_Core
-                                {
-                                    ID = Convert.ToInt32(reader["ID"]),
-                                    TransactionType = Enum.TryParse(reader["TransactionType"]?.ToString(), out TransactionType txType) ? txType : TransactionType.IN,
-                                    BatchNumber = reader["BatchNumber"]?.ToString(),
-                                    PartID = reader["PartID"]?.ToString(),
-                                    FromLocation = reader["FromLocation"]?.ToString(),
-                                    ToLocation = reader["ToLocation"]?.ToString(),
-                                    Operation = reader["Operation"]?.ToString(),
-                                    Quantity = Convert.ToInt32(reader["Quantity"]),
-                                    Notes = reader["Notes"]?.ToString(),
-                                    User = reader["User"]?.ToString(),
-                                    ItemType = reader["ItemType"]?.ToString(),
-                                    DateTime = Convert.ToDateTime(reader["ReceiveDate"])
-                                });
-                            }
-                        }
-                    }
-
-                    using (var cmdUsers = new MySqlCommand(SqlUsers, connection))
-                    using (var adapter = new MySqlDataAdapter(cmdUsers))
-                    {
-                        await Task.Run(() => adapter.Fill(usersTable)).ConfigureAwait(false);
-                    }
+                if (!transactionsResult.IsSuccess)
+                {
+                    return Model_Dao_Result<List<Model_User_Performance>>.Failure(transactionsResult.ErrorMessage);
                 }
+
+                foreach (DataRow row in transactionsResult.Data.Rows)
+                {
+                    transactions.Add(new Model_Transactions_Core
+                    {
+                        ID = Convert.ToInt32(row["ID"]),
+                        TransactionType = Enum.TryParse(row["TransactionType"]?.ToString(), out TransactionType txType) ? txType : TransactionType.IN,
+                        BatchNumber = row["BatchNumber"]?.ToString(),
+                        PartID = row["PartID"]?.ToString(),
+                        FromLocation = row["FromLocation"]?.ToString(),
+                        ToLocation = row["ToLocation"]?.ToString(),
+                        Operation = row["Operation"]?.ToString(),
+                        Quantity = Convert.ToInt32(row["Quantity"]),
+                        Notes = row["Notes"]?.ToString(),
+                        User = row["User"]?.ToString(),
+                        ItemType = row["ItemType"]?.ToString(),
+                        DateTime = Convert.ToDateTime(row["ReceiveDate"])
+                    });
+                }
+
+                var usersResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
+                    Model_Application_Variables.ConnectionString,
+                    "md_analytics_GetUsers", null);
+
+                if (!usersResult.IsSuccess)
+                {
+                    return Model_Dao_Result<List<Model_User_Performance>>.Failure(usersResult.ErrorMessage);
+                }
+
+                usersTable = usersResult.Data;
 
                 // Fetch Visual Data for Shift Mapping
                 var visualDataResult = await _visualDao.GetSysVisualDataAsync();
@@ -171,41 +178,47 @@ namespace MTM_WIP_Application_Winforms.Services.Analytics
             try
             {
                 var transactions = new List<Model_Transactions_Core>();
-                await using (var connection = new MySqlConnection(Model_Application_Variables.ConnectionString))
+                var parameters = new Dictionary<string, object>
                 {
-                    await connection.OpenAsync().ConfigureAwait(false);
+                    { "User", user },
+                    { "StartDate", start },
+                    { "EndDate", end }
+                };
 
-                    using (var cmd = new MySqlCommand(SqlUserHistory, connection))
+                var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
+                    Model_Application_Variables.ConnectionString,
+                    "md_analytics_GetUserHistory", parameters);
+
+                if (!result.IsSuccess)
+                {
+                    return Model_Dao_Result<List<Model_Transactions_Core>>.Failure(result.ErrorMessage);
+                }
+
+                if (result.Data == null)
+                {
+                    return Model_Dao_Result<List<Model_Transactions_Core>>.Failure("No data returned from database.");
+                }
+
+                foreach (DataRow row in result.Data.Rows)
+                {
+                    string txTypeStr = row["TransactionType"]?.ToString() ?? nameof(TransactionType.IN);
+                    _ = Enum.TryParse(txTypeStr, out TransactionType txType);
+
+                    transactions.Add(new Model_Transactions_Core
                     {
-                        cmd.Parameters.AddWithValue("@User", user);
-                        cmd.Parameters.AddWithValue("@Start", start);
-                        cmd.Parameters.AddWithValue("@End", end);
-
-                        using (var reader = await cmd.ExecuteReaderAsync().ConfigureAwait(false))
-                        {
-                            while (await reader.ReadAsync().ConfigureAwait(false))
-                            {
-                                string txTypeStr = reader["TransactionType"]?.ToString() ?? nameof(TransactionType.IN);
-                                _ = Enum.TryParse(txTypeStr, out TransactionType txType);
-
-                                transactions.Add(new Model_Transactions_Core
-                                {
-                                    ID = Convert.ToInt32(reader["ID"]),
-                                    TransactionType = txType,
-                                    BatchNumber = reader["BatchNumber"]?.ToString(),
-                                    PartID = reader["PartID"]?.ToString(),
-                                    FromLocation = reader["FromLocation"]?.ToString(),
-                                    ToLocation = reader["ToLocation"]?.ToString(),
-                                    Operation = reader["Operation"]?.ToString(),
-                                    Quantity = Convert.ToInt32(reader["Quantity"]),
-                                    Notes = reader["Notes"]?.ToString(),
-                                    User = reader["User"]?.ToString(),
-                                    ItemType = reader["ItemType"]?.ToString(),
-                                    DateTime = Convert.ToDateTime(reader["ReceiveDate"])
-                                });
-                            }
-                        }
-                    }
+                        ID = Convert.ToInt32(row["ID"]),
+                        TransactionType = txType,
+                        BatchNumber = row["BatchNumber"]?.ToString(),
+                        PartID = row["PartID"]?.ToString(),
+                        FromLocation = row["FromLocation"]?.ToString(),
+                        ToLocation = row["ToLocation"]?.ToString(),
+                        Operation = row["Operation"]?.ToString(),
+                        Quantity = Convert.ToInt32(row["Quantity"]),
+                        Notes = row["Notes"]?.ToString(),
+                        User = row["User"]?.ToString(),
+                        ItemType = row["ItemType"]?.ToString(),
+                        DateTime = Convert.ToDateTime(row["ReceiveDate"])
+                    });
                 }
 
                 return Model_Dao_Result<List<Model_Transactions_Core>>.Success(transactions);
@@ -229,20 +242,21 @@ namespace MTM_WIP_Application_Winforms.Services.Analytics
             try
             {
                 var users = new List<string>();
-                await using (var connection = new MySqlConnection(Model_Application_Variables.ConnectionString))
+                var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
+                    Model_Application_Variables.ConnectionString,
+                    "md_analytics_GetAllUsers", null);
+
+                if (!result.IsSuccess)
                 {
-                    await connection.OpenAsync().ConfigureAwait(false);
-                    using (var cmd = new MySqlCommand(SqlAllUsers, connection))
-                    using (var reader = await cmd.ExecuteReaderAsync().ConfigureAwait(false))
+                    return Model_Dao_Result<List<string>>.Failure(result.ErrorMessage);
+                }
+
+                foreach (DataRow row in result.Data.Rows)
+                {
+                    var value = row["User"]?.ToString();
+                    if (!string.IsNullOrWhiteSpace(value))
                     {
-                        while (await reader.ReadAsync().ConfigureAwait(false))
-                        {
-                            var value = reader["User"]?.ToString();
-                            if (!string.IsNullOrWhiteSpace(value))
-                            {
-                                users.Add(value);
-                            }
-                        }
+                        users.Add(value);
                     }
                 }
 

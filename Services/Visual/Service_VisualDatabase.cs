@@ -1439,6 +1439,14 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
             return new Model_Dao_Result<DataTable> { IsSuccess = true, Data = dt };
         }
 
+        /// <summary>
+        /// Builds SQL Server connection string with immediate disposal pattern (Pooling=false).
+        /// </summary>
+        /// <returns>Complete SQL Server connection string for Infor Visual ERP</returns>
+        /// <remarks>
+        /// Connection pooling is disabled (Pooling=false) for consistency with MySQL immediate disposal pattern.
+        /// All 18 connection usages in this service already use proper `using` statements for disposal.
+        /// </remarks>
         private string GetConnectionString()
         {
             var builder = new SqlConnectionStringBuilder
@@ -1449,7 +1457,8 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 Password = _password,
                 ConnectTimeout = 5, // Reduced timeout for faster fallback
                 ApplicationName = "MTM_WIP_App_VisualDashboard",
-                TrustServerCertificate = true // Required for some SQL Server configurations
+                TrustServerCertificate = true, // Required for some SQL Server configurations
+                Pooling = false // Immediate disposal per Constitution Principle V
             };
             return builder.ConnectionString;
         }

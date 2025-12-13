@@ -199,7 +199,7 @@ namespace MTM_WIP_Application_Winforms.Services.Startup
                 // 14. Show application with error handling - CRITICAL STEP
                 progress = 100;
                 _splashScreen?.UpdateProgress(progress, "Ready to start!");
-                await Task.Delay(500);
+                await Task.Delay(50);
 
                 try
                 {

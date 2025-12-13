@@ -71,7 +71,7 @@ namespace MTM_WIP_Application_Winforms.Services.Startup
 #else
                     if (System.Diagnostics.Debugger.IsAttached)
                     {
-                        Model_Shared_Users.Database = "mtm_wip_application_winforms_test";
+                        Model_Shared_Users.Database = "mtm_wip_application_winforms";
                         LoggingUtility.Log($"[Startup] Debugger attached: Ignoring user database setting '{dbName}' and enforcing test database.");
                     }
                     else

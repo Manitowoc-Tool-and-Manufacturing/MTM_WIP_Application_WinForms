@@ -40,25 +40,54 @@ namespace MTM_WIP_Application_Winforms.Services
 
                     if (defaults != null)
                     {
-                        bool addedAny = false;
-                        foreach (var shortcut in defaults)
-                        {
-                            // Ensure the shortcut exists in the system table (sys_shortcuts)
-                            // This updates the definition and ensures FK constraints are met
-                            await _dao.UpsertSystemShortcutAsync(shortcut.Name, (int)shortcut.Keys, shortcut.Description, shortcut.Category);
+                        // OPTIMIZATION: Fetch existing shortcuts to avoid unnecessary DB calls
+                        // This prevents ~50 individual DB calls on every startup which caused a ~5s lag
+                        var existingResult = await _dao.GetAllSystemShortcutsAsync();
+                        var existingShortcuts = new Dictionary<string, (int Keys, string Description, string Category)>();
 
-                            // If shortcut is not in cache, it means it wasn't returned by GetUserShortcutsAsync
-                            // Since we just added it to sys_shortcuts, it should appear on next refresh
-                            if (!_shortcutCache.ContainsKey(shortcut.Name))
+                        if (existingResult.IsSuccess && existingResult.Data != null)
+                        {
+                            foreach (DataRow row in existingResult.Data.Rows)
                             {
-                                addedAny = true;
+                                string name = row["ShortcutName"].ToString() ?? string.Empty;
+                                
+                                int keys = 0;
+                                // Handle potential column name variations safely
+                                if (row.Table.Columns.Contains("ShortcutKeys") && row["ShortcutKeys"] != DBNull.Value)
+                                    keys = Convert.ToInt32(row["ShortcutKeys"]);
+                                else if (row.Table.Columns.Contains("Keys") && row["Keys"] != DBNull.Value)
+                                    keys = Convert.ToInt32(row["Keys"]);
+
+                                string desc = row["Description"].ToString() ?? string.Empty;
+                                string cat = row["Category"].ToString() ?? string.Empty;
+                                
+                                existingShortcuts[name] = (keys, desc, cat);
                             }
                         }
 
-                        if (addedAny)
+                        foreach (var shortcut in defaults)
                         {
-                            await RefreshCacheAsync();
+                            bool needsUpdate = true;
+                            if (existingShortcuts.TryGetValue(shortcut.Name, out var existing))
+                            {
+                                if (existing.Keys == (int)shortcut.Keys &&
+                                    existing.Description == shortcut.Description &&
+                                    existing.Category == shortcut.Category)
+                                {
+                                    needsUpdate = false;
+                                }
+                            }
+
+                            if (needsUpdate)
+                            {
+                                // Ensure the shortcut exists in the system table (sys_shortcuts)
+                                // This updates the definition and ensures FK constraints are met
+                                await _dao.UpsertSystemShortcutAsync(shortcut.Name, (int)shortcut.Keys, shortcut.Description, shortcut.Category);
+                            }
                         }
+
+                        // Note: We do NOT call RefreshCacheAsync() here anymore because 
+                        // InitializeAsync() calls it immediately after this method returns.
                     }
                 }
                 else

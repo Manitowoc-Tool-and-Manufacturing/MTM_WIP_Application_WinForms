@@ -9,6 +9,19 @@ namespace MTM_WIP_Application_Winforms.Helpers
     {
         #region Connection String
 
+        /// <summary>
+        /// Builds MySQL connection string with immediate disposal pattern (Pooling=false).
+        /// </summary>
+        /// <param name="server">MySQL server address (defaults to Model_Shared_Users.WipServerAddress)</param>
+        /// <param name="database">Database name (defaults to Model_Shared_Users.Database)</param>
+        /// <param name="uid">User ID (defaults to "root")</param>
+        /// <param name="password">Password (defaults to "root")</param>
+        /// <returns>Complete MySQL connection string</returns>
+        /// <remarks>
+        /// Connection pooling is disabled (Pooling=false) per Constitution Principle V: Immediate Connection Disposal.
+        /// Every database operation opens a fresh connection, performs its action, and closes immediately.
+        /// This prevents connection leaks and simplifies debugging at the cost of ~10-20ms overhead per operation.
+        /// </remarks>
         public static string GetConnectionString(string? server, string? database, string? uid, string? password)
         {
             try
@@ -20,7 +33,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
                 
                 return $"SERVER={server};DATABASE={database};UID={uid};PASSWORD={password};" +
                        $"Allow User Variables=True;SslMode=Disabled;AllowPublicKeyRetrieval=true;" +
-                       $"Pooling=true;MinimumPoolSize=5;MaximumPoolSize=100;ConnectionReset=true;";
+                       $"Pooling=false;";
             }
             catch (Exception ex)
             {
