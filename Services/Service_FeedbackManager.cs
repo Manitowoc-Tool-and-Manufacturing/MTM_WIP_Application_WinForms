@@ -62,6 +62,13 @@ namespace MTM_WIP_Application_Winforms.Services
         Task<Model_Dao_Result<bool>> UpdateStatusAsync(int feedbackId, string newStatus, int? assignedDeveloperId, string? notes, int modifiedByUserId);
 
         /// <summary>
+        /// Updates the details of a feedback record.
+        /// </summary>
+        /// <param name="model">The feedback model containing updated details.</param>
+        /// <returns>Success or failure.</returns>
+        Task<Model_Dao_Result> UpdateDetailsAsync(Model_UserFeedback model);
+
+        /// <summary>
         /// Marks a feedback submission as a duplicate.
         /// </summary>
         /// <param name="feedbackId">The feedback ID.</param>
@@ -96,6 +103,13 @@ namespace MTM_WIP_Application_Winforms.Services
         /// <param name="windowFormMappingId">The window mapping ID.</param>
         /// <returns>DataTable of mappings.</returns>
         Task<Model_Dao_Result<DataTable>> GetControlMappingsAsync(int windowFormMappingId);
+
+        /// <summary>
+        /// Updates the details of a feedback submission.
+        /// </summary>
+        /// <param name="feedback">The feedback model with updated details.</param>
+        /// <returns>True if successful.</returns>
+        Task<Model_Dao_Result<bool>> UpdateFeedbackDetailsAsync(Model_UserFeedback feedback);
     }
 
     /// <summary>
@@ -293,6 +307,36 @@ namespace MTM_WIP_Application_Winforms.Services
         }
 
         /// <inheritdoc/>
+        public async Task<Model_Dao_Result> UpdateDetailsAsync(Model_UserFeedback feedback)
+        {
+            try
+            {
+                // Sanitize HTML
+                feedback.Description = Helper_HtmlSanitizer.Sanitize(feedback.Description ?? string.Empty);
+                if (!string.IsNullOrEmpty(feedback.StepsToReproduce)) feedback.StepsToReproduce = Helper_HtmlSanitizer.Sanitize(feedback.StepsToReproduce);
+                if (!string.IsNullOrEmpty(feedback.ExpectedBehavior)) feedback.ExpectedBehavior = Helper_HtmlSanitizer.Sanitize(feedback.ExpectedBehavior);
+                if (!string.IsNullOrEmpty(feedback.ActualBehavior)) feedback.ActualBehavior = Helper_HtmlSanitizer.Sanitize(feedback.ActualBehavior);
+                if (!string.IsNullOrEmpty(feedback.BusinessJustification)) feedback.BusinessJustification = Helper_HtmlSanitizer.Sanitize(feedback.BusinessJustification);
+                if (!string.IsNullOrEmpty(feedback.ExpectedConsistency)) feedback.ExpectedConsistency = Helper_HtmlSanitizer.Sanitize(feedback.ExpectedConsistency);
+
+                var result = await _feedbackDao.UpdateDetailsAsync(feedback);
+                
+                if (result.IsSuccess)
+                {
+                    LoggingUtility.Log(Enum_LogLevel.Information, "Feedback", $"Feedback details updated: {feedback.TrackingNumber}", feedback.UserID.ToString());
+                    return Model_Dao_Result.Success();
+                }
+                
+                return Model_Dao_Result.Failure(result.ErrorMessage);
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.Log(Enum_LogLevel.Error, "Feedback", "Error updating feedback details", feedback.UserID.ToString(), ex);
+                return Model_Dao_Result.Failure($"Error updating feedback details: {ex.Message}");
+            }
+        }
+
+        /// <inheritdoc/>
         public async Task<Model_Dao_Result<bool>> UpdateStatusAsync(int feedbackId, string newStatus, int? assignedDeveloperId, string? notes, int modifiedByUserId)
         {
             // Get old status for logging (FR-037)
@@ -432,6 +476,8 @@ namespace MTM_WIP_Application_Winforms.Services
 
             return Model_Dao_Result<bool>.Success(true);
         }
+
+        public Task<Model_Dao_Result<bool>> UpdateFeedbackDetailsAsync(Model_UserFeedback feedback) => throw new NotImplementedException();
 
         #endregion
     }

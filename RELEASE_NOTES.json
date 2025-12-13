@@ -1,5 +1,11 @@
 [
   {
+    "Version": "6.5.0",
+    "Date": "December 13, 2025",
+    "Summary": "Help System with Feedback, Connection Stability, and Performance Improvements.",
+    "Details": "<h3>Help System with User Feedback</h3><p><strong>What's new</strong>:</p><ul><li><strong>Built-in Documentation</strong>: Access comprehensive help directly within the application through the Help menu.</li><li><strong>Submit Feedback</strong>: Easily submit bug reports, feature suggestions, questions, and inconsistency reports.</li><li><strong>Modern Interface</strong>: Clean, searchable help system with categories for all major features.</li></ul><h3>Startup Performance Boost</h3><p><strong>What's new</strong>:</p><ul><li><strong>5.6 Seconds Faster</strong>: Application now starts approximately 5.6 seconds faster than before.</li><li><strong>Smoother Animation</strong>: Splash screen to main window transition reduced from 500ms to 50ms.</li><li><strong>Instant QuickButtons</strong>: QuickButtons load without visible delay or placeholder flicker.</li></ul><h3>Connection Stability</h3><p><strong>What's new</strong>:</p><ul><li><strong>No More 'Max Users Reached'</strong>: Comprehensive system prevents database connection exhaustion.</li><li><strong>50% Faster Transactions</strong>: Optimized database operations for improved speed.</li><li><strong>Automatic Monitoring</strong>: Connection statistics tracked every 5 minutes.</li></ul><h3>Enhanced Application Launch</h3><p><strong>What's new</strong>:</p><ul><li><strong>Smart Instance Management</strong>: Only one copy can run at a time.</li><li><strong>Window Activation</strong>: Double-clicking brings existing window to front.</li><li><strong>Reliable Restarts</strong>: Settings restart works smoothly without errors.</li></ul>"
+  },
+  {
     "Version": "6.4.1",
     "Date": "December 08, 2025",
     "Summary": "Print Preview sorting and reliability improvements.",

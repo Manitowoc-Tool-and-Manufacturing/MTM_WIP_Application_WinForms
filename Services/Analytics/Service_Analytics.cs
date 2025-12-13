@@ -67,7 +67,7 @@ namespace MTM_WIP_Application_Winforms.Services.Analytics
                     Model_Application_Variables.ConnectionString,
                     "md_analytics_GetTransactionsByRange", parameters);
 
-                if (!transactionsResult.IsSuccess)
+                if (!transactionsResult.IsSuccess || transactionsResult.Data == null)
                 {
                     return Model_Dao_Result<List<Model_User_Performance>>.Failure(transactionsResult.ErrorMessage);
                 }
@@ -123,7 +123,7 @@ namespace MTM_WIP_Application_Winforms.Services.Analytics
                                                   .GroupBy(t => t.User))
                 {
                     string userKey = group.Key ?? "Unknown";
-                    DataRow? userRow = FindUserRow(usersTable, userKey);
+                    DataRow? userRow = usersTable != null ? FindUserRow(usersTable, userKey) : null;
                     
                     // Determine Shift from Visual first, then fallback to WIP DB
                     string shift = "Unknown";
@@ -246,7 +246,7 @@ namespace MTM_WIP_Application_Winforms.Services.Analytics
                     Model_Application_Variables.ConnectionString,
                     "md_analytics_GetAllUsers", null);
 
-                if (!result.IsSuccess)
+                if (!result.IsSuccess || result.Data == null)
                 {
                     return Model_Dao_Result<List<string>>.Failure(result.ErrorMessage);
                 }

@@ -49,6 +49,13 @@ namespace MTM_WIP_Application_Winforms.Data
         Task<Model_Dao_Result> UpdateStatusAsync(int feedbackId, string newStatus, int? assignedDeveloperId, string? notes, int modifiedByUserId);
 
         /// <summary>
+        /// Updates the details of a feedback record.
+        /// </summary>
+        /// <param name="model">The feedback model containing updated details.</param>
+        /// <returns>Success or failure.</returns>
+        Task<Model_Dao_Result> UpdateDetailsAsync(Model_UserFeedback model);
+
+        /// <summary>
         /// Marks a feedback record as a duplicate of another.
         /// </summary>
         /// <param name="feedbackId">The feedback ID to mark as duplicate.</param>

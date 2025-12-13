@@ -196,7 +196,7 @@ namespace MTM_WIP_Application_Winforms.Services.Maintenance
                         Helper_Database_Variables.GetConnectionString(null, null, null, null),
                         "md_system_GetTableRowCount", parameters);
 
-                    if (result.IsSuccess && result.Data.Rows.Count > 0)
+                    if (result.IsSuccess && result.Data != null && result.Data.Rows.Count > 0)
                     {
                         counts[table] = Convert.ToInt64(result.Data.Rows[0]["Count"]);
                     }
@@ -222,7 +222,7 @@ namespace MTM_WIP_Application_Winforms.Services.Maintenance
                     Helper_Database_Variables.GetConnectionString(null, null, null, null),
                     "md_system_GetTableSizes", null);
 
-                if (!result.IsSuccess)
+                if (!result.IsSuccess || result.Data == null)
                 {
                     return Model_Dao_Result<List<Dictionary<string, object>>>.Failure(result.ErrorMessage);
                 }
@@ -259,7 +259,7 @@ namespace MTM_WIP_Application_Winforms.Services.Maintenance
                         Helper_Database_Variables.GetConnectionString(null, null, null, null),
                         "md_system_CheckTable", parameters);
 
-                    if (result.IsSuccess && result.Data.Rows.Count > 0)
+                    if (result.IsSuccess && result.Data != null && result.Data.Rows.Count > 0)
                     {
                         results[table] = result.Data.Rows[0]["Msg_text"].ToString() ?? "Unknown";
                     }
@@ -286,7 +286,7 @@ namespace MTM_WIP_Application_Winforms.Services.Maintenance
                     Helper_Database_Variables.GetConnectionString(null, null, null, null),
                     "md_system_GetProcessList", null);
 
-                if (!result.IsSuccess)
+                if (!result.IsSuccess || result.Data == null)
                 {
                     return Model_Dao_Result<List<string>>.Failure(result.ErrorMessage);
                 }
@@ -329,7 +329,7 @@ namespace MTM_WIP_Application_Winforms.Services.Maintenance
                         Helper_Database_Variables.GetConnectionString(null, null, null, null),
                         "md_system_CheckTableExists", parameters);
 
-                    if (result.IsSuccess && result.Data.Rows.Count > 0)
+                    if (result.IsSuccess && result.Data != null && result.Data.Rows.Count > 0)
                     {
                         bool exists = Convert.ToInt32(result.Data.Rows[0]["Exists"]) > 0;
                         if (!exists)
@@ -359,7 +359,7 @@ namespace MTM_WIP_Application_Winforms.Services.Maintenance
                             Helper_Database_Variables.GetConnectionString(null, null, null, null),
                             "md_system_CheckColumnExists", parameters);
 
-                        if (result.IsSuccess && result.Data.Rows.Count > 0)
+                        if (result.IsSuccess && result.Data != null && result.Data.Rows.Count > 0)
                         {
                             bool exists = Convert.ToInt32(result.Data.Rows[0]["Exists"]) > 0;
                             if (!exists)
@@ -401,7 +401,7 @@ namespace MTM_WIP_Application_Winforms.Services.Maintenance
                     Helper_Database_Variables.GetConnectionString(null, null, null, null),
                     "md_system_GetAllErrorLogs", null);
 
-                if (!result.IsSuccess)
+                if (!result.IsSuccess || result.Data == null)
                 {
                     return Model_Dao_Result<string>.Failure(result.ErrorMessage);
                 }

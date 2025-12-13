@@ -50,6 +50,6 @@ MTM_WIP_Application_WinForms/
 - **Stored Procedures**: All database access via stored procedures
 
 ## Version
-- **Current**: 6.4.1.0
+- **Current**: 6.5.0.0
 - **Repository**: https://github.com/Dorotel/MTM_WIP_Application_Winforms
 - **Maintained By**: Manitowoc Tool and Manufacturing

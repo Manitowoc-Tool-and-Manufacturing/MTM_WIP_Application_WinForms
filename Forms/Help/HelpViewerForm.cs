@@ -231,7 +231,20 @@ namespace MTM_WIP_Application_Winforms.Forms.Help
                     case "getSubmissionDetails":
                         if (root.TryGetProperty("feedbackId", out JsonElement feedbackIdElement))
                         {
-                            HandleGetSubmissionDetails(feedbackIdElement.GetInt32());
+                            int feedbackId = 0;
+                            if (feedbackIdElement.ValueKind == JsonValueKind.Number)
+                            {
+                                feedbackId = feedbackIdElement.GetInt32();
+                            }
+                            else if (feedbackIdElement.ValueKind == JsonValueKind.String)
+                            {
+                                int.TryParse(feedbackIdElement.GetString(), out feedbackId);
+                            }
+                            
+                            if (feedbackId > 0)
+                            {
+                                HandleGetSubmissionDetails(feedbackId);
+                            }
                         }
                         break;
 
@@ -322,7 +335,19 @@ namespace MTM_WIP_Application_Winforms.Forms.Help
         {
             try
             {
-                int feedbackId = data.TryGetProperty("feedbackId", out var f) ? f.GetInt32() : 0;
+                int feedbackId = 0;
+                if (data.TryGetProperty("feedbackId", out var f))
+                {
+                    if (f.ValueKind == JsonValueKind.Number)
+                    {
+                        feedbackId = f.GetInt32();
+                    }
+                    else if (f.ValueKind == JsonValueKind.String)
+                    {
+                        int.TryParse(f.GetString(), out feedbackId);
+                    }
+                }
+                
                 string? comment = data.TryGetProperty("comment", out var c) ? c.GetString() : null;
 
                 if (feedbackId == 0 || string.IsNullOrEmpty(comment)) return;
@@ -475,12 +500,10 @@ namespace MTM_WIP_Application_Winforms.Forms.Help
                         string windowForm = safeData.TryGetProperty("windowForm", out var w) ? w.GetString() ?? "Unknown" : "Unknown";
                         feedback.Title = $"Bug: {feedback.Category} in {windowForm}";
                         
-                        string desc = safeData.GetProperty("description").GetString() ?? "";
-                        string steps = safeData.TryGetProperty("stepsToReproduce", out var st) ? st.GetString() ?? "" : "";
-                        string expected = safeData.TryGetProperty("expectedBehavior", out var ex) ? ex.GetString() ?? "" : "";
-                        string actual = safeData.TryGetProperty("actualBehavior", out var ac) ? ac.GetString() ?? "" : "";
-                        
-                        feedback.Description = $"Description:\n{desc}\n\nSteps to Reproduce:\n{steps}\n\nExpected:\n{expected}\n\nActual:\n{actual}";
+                        feedback.Description = safeData.GetProperty("description").GetString() ?? "";
+                        feedback.StepsToReproduce = safeData.TryGetProperty("stepsToReproduce", out var st) ? st.GetString() : null;
+                        feedback.ExpectedBehavior = safeData.TryGetProperty("expectedBehavior", out var ex) ? ex.GetString() : null;
+                        feedback.ActualBehavior = safeData.TryGetProperty("actualBehavior", out var ac) ? ac.GetString() : null;
                     }
                     else if (safeData.TryGetProperty("suggestionCategory", out _))
                     {
@@ -489,11 +512,9 @@ namespace MTM_WIP_Application_Winforms.Forms.Help
                         feedback.Priority = safeData.GetProperty("priority").GetString();
                         feedback.Title = safeData.GetProperty("title").GetString();
                         
-                        string desc = safeData.GetProperty("description").GetString() ?? "";
-                        string justification = safeData.TryGetProperty("businessJustification", out var bj) ? bj.GetString() ?? "" : "";
-                        string affected = safeData.TryGetProperty("affectedUsers", out var au) ? au.GetString() ?? "" : "";
-                        
-                        feedback.Description = $"Description:\n{desc}\n\nJustification:\n{justification}\n\nAffected Users:\n{affected}";
+                        feedback.Description = safeData.GetProperty("description").GetString() ?? "";
+                        feedback.BusinessJustification = safeData.TryGetProperty("businessJustification", out var bj) ? bj.GetString() : null;
+                        feedback.AffectedUsers = safeData.TryGetProperty("affectedUsers", out var au) ? au.GetString() : null;
                     }
                     else if (safeData.TryGetProperty("inconsistencyType", out _))
                     {
@@ -504,12 +525,10 @@ namespace MTM_WIP_Application_Winforms.Forms.Help
                         feedback.Severity = "Low";
                         feedback.Priority = "Low";
 
-                        string desc = safeData.GetProperty("description").GetString() ?? "";
-                        string loc1 = safeData.TryGetProperty("location1", out var l1) ? l1.GetString() ?? "" : "";
-                        string loc2 = safeData.TryGetProperty("location2", out var l2) ? l2.GetString() ?? "" : "";
-                        string expected = safeData.TryGetProperty("expectedConsistency", out var ec) ? ec.GetString() ?? "" : "";
-
-                        feedback.Description = $"Description:\n{desc}\n\nLocation 1:\n{loc1}\n\nLocation 2:\n{loc2}\n\nExpected:\n{expected}";
+                        feedback.Description = safeData.GetProperty("description").GetString() ?? "";
+                        feedback.Location1 = safeData.TryGetProperty("location1", out var l1) ? l1.GetString() : null;
+                        feedback.Location2 = safeData.TryGetProperty("location2", out var l2) ? l2.GetString() : null;
+                        feedback.ExpectedConsistency = safeData.TryGetProperty("expectedConsistency", out var ec) ? ec.GetString() : null;
                     }
                     else if (safeData.TryGetProperty("questionCategory", out _))
                     {

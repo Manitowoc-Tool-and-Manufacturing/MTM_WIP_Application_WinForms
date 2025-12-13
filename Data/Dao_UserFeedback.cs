@@ -135,6 +135,29 @@ namespace MTM_WIP_Application_Winforms.Data
         }
 
         /// <inheritdoc/>
+        public async Task<Model_Dao_Result> UpdateDetailsAsync(Model_UserFeedback model)
+        {
+            var parameters = new Dictionary<string, object>
+            {
+                { "FeedbackID", model.FeedbackID },
+                { "Description", model.Description ?? (object)DBNull.Value },
+                { "StepsToReproduce", model.StepsToReproduce ?? (object)DBNull.Value },
+                { "ExpectedBehavior", model.ExpectedBehavior ?? (object)DBNull.Value },
+                { "ActualBehavior", model.ActualBehavior ?? (object)DBNull.Value },
+                { "BusinessJustification", model.BusinessJustification ?? (object)DBNull.Value },
+                { "AffectedUsers", model.AffectedUsers ?? (object)DBNull.Value },
+                { "Location1", model.Location1 ?? (object)DBNull.Value },
+                { "Location2", model.Location2 ?? (object)DBNull.Value },
+                { "ExpectedConsistency", model.ExpectedConsistency ?? (object)DBNull.Value }
+            };
+
+            return await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
+                Model_Application_Variables.ConnectionString,
+                "md_feedback_UpdateDetails",
+                parameters);
+        }
+
+        /// <inheritdoc/>
         public async Task<Model_Dao_Result> MarkAsDuplicateAsync(int feedbackId, int duplicateOfId, int modifiedByUserId)
         {
             var parameters = new Dictionary<string, object>
@@ -202,6 +225,6 @@ namespace MTM_WIP_Application_Winforms.Data
             }
 
             return Model_Dao_Result<string>.Failure($"Failed to generate tracking number after {maxRetries} attempts. Last error: {lastError}");
-        }
+        } 
     }
 }

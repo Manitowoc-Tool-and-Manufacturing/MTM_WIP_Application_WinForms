@@ -36,12 +36,16 @@ namespace MTM_WIP_Application_Winforms.Helpers
 
                 if (result.IsSuccess && result.Data != null)
                 {
-                    string targetDatabase = Model_Shared_Users.Database;
+                    string? targetDatabase = Model_Shared_Users.Database;
                     int openConnections = 0;
 
                     foreach (DataRow row in result.Data.Rows)
                     {
-                        string? db = row["db"]?.ToString();
+                        string? db = null;
+                        if (row.Table.Columns.Contains("db") && row["db"] != DBNull.Value)
+                        {
+                            db = row["db"]?.ToString();
+                        }
                         // Count connections to our database
                         if (string.Equals(db, targetDatabase, StringComparison.OrdinalIgnoreCase))
                         {

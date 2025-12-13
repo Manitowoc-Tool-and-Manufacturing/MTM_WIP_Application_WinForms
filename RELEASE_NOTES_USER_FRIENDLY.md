@@ -8,7 +8,8 @@
 
 | Date | Version | Summary | What to do |
 | --- | --- | --- | --- |
-| [Dec 08, 2025](#latest-update---december-08-2025-version-641) | [6.4.1](#latest-update---december-08-2025-version-641) | Print Preview sorting and reliability improvements. | Try the new "Sort By" dropdown in Print Preview! |
+| [Dec 13, 2025](#latest-update---december-13-2025-version-650) | [6.5.0](#latest-update---december-13-2025-version-650) | Help System with Feedback, Connection Stability, and Performance Improvements. | Check out the new Help menu and enjoy faster startup! |
+| [Dec 08, 2025](#previous-update---december-08-2025-version-641) | [6.4.1](#previous-update---december-08-2025-version-641) | Print Preview sorting and reliability improvements. | Try the new "Sort By" dropdown in Print Preview! |
 | [Dec 06, 2025](#previous-update---december-06-2025-version-640) | [6.4.0](#previous-update---december-06-2025-version-640) | New Infor Visual Dashboard with Receiving Analytics, Inventory Audit, and Die Tool Discovery. | Check out the new Dashboard tab! |
 | [Nov 23, 2025](#previous-update---november-23-2025-version-635) | [6.3.5](#previous-update---november-23-2025-version-635) | QuickButtons visual improvements and theme system refinements. | Nothing—enjoy the clearer buttons! |
 | [Nov 23, 2025](#previous-update---november-23-2025-version-634) | [6.3.4](#previous-update---november-23-2025-version-634) | Startup architecture modernization and service refactoring. | Nothing—internal improvements. |
@@ -40,7 +41,87 @@
 
 ---
 
-## Latest Update - December 08, 2025 (Version 6.4.1)
+## Latest Update - December 13, 2025 (Version 6.5.0)
+
+**What Changed**: We've introduced a **comprehensive Help System with user feedback**, dramatically **improved application startup speed** (5+ seconds faster), and **enhanced connection stability** to prevent "max users reached" errors.
+**Do I Need To Do Anything?**: No, all improvements are automatic. Try the Help menu to access documentation and submit feedback!
+
+---
+
+### 🎯 What This Means For You
+
+#### Help System with User Feedback
+
+**What's new**:
+- **Built-in Documentation**: Access comprehensive help directly within the application through the Help menu.
+- **Submit Feedback**: Easily submit bug reports, feature suggestions, questions, and inconsistency reports.
+- **Modern Interface**: Clean, searchable help system with categories for all major features.
+- **Quick Support**: Get help without leaving your workflow or opening external documents.
+
+**Why this helps**:
+- **Faster Problem Resolution**: Submit issues directly from the application with automatic context included.
+- **Better Training**: New users can learn features without separate training materials.
+- **Your Voice Matters**: Your feedback and suggestions are captured and tracked for future improvements.
+
+#### Startup Performance Boost
+
+**What's new**:
+- **5.6 Seconds Faster**: Application now starts approximately 5.6 seconds faster than before.
+- **Smoother Animation**: Splash screen to main window transition reduced from 500ms to 50ms.
+- **Instant QuickButtons**: QuickButtons load without visible delay or placeholder flicker.
+
+**Why this helps**:
+- **Get to Work Faster**: Less time waiting, more time being productive.
+- **Professional Feel**: Application feels snappy and responsive from the moment you launch it.
+
+#### Connection Stability Improvements
+
+**What's new**:
+- **No More "Max Users Reached"**: Comprehensive system prevents database connection exhaustion.
+- **Automatic Monitoring**: Connection statistics tracked every 5 minutes to ensure stability.
+- **50% Faster Transactions**: Optimized database operations for improved speed.
+- **30-Minute Timeout**: Idle connections automatically close to reduce server load.
+
+**Why this helps**:
+- **All-Day Reliability**: Run the application for extended periods without connection errors.
+- **Faster Operations**: Inventory transactions process more quickly.
+- **Peak Performance**: Better stability during busy periods when many users are active.
+
+#### Enhanced Application Launch
+
+**What's new**:
+- **Smart Instance Management**: Only one copy of the application can run at a time.
+- **Window Activation**: Double-clicking the icon brings existing window to front instead of showing error.
+- **Reliable Restarts**: Restarting from Settings now works smoothly without "already running" errors.
+
+**Why this helps**:
+- **No Confusion**: Easy to find and return to your open application window.
+- **Data Safety**: Prevents accidental data conflicts from multiple instances.
+- **Smooth Settings Changes**: Apply new settings with reliable restart functionality.
+
+#### Visual and UI Improvements
+
+**What's new**:
+- **Cleaner Startup**: QuickButtons remain hidden until fully loaded (no flickering).
+- **Better Settings Navigation**: Enhanced layout in Settings form for easier management.
+- **Improved Dashboards**: Visual Dashboard components resize properly on all screen sizes.
+- **Access Indicators**: Clear indication of permission levels when opening restricted forms.
+
+**Why this helps**:
+- **Professional Appearance**: Polished, consistent experience throughout the application.
+- **Better Usability**: Easier to navigate and understand what features are available.
+
+#### Bug Fixes
+
+**What's fixed**:
+- **QuickButtons Startup Issue**: Fixed buttons disappearing briefly during application startup.
+- **Restart Error**: Fixed "Application Already Running" error when restarting from Settings.
+- **Zombie Process**: Fixed rare issue where application appeared closed but was still running.
+- **Theme Application**: Fixed theme colors not applying correctly on first launch.
+
+---
+
+## Previous Update - December 08, 2025 (Version 6.4.1)
 
 **What Changed**: We've added the ability to **sort your print previews** by any column and improved the reliability of printing large reports.
 **Do I Need To Do Anything?**: No, the new "Sort By" option will appear automatically in the Print Preview window.
