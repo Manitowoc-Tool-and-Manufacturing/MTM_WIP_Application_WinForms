@@ -9,6 +9,18 @@ namespace MTM_WIP_Application_Winforms.Services.Startup
     /// Service responsible for database-related startup tasks, including connectivity validation
     /// and parameter cache initialization.
     /// </summary>
+    /// <remarks>
+    /// <para><strong>ARCHITECTURAL EXCEPTION (Constitution Principle I)</strong></para>
+    /// <para>This service contains direct MySqlConnection usage in InitializeParameterPrefixCacheInternal().
+    /// This is an APPROVED exception because:</para>
+    /// <list type="number">
+    /// <item><description>Parameter cache initialization requires querying INFORMATION_SCHEMA.PARAMETERS at startup</description></item>
+    /// <item><description>This is a one-time operation that cannot use stored procedures (it's building the stored procedure metadata cache)</description></item>
+    /// <item><description>Direct connection is properly disposed using 'using var' pattern</description></item>
+    /// <item><description>This exception is documented in .specify/memory/constitution.md</description></item>
+    /// </list>
+    /// <para>ALL other components MUST use Helper_Database_StoredProcedure for database access.</para>
+    /// </remarks>
     public static class Service_OnStartup_Database
     {
         #region Methods

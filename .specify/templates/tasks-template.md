@@ -95,7 +95,19 @@ Examples of foundational tasks (adjust based on your project):
 - [ ] T016 [US1] Add validation and error handling
 - [ ] T017 [US1] Add logging for user story 1 operations
 
-**Checkpoint**: At this point, User Story 1 should be fully functional and testable independently
+### Constitution Compliance Verification for User Story 1
+
+- [ ] T018 [US1] **Database Access**: Verify all database operations use Helper_Database_StoredProcedure (no direct MySqlConnection/SqlConnection)
+- [ ] T019 [US1] **Stored Procedures**: Verify no inline SQL (only stored procedure calls)
+- [ ] T020 [US1] **Model_Dao_Result**: Verify all DAO methods return Model_Dao_Result<T>
+- [ ] T021 [US1] **Error Handling**: Verify no MessageBox.Show usage (only Service_ErrorHandler)
+- [ ] T022 [US1] **Connection Disposal**: Verify all connections use `using` statements and Pooling=false
+- [ ] T023 [US1] **Async/Await**: Verify no blocking calls (.Result, .Wait(), .GetAwaiter().GetResult())
+- [ ] T024 [US1] **Theme Integration**: Verify forms inherit ThemedForm, controls inherit ThemedUserControl
+- [ ] T025 [US1] **XML Documentation**: Verify all public members have XML docs
+- [ ] T026 [US1] **Region Organization**: Verify all files use standard #region structure
+
+**Checkpoint**: At this point, User Story 1 should be fully functional, testable independently, and constitution-compliant
 
 ---
 

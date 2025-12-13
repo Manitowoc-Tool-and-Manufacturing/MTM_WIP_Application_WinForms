@@ -31,7 +31,17 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+- [ ] **Centralized Database Access**: All database operations use `Helper_Database_StoredProcedure` (exceptions: `Service_OnStartup_Database`, `Helper_Control_MySqlSignal`)
+- [ ] **Stored Procedures Only**: No inline SQL detected (diagnostic queries through ExecuteScalarWithStatusAsync acceptable)
+- [ ] **Model_Dao_Result Pattern**: All DAO methods return `Model_Dao_Result<T>`
+- [ ] **Centralized Error Handling**: No `MessageBox.Show` usage (must use `Service_ErrorHandler`)
+- [ ] **Immediate Connection Disposal**: Connection pooling disabled (`Pooling=false`), all connections use `using` statements
+- [ ] **Async-First I/O**: All I/O operations use async/await (no `.Result`, `.Wait()`, `.GetAwaiter().GetResult()`)
+- [ ] **Theme System Integration**: Forms inherit from `ThemedForm`, controls from `ThemedUserControl`
+- [ ] **MySQL 5.7.24 Compatibility**: No MySQL 8.0+ features (JSON functions, CTEs, window functions, CHECK constraints)
+- [ ] **.NET 8.0/C# 12.0 Compliance**: No .NET 9.0+ or C# 13.0+ features
+- [ ] **XML Documentation**: All public members have XML docs
+- [ ] **Region Organization**: All files use standard #region structure (Fields, Properties, Constructors, Methods, Events, Helpers, Cleanup)
 
 ## Project Structure
 

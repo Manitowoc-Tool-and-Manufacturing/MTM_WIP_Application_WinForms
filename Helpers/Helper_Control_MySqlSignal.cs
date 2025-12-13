@@ -2,8 +2,21 @@ using MySql.Data.MySqlClient;
 
 namespace MTM_WIP_Application_Winforms.Helpers;
 
-/* The class `Helper_Control_MySqlSignal` provides a method to get the network strength and ping time
-to a MySQL server asynchronously. */
+/// <summary>
+/// Provides network diagnostics and signal strength measurement for MySQL server connectivity.
+/// </summary>
+/// <remarks>
+/// <para><strong>ARCHITECTURAL EXCEPTION (Constitution Principle I)</strong></para>
+/// <para>This helper contains direct MySqlConnection usage in GetStrengthAsync().
+/// This is an APPROVED exception because:</para>
+/// <list type="number">
+/// <item><description>Network diagnostic tool that measures raw connection performance (ping time)</description></item>
+/// <item><description>Using Helper_Database_StoredProcedure would add overhead and defeat the purpose of measuring connection speed</description></item>
+/// <item><description>Direct connection is properly disposed using 'using var' pattern</description></item>
+/// <item><description>This exception is documented in .specify/memory/constitution.md</description></item>
+/// </list>
+/// <para>ALL other components MUST use Helper_Database_StoredProcedure for database access.</para>
+/// </remarks>
 public class Helper_Control_MySqlSignal
 {
     #region Public Methods

@@ -84,6 +84,17 @@
 
 ### Functional Requirements
 
+#### Database Access Requirements (if applicable)
+
+- **FR-DB-001**: All database operations MUST use `Helper_Database_StoredProcedure` methods (ExecuteDataTableWithStatusAsync, ExecuteNonQueryWithStatusAsync, ExecuteScalarWithStatusAsync)
+- **FR-DB-002**: All database operations MUST use stored procedures (no inline SQL except diagnostic queries through ExecuteScalarWithStatusAsync)
+- **FR-DB-003**: All DAO methods MUST return `Model_Dao_Result<T>` with IsSuccess, Data, and ErrorMessage properties
+- **FR-DB-004**: Connection string MUST include `Pooling=false` for immediate connection disposal
+- **FR-DB-005**: All database connections MUST use `using` statements or `using var` pattern
+- **FR-DB-006**: Stored procedures MUST follow naming convention: `{prefix}_{entity}_{action}`
+
+#### Feature-Specific Requirements
+
 - **FR-001**: System MUST [specific capability, e.g., "allow users to create accounts"]
 - **FR-002**: System MUST [specific capability, e.g., "validate email addresses"]  
 - **FR-003**: Users MUST be able to [key interaction, e.g., "reset their password"]
