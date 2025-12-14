@@ -8,7 +8,8 @@
 
 | Date | Version | Summary | What to do |
 | --- | --- | --- | --- |
-| [Dec 13, 2025](#latest-update---december-13-2025-version-650) | [6.5.0](#latest-update---december-13-2025-version-650) | Help System with Feedback, Connection Stability, and Performance Improvements. | Check out the new Help menu and enjoy faster startup! |
+| [Dec 14, 2025](#latest-update---december-14-2025-version-660) | [6.6.0](#latest-update---december-14-2025-version-660) | New Developer Tools Dashboard, System Health Monitor, and Core Performance Improvements. | Check out the new System Health view in the View menu! |
+| [Dec 13, 2025](#previous-update---december-13-2025-version-650) | [6.5.0](#previous-update---december-13-2025-version-650) | Help System with Feedback, Connection Stability, and Performance Improvements. | Check out the new Help menu and enjoy faster startup! |
 | [Dec 08, 2025](#previous-update---december-08-2025-version-641) | [6.4.1](#previous-update---december-08-2025-version-641) | Print Preview sorting and reliability improvements. | Try the new "Sort By" dropdown in Print Preview! |
 | [Dec 06, 2025](#previous-update---december-06-2025-version-640) | [6.4.0](#previous-update---december-06-2025-version-640) | New Infor Visual Dashboard with Receiving Analytics, Inventory Audit, and Die Tool Discovery. | Check out the new Dashboard tab! |
 | [Nov 23, 2025](#previous-update---november-23-2025-version-635) | [6.3.5](#previous-update---november-23-2025-version-635) | QuickButtons visual improvements and theme system refinements. | Nothing—enjoy the clearer buttons! |
@@ -41,7 +42,49 @@
 
 ---
 
-## Latest Update - December 13, 2025 (Version 6.5.0)
+## Latest Update - December 14, 2025 (Version 6.6.0)
+
+**What Changed**: We've completely overhauled the **Developer Tools** into a unified dashboard, added a new **System Health Monitor** for all users, and modernized the core **Error Handling and Logging** systems for better reliability.
+**Do I Need To Do Anything?**: No, but you can now check "System Health" in the View menu to see your feedback status and system stability.
+
+---
+
+### 🎯 What This Means For You
+
+#### System Health Monitor
+
+**What's new**:
+- **Health at a Glance**: See if the system is operating normally or experiencing issues with a simple traffic light indicator.
+- **My Feedback**: View the status of all feedback and bug reports you've submitted in one place.
+- **Quick Actions**: Easily submit new feedback or contact IT support directly from the health screen.
+
+**Why this helps**:
+- **Transparency**: Know immediately if system slowness is a known issue.
+- **Track Your Requests**: See when your feature requests are "In Progress" or "Resolved" without asking IT.
+
+#### Developer Tools Dashboard (For Admins/Devs)
+
+**What's new**:
+- **Unified Hub**: Logs, Feedback, System Info, and Statistics all in one multi-tab interface.
+- **Advanced Log Viewer**: Search, filter, and group logs with powerful new tools.
+- **Real-time Stats**: Monitor error rates and system performance in real-time.
+
+**Why this helps**:
+- **Faster Troubleshooting**: Developers can diagnose issues much faster with better tools.
+- **Proactive Maintenance**: We can spot trends and fix problems before they affect you.
+
+#### Core Reliability Improvements
+
+**What's new**:
+- **Modern Architecture**: The application's "nervous system" (logging and error handling) has been upgraded to modern standards.
+- **Better Stability**: Reduced chance of crashes and better handling of database hiccups.
+
+**Why this helps**:
+- **Smoother Experience**: Fewer interruptions and more reliable daily operation.
+
+---
+
+## Previous Update - December 13, 2025 (Version 6.5.0)
 
 **What Changed**: We've introduced a **comprehensive Help System with user feedback**, dramatically **improved application startup speed** (5+ seconds faster), and **enhanced connection stability** to prevent "max users reached" errors.
 **Do I Need To Do Anything?**: No, all improvements are automatic. Try the Help menu to access documentation and submit feedback!

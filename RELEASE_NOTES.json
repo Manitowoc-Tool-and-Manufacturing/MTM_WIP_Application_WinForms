@@ -1,5 +1,11 @@
 [
   {
+    "Version": "6.6.0",
+    "Date": "December 14, 2025",
+    "Summary": "New Developer Tools Dashboard, System Health Monitor, and Core Performance Improvements.",
+    "Details": "<h3>System Health Monitor</h3><p><strong>What's new</strong>:</p><ul><li><strong>Health at a Glance</strong>: See if the system is operating normally or experiencing issues with a simple traffic light indicator.</li><li><strong>My Feedback</strong>: View the status of all feedback and bug reports you've submitted in one place.</li><li><strong>Quick Actions</strong>: Easily submit new feedback or contact IT support directly from the health screen.</li></ul><h3>Developer Tools Dashboard</h3><p><strong>What's new</strong>:</p><ul><li><strong>Unified Hub</strong>: Logs, Feedback, System Info, and Statistics all in one multi-tab interface.</li><li><strong>Advanced Log Viewer</strong>: Search, filter, and group logs with powerful new tools.</li><li><strong>Real-time Stats</strong>: Monitor error rates and system performance in real-time.</li></ul><h3>Core Reliability Improvements</h3><p><strong>What's new</strong>:</p><ul><li><strong>Modern Architecture</strong>: The application's 'nervous system' (logging and error handling) has been upgraded to modern standards.</li><li><strong>Better Stability</strong>: Reduced chance of crashes and better handling of database hiccups.</li></ul>"
+  },
+  {
     "Version": "6.5.0",
     "Date": "December 13, 2025",
     "Summary": "Help System with Feedback, Connection Stability, and Performance Improvements.",
