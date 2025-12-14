@@ -1,10 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Models.DeveloperTools;
 using MTM_WIP_Application_Winforms.Services.DeveloperTools;
@@ -348,7 +341,7 @@ namespace MTM_WIP_Application_Winforms.Controls.DeveloperTools
         {
             if (_devToolsService == null || _errorHandler == null) return;
 
-            if (MessageBox.Show("This will truncate the database log table and re-import all logs from CSV files. Continue?", 
+            if (_errorHandler.ShowConfirmation("This will truncate the database log table and re-import all logs from CSV files. Continue?", 
                 "Sync Logs", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
             {
                 return;
@@ -362,7 +355,7 @@ namespace MTM_WIP_Application_Winforms.Controls.DeveloperTools
                 var result = await _devToolsService.SyncLogsToDatabaseAsync();
                 if (result.IsSuccess)
                 {
-                    MessageBox.Show("Logs synchronized successfully.", "Sync Logs", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    _errorHandler.ShowInformation("Logs synchronized successfully.", "Sync Logs");
                     await PerformSearchAsync();
                 }
                 else
@@ -385,7 +378,7 @@ namespace MTM_WIP_Application_Winforms.Controls.DeveloperTools
 
         private async void BtnExport_Click(object? sender, EventArgs e)
         {
-            if (_devToolsService == null) return;
+            if (_devToolsService == null || _errorHandler == null) return;
 
             using (var sfd = new SaveFileDialog())
             {
@@ -402,7 +395,7 @@ namespace MTM_WIP_Application_Winforms.Controls.DeveloperTools
                         
                         if (entries == null || entries.Count == 0)
                         {
-                            MessageBox.Show("No logs to export.", "Export", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            _errorHandler.ShowInformation("No logs to export.", "Export");
                             return;
                         }
 
@@ -414,7 +407,7 @@ namespace MTM_WIP_Application_Winforms.Controls.DeveloperTools
                         
                         if (result.IsSuccess)
                         {
-                            MessageBox.Show("Logs exported successfully.", "Export", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            _errorHandler.ShowInformation("Logs exported successfully.", "Export");
                         }
                         else
                         {

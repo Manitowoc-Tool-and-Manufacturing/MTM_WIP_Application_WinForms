@@ -780,11 +780,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     if (isDuplicate)
                     {
 
-                        MessageBox.Show(
+                        Service_ErrorHandler.ShowInformation(
                             $"A quick button for Part '{dlg.PartId}' with Operation '{dlg.Operation}' already exists.\n\nNo changes were made.",
-                            "Duplicate Quick Button",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Information);
+                            "Duplicate Quick Button");
                         return;
                     }
 

@@ -1,18 +1,11 @@
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Services;
 using MTM_WIP_Application_Winforms.Services.ErrorHandling;
 
 namespace MTM_WIP_Application_Winforms.Controls.DeveloperTools
 {
-using MTM_WIP_Application_Winforms.Core;
-using MTM_WIP_Application_Winforms.Models;
+    using MTM_WIP_Application_Winforms.Models;
 
     public partial class Control_FeedbackManager : ThemedUserControl
     {
@@ -25,11 +18,11 @@ using MTM_WIP_Application_Winforms.Models;
             InitializeControls();
         }
 
-        public void Initialize(IService_FeedbackManager feedbackManager, IService_ErrorHandler errorHandler)
+        public async Task Initialize(IService_FeedbackManager feedbackManager, IService_ErrorHandler errorHandler)
         {
             _feedbackManager = feedbackManager;
             _errorHandler = errorHandler;
-            LoadDataAsync();
+            await LoadDataAsync();
         }
 
         private void InitializeControls()
@@ -74,11 +67,11 @@ using MTM_WIP_Application_Winforms.Models;
             Control_FeedbackManager_DataGridView_Feedback.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Description", HeaderText = "Description", AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill, ReadOnly = true });
 
             // Events
-            Control_FeedbackManager_Button_Refresh.Click += (s, e) => LoadDataAsync();
-            Control_FeedbackManager_ComboBox_Status.SelectedIndexChanged += (s, e) => LoadDataAsync();
-            Control_FeedbackManager_ComboBox_Type.SelectedIndexChanged += (s, e) => LoadDataAsync();
-            Control_FeedbackManager_DateTimePicker_Start.ValueChanged += (s, e) => LoadDataAsync();
-            Control_FeedbackManager_DateTimePicker_End.ValueChanged += (s, e) => LoadDataAsync();
+            Control_FeedbackManager_Button_Refresh.Click += async (s, e) => await LoadDataAsync();
+            Control_FeedbackManager_ComboBox_Status.SelectedIndexChanged += async (s, e) => await LoadDataAsync();
+            Control_FeedbackManager_ComboBox_Type.SelectedIndexChanged += async (s, e) => await LoadDataAsync();
+            Control_FeedbackManager_DateTimePicker_Start.ValueChanged += async (s, e) => await LoadDataAsync();
+            Control_FeedbackManager_DateTimePicker_End.ValueChanged += async (s, e) => await LoadDataAsync();
             
             Control_FeedbackManager_Button_MarkNew.Click += async (s, e) => await BulkUpdateStatusAsync("New");
             Control_FeedbackManager_Button_MarkOpen.Click += async (s, e) => await BulkUpdateStatusAsync("Open");
@@ -206,7 +199,7 @@ using MTM_WIP_Application_Winforms.Models;
                 
                 if (successCount > 0)
                 {
-                    LoadDataAsync();
+                    await LoadDataAsync();
                 }
             }
             catch (Exception ex)

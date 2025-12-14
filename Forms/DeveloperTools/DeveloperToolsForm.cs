@@ -1,12 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Services.DeveloperTools;
 using MTM_WIP_Application_Winforms.Services.ErrorHandling;
@@ -41,19 +32,20 @@ namespace MTM_WIP_Application_Winforms.Forms.DeveloperTools
             _logger = logger;
             _errorHandler = errorHandler;
             _feedbackManager = feedbackManager;
+            _autoRefreshTimer = new System.Windows.Forms.Timer();
 
-            InitializeCustomControls();
+            _ = InitializeCustomControls();
         }
 
         #endregion
 
         #region Initialization
 
-        private void InitializeCustomControls()
+        private async Task InitializeCustomControls()
         {
             DeveloperToolsForm_Control_LogViewer.Initialize(_devToolsService, _errorHandler);
             DeveloperToolsForm_Control_SystemInfo.Initialize(_devToolsService, _errorHandler);
-            DeveloperToolsForm_Control_FeedbackManager.Initialize(_feedbackManager, _errorHandler);
+            await DeveloperToolsForm_Control_FeedbackManager.Initialize(_feedbackManager, _errorHandler);
             DeveloperToolsForm_Control_LogStatistics.Initialize(_devToolsService, _errorHandler);
             
             DeveloperToolsForm_TabControl_Main.SelectedIndexChanged += DeveloperToolsForm_TabControl_Main_SelectedIndexChanged;
@@ -149,7 +141,6 @@ namespace MTM_WIP_Application_Winforms.Forms.DeveloperTools
                 DeveloperToolsForm_Control_RecentErrors.ErrorSelected += DeveloperToolsForm_Control_RecentErrors_ErrorSelected;
                 DeveloperToolsForm_Control_SystemHealth.StatusClicked += DeveloperToolsForm_Control_SystemHealth_StatusClicked;
 
-                _autoRefreshTimer = new System.Windows.Forms.Timer();
                 _autoRefreshTimer.Interval = 30000; // 30 seconds
                 _autoRefreshTimer.Tick += async (s, args) => 
                 {
@@ -210,7 +201,7 @@ namespace MTM_WIP_Application_Winforms.Forms.DeveloperTools
                 }
                 else if (DeveloperToolsForm_TabControl_Main.SelectedTab == DeveloperToolsForm_TabPage_Feedback)
                 {
-                    DeveloperToolsForm_Control_FeedbackManager.LoadDataAsync();
+                    await DeveloperToolsForm_Control_FeedbackManager.LoadDataAsync();
                 }
                 else if (DeveloperToolsForm_TabControl_Main.SelectedTab == DeveloperToolsForm_TabPage_SystemInfo)
                 {

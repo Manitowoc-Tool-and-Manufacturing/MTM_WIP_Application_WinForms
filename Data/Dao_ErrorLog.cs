@@ -4,6 +4,7 @@ using MTM_WIP_Application_Winforms.Forms.MainForm;
 using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Models;
+using MTM_WIP_Application_Winforms.Services;
 using MySql.Data.MySqlClient;
 
 namespace MTM_WIP_Application_Winforms.Data;
@@ -260,11 +261,9 @@ internal static class Dao_ErrorLog
             {
                 if (ShouldShowSqlErrorMessage(message))
                 {
-                    MessageBox.Show(
+                    Service_ErrorHandler.ShowError(
                         @"Database connection error. The application will now close.",
-                        @"Error",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Error);
+                        @"Error");
                 }
 
                 Process.GetCurrentProcess().Kill();
@@ -284,7 +283,7 @@ internal static class Dao_ErrorLog
 
                 if (ShouldShowSqlErrorMessage(message))
                 {
-                    MessageBox.Show(message, @"SQL Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Service_ErrorHandler.ShowError(message, @"SQL Error");
                 }
 
                 return Model_Dao_Result.Failure(message, ex);
@@ -349,14 +348,14 @@ internal static class Dao_ErrorLog
             {
                 if (isCritical)
                 {
-                    MessageBox.Show(message + "\n\nThe application will now close due to a critical error.",
-                        @"Critical Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Service_ErrorHandler.ShowError(message + "\n\nThe application will now close due to a critical error.",
+                        @"Critical Error");
                     Process.GetCurrentProcess().Kill();
                     return Model_Dao_Result.Failure("Critical error - application terminated", ex);
                 }
                 else
                 {
-                    MessageBox.Show(message, @"Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Service_ErrorHandler.ShowError(message, @"Error");
                 }
             }
 

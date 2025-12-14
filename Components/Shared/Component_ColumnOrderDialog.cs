@@ -1,4 +1,6 @@
 using MTM_WIP_Application_Winforms.Helpers;
+using MTM_WIP_Application_Winforms.Services;
+using MTM_WIP_Application_Winforms.Services.Logging;
 
 namespace MTM_WIP_Application_Winforms.Components.Shared
 {
@@ -173,7 +175,10 @@ namespace MTM_WIP_Application_Winforms.Components.Shared
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error printing: {ex.Message}", "Print Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                LoggingUtility.LogApplicationError(ex);
+                Service_ErrorHandler.ShowError(
+                    $"Error printing: {ex.Message}",
+                    "Print Error");
             }
         }
 

@@ -504,8 +504,8 @@ using Microsoft.Extensions.DependencyInjection;
                     }
                     else
                     {
-                        MessageBox.Show("The retry operation failed. Please check the technical details for more information.", 
-                            "Retry Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        Service_ErrorHandler.ShowWarning("The retry operation failed. Please check the technical details for more information.", 
+                            "Retry Failed");
                     }
                 }
                 catch (Exception ex)

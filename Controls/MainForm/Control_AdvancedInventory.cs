@@ -2177,7 +2177,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 string excelPath = await GetUserExcelFilePathAsync();
                 if (!File.Exists(excelPath))
                 {
-                    MessageBox.Show(@"Excel file not found. Please create or open the Excel file first.", nameof(AdvancedInventory_Import_Button_ImportExcel));
+                    Service_ErrorHandler.ShowWarning(@"Excel file not found. Please create or open the Excel file first.", nameof(AdvancedInventory_Import_Button_ImportExcel));
                     return;
                 }
 
@@ -2191,11 +2191,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 }
                 catch (IOException)
                 {
-                    MessageBox.Show(
+                    Service_ErrorHandler.ShowWarning(
                         $"The Excel file is currently open in another application.\n\nPlease close '{Path.GetFileName(excelPath)}' and try again.",
-                        "File In Use",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Warning);
+                        "File In Use");
                     return;
                 }
 
@@ -2207,7 +2205,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     if (worksheet == null)
                     {
                         string availableSheets = string.Join(", ", workbook.Worksheets.Select(w => $"'{w.Name}'"));
-                        MessageBox.Show(
+                        Service_ErrorHandler.ShowWarning(
                             $"Worksheet 'Tab 1' not found.\n\nAvailable sheets: {availableSheets}\n\nPlease ensure your data is on a sheet named 'Tab 1'.",
                             nameof(AdvancedInventory_Import_Button_ImportExcel));
                         return;
@@ -2218,7 +2216,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     // Diagnostic: Check for empty sheet
                     if (usedRange == null)
                     {
-                        MessageBox.Show(
+                        Service_ErrorHandler.ShowWarning(
                            "Worksheet 'Tab 1' appears to be empty.\n\nPlease ensure you have entered data and saved the file.",
                            nameof(AdvancedInventory_Import_Button_ImportExcel));
                         return;
@@ -2230,7 +2228,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     // Diagnostic: Check for data rows
                     if (rowCount < 2)
                     {
-                        MessageBox.Show(
+                        Service_ErrorHandler.ShowWarning(
                            $"Found {rowCount} row(s) in 'Tab 1'.\n\nExpected at least 2 rows (1 header row + data rows).\nPlease ensure you have added data below the headers.",
                            nameof(AdvancedInventory_Import_Button_ImportExcel));
                         return;
@@ -2262,7 +2260,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
                 if (dt.Rows.Count == 0)
                 {
-                    MessageBox.Show(
+                    Service_ErrorHandler.ShowWarning(
                         "No data rows could be extracted from the Excel file.",
                         nameof(AdvancedInventory_Import_Button_ImportExcel));
                     return;
@@ -2334,7 +2332,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             if (missingColumns.Count > 0)
             {
                 string missingList = string.Join(", ", missingColumns);
-                MessageBox.Show(
+                Service_ErrorHandler.ShowWarning(
                     $"The following required columns are missing from the imported data: {missingList}.\n\nPlease ensure your Excel file has the correct headers (e.g., Part, Operation, Location, Quantity, Notes).",
                     nameof(AdvancedInventory_Import_Button_Save));
                 return;

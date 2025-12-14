@@ -1,7 +1,6 @@
 using System.Data;
 using MTM_WIP_Application_Winforms.Data;
 using MTM_WIP_Application_Winforms.Models;
-using MySql.Data.MySqlClient;
 using MTM_WIP_Application_Winforms.Services.Logging;
 using Newtonsoft.Json;
 using MTM_WIP_Application_Winforms.Helpers;

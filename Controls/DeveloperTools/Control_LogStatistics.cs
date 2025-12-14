@@ -1,5 +1,3 @@
-using System;
-using System.Windows.Forms;
 using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Models.DeveloperTools;
 using MTM_WIP_Application_Winforms.Services.DeveloperTools;
@@ -79,9 +77,9 @@ namespace MTM_WIP_Application_Winforms.Controls.DeveloperTools
 
         private async void Control_LogStatistics_Button_Purge_Click(object sender, EventArgs e)
         {
-            if (_service == null) return;
+            if (_service == null || _errorHandler == null) return;
 
-            var confirm = MessageBox.Show("Are you sure you want to delete ALL log files? This cannot be undone.", 
+            var confirm = _errorHandler.ShowConfirmation("Are you sure you want to delete ALL log files? This cannot be undone.", 
                 "Confirm Purge", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
             
             if (confirm != DialogResult.Yes) return;
@@ -96,9 +94,9 @@ namespace MTM_WIP_Application_Winforms.Controls.DeveloperTools
                 
                 if (result.IsSuccess)
                 {
-                    MessageBox.Show(result.StatusMessage, "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    _errorHandler.ShowInformation(result.StatusMessage, "Success");
                 }
-                else if (_errorHandler != null)
+                else
                 {
                     _errorHandler.ShowUserError(result.ErrorMessage);
                 }
@@ -106,7 +104,7 @@ namespace MTM_WIP_Application_Winforms.Controls.DeveloperTools
             catch (Exception ex)
             {
                 Control_LogStatistics_Label_SyncStatus.Text = "Error";
-                _errorHandler?.HandleException(ex, Models.Enum_ErrorSeverity.Medium, callerName: nameof(Control_LogStatistics_Button_Purge_Click), controlName: this.Name);
+                _errorHandler.HandleException(ex, Models.Enum_ErrorSeverity.Medium, callerName: nameof(Control_LogStatistics_Button_Purge_Click), controlName: this.Name);
             }
             finally
             {

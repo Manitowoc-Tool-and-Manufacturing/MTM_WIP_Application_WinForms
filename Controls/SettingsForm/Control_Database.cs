@@ -186,8 +186,8 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                         : !portResult.IsSuccess ? portResult.ErrorMessage
                         : databaseResult.ErrorMessage;
 
-                    MessageBox.Show($"Failed to save database settings:\n{errorMessage}",
-                        "Save Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Service_ErrorHandler.ShowUserError($"Failed to save database settings:\n{errorMessage}",
+                        "Save Error");
                     StatusMessageChanged?.Invoke(this, "Error saving database settings.");
                 }
             }
@@ -227,9 +227,9 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 // Validate inputs
                 if (string.IsNullOrWhiteSpace(testServer) || string.IsNullOrWhiteSpace(testPort) || string.IsNullOrWhiteSpace(testDatabase))
                 {
-                    MessageBox.Show(
+                    Service_ErrorHandler.ShowWarning(
                         "Please fill in all database connection fields before testing.",
-                        "Missing Information", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        "Missing Information");
                     return;
                 }
 
@@ -291,8 +291,7 @@ namespace MTM_WIP_Application_Winforms.Controls.SettingsForm
                 }
                 else
                 {
-                    MessageBox.Show(sb.ToString(), "Connection Tests Completed with Errors",
-                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    Service_ErrorHandler.ShowWarning(sb.ToString(), "Connection Tests Completed with Errors");
                     StatusMessageChanged?.Invoke(this, "Connection tests completed with errors.");
                 }
             }

@@ -2,7 +2,6 @@ using System.Diagnostics;
 using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Models;
-using MySql.Data.MySqlClient;
 using System.Data;
 
 namespace MTM_WIP_Application_Winforms.Services.Maintenance

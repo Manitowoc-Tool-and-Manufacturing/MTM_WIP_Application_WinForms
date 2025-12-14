@@ -4,6 +4,7 @@ using MTM_WIP_Application_Winforms.Components.Shared;
 using MTM_WIP_Application_Winforms.Data;
 using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Models;
+using MTM_WIP_Application_Winforms.Services;
 
 namespace MTM_WIP_Application_Winforms.Core
 {
@@ -354,7 +355,7 @@ namespace MTM_WIP_Application_Winforms.Core
             saveSettingsItem.Click += async (s, e) =>
             {
                 await SaveGridSettingsAsync(dgv);
-                MessageBox.Show(@"Grid settings saved successfully.", @"Grid Settings", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                Service_ErrorHandler.ShowInformation(@"Grid settings saved successfully.", @"Grid Settings");
             };
             menu.Items.Add(saveSettingsItem);
 

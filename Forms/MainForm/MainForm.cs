@@ -741,7 +741,7 @@ using MTM_WIP_Application_Winforms.Services.ErrorHandling;
             {
                 LoggingUtility.LogApplicationError(ex);
                 Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
-                    callerName: nameof(MainForm_OnStartup_GetUserFullNameAsync), controlName: Name);
+                    callerName: nameof(MainForm_OnStartup_GetUserFullNameAsync), controlName: this.Name);
             }
         }
 

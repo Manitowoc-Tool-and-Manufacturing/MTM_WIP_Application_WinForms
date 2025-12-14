@@ -1,6 +1,4 @@
-using System;
 using System.Diagnostics;
-using System.Windows.Forms;
 using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Models.DeveloperTools;
 using MTM_WIP_Application_Winforms.Services.DeveloperTools;
@@ -150,12 +148,12 @@ namespace MTM_WIP_Application_Winforms.Controls.DeveloperTools
 
                 if (result.IsSuccess && result.Data != null && result.Data.IsConnected)
                 {
-                    MessageBox.Show($"Connection Successful!\nLatency: {stopwatch.ElapsedMilliseconds}ms", "Database Test", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    _errorHandler.ShowInformation($"Connection Successful!\nLatency: {stopwatch.ElapsedMilliseconds}ms", "Database Test");
                     UpdateDatabaseUI(result.Data);
                 }
                 else
                 {
-                    MessageBox.Show($"Connection Failed.\nError: {result.ErrorMessage}", "Database Test", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    _errorHandler.ShowUserError($"Connection Failed.\nError: {result.ErrorMessage}", "Database Test");
                 }
             }
             catch (Exception ex)

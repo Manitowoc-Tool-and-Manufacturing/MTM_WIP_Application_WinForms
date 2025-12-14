@@ -610,11 +610,9 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                     confirmMessage = $"Are you sure you want to delete {_lastRemovedItems.Count} items?\n\n{sb}";
                 }
 
-                DialogResult confirmResult = MessageBox.Show(
+                DialogResult confirmResult = Service_ErrorHandler.ShowConfirmation(
                     confirmMessage,
-                    @"Confirm Deletion",
-                    MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Warning);
+                    @"Confirm Deletion");
 
                 if (confirmResult != DialogResult.Yes)
                 {
