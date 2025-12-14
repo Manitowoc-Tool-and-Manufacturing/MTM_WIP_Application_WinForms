@@ -108,7 +108,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             MainForm_MenuStrip_Visual_Separator3 = new ToolStripSeparator();
             MainForm_MenuStrip_Visual_UserAnalytics = new ToolStripMenuItem();
             MainForm_MenuStrip_Development = new ToolStripMenuItem();
-            MainForm_MenuStrip_Development_ViewErrorReports = new ToolStripMenuItem();
+
             MainForm_MenuStrip_Development_ViewApplicationLogs = new ToolStripMenuItem();
             MainForm_MenuStrip_Development_SyncReports = new ToolStripMenuItem();
             MainForm_MenuStrip_Development_DeveloperTools = new ToolStripMenuItem();
@@ -302,17 +302,11 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             // 
             // MainForm_MenuStrip_Development
             // 
-            MainForm_MenuStrip_Development.DropDownItems.AddRange(new ToolStripItem[] { MainForm_MenuStrip_Development_ViewErrorReports, MainForm_MenuStrip_Development_ViewApplicationLogs, MainForm_MenuStrip_Development_SyncReports, MainForm_MenuStrip_Development_DeveloperTools });
+            MainForm_MenuStrip_Development.DropDownItems.AddRange(new ToolStripItem[] { MainForm_MenuStrip_Development_ViewApplicationLogs, MainForm_MenuStrip_Development_SyncReports, MainForm_MenuStrip_Development_DeveloperTools });
             MainForm_MenuStrip_Development.Name = "MainForm_MenuStrip_Development";
             MainForm_MenuStrip_Development.Size = new Size(90, 24);
             MainForm_MenuStrip_Development.Text = "Development";
-            // 
-            // MainForm_MenuStrip_Development_ViewErrorReports
-            // 
-            MainForm_MenuStrip_Development_ViewErrorReports.Name = "MainForm_MenuStrip_Development_ViewErrorReports";
-            MainForm_MenuStrip_Development_ViewErrorReports.Size = new Size(278, 22);
-            MainForm_MenuStrip_Development_ViewErrorReports.Text = "📋 View Error Reports";
-            MainForm_MenuStrip_Development_ViewErrorReports.Click += MainForm_MenuStrip_Development_ViewErrorReports_Click;
+
             // 
             // MainForm_MenuStrip_Development_ViewApplicationLogs
             // 
@@ -649,7 +643,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
         private TableLayoutPanel tableLayoutPanel1;
         internal ToolTip MainForm_ToolTip;
         private ToolStripMenuItem MainForm_MenuStrip_Development;
-        private ToolStripMenuItem MainForm_MenuStrip_Development_ViewErrorReports;
+
         private ToolStripMenuItem MainForm_MenuStrip_Development_ViewApplicationLogs;
         private ToolStripMenuItem MainForm_MenuStrip_Development_SyncReports;
         private ToolStripMenuItem MainForm_MenuStrip_Development_DeveloperTools;

@@ -32,7 +32,7 @@ using MTM_WIP_Application_Winforms.Services.ErrorHandling;
         private Timer? _connectionMonitorTimer;
         public Helper_Control_MySqlSignal ConnectionStrengthChecker = null!;
         private Helper_StoredProcedureProgress? _progressHelper;
-        private Form_ViewErrorReports? _viewErrorReportsForm;
+
 
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -1259,13 +1259,7 @@ using MTM_WIP_Application_Winforms.Services.ErrorHandling;
                 _connectionStrengthTimer?.Stop();
                 _connectionStrengthTimer?.Dispose();
 
-                // Close View Error Reports form if it's open
-                if (_viewErrorReportsForm != null && !_viewErrorReportsForm.IsDisposed)
-                {
-                    _viewErrorReportsForm.Close();
-                    _viewErrorReportsForm.Dispose();
-                    _viewErrorReportsForm = null;
-                }
+
 
             }
             catch (Exception ex)
@@ -1494,32 +1488,7 @@ using MTM_WIP_Application_Winforms.Services.ErrorHandling;
             }
         }
 
-        private void MainForm_MenuStrip_Development_ViewErrorReports_Click(object? sender, EventArgs e)
-        {
-            try
-            {
-                if (_viewErrorReportsForm is { IsDisposed: false })
-                {
-                    if (_viewErrorReportsForm.WindowState == FormWindowState.Minimized)
-                    {
-                        _viewErrorReportsForm.WindowState = FormWindowState.Normal;
-                    }
 
-                    _viewErrorReportsForm.BringToFront();
-                    _viewErrorReportsForm.Focus();
-                    return;
-                }
-
-                _viewErrorReportsForm = new Form_ViewErrorReports();
-                _viewErrorReportsForm.FormClosed += (_, _) => _viewErrorReportsForm = null;
-                _viewErrorReportsForm.Show(this);
-            }
-            catch (Exception ex)
-            {
-                LoggingUtility.LogApplicationError(ex);
-                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, controlName: nameof(MainForm_MenuStrip_Development_ViewErrorReports_Click));
-            }
-        }
 
         private void MainForm_MenuStrip_Development_DeveloperTools_Click(object? sender, EventArgs e)
         {

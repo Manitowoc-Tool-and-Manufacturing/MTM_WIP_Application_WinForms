@@ -22,6 +22,7 @@ namespace MTM_WIP_Application_Winforms.Forms.DeveloperTools
 
         private readonly IService_DeveloperTools _devToolsService;
         private readonly ILoggingService _logger;
+        private System.Windows.Forms.Timer _autoRefreshTimer;
         private readonly IService_ErrorHandler _errorHandler;
         private readonly IService_FeedbackManager _feedbackManager;
 
@@ -68,6 +69,78 @@ namespace MTM_WIP_Application_Winforms.Forms.DeveloperTools
 
         #region Event Handlers
 
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            // Tab Navigation
+            if (keyData == (Keys.Control | Keys.D1))
+            {
+                DeveloperToolsForm_TabControl_Main.SelectedTab = DeveloperToolsForm_TabPage_Dashboard;
+                return true;
+            }
+            if (keyData == (Keys.Control | Keys.D2))
+            {
+                DeveloperToolsForm_TabControl_Main.SelectedTab = DeveloperToolsForm_TabPage_Logs;
+                return true;
+            }
+            if (keyData == (Keys.Control | Keys.D3))
+            {
+                DeveloperToolsForm_TabControl_Main.SelectedTab = DeveloperToolsForm_TabPage_Feedback;
+                return true;
+            }
+            if (keyData == (Keys.Control | Keys.D4))
+            {
+                DeveloperToolsForm_TabControl_Main.SelectedTab = DeveloperToolsForm_TabPage_SystemInfo;
+                return true;
+            }
+
+            // Search Focus
+            if (keyData == (Keys.Control | Keys.F))
+            {
+                DeveloperToolsForm_TabControl_Main.SelectedTab = DeveloperToolsForm_TabPage_Logs;
+                DeveloperToolsForm_Control_LogViewer.FocusSearch();
+                return true;
+            }
+
+            // Refresh
+            if (keyData == (Keys.Control | Keys.R) || keyData == Keys.F5)
+            {
+                _ = RefreshCurrentTabAsync();
+                return true;
+            }
+
+            // Clear Filters
+            if (keyData == Keys.Escape)
+            {
+                if (DeveloperToolsForm_TabControl_Main.SelectedTab == DeveloperToolsForm_TabPage_Logs)
+                {
+                    DeveloperToolsForm_Control_LogViewer.ClearFilters();
+                    return true;
+                }
+            }
+
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
+
+        private async Task RefreshCurrentTabAsync()
+        {
+            if (DeveloperToolsForm_TabControl_Main.SelectedTab == DeveloperToolsForm_TabPage_Dashboard)
+            {
+                await LoadDashboardAsync();
+            }
+            else if (DeveloperToolsForm_TabControl_Main.SelectedTab == DeveloperToolsForm_TabPage_Logs)
+            {
+                await DeveloperToolsForm_Control_LogViewer.RefreshLogsAsync();
+            }
+            else if (DeveloperToolsForm_TabControl_Main.SelectedTab == DeveloperToolsForm_TabPage_Feedback)
+            {
+                await DeveloperToolsForm_Control_FeedbackManager.LoadDataAsync();
+            }
+            else if (DeveloperToolsForm_TabControl_Main.SelectedTab == DeveloperToolsForm_TabPage_SystemInfo)
+            {
+                await DeveloperToolsForm_Control_SystemInfo.RefreshDataAsync();
+            }
+        }
+
         private async void DeveloperToolsForm_Load(object sender, EventArgs e)
         {
             try
@@ -75,6 +148,17 @@ namespace MTM_WIP_Application_Winforms.Forms.DeveloperTools
                 await LoadDashboardAsync();
                 DeveloperToolsForm_Control_RecentErrors.ErrorSelected += DeveloperToolsForm_Control_RecentErrors_ErrorSelected;
                 DeveloperToolsForm_Control_SystemHealth.StatusClicked += DeveloperToolsForm_Control_SystemHealth_StatusClicked;
+
+                _autoRefreshTimer = new System.Windows.Forms.Timer();
+                _autoRefreshTimer.Interval = 30000; // 30 seconds
+                _autoRefreshTimer.Tick += async (s, args) => 
+                {
+                    if (DeveloperToolsForm_TabControl_Main.SelectedTab == DeveloperToolsForm_TabPage_Logs)
+                    {
+                        await DeveloperToolsForm_Control_LogViewer.RefreshLogsAsync();
+                    }
+                };
+                _autoRefreshTimer.Start();
             }
             catch (Exception ex)
             {

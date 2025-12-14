@@ -19,9 +19,13 @@
                 "serena",
                 "start-mcp-server",
                 "--context",
-                "ide",
+                "desktop-app",
                 "--project",
-                "."
+                ".",
+                "--mode",
+                "editing",
+                "--mode",
+                "interactive"
             ]
         }
     }

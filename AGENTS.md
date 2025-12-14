@@ -543,45 +543,459 @@ Detailed guidance in `.github/instructions/`:
 - `documentation.instructions.md` - XML documentation
 - And more...
 
-### Serena Semantic Coding Tools (RECOMMENDED for Large Tasks)
+### Serena Semantic Coding Tools (ESSENTIAL for MTM Project)
 
-**Serena is active** and provides IDE-like code navigation and symbol-level editing for this project.
+**Serena** provides IDE-like code navigation and symbol-level editing for this 300+ file codebase. It's **critical** for efficient work on MTM project.
 
-#### When to Use Serena
-- **Large codebase exploration** - Navigate 300+ files efficiently
-- **Multiple file tasks** - Explore DAOs, Services, Forms without reading entire files
-- **Refactoring** - Find all method references before modifying
-- **Architecture validation** - Search for anti-patterns across codebase
-- **Token efficiency** - Reduce token usage by 80-90%
+#### Installation & Setup
 
-#### Essential Serena Commands
+**Prerequisites:**
+- Python 3.10+ with uv (recommended) or pip
+- .NET 8.0 SDK (for C# language server)
+- Git (for repository access)
+
+**Quick Start:**
+
 ```powershell
-# Get file structure (instead of reading entire file)
+# Method 1: Using uvx (recommended - no installation needed)
+uvx --from git+https://github.com/oraios/serena serena --version
+
+# Method 2: Local installation
+git clone https://github.com/oraios/serena
+cd serena
+uv run serena --version
+
+# Method 3: pip install
+pip install git+https://github.com/oraios/serena
+serena --version
+```
+
+**MTM Project Setup:**
+
+```powershell
+# 1. Navigate to MTM project
+cd C:\Users\johnk\source\repos\MTM_WIP_Application_WinForms
+
+# 2. Create Serena project (one-time)
+serena project create --language csharp --name "MTM_WIP_Application" --index
+
+# 3. Verify setup
+serena project health-check
+
+# Output should show:
+# - Project: MTM_WIP_Application
+# - Languages: csharp
+# - Files indexed: 300+
+# - Language server: Running
+```
+
+**Configuration File** (`.serena/project.yml`):
+```yaml
+name: MTM_WIP_Application
+languages:
+  - csharp
+read_only: false  # Set true for QA/review-only agents
+excluded_tools: []  # Add tools to disable (e.g., execute_shell_command for safety)
+ignore_patterns:
+  - "bin/**"
+  - "obj/**"
+  - "*.dll"
+  - "*.exe"
+```
+
+#### MCP Server Setup (For AI Assistants)
+
+**For Gemini CLI / Claude Desktop / VS Code:**
+
+```powershell
+# Start Serena MCP server
+serena start-mcp-server --context ide --project "C:\Users\johnk\source\repos\MTM_WIP_Application_WinForms"
+
+# Server will:
+# 1. Start on http://localhost:24282 (or next available port)
+# 2. Open dashboard at http://localhost:24282/dashboard/
+# 3. Expose 35+ tools via MCP protocol
+# 4. Auto-index C# files in background
+```
+
+**MCP Client Configuration Examples:**
+
+**Gemini CLI** (`~/.gemini-cli/config.json`):
+```json
+{
+  "mcpServers": {
+    "serena": {
+      "command": "uvx",
+      "args": [
+        "--from", "git+https://github.com/oraios/serena",
+        "serena", "start-mcp-server",
+        "--context", "ide",
+        "--project", "C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms"
+      ]
+    }
+  }
+}
+```
+
+**Claude Desktop** (`claude_desktop_config.json`):
+```json
+{
+  "mcpServers": {
+    "serena": {
+      "command": "C:\\path\\to\\uvx.exe",
+      "args": [
+        "--from", "git+https://github.com/oraios/serena",
+        "serena", "start-mcp-server",
+        "--context", "desktop-app",
+        "--project", "C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms"
+      ]
+    }
+  }
+}
+```
+
+**VS Code** (via Cline/Roo Code extension settings):
+```json
+{
+  "mcp.servers": {
+    "serena": {
+      "command": "serena",
+      "args": [
+        "start-mcp-server",
+        "--context", "ide",
+        "--project", "${workspaceFolder}"
+      ]
+    }
+  }
+}
+```
+
+#### Contexts & Modes
+
+**Contexts** (Choose based on environment):
+- `ide` - For VS Code, Cursor, Cline (disables basic file ops AI already has)
+- `desktop-app` - For Claude Desktop (full tool suite)
+- `claude-code` - For Claude Code CLI (optimized for Claude Code)
+- `agent` - For autonomous agents (Agno, custom frameworks)
+
+**Modes** (Combine for workflow):
+- `editing` - Code modification focus
+- `interactive` - Asks questions before acting
+- `planning` - Analysis/design, no immediate editing
+- `one-shot` - Complete task in single response
+- `no-onboarding` - Skip initial project exploration (use after first time)
+
+**MTM Recommended Combinations:**
+```powershell
+# Daily development work
+serena start-mcp-server --context ide --mode editing --mode interactive
+
+# Initial project exploration
+serena start-mcp-server --context ide --mode planning --mode interactive
+
+# Quick bug fix
+serena start-mcp-server --context ide --mode editing --mode one-shot --mode no-onboarding
+
+# Code review / audit
+serena start-mcp-server --context ide --mode planning --mode no-onboarding
+# Also set read_only: true in project.yml
+```
+
+#### Essential Serena Commands for MTM
+
+```powershell
+# 1. Get file structure (instead of reading entire file)
 get_symbols_overview("Data/Dao_Inventory.cs", depth=1)
+# Returns: Class + all method signatures (200-300 tokens vs 5,000+)
 
-# Read specific method only
+# 2. Read specific method only
 find_symbol("Dao_Inventory/GetAllAsync", include_body=true)
+# Returns: Just this method (100-200 tokens)
 
-# Find where method is used before modifying
+# 3. Find where method is used before modifying
 find_referencing_symbols("GetAllAsync", "Data/Dao_Inventory.cs")
+# Returns: All call sites with context (critical before breaking changes!)
 
-# Replace method precisely
+# 4. Replace method precisely
 replace_symbol_body("Dao_Inventory/GetAllAsync", "Data/Dao_Inventory.cs", new_code)
+# Updates: Complete method implementation
 
-# Find anti-patterns
+# 5. Find architectural violations
 search_for_pattern("MessageBox\\.Show", restrict_search_to_code_files=true)
+# Finds: All anti-pattern usages
 
-# Access project knowledge
+# 6. Access project knowledge
 read_memory("architectural_patterns.md")
 list_memories()
+# Loads: Coding standards, patterns, common tasks
 ```
 
 #### Serena Dashboard
-- **URL**: http://127.0.0.1:24282/dashboard/
-- **Monitor**: Real-time tool usage, execution queue, memory list
 
-**Full Guide**: `.github/instructions/serena-semantic-tools.instructions.md`  
-**Serena Documentation**: https://oraios.github.io/serena/
+- **URL**: http://127.0.0.1:24282/dashboard/
+- **Features**:
+  - Real-time tool usage monitoring
+  - Execution queue status
+  - Memory list and contents
+  - Language server status
+  - Configuration viewer
+  - Log viewer
+
+**Troubleshooting via Dashboard:**
+- Check if language server is running (should show "csharp: Running")
+- View execution logs for failed tool calls
+- Monitor token usage per tool
+- Verify active context and modes
+
+#### Performance Optimization
+
+**Pre-Indexing** (Recommended for MTM's 300+ files):
+```powershell
+# One-time indexing (takes ~60 seconds)
+serena project index
+
+# Benefit: Saves 5-10 seconds per tool call during session
+```
+
+**Git Worktrees** (Parallel development):
+```powershell
+# Create worktree for feature branch
+git worktree add ../MTM_feature_branch
+
+# Copy Serena cache (avoid re-indexing)
+Copy-Item -Recurse .serena/cache ../MTM_feature_branch/.serena/cache
+
+# Result: Instant Serena availability in new worktree
+```
+
+#### Token Efficiency Benchmarks
+
+**MTM Codebase Exploration:**
+- **Without Serena**: Reading 10 DAO files = ~50,000 tokens
+- **With Serena**: Symbol-level exploration = ~3,000 tokens
+- **Savings**: 94%
+
+**Refactoring Impact Analysis:**
+- **Without Serena**: Grep + read files = ~50,000 tokens
+- **With Serena**: `find_referencing_symbols` = ~1,500 tokens
+- **Savings**: 97%
+
+#### Agent Profiles Using Serena
+
+Serena enables specialized agent workflows for MTM project. Choose profile based on task:
+
+##### 1. DAO Developer Agent
+
+**Focus:** Data layer (DAOs, stored procedures, database access)
+
+**Serena Workflow:**
+```
+1. Explore existing DAOs:
+   get_symbols_overview("Data/Dao_Entity.cs", depth=1)
+
+2. Validate patterns:
+   search_for_pattern("Task<Model_Dao_Result", relative_path="Data")
+   search_for_pattern("Helper_Database_StoredProcedure", relative_path="Data")
+
+3. Add new methods:
+   find_symbol("Dao_Entity/SimilarMethod", include_body=true)  # Template
+   insert_after_symbol("Dao_Entity/SimilarMethod", ..., new_method)
+
+4. Verify compilation:
+   execute_shell_command("dotnet build")
+```
+
+**Memories to Load:**
+- `dao_best_practices.md`
+- `helper_database_usage.md`
+- `model_dao_result_pattern.md`
+
+##### 2. Forms & UI Agent
+
+**Focus:** WinForms (Forms, Controls, theme integration)
+
+**Serena Workflow:**
+```
+1. Explore Form structure:
+   get_symbols_overview("Forms/Settings/SettingsForm.cs", depth=1)
+
+2. Verify theme compliance:
+   search_for_pattern("class \\w+Form : ThemedForm", relative_path="Forms")
+
+3. Find event handlers:
+   search_for_pattern("_Click\\(object sender, EventArgs e\\)", relative_path="Forms")
+
+4. Modify handlers:
+   find_symbol("SettingsForm/Button_Save_Click", include_body=true)
+   replace_symbol_body(...)
+```
+
+**Memories to Load:**
+- `theme_system_guide.md`
+- `winforms_patterns.md`
+- `ui_naming_conventions.md`
+
+##### 3. Service Layer Architect
+
+**Focus:** Business logic (Services, error handling, logging)
+
+**Serena Workflow:**
+```
+1. Explore Service methods:
+   get_symbols_overview("Services/Service_ErrorHandler.cs", depth=1)
+
+2. Find Service usage:
+   find_referencing_symbols("ShowUserError", "Services/Service_ErrorHandler.cs")
+
+3. Validate error handling:
+   search_for_pattern("Service_ErrorHandler\\.(ShowUserError|HandleException)")
+   search_for_pattern("MessageBox\\.Show")  # Should be 0 results!
+
+4. Update Service logic:
+   find_symbol("Service_ErrorHandler/HandleException", include_body=true)
+   replace_symbol_body(...)
+```
+
+**Memories to Load:**
+- `service_error_handler_usage.md`
+- `logging_patterns.md`
+- `service_layer_architecture.md`
+
+##### 4. Database Administrator Agent
+
+**Focus:** Stored procedures, database migrations, SP-DAO mapping
+
+**Serena Workflow:**
+```
+1. Map stored procedure to DAO:
+   search_for_pattern('"md_inventory_GetAll"', relative_path="Data")
+   → Find which DAO calls this SP
+
+2. Trace SP → DAO → Service → Form:
+   find_referencing_symbols("GetAllAsync", "Data/Dao_Inventory.cs")
+   → See full call chain
+
+3. Validate SP parameters:
+   find_symbol("Dao_Inventory/GetAllAsync", include_body=true)
+   → Verify parameter mapping
+
+4. Execute SP migration:
+   execute_shell_command('& "C:\\MAMP\\bin\\mysql\\bin\\mysql.exe" -h localhost -P 3306 -u root -proot mtm_wip_application_winforms < Database/UpdatedStoredProcedures/new_sp.sql')
+```
+
+**Memories to Load:**
+- `stored_procedure_conventions.md`
+- `database_schema.md`
+- `sp_dao_mapping.md`
+
+##### 5. Quality Assurance Agent
+
+**Focus:** Code review, architectural compliance, documentation
+
+**Serena Configuration:**
+```yaml
+# .serena/project.yml
+read_only: true  # Prevent accidental edits
+excluded_tools:
+  - execute_shell_command  # No command execution
+  - replace_symbol_body    # No code modification
+  - insert_after_symbol
+  - insert_before_symbol
+```
+
+**Serena Workflow:**
+```
+1. Architectural validation:
+   search_for_pattern("MessageBox\\.Show")  # Should be 0
+   search_for_pattern("new MySqlConnection")  # Should be 0
+   search_for_pattern("Task<Model_Dao_Result", relative_path="Data")  # Should match all DAO methods
+
+2. Documentation audit:
+   search_for_pattern("^\\s*public (async )?Task", context_lines_before=1)
+   → Check if preceding line has /// (XML docs)
+
+3. #region compliance:
+   search_for_pattern("#region Fields")
+   search_for_pattern("#region Methods")
+   → Verify all files have proper organization
+
+4. Generate compliance report:
+   write_memory("compliance_report_2025-12-14.md", findings)
+```
+
+**Memories to Load:**
+- `architectural_patterns.md`
+- `coding_standards.md`
+- `compliance_checklist.md`
+
+##### 6. Documentation Specialist Agent
+
+**Focus:** XML documentation, help system, release notes
+
+**Serena Workflow:**
+```
+1. Find undocumented methods:
+   search_for_pattern("^\\s*public.*Task.*\\(", relative_path="Data", context_lines_before=1)
+   → Check for missing /// comments
+
+2. Read methods needing docs:
+   find_symbol("Dao_Entity/UndocumentedMethod", include_body=true)
+
+3. Add XML documentation:
+   replace_symbol_body(
+       name_path="Dao_Entity/UndocumentedMethod",
+       relative_path="Data/Dao_Entity.cs",
+       body=method_with_xml_docs_added
+   )
+
+4. Generate documentation:
+   write_memory("undocumented_methods_log.md", list_of_completed_methods)
+```
+
+**Memories to Load:**
+- `xml_documentation_standards.md`
+- `help_system_guide.md`
+
+---
+
+#### Troubleshooting Serena
+
+**Issue: "find_symbol returns empty"**
+```powershell
+# Solution 1: Restart language server
+restart_language_server()
+
+# Solution 2: Re-index project
+serena project index
+
+# Solution 3: Check dashboard
+# Visit http://127.0.0.1:24282/dashboard/
+# Look for language server status
+```
+
+**Issue: "Slow tool execution"**
+```powershell
+# Solution: Pre-index project
+serena project index
+
+# Also: Restrict search scope
+search_for_pattern("pattern", relative_path="Data")  # Not entire project
+```
+
+**Issue: "Context window filling up"**
+```
+# Solution: Use memory system
+write_memory("current_progress.md", summary_of_work)
+
+# Start new conversation:
+activate_project("MTM_WIP_Application")
+read_memory("current_progress.md")
+# Continue work
+```
+
+**Full Serena Guide**: `.github/instructions/serena-semantic-tools.instructions.md`  
+**Serena Official Docs**: https://oraios.github.io/serena/  
+**GitHub Repository**: https://github.com/oraios/serena
 
 ### MCP Workflow Tools
 

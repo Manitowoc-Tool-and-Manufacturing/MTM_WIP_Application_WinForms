@@ -89,7 +89,7 @@ using MTM_WIP_Application_Winforms.Models;
             Control_FeedbackManager_DataGridView_Feedback.RowPrePaint += Control_FeedbackManager_DataGridView_Feedback_RowPrePaint;
         }
 
-        public async void LoadDataAsync()
+        public async Task LoadDataAsync()
         {
             if (_feedbackManager == null || _errorHandler == null) return;
 

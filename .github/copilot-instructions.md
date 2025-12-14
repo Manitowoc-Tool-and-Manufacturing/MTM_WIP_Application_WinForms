@@ -366,34 +366,407 @@ This project follows the "MTM WIP Application Constitution" (.specify/memory/con
 4. Prioritize consistency over external best practices
 5. Follow the constitution - it's non-negotiable
 
-## Serena Semantic Tools (For Large Requests)
+## Serena Semantic Tools Integration
 
-**Serena** is available for efficient code navigation and editing, especially valuable for large codebase tasks.
+**Serena** is a semantic coding toolkit providing IDE-like capabilities through Language Server Protocol (LSP). It's essential for efficient work on the MTM codebase (300+ files).
 
-### When to Use Serena
-- **Exploring multiple files** - Navigate 20+ DAO files efficiently
-- **Symbol-level operations** - Find/edit specific methods without reading entire files
-- **Relationship discovery** - Find all usages of a method before modifying
-- **Pattern searches** - Find architectural violations (MessageBox.Show, direct MySQL, etc.)
-- **Token efficiency** - Reduce token usage by 80-90% for large explorations
+### Decision Tree: Serena vs. Standard Tools
 
-### Key Serena Tools
-- `get_symbols_overview(file, depth=1)` - Get file structure without reading all code
-- `find_symbol("Class/Method", include_body=true)` - Read specific symbols only
-- `find_referencing_symbols("Method", file)` - Find all usages before modifying
-- `replace_symbol_body("Class/Method", file, code)` - Replace methods precisely
-- `search_for_pattern("regex")` - Find patterns across codebase
-
-### Example Workflow
 ```
-# Instead of reading 10 full DAO files (10,000+ tokens):
-get_symbols_overview("Data/Dao_Inventory.cs", depth=1)  # 200 tokens
-find_symbol("Dao_Inventory/GetAllAsync", include_body=true)  # 100 tokens
-# Total: 300 tokens vs 10,000+
+Task involves code navigation/editing?
+├─ YES: Multiple files (3+) OR finding usages OR architectural validation?
+│  ├─ YES: ✅ USE SERENA (80-90% token savings)
+│  │  └─ Examples: Exploring DAOs, finding MessageBox.Show, refactoring methods
+│  └─ NO: Single-line edit in known location?
+│     ├─ YES: ❌ Use standard edit tools
+│     └─ NO: ✅ USE SERENA (precision + token efficiency)
+│        └─ Examples: Modifying method, adding DAO method, symbol-level edits
+└─ NO: Creating new file from scratch?
+   └─ YES: ❌ Use standard file creation
+      └─ Note: Serena for reading/exploring, standard tools for creation
 ```
 
-**Full Documentation**: See `.github/instructions/serena-semantic-tools.instructions.md`  
-**Serena Docs**: https://oraios.github.io/serena/
+### When to Use Serena (MTM Context)
+
+#### ✅ ALWAYS Use Serena For:
+1. **Multi-DAO exploration** - Understanding 20+ DAO files
+2. **Architectural validation** - Finding `MessageBox.Show`, direct `MySqlConnection`, missing XML docs
+3. **Pre-refactoring analysis** - Finding all usages of a method before changing signature
+4. **Theme system exploration** - Finding all `ThemedForm` / `ThemedUserControl` implementations
+5. **Stored procedure mapping** - Tracing SP → DAO → Service → Form chains
+6. **Service_ErrorHandler migration** - Replacing error handling patterns
+7. **#region compliance** - Checking file organization
+8. **Token efficiency** - When context window is limited (>80% savings)
+
+#### ❌ Don't Use Serena For:
+1. **Single-line edits** - Changing one variable name in known location
+2. **New file creation** - Creating Forms, Controls, Models from scratch
+3. **Non-code files** - Editing XML, JSON, config files
+4. **Simple reads** - Reading small files (<100 lines) once
+
+### Core Serena Tools for MTM
+
+#### Symbol Navigation
+```csharp
+// 1. Get file structure (ALWAYS first step)
+get_symbols_overview("Data/Dao_Inventory.cs", depth=1)
+// Returns: Class + all method signatures (NO bodies)
+// Token usage: ~200-300 tokens (vs ~5,000 for full file)
+
+// 2. Read specific method
+find_symbol("Dao_Inventory/GetAllAsync", include_body=true)
+// Returns: Just this method's code
+// Token usage: ~100-200 tokens
+
+// 3. Find all usages (BEFORE modifying)
+find_referencing_symbols("GetAllAsync", "Data/Dao_Inventory.cs")
+// Returns: All call sites with context
+// Critical before breaking changes!
+```
+
+#### Symbol Editing
+```csharp
+// 1. Replace entire method
+replace_symbol_body(
+    name_path="Dao_Inventory/GetAllAsync",
+    relative_path="Data/Dao_Inventory.cs",
+    body=complete_new_method_with_xml_docs
+)
+
+// 2. Insert new method after existing
+insert_after_symbol(
+    name_path="Dao_Inventory/GetAllAsync",
+    relative_path="Data/Dao_Inventory.cs",
+    body=new_method_with_xml_docs
+)
+
+// 3. Rename across entire codebase
+rename_symbol(
+    name_path="GetAllAsync",
+    relative_path="Data/Dao_Inventory.cs",
+    new_name="GetAllInventoryAsync"
+)
+// Updates ALL references automatically via LSP
+```
+
+#### Architectural Validation
+```csharp
+// Find anti-patterns
+search_for_pattern(
+    substring_pattern="MessageBox\\.Show",
+    restrict_search_to_code_files=true,
+    context_lines_before=2,
+    context_lines_after=2
+)
+
+// Find compliance patterns
+search_for_pattern(
+    substring_pattern="Helper_Database_StoredProcedure\\.Execute",
+    relative_path="Data"
+)
+```
+
+### Serena + MTM Architectural Patterns
+
+#### Pattern 1: DAO Exploration & Validation
+
+**Scenario:** Understand new DAO and verify architectural compliance.
+
+```
+Workflow:
+1. get_symbols_overview("Data/Dao_Entity.cs", depth=1)
+   → See all methods (200 tokens)
+
+2. Verify Model_Dao_Result usage:
+   search_for_pattern("Task<Model_Dao_Result", relative_path="Data/Dao_Entity.cs")
+   → Should match all public methods
+
+3. Verify Helper_Database_StoredProcedure usage:
+   search_for_pattern("Helper_Database_StoredProcedure", relative_path="Data/Dao_Entity.cs")
+   → Should be present (no direct MySqlConnection)
+
+4. Check specific method implementation:
+   find_symbol("Dao_Entity/GetAllAsync", include_body=true)
+   → Verify stored procedure pattern (100 tokens)
+
+Total: ~500 tokens (vs ~5,000 reading full file)
+```
+
+#### Pattern 2: Service_ErrorHandler Migration
+
+**Scenario:** Replace all `MessageBox.Show` with `Service_ErrorHandler`.
+
+```
+Workflow:
+1. Find all violations:
+   search_for_pattern("MessageBox\\.Show", restrict_search_to_code_files=true)
+   → Returns list of files + line numbers
+
+2. For each violation:
+   a. Read method context:
+      find_symbol("ClassName/MethodName", include_body=true)
+   
+   b. Replace with correct pattern:
+      replace_symbol_body(
+          name_path="ClassName/MethodName",
+          relative_path="path/to/file.cs",
+          body=method_with_service_error_handler
+      )
+
+3. Verify fix:
+   search_for_pattern("MessageBox\\.Show")
+   → Should return 0 results
+```
+
+#### Pattern 3: Multi-File Refactoring
+
+**Scenario:** Change DAO method signature affecting 10+ Forms.
+
+```
+Workflow:
+1. Find all usages FIRST:
+   find_referencing_symbols("GetAllAsync", "Data/Dao_Inventory.cs")
+   → Returns all 10+ call sites with code snippets
+
+2. Document impact:
+   - Write down all affected files
+   - Note each calling context
+
+3. Update DAO method:
+   replace_symbol_body(
+       name_path="Dao_Inventory/GetAllAsync",
+       relative_path="Data/Dao_Inventory.cs",
+       body=updated_method_with_new_parameter
+   )
+
+4. Update each caller (from step 1 list):
+   For each caller:
+   find_symbol("FormName/MethodName", include_body=true)
+   replace_symbol_body(
+       name_path="FormName/MethodName",
+       relative_path="Forms/.../FormName.cs",
+       body=updated_caller
+   )
+
+5. Build verification:
+   execute_shell_command("dotnet build MTM_WIP_Application_Winforms.csproj")
+   → Verify no compilation errors
+```
+
+#### Pattern 4: Theme System Integration Check
+
+**Scenario:** Verify all Forms inherit from `ThemedForm`.
+
+```
+Workflow:
+1. Find all Form classes:
+   search_for_pattern(
+       substring_pattern="class \\w+Form : (Form|ThemedForm)",
+       relative_path="Forms"
+   )
+
+2. Identify violations (inheriting from Form, not ThemedForm)
+
+3. For each violation:
+   get_symbols_overview("Forms/.../ViolatingForm.cs", depth=0)
+   → Understand form structure
+   
+   replace_symbol_body(
+       name_path="ViolatingForm",
+       relative_path="Forms/.../ViolatingForm.cs",
+       body=class_inheriting_from_themed_form
+   )
+
+4. Verify fix:
+   search_for_pattern("class \\w+Form : Form[^T]", relative_path="Forms")
+   → Should return 0 results
+```
+
+### Gemini-Specific Optimizations
+
+#### Gemini Context Management
+
+**Gemini Advantage:** 2M token context window (vs 200K for GPT-4)
+
+**Strategy:**
+1. **Use Serena for exploration phase** (reduce tokens 80-90%)
+2. **Keep full context for editing phase** (Gemini can handle it)
+3. **Use memories for recurring patterns** (load once per session)
+
+```
+# Start of conversation:
+activate_project("MTM_WIP_Application")
+read_memory("architectural_patterns.md")  # Load once
+read_memory("dao_best_practices.md")      # Load once
+
+# Then use Serena for efficient exploration:
+get_symbols_overview("Data/Dao_Inventory.cs", depth=1)
+find_symbol("Dao_Inventory/GetAllAsync", include_body=true)
+# ... more targeted reads
+
+# Gemini can hold ALL this in context without summarization
+```
+
+#### Gemini Function Calling Best Practices
+
+**Parallel Tool Calls:**
+Gemini supports parallel function calling. Use it for batch operations:
+
+```
+# ✅ Efficient: Parallel reads
+Batch call:
+- get_symbols_overview("Data/Dao_Inventory.cs", depth=1)
+- get_symbols_overview("Data/Dao_User.cs", depth=1)
+- get_symbols_overview("Data/Dao_Transactions.cs", depth=1)
+
+# All execute simultaneously, results returned together
+
+# ❌ Inefficient: Sequential reads
+Call 1: get_symbols_overview("Data/Dao_Inventory.cs", depth=1)
+Wait for result...
+Call 2: get_symbols_overview("Data/Dao_User.cs", depth=1)
+Wait for result...
+# 3x slower
+```
+
+**Thinking Before Acting:**
+Use Serena's thinking tools to organize complex tasks:
+
+```
+# After gathering info:
+think_about_collected_information()
+# Gemini reflects: Is this enough? What's missing?
+
+# Before major changes:
+think_about_task_adherence()
+# Gemini verifies: Still solving the right problem?
+
+# Before reporting done:
+think_about_whether_you_are_done()
+# Gemini checks: All requirements met?
+```
+
+### Tool Chaining Examples
+
+#### Chain 1: Explore → Validate → Fix
+```
+Step 1 (Explore):
+get_symbols_overview("Data/Dao_Inventory.cs", depth=1)
+→ See all methods
+
+Step 2 (Validate):
+search_for_pattern("MessageBox\\.Show", relative_path="Data/Dao_Inventory.cs")
+→ Find anti-patterns
+
+Step 3 (Fix if found):
+find_symbol("Dao_Inventory/MethodWithViolation", include_body=true)
+→ Read method
+
+replace_symbol_body(
+    name_path="Dao_Inventory/MethodWithViolation",
+    relative_path="Data/Dao_Inventory.cs",
+    body=corrected_method
+)
+→ Fix violation
+```
+
+#### Chain 2: Find Usages → Modify → Update Callers
+```
+Step 1 (Impact Analysis):
+find_referencing_symbols("MethodName", "Data/Dao_Entity.cs")
+→ Find all 5 call sites
+
+Step 2 (Modify):
+replace_symbol_body(
+    name_path="Dao_Entity/MethodName",
+    relative_path="Data/Dao_Entity.cs",
+    body=modified_method
+)
+→ Change method
+
+Step 3 (Update Callers - parallel if possible):
+For each of 5 callers:
+  find_symbol("Caller/CallerMethod", include_body=true)
+  replace_symbol_body(...)
+→ Update all call sites
+
+Step 4 (Verify):
+execute_shell_command("dotnet build")
+→ Ensure compilation success
+```
+
+#### Chain 3: Memory-Driven Development
+```
+Step 1 (Load Context):
+activate_project("MTM_WIP_Application")
+read_memory("architectural_patterns.md")
+→ Load coding standards once
+
+Step 2 (Work):
+get_symbols_overview(...)
+find_symbol(...)
+replace_symbol_body(...)
+→ Make changes following patterns
+
+Step 3 (Save Learnings):
+write_memory(
+    memory_file_name="refactoring_completed_2025-12-14.md",
+    content=summary_of_work_done
+)
+→ Document for next conversation
+```
+
+### Token Efficiency Examples
+
+**Example 1: DAO Exploration**
+```
+❌ Without Serena (reading full files):
+read_file("Data/Dao_Inventory.cs", 1, 500)     # 5,000 tokens
+read_file("Data/Dao_User.cs", 1, 400)          # 4,000 tokens
+read_file("Data/Dao_Transactions.cs", 1, 600)  # 6,000 tokens
+Total: 15,000 tokens
+
+✅ With Serena (symbol-level reads):
+get_symbols_overview("Data/Dao_Inventory.cs", depth=1)      # 250 tokens
+get_symbols_overview("Data/Dao_User.cs", depth=1)           # 200 tokens
+get_symbols_overview("Data/Dao_Transactions.cs", depth=1)   # 300 tokens
+find_symbol("Dao_Inventory/GetAllAsync", include_body=true) # 150 tokens
+find_symbol("Dao_User/GetByIdAsync", include_body=true)     # 120 tokens
+Total: 1,020 tokens
+
+Savings: 93%
+```
+
+**Example 2: Refactoring Impact Analysis**
+```
+❌ Without Serena (grep + read):
+grep_search("GetAllAsync")                      # 2,000 tokens
+read_file("Forms/MainForm.cs", 1, 800)         # 8,000 tokens
+read_file("Forms/SettingsForm.cs", 1, 600)     # 6,000 tokens
+... (8 more files)
+Total: 50,000+ tokens
+
+✅ With Serena (reference discovery):
+find_referencing_symbols("GetAllAsync", "Data/Dao_Inventory.cs")  # 1,500 tokens
+→ Returns all 10 call sites with code snippets
+Total: 1,500 tokens
+
+Savings: 97%
+```
+
+### Quick Reference: Most-Used Serena Tools
+
+| Tool | Use Case | Token Savings |
+|------|----------|---------------|
+| `get_symbols_overview` | Explore file structure | 95% |
+| `find_symbol` | Read specific method | 90% |
+| `find_referencing_symbols` | Find usages before refactoring | 90% |
+| `replace_symbol_body` | Update method precisely | N/A |
+| `search_for_pattern` | Find architectural violations | Variable |
+| `read_memory` | Load project knowledge | 100% |
+
+**Full Documentation**: `.github/instructions/serena-semantic-tools.instructions.md`  
+**Serena Official Docs**: https://oraios.github.io/serena/
 
 <!-- MANUAL ADDITIONS START -->
 <!-- MANUAL ADDITIONS END -->

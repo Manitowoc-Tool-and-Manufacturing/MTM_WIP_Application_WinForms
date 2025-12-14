@@ -77,6 +77,29 @@ namespace MTM_WIP_Application_Winforms.Controls.DeveloperTools
             }
         }
 
+        public void FocusSearch()
+        {
+            Control_LogViewer_TextBox_Search.Focus();
+        }
+
+        public void ClearFilters()
+        {
+            Control_LogViewer_TextBox_Search.Clear();
+            Control_LogViewer_CheckBox_Regex.Checked = false;
+            Control_LogViewer_ComboBox_DateRange.SelectedItem = "Last 7 Days";
+            Control_LogViewer_ComboBox_GroupBy.SelectedItem = "None";
+            Control_LogViewer_CheckBox_Info.Checked = true;
+            Control_LogViewer_CheckBox_Warning.Checked = true;
+            Control_LogViewer_CheckBox_Error.Checked = true;
+            Control_LogViewer_CheckBox_Critical.Checked = true;
+            _ = PerformSearchAsync();
+        }
+
+        public async Task RefreshLogsAsync()
+        {
+            await PerformSearchAsync();
+        }
+
         private void InitializeControls()
         {
             // Date Range

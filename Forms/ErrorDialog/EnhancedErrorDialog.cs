@@ -544,32 +544,10 @@ using Microsoft.Extensions.DependencyInjection;
         {
             try
             {
-                // Create error report from current exception
-                var report = new MTM_WIP_Application_WinForms.Models.Model_ErrorReport_Core
-                {
-                    UserName = Model_Application_Variables.User,
-                    MachineName = Environment.MachineName,
-                    AppVersion = Model_Application_Variables.UserVersion,
-                    ErrorType = _exception.GetType().Name,
-                    ErrorSummary = _exception.Message,
-                    TechnicalDetails = _exception.ToString(),
-                    CallStack = _exception.StackTrace ?? string.Empty,
-                    ReportDate = DateTime.Now
-                };
-
-                // Open Report Issue dialog
-                using (var reportDialog = new Form_ReportIssue(report))
-                {
-                    var result = reportDialog.ShowDialog(this);
-                    
-                    if (result == DialogResult.OK)
-                    {
-                        // Report was submitted successfully
-                        Service_ErrorHandler.ShowInformation(
-                            "Thank you for reporting this issue. The error details have been submitted to IT support.",
-                            "Issue Reported");
-                    }
-                }
+                // Feature deprecated in favor of automated error logging and Feedback Manager
+                Service_ErrorHandler.ShowInformation(
+                    "Please contact IT support directly to report this issue, or use the Feedback tool in Developer Tools if accessible.",
+                    "Report Issue");
             }
             catch (Exception ex)
             {
