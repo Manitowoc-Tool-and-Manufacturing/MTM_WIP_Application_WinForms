@@ -93,7 +93,6 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 });
             // No longer need to initialize or wire up removed ComboBoxes or Like controls
             Control_AdvancedRemove_Initialize();
-            ApplyStandardComboBoxProperties();
             WireUpComboBoxEvents();
             Core_Themes.ApplyFocusHighlighting(this);
 
@@ -232,8 +231,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
-                    new StringBuilder().Append("Control_AdvancedRemove_Button_Normal_Click").ToString());
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
+                    callerName: "Control_AdvancedRemove_Button_Normal_Click");
             }
         }
 
@@ -261,11 +260,6 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         {
             Control_AdvancedRemove_RadioButton_Month.Checked = true;
             ApplyQuickFilter();
-        }
-
-        private void ApplyStandardComboBoxProperties()
-        {
-            // No standard ComboBoxes to configure - using SuggestionTextBoxWithLabel for Users
         }
 
         private Task LoadComboBoxesAsync()
@@ -669,7 +663,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex);
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
+                    callerName: "Control_AdvancedRemove_Button_Delete_Click");
             }
         }
 
@@ -741,7 +736,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             {
                 Debug.WriteLine($"[ERROR] Exception in AdvancedRemove HardReset: {ex}");
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "Control_AdvancedRemove_HardReset");
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: "Control_AdvancedRemove_HardReset");
             }
             finally
             {
@@ -819,7 +814,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             {
                 Debug.WriteLine($"[ERROR] Exception in AdvancedRemove SoftReset: {ex}");
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "Control_AdvancedRemove_SoftReset");
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: "Control_AdvancedRemove_SoftReset");
             }
             finally
             {

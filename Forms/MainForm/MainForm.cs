@@ -5,7 +5,7 @@ using Microsoft.Win32;
 using MTM_WIP_Application_Winforms.Controls.MainForm;
 using MTM_WIP_Application_Winforms.Core;
 using MTM_WIP_Application_Winforms.Data;
-using MTM_WIP_Application_Winforms.Forms.ErrorReports;
+
 using MTM_WIP_Application_Winforms.Forms.Settings;
 using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Helpers;
@@ -144,7 +144,7 @@ using MTM_WIP_Application_Winforms.Services.ErrorHandling;
                 LoggingUtility.LogApplicationError(ex);
                 // NOTE: Fire-and-forget required here - constructors cannot be async.
                 // Error logging may be incomplete if application terminates immediately.
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: nameof(MainForm));
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.High, callerName: nameof(MainForm), controlName: Name);
             }
 
             Debug.WriteLine("[DEBUG] [MainForm.ctor] MainForm constructed.");
@@ -302,7 +302,7 @@ using MTM_WIP_Application_Winforms.Services.ErrorHandling;
                     catch (Exception ex)
                     {
                         LoggingUtility.LogApplicationError(ex);
-                        await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "MainForm_Shown_Event");
+                        Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.High, callerName: "MainForm_Shown_Event", controlName: Name);
                     }
                 };
             }
@@ -571,7 +571,7 @@ using MTM_WIP_Application_Winforms.Services.ErrorHandling;
                     catch (Exception ex)
                     {
                         LoggingUtility.LogApplicationError(ex);
-                        await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "MainForm_TabControl_SelectedIndexChanged_Handler");
+                        Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: "MainForm_TabControl_SelectedIndexChanged_Handler", controlName: Name);
                     }
                 };
                 MainForm_TabControl.Selecting += MainForm_TabControl_Selecting;
@@ -725,7 +725,7 @@ using MTM_WIP_Application_Winforms.Services.ErrorHandling;
             }
         }
 
-        private static async Task MainForm_OnStartup_GetUserFullNameAsync()
+        private async Task MainForm_OnStartup_GetUserFullNameAsync()
         {
             try
             {
@@ -740,8 +740,8 @@ using MTM_WIP_Application_Winforms.Services.ErrorHandling;
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
-                    "MainForm_OnStartup_GetUserFullNameAsync");
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
+                    callerName: nameof(MainForm_OnStartup_GetUserFullNameAsync), controlName: Name);
             }
         }
 
@@ -766,8 +766,8 @@ using MTM_WIP_Application_Winforms.Services.ErrorHandling;
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
-                    nameof(MainForm_OnStartup_SetupConnectionStrengthControl));
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
+                    callerName: nameof(MainForm_OnStartup_SetupConnectionStrengthControl), controlName: Name);
             }
         }
 
@@ -1265,7 +1265,7 @@ using MTM_WIP_Application_Winforms.Services.ErrorHandling;
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "MainForm_OnFormClosing");
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: "MainForm_OnFormClosing", controlName: Name);
             }
 
             base.OnFormClosing(e);
@@ -1322,7 +1322,7 @@ using MTM_WIP_Application_Winforms.Services.ErrorHandling;
                 Service_DebugTracer.TraceUIAction("SETTINGS_MENU_ERROR", nameof(MainForm),
                     new Dictionary<string, object> { ["Exception"] = ex.Message });
                 LoggingUtility.LogApplicationError(ex);
-                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: nameof(MainForm_MenuStrip_File_Settings_Click));
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: nameof(MainForm_MenuStrip_File_Settings_Click), controlName: Name);
             }
 
             Service_DebugTracer.TraceMethodExit(null, nameof(MainForm_MenuStrip_File_Settings_Click), nameof(MainForm));

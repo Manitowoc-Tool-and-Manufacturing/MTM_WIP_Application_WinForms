@@ -4,6 +4,7 @@ using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Services.Logging;
 using System.Data;
 using MySql.Data.MySqlClient;
+using MTM_WIP_Application_Winforms.Services;
 
 namespace MTM_WIP_Application_Winforms.Data;
 
@@ -146,7 +147,7 @@ internal class Dao_Transactions
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "SearchTransactionsAsync");
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: "SearchTransactionsAsync");
             return Model_Dao_Result<List<Model_Transactions_Core>>.Failure(
                 "Failed to search transactions", ex
             );
@@ -205,7 +206,7 @@ internal class Dao_Transactions
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "SearchTransactions");
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: "SearchTransactions");
             return Model_Dao_Result<List<Model_Transactions_Core>>.Failure(
                 "Failed to search transactions (sync)", ex
             );
@@ -387,7 +388,7 @@ internal class Dao_Transactions
         {
 
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "SearchAsync");
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: "SearchAsync");
             return Model_Dao_Result<List<Model_Transactions_Core>>.Failure(
                 "Failed to search transactions with criteria", ex
             );
@@ -463,7 +464,7 @@ internal class Dao_Transactions
         {
 
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "GetBatchLifecycleAsync");
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: "GetBatchLifecycleAsync");
             return Model_Dao_Result<List<Model_Transactions_Core>>.Failure(
                 "Failed to retrieve batch lifecycle", ex
             );
@@ -703,7 +704,7 @@ internal class Dao_Transactions
             System.Diagnostics.Debug.WriteLine($"[DAO DEBUG] Stack trace: {ex.StackTrace}");
 
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "SmartSearchAsync");
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: "SmartSearchAsync");
             return Model_Dao_Result<List<Model_Transactions_Core>>.Failure(
                 "Smart search failed", ex
             );
@@ -776,7 +777,7 @@ internal class Dao_Transactions
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "GetModel_Transactions_Core_AnalyticsAsync");
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: "GetModel_Transactions_Core_AnalyticsAsync");
             return Model_Dao_Result<Dictionary<string, object>>.Failure(
                 "Failed to retrieve transaction analytics", ex
             );

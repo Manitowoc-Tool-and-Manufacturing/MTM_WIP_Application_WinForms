@@ -178,7 +178,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 catch (Exception ex)
                 {
                     LoggingUtility.LogApplicationError(ex);
-                    await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "Control_TransferTab_InitializeBackground_GetUserFullName");
+                    Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: "Control_TransferTab_InitializeBackground_GetUserFullName", controlName: Name);
                 }
 
                 // Update button states on UI thread after background operations complete
@@ -201,7 +201,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "Control_TransferTab_InitializeBackground");
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: "Control_TransferTab_InitializeBackground", controlName: Name);
             }
         }
 
@@ -336,8 +336,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
-                    new StringBuilder().Append("MainForm_ProcessCmdKey").ToString());
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
+                    callerName: "MainForm_ProcessCmdKey", controlName: Name);
                 return false;
             }
         }
@@ -596,8 +596,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             {
                 Debug.WriteLine($"[ERROR] Exception in TransferTab Reset: {ex}");
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
-                    new StringBuilder().Append("MainForm_Transfer_Button_Reset_Click").ToString());
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
+                    callerName: "MainForm_Transfer_Button_Reset_Click", controlName: Name);
             }
             finally
             {
@@ -656,8 +656,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             {
                 Debug.WriteLine($"[ERROR] Exception in TransferTab HardReset: {ex}");
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
-                    new StringBuilder().Append("MainForm_Transfer_HardReset").ToString());
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
+                    callerName: "MainForm_Transfer_HardReset", controlName: Name);
             }
             finally
             {
@@ -717,8 +717,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             {
                 Debug.WriteLine($"[ERROR] Exception in TransferTab SoftReset: {ex}");
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
-                    new StringBuilder().Append("MainForm_Transfer_SoftReset").ToString());
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
+                    callerName: "MainForm_Transfer_SoftReset", controlName: Name);
             }
             finally
             {
@@ -855,8 +855,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
-                    new StringBuilder().Append("Control_TransferTab_Button_Search_Click").ToString());
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
+                    callerName: "Control_TransferTab_Button_Search_Click", controlName: Name);
             }
             finally
             {
@@ -926,8 +926,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
-                    new StringBuilder().Append("Control_TransferTab_Button_Transfer_Click").ToString());
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
+                    callerName: "Control_TransferTab_Button_Transfer_Click", controlName: Name);
             }
             finally
             {
@@ -1186,8 +1186,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
-                    new StringBuilder().Append("Control_TransferTab_Update_ButtonStates").ToString());
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
+                    callerName: "Control_TransferTab_Update_ButtonStates", controlName: Name);
             }
         }
 
@@ -1240,8 +1240,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
-                    new StringBuilder().Append("Control_TransferTab_WireUpEvents").ToString());
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
+                    callerName: "Control_TransferTab_WireUpEvents", controlName: Name);
             }
         }
 

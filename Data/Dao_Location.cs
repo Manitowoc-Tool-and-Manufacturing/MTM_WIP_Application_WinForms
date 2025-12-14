@@ -41,7 +41,7 @@ internal static class Dao_Location
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "DeleteLocation");
+            // Do not close app on DAO error, just return failure
             return Model_Dao_Result.Failure($"Error deleting location {location}", ex);
         }
     }
@@ -84,7 +84,7 @@ internal static class Dao_Location
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "InsertLocation");
+            // Do not close app on DAO error, just return failure
             return Model_Dao_Result.Failure($"Error creating location {location}", ex);
         }
     }
@@ -128,7 +128,7 @@ internal static class Dao_Location
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "UpdateLocation");
+            // Do not close app on DAO error, just return failure
             return Model_Dao_Result.Failure($"Error updating location {oldLocation}", ex);
         }
     }
@@ -158,7 +158,7 @@ internal static class Dao_Location
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "GetAllLocations");
+            // Do not close app on DAO error, just return failure
             return Model_Dao_Result<DataTable>.Failure("Error retrieving locations", ex);
         }
     }
@@ -222,7 +222,7 @@ internal static class Dao_Location
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "LocationExists");
+            // Do not close app on DAO error, just return failure
             return Model_Dao_Result<bool>.Failure($"Error checking location {location}", ex);
         }
     }

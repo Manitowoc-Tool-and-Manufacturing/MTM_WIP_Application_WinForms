@@ -5,6 +5,7 @@ using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using MySql.Data.MySqlClient;
+using MTM_WIP_Application_Winforms.Services;
 
 namespace MTM_WIP_Application_Winforms.Data;
 
@@ -14,75 +15,27 @@ internal static class Dao_System
 {
     #region User Roles / Access
 
-    internal static async Task<Model_Dao_Result> SetUserAccessTypeAsync(string userName, string accessType,
-        string? connectionString = null,
-        MySqlConnection? connection = null,
-        MySqlTransaction? transaction = null)
+
+    internal static string System_GetUserName()
     {
         try
         {
-            // Convert string access type to INT for stored procedure
-            // Note: Stored procedure expects INT (0 = standard user, 1 = admin/vits user)
-            int accessTypeInt = accessType?.ToLower() switch
-            {
-                "admin" => 1,
-                "vitsuser" => 1,
-                "user" => 0,
-                "standard" => 0,
-                _ => 0 // Default to standard user
-            };
+            string userIdWithDomain = Model_Application_Variables.EnteredUser == "Default User"
+                ? WindowsIdentity.GetCurrent().Name
+                : Model_Application_Variables.EnteredUser ??
+                  throw new InvalidOperationException("User identity could not be retrieved.");
 
-            Dictionary<string, object> parameters = new()
-            {
-                ["User"] = userName,           // p_ prefix added automatically
-                ["AccessType"] = accessTypeInt // INT not string
-            };
-
-            var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
-                connectionString ?? Model_Application_Variables.ConnectionString,
-                "sys_user_access_SetType",     // Correct procedure name
-                parameters,
-                null, // No progress helper for this method
-                connection: connection,
-                transaction: transaction
-            );
-
-            if (result.IsSuccess)
-            {
-                if (Model_Application_Variables.User == userName)
-                {
-                    // Update flags based on role priority
-                    Model_Application_Variables.UserTypeDeveloper = accessType == "Developer";
-                    Model_Application_Variables.UserTypeAdmin = accessType == "Admin";
-                    Model_Application_Variables.UserTypeReadOnly = accessType == "ReadOnly";
-                    Model_Application_Variables.UserTypeNormal = accessType == "User" || accessType == "Normal";
-                }
-                return Model_Dao_Result.Success($"User access type set to {accessType} for {userName}");
-            }
-            else
-            {
-                return Model_Dao_Result.Failure($"Failed to set user access type for {userName}: {result.ErrorMessage}", result.Exception);
-            }
+            int posSlash = userIdWithDomain.IndexOf('\\');
+            string user = (posSlash == -1 ? userIdWithDomain : userIdWithDomain[(posSlash + 1)..]).ToUpper();
+            Model_Application_Variables.User = user;
+            return user;
         }
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
-            await HandleSystemDaoExceptionAsync(ex, "SetUserAccessType");
-            return Model_Dao_Result.Failure($"Failed to set user access type for {userName}", ex);
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: nameof(System_GetUserName));
+            return string.Empty;
         }
-    }
-
-    internal static string System_GetUserName()
-    {
-        var userIdWithDomain = Model_Application_Variables.EnteredUser == "Default User"
-            ? WindowsIdentity.GetCurrent().Name
-            : Model_Application_Variables.EnteredUser ??
-              throw new InvalidOperationException("User identity could not be retrieved.");
-
-        var posSlash = userIdWithDomain.IndexOf('\\');
-        var user = (posSlash == -1 ? userIdWithDomain : userIdWithDomain[(posSlash + 1)..]).ToUpper();
-        Model_Application_Variables.User = user;
-        return user;
     }
 
     internal static async Task<Model_Dao_Result<List<Model_Shared_Users>>> System_UserAccessTypeAsync(MySqlConnection? connection = null, MySqlTransaction? transaction = null)
@@ -455,6 +408,8 @@ internal static class Dao_System
             catch (Exception ex)
             {
                 report.AppendLine($"⚠️  Error checking user settings: {ex.Message}");
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: "ValidateJsonSettingsAsync - User Settings");
+                totalErrors++;
                 LoggingUtility.LogApplicationError(ex);
             }
 
@@ -479,6 +434,7 @@ internal static class Dao_System
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: "ValidateJsonSettingsAsync");
             return Model_Dao_Result<string>.Failure($"JSON validation failed: {ex.Message}", ex);
         }
     }
@@ -487,12 +443,13 @@ internal static class Dao_System
 
     #region Helpers
 
-    private static async Task HandleSystemDaoExceptionAsync(Exception ex, string method)
+    private static Task HandleSystemDaoExceptionAsync(Exception ex, string method)
     {
         LoggingUtility.LogApplicationError(new Exception($"Error in {method}: {ex.Message}", ex));
 
         // ENHANCED: Pass method name to error handlers for better debugging
-        await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, controlName: method);
+        Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, controlName: method);
+        return Task.CompletedTask;
     }
 
     #endregion
@@ -571,6 +528,7 @@ internal static class Dao_System
         {
             string userMessage = $"Database connectivity check failed: {ex.Message}";
             LoggingUtility.LogApplicationError(ex);
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: "CheckConnectivityAsync");
             return Model_Dao_Result.Failure(userMessage, ex);
         }
     }

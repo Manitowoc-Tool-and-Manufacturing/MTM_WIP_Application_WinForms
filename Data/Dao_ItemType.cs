@@ -3,6 +3,7 @@ using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Models;
 using MySql.Data.MySqlClient;
+using MTM_WIP_Application_Winforms.Services;
 
 namespace MTM_WIP_Application_Winforms.Data;
 
@@ -41,7 +42,7 @@ internal static class Dao_ItemType
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "DeleteItemType");
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: "DeleteItemType");
             return Model_Dao_Result.Failure($"Error deleting item type {itemType}", ex);
         }
     }
@@ -79,7 +80,7 @@ internal static class Dao_ItemType
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "InsertItemType");
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: "InsertItemType");
             return Model_Dao_Result.Failure($"Error creating item type {itemType}", ex);
         }
     }
@@ -122,7 +123,7 @@ internal static class Dao_ItemType
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "UpdateItemType");
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: "UpdateItemType");
             return Model_Dao_Result.Failure("Error updating item type", ex);
         }
     }
@@ -152,7 +153,7 @@ internal static class Dao_ItemType
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "GetAllItemTypes");
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: "GetAllItemTypes");
             return Model_Dao_Result<DataTable>.Failure("Error retrieving item types", ex);
         }
     }
@@ -180,6 +181,7 @@ internal static class Dao_ItemType
         catch (Exception ex)
         {
             LoggingUtility.LogApplicationError(ex);
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: "GetItemTypeByName");
             return Model_Dao_Result<DataRow>.Failure($"Error retrieving item type {itemType}", ex);
         }
     }
@@ -216,7 +218,7 @@ internal static class Dao_ItemType
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "ItemTypeExists");
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: "ItemTypeExists");
             return Model_Dao_Result<bool>.Failure($"Error checking item type {itemType}", ex);
         }
     }

@@ -49,7 +49,7 @@ internal static class Dao_Part
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "GetAllPartsAsync");
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: "GetAllPartsAsync");
 
             Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_Part");
             return Model_Dao_Result<DataTable>.Failure("Error retrieving parts", ex);
@@ -94,7 +94,7 @@ internal static class Dao_Part
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "GetPartByNumberAsync");
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: "GetPartByNumberAsync");
 
             Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_Part");
             return Model_Dao_Result<DataRow>.Failure($"Error retrieving part {partNumber}", ex);
@@ -161,7 +161,7 @@ internal static class Dao_Part
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "GetPartTypesAsync");
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: "GetPartTypesAsync");
 
             Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_Part");
             return Model_Dao_Result<DataTable>.Failure("Error retrieving part types", ex);
@@ -204,7 +204,7 @@ internal static class Dao_Part
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "SearchPartsAsync");
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: "SearchPartsAsync");
 
             Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_Part");
             return Model_Dao_Result<DataTable>.Failure($"Error searching for parts with term '{searchTerm}'", ex);
@@ -257,7 +257,7 @@ internal static class Dao_Part
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "GetColorCodeFlaggedPartsAsync");
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: "GetColorCodeFlaggedPartsAsync");
 
             Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_Part");
             return Model_Dao_Result<DataTable>.Failure("Error retrieving color-code flagged parts", ex);
@@ -326,7 +326,7 @@ internal static class Dao_Part
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "CreatePartAsync");
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: "CreatePartAsync");
 
             Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_Part");
             return Model_Dao_Result.Failure($"Error adding part {itemNumber}", ex);
@@ -402,7 +402,7 @@ internal static class Dao_Part
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "UpdatePartAsync");
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: "UpdatePartAsync");
 
             Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_Part");
             return Model_Dao_Result.Failure($"Error updating part {itemNumber}", ex);
@@ -449,7 +449,7 @@ internal static class Dao_Part
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "UpdatePartByNumberAsync");
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: "UpdatePartByNumberAsync");
 
             Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_Part");
             return Model_Dao_Result.Failure($"Error updating part {partNumber}", ex);
@@ -512,7 +512,7 @@ internal static class Dao_Part
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "UpdateColorCodeFlagAsync");
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: "UpdateColorCodeFlagAsync");
 
             Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_Part");
             return Model_Dao_Result.Failure($"Error updating color code flag for part {partNumber}", ex);
@@ -560,7 +560,7 @@ internal static class Dao_Part
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "DeletePartAsync");
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: "DeletePartAsync");
 
             Service_DebugTracer.TraceMethodExit(null, controlName: "Dao_Part");
             return Model_Dao_Result.Failure($"Error deleting part {partNumber}", ex);

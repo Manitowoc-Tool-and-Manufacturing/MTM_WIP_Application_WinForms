@@ -63,7 +63,7 @@ public static class Dao_Inventory
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "GetAllInventoryAsync");
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: "GetAllInventoryAsync");
 
             var errorResult = Model_Dao_Result<DataTable>.Failure("Failed to retrieve all inventory", ex);
             Service_DebugTracer.TraceMethodExit(errorResult, nameof(GetAllInventoryAsync), "Dao_Inventory");
@@ -118,7 +118,7 @@ public static class Dao_Inventory
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "SearchInventoryAsync");
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: "SearchInventoryAsync");
 
             var errorResult = Model_Dao_Result<DataTable>.Failure($"Failed to search inventory for term '{searchTerm}'", ex);
             Service_DebugTracer.TraceMethodExit(errorResult, nameof(SearchInventoryAsync), "Dao_Inventory");
@@ -195,7 +195,7 @@ public static class Dao_Inventory
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "GetInventoryByPartIdAsync");
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: "GetInventoryByPartIdAsync");
 
             var errorResult = Model_Dao_Result<DataTable>.Failure($"Failed to retrieve inventory for part {partId}", ex);
 
@@ -294,7 +294,7 @@ public static class Dao_Inventory
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "GetInventoryByPartIdAndOperationAsync");
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: "GetInventoryByPartIdAndOperationAsync");
 
             var errorResult = Model_Dao_Result<DataTable>.Failure($"Failed to retrieve inventory for part {partId}, operation {operation}", ex);
 
@@ -432,7 +432,7 @@ public static class Dao_Inventory
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "AddInventoryItemAsync");
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: "AddInventoryItemAsync");
             return Model_Dao_Result<int>.Failure($"Failed to add inventory item for part {partId}", ex);
         }
     }
@@ -491,7 +491,7 @@ public static class Dao_Inventory
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "RemoveInventoryItemsFromDataGridViewAsync");
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: "RemoveInventoryItemsFromDataGridViewAsync");
             return Model_Dao_Result<(int, List<string>)>.Failure("Failed to remove inventory items from DataGridView", ex);
         }
     }
@@ -578,7 +578,7 @@ public static class Dao_Inventory
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "RemoveInventoryItemAsync");
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: "RemoveInventoryItemAsync");
             return Model_Dao_Result<(int, string)>.Failure($"Failed to remove inventory item for part {partId}", ex);
         }
     }
@@ -638,7 +638,7 @@ public static class Dao_Inventory
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "TransferPartSimpleAsync");
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: "TransferPartSimpleAsync");
             return Model_Dao_Result.Failure($"Failed to transfer part {partId}", ex);
         }
     }
@@ -711,7 +711,7 @@ public static class Dao_Inventory
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "TransferInventoryQuantityAsync");
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: "TransferInventoryQuantityAsync");
             return Model_Dao_Result.Failure($"Failed to transfer quantity for part {partId}", ex);
         }
     }
@@ -742,7 +742,7 @@ public static class Dao_Inventory
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "FixBatchNumbersAsync");
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: "FixBatchNumbersAsync");
             return Model_Dao_Result.Failure("Failed to fix batch numbers", ex);
         }
     }

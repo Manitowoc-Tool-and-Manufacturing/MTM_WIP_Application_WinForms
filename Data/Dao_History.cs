@@ -1,5 +1,6 @@
 using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Models;
+using MTM_WIP_Application_Winforms.Services;
 using MTM_WIP_Application_Winforms.Services.Logging;
 using MySql.Data.MySqlClient;
 
@@ -55,7 +56,7 @@ internal class Dao_History
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            var errorResult = await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "AddTransactionHistoryAsync");
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: "AddTransactionHistoryAsync");
             return Model_Dao_Result.Failure("Failed to add transaction history", ex);
         }
     }

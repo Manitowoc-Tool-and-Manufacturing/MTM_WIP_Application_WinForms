@@ -1,6 +1,7 @@
 using System.Data;
 using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Models;
+using MTM_WIP_Application_Winforms.Services;
 using MTM_WIP_Application_Winforms.Services.Logging;
 using MySql.Data.MySqlClient;
 
@@ -41,7 +42,7 @@ internal static class Dao_Operation
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "DeleteOperation");
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: "DeleteOperation");
             return Model_Dao_Result.Failure($"Error deleting operation {operationNumber}", ex);
         }
     }
@@ -83,7 +84,7 @@ internal static class Dao_Operation
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "InsertOperation");
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: "InsertOperation");
             return Model_Dao_Result.Failure($"Error creating operation {operationNumber}", ex);
         }
     }
@@ -126,7 +127,7 @@ internal static class Dao_Operation
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "UpdateOperation");
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: "UpdateOperation");
             return Model_Dao_Result.Failure($"Error updating operation {oldOperation}", ex);
         }
     }
@@ -160,7 +161,7 @@ internal static class Dao_Operation
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "GetAllOperations");
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: "GetAllOperations");
             return Model_Dao_Result<DataTable>.Failure("Error retrieving operations", ex);
         }
     }
@@ -220,7 +221,7 @@ internal static class Dao_Operation
         catch (Exception ex)
         {
             LoggingUtility.LogDatabaseError(ex);
-            await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex, callerName: "OperationExists");
+            Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: "OperationExists");
             return Model_Dao_Result<bool>.Failure($"Error checking operation {operationNumber}", ex);
         }
     }

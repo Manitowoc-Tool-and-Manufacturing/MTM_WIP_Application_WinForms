@@ -266,15 +266,15 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 catch (Exception ex)
                 {
                     LoggingUtility.LogApplicationError(ex);
-                    await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
-                        new StringBuilder().Append("Control_RemoveTab_OnStartup_GetUserFullName").ToString());
+                    Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
+                        callerName: "Control_RemoveTab_OnStartup_GetUserFullName");
                 }
             }
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
-                    new StringBuilder().Append("Control_RemoveTab_OnStartup").ToString());
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
+                    callerName: "Control_RemoveTab_OnStartup");
             }
         }
 
@@ -285,7 +285,7 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
         /// <remarks>
         /// This method is called automatically during control construction and should not be called directly.
         /// Configures SuggestionTextBoxWithLabel controls with data provider delegates.
-        /// Handles errors with Dao_ErrorLog.HandleException_GeneralError_CloseApp for critical initialization failures.
+        /// Handles errors with Service_ErrorHandler.HandleException for critical initialization failures.
         /// </remarks>
         public async Task Control_RemoveTab_OnStartup_LoadDataComboBoxesAsync()
         {
@@ -321,8 +321,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
-                    new StringBuilder().Append("MainForm_LoadRemoveTabComboBoxesAsync").ToString());
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
+                    callerName: "MainForm_LoadRemoveTabComboBoxesAsync");
             }
         }
 
@@ -474,8 +474,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
-                    new StringBuilder().Append("MainForm_ProcessCmdKey").ToString());
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
+                    callerName: "MainForm_ProcessCmdKey");
                 return false;
             }
         }
@@ -624,8 +624,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
-                    new StringBuilder().Append("Control_RemoveTab_Button_Delete_Click").ToString());
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
+                    callerName: "Control_RemoveTab_Button_Delete_Click");
             }
             finally
             {
@@ -759,8 +759,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
-                    new StringBuilder().Append("MainForm_Remove_Button_Reset_Click").ToString());
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
+                    callerName: "MainForm_Remove_Button_Reset_Click");
             }
             finally
             {
@@ -801,8 +801,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
-                    new StringBuilder().Append("MainForm_Remove_HardReset").ToString());
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
+                    callerName: "MainForm_Remove_HardReset");
             }
             finally
             {
@@ -847,8 +847,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
-                    new StringBuilder().Append("MainForm_Remove_SoftReset").ToString());
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
+                    callerName: "MainForm_Remove_SoftReset");
             }
             finally
             {
@@ -922,8 +922,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
-                    new StringBuilder().Append("Control_RemoveTab_Button_AdvancedItemRemoval_Click").ToString());
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
+                    callerName: "Control_RemoveTab_Button_AdvancedItemRemoval_Click");
             }
         }
 
@@ -950,8 +950,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
-                    new StringBuilder().Append("Control_RemoveTab_Button_Normal_Click").ToString());
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
+                    callerName: "Control_RemoveTab_Button_Normal_Click");
             }
         }
 
@@ -1118,8 +1118,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                await Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
-                    new StringBuilder().Append("Control_RemoveTab_Button_Search_Click").ToString());
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
+                    callerName: "Control_RemoveTab_Button_Search_Click");
             }
             finally
             {
@@ -1195,8 +1195,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
-                    new StringBuilder().Append("Control_RemoveTab_Update_ButtonStates").ToString());
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
+                    callerName: "Control_RemoveTab_Update_ButtonStates");
             }
         }
 
@@ -1249,8 +1249,8 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                _ = Dao_ErrorLog.HandleException_GeneralError_CloseApp(ex,
-                    new StringBuilder().Append("Control_RemoveTab_WireUpEvents").ToString());
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
+                    callerName: "Control_RemoveTab_WireUpEvents");
             }
         }
 
