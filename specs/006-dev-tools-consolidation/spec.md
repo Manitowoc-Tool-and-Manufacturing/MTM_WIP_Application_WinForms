@@ -54,13 +54,13 @@ As a developer, I want to see a dashboard with real-time statistics, recent erro
 
 ---
 
-### User Story 3 - Advanced Log Viewer (Priority: P2)
+### User Story 3 - Advanced Log Viewer & Management (Priority: P2)
 
-As a developer, I want to search, filter, and analyze application logs with advanced tools (regex search, date range, severity filters, grouping), so that I can quickly diagnose issues without manual log file manipulation.
+As a developer, I want to search, filter, and analyze application logs with advanced tools, and manage log files directly from the UI, so that I can quickly diagnose issues and maintain the log directory.
 
 **Why this priority**: Core diagnostic capability. The advanced log viewer replaces the legacy `Form_ViewLogsForm` with significantly enhanced functionality.
 
-**Independent Test**: Can be fully tested by generating test log entries and verifying they can be searched, filtered, and grouped correctly.
+**Independent Test**: Can be fully tested by generating test log entries and verifying they can be searched, filtered, grouped, synced, and purged.
 
 **Acceptance Scenarios**:
 
@@ -70,6 +70,8 @@ As a developer, I want to search, filter, and analyze application logs with adva
 4. **Given** I select "Group By: Error Type", **When** the grouping is applied, **Then** logs are grouped by error type with expandable sections
 5. **Given** I select a log entry in the list, **When** I view the details panel, **Then** I see the full message, stack trace (if applicable), and context data in formatted JSON
 6. **Given** I am viewing a log entry, **When** I click "Copy" or "Export Entry", **Then** the log details are copied to clipboard or exported to a file
+7. **Given** I am on the Dashboard tab, **When** I click "Sync Logs", **Then** the application reads all `_app_error.csv` and `_db_error.csv` files, inserts them into the database in batches, and updates the progress bar with row counts
+8. **Given** I am on the Dashboard tab, **When** I click "Purge Logs" and confirm, **Then** all CSV log files in the log directory are permanently deleted
 
 ---
 

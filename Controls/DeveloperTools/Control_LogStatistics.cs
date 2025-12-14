@@ -77,6 +77,43 @@ namespace MTM_WIP_Application_Winforms.Controls.DeveloperTools
             }
         }
 
+        private async void Control_LogStatistics_Button_Purge_Click(object sender, EventArgs e)
+        {
+            if (_service == null) return;
+
+            var confirm = MessageBox.Show("Are you sure you want to delete ALL log files? This cannot be undone.", 
+                "Confirm Purge", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            
+            if (confirm != DialogResult.Yes) return;
+
+            Control_LogStatistics_Button_Purge.Enabled = false;
+            Control_LogStatistics_Label_SyncStatus.Text = "Purging...";
+
+            try
+            {
+                var result = await _service.PurgeLogsAsync();
+                Control_LogStatistics_Label_SyncStatus.Text = result.IsSuccess ? "Purge Complete" : "Purge Failed";
+                
+                if (result.IsSuccess)
+                {
+                    MessageBox.Show(result.ErrorMessage, "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else if (_errorHandler != null)
+                {
+                    _errorHandler.ShowUserError(result.ErrorMessage);
+                }
+            }
+            catch (Exception ex)
+            {
+                Control_LogStatistics_Label_SyncStatus.Text = "Error";
+                _errorHandler?.HandleException(ex, Models.Enum_ErrorSeverity.Medium, callerName: nameof(Control_LogStatistics_Button_Purge_Click), controlName: this.Name);
+            }
+            finally
+            {
+                Control_LogStatistics_Button_Purge.Enabled = true;
+            }
+        }
+
         private void UpdateProgress(int current, int total)
         {
             if (total > 0)

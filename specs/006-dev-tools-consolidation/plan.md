@@ -61,6 +61,8 @@ This plan transforms the application's core logging and error handling architect
 | Interface + Static Accessor Pattern | For backward compatibility during migration, both `ILoggingService` injection AND a static `LoggingUtility.Instance` property will be available |
 | Phased Migration | Static calls remain functional during transition; no Big Bang refactoring |
 | Preserve Service_ErrorHandler MessageBox.Show | Internal to error handling; fallback for when the enhanced dialog fails |
+| Batch Log Insertion | Log synchronization uses batch processing (100 entries/batch) with single transaction per batch to optimize performance |
+| Log File Filtering | Only `_app_error.csv` and `_db_error.csv` files are synced to database; `_normal.csv` and compiled logs are excluded |
 
 ## Project Structure
 

@@ -223,6 +223,7 @@ namespace MTM_WIP_Application_Winforms.Controls.DeveloperTools
             // 
             this.Control_LogStatistics_Panel_Sync.Controls.Add(this.Control_LogStatistics_Label_SyncStatus);
             this.Control_LogStatistics_Panel_Sync.Controls.Add(this.Control_LogStatistics_ProgressBar_Sync);
+            this.Control_LogStatistics_Panel_Sync.Controls.Add(this.Control_LogStatistics_Button_Purge);
             this.Control_LogStatistics_Panel_Sync.Controls.Add(this.Control_LogStatistics_Button_Sync);
             this.Control_LogStatistics_Panel_Sync.Dock = DockStyle.Fill;
             this.Control_LogStatistics_Panel_Sync.Location = new Point(483, 3);
@@ -241,23 +242,35 @@ namespace MTM_WIP_Application_Winforms.Controls.DeveloperTools
             this.Control_LogStatistics_Button_Sync.UseVisualStyleBackColor = true;
             this.Control_LogStatistics_Button_Sync.Click += new System.EventHandler(this.Control_LogStatistics_Button_Sync_Click);
             // 
+            // Control_LogStatistics_Button_Purge
+            // 
+            this.Control_LogStatistics_Button_Purge = new Button();
+            this.Control_LogStatistics_Button_Purge.Dock = DockStyle.Top;
+            this.Control_LogStatistics_Button_Purge.Location = new Point(0, 23);
+            this.Control_LogStatistics_Button_Purge.Name = "Control_LogStatistics_Button_Purge";
+            this.Control_LogStatistics_Button_Purge.Size = new Size(114, 23);
+            this.Control_LogStatistics_Button_Purge.TabIndex = 1;
+            this.Control_LogStatistics_Button_Purge.Text = "Purge Logs";
+            this.Control_LogStatistics_Button_Purge.UseVisualStyleBackColor = true;
+            this.Control_LogStatistics_Button_Purge.Click += new System.EventHandler(this.Control_LogStatistics_Button_Purge_Click);
+            // 
             // Control_LogStatistics_ProgressBar_Sync
             // 
             this.Control_LogStatistics_ProgressBar_Sync.Dock = DockStyle.Top;
-            this.Control_LogStatistics_ProgressBar_Sync.Location = new Point(0, 23);
+            this.Control_LogStatistics_ProgressBar_Sync.Location = new Point(0, 46);
             this.Control_LogStatistics_ProgressBar_Sync.Name = "Control_LogStatistics_ProgressBar_Sync";
-            this.Control_LogStatistics_ProgressBar_Sync.Size = new Size(114, 15);
-            this.Control_LogStatistics_ProgressBar_Sync.TabIndex = 1;
+            this.Control_LogStatistics_ProgressBar_Sync.Size = new Size(114, 10);
+            this.Control_LogStatistics_ProgressBar_Sync.TabIndex = 2;
             // 
             // Control_LogStatistics_Label_SyncStatus
             // 
             this.Control_LogStatistics_Label_SyncStatus.Dock = DockStyle.Fill;
             this.Control_LogStatistics_Label_SyncStatus.Font = new Font("Segoe UI", 8F, FontStyle.Regular, GraphicsUnit.Point);
             this.Control_LogStatistics_Label_SyncStatus.ForeColor = Color.Gray;
-            this.Control_LogStatistics_Label_SyncStatus.Location = new Point(0, 38);
+            this.Control_LogStatistics_Label_SyncStatus.Location = new Point(0, 56);
             this.Control_LogStatistics_Label_SyncStatus.Name = "Control_LogStatistics_Label_SyncStatus";
-            this.Control_LogStatistics_Label_SyncStatus.Size = new Size(114, 36);
-            this.Control_LogStatistics_Label_SyncStatus.TabIndex = 2;
+            this.Control_LogStatistics_Label_SyncStatus.Size = new Size(114, 18);
+            this.Control_LogStatistics_Label_SyncStatus.TabIndex = 3;
             this.Control_LogStatistics_Label_SyncStatus.Text = "Ready";
             this.Control_LogStatistics_Label_SyncStatus.TextAlign = ContentAlignment.MiddleCenter;
             // 
@@ -295,6 +308,7 @@ namespace MTM_WIP_Application_Winforms.Controls.DeveloperTools
         private Label Control_LogStatistics_Label_InfoLabel;
         private Panel Control_LogStatistics_Panel_Sync;
         private Button Control_LogStatistics_Button_Sync;
+        private Button Control_LogStatistics_Button_Purge;
         private ProgressBar Control_LogStatistics_ProgressBar_Sync;
         private Label Control_LogStatistics_Label_SyncStatus;
     }

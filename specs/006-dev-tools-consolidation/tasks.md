@@ -89,6 +89,8 @@
 - [x] T022 [US1] Create IService_DeveloperTools.cs interface in Services/DeveloperTools/IService_DeveloperTools.cs per contracts/IService_DeveloperTools.md
 - [x] T023 [US1] Create Service_DeveloperTools.cs implementation in Services/DeveloperTools/Service_DeveloperTools.cs with CSV parsing, database queries, statistics aggregation
 - [x] T024 [US1] Register IService_DeveloperTools in Service_OnStartup_DependencyInjection.cs as transient
+- [x] T024a [US3] Implement SyncLogsToDatabaseAsync in Service_DeveloperTools.cs with batch insertion and progress reporting
+- [x] T024b [US3] Implement PurgeLogsAsync in Service_DeveloperTools.cs to delete CSV log files
 
 ### 3.5 Backward Compatibility Verification
 

@@ -44,6 +44,12 @@ public interface IService_DeveloperTools
     /// <returns>Model_Dao_Result indicating success or failure.</returns>
     Task<Model_Dao_Result> SyncLogsToDatabaseAsync(IProgress<(int current, int total)>? progress = null);
 
+    /// <summary>
+    /// Purges all log files from the log directory.
+    /// </summary>
+    /// <returns>Model_Dao_Result indicating success or failure.</returns>
+    Task<Model_Dao_Result> PurgeLogsAsync();
+
     #endregion
 
     #region Log Queries

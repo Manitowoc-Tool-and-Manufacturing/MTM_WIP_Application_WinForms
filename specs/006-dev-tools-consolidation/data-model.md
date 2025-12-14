@@ -35,7 +35,7 @@
 
 ## Entity Definitions
 
-### 1. Model_LogEntry
+### 1. Model_DevLogEntry
 
 Represents a single log record from either CSV files or database.
 
@@ -45,7 +45,7 @@ namespace MTM_WIP_Application_Winforms.Models.DeveloperTools;
 /// <summary>
 /// Represents a single log entry from CSV files or database.
 /// </summary>
-public class Model_LogEntry
+public class Model_DevLogEntry
 {
     #region Properties
 

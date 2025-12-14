@@ -510,6 +510,38 @@ public class Service_DeveloperTools : IService_DeveloperTools
         }
     }
 
+    public async Task<Model_Dao_Result> PurgeLogsAsync()
+    {
+        try
+        {
+            var logRoot = Helper_LogPath.LogDirectory;
+            if (!Directory.Exists(logRoot)) return Model_Dao_Result.Success("No logs found to purge.");
+
+            var files = Directory.GetFiles(logRoot, "*.csv", SearchOption.AllDirectories);
+            int count = 0;
+            
+            await Task.Run(() =>
+            {
+                foreach (var file in files)
+                {
+                    try 
+                    { 
+                        File.Delete(file); 
+                        count++;
+                    }
+                    catch { /* Ignore locked files */ }
+                }
+            });
+
+            return Model_Dao_Result.Success($"Purged {count} log files.");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogApplicationError(ex);
+            return Model_Dao_Result.Failure(ex.Message);
+        }
+    }
+
     private async Task<int> CountLogEntriesInFileAsync(string filePath)
     {
         try 

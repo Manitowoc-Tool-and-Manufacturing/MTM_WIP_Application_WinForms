@@ -38,6 +38,8 @@ Fields are escaped via `EscapeCsvField()` method to handle commas/quotes in cont
 3. The existing `Form_ViewLogsForm` already has CSV parsing code that can be migrated
 4. Auto-refresh will need to use `FileSystemWatcher` or periodic file checks
 5. Large log files may require virtualization for performance
+6. **Log Synchronization**: Only `_app_error.csv` and `_db_error.csv` files should be synced to the database. `_normal.csv` files contain general info logs that are not needed in the error database.
+7. **Severity Mapping**: CSV logs use "INFO", "WARN", "ERROR" etc., while the database uses "Information", "Warning", "Error". A mapping function is required during sync.
 
 ---
 
