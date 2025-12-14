@@ -57,6 +57,14 @@ namespace MTM_WIP_Application_Winforms.Forms.DeveloperTools
             DeveloperToolsForm_TabControl_Main.SelectedTab = DeveloperToolsForm_TabPage_Logs;
         }
 
+        public void SelectTab(int index)
+        {
+            if (index >= 0 && index < DeveloperToolsForm_TabControl_Main.TabCount)
+            {
+                DeveloperToolsForm_TabControl_Main.SelectedIndex = index;
+            }
+        }
+
         #endregion
 
         #region Event Handlers

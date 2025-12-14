@@ -1417,80 +1417,7 @@ using MTM_WIP_Application_Winforms.Services.ErrorHandling;
 
         #endregion
 
-        private void MainForm_MenuStrip_Development_ViewApplicationLogs_Click(object? sender, EventArgs e)
-        {
-            try
-            {
-                // Redirect to Developer Tools
-                MainForm_MenuStrip_Development_DeveloperTools_Click(sender, e);
-            }
-            catch (Exception ex)
-            {
-                LoggingUtility.LogApplicationError(ex);
-                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, controlName: nameof(MainForm));
-            }
-        }
-
-        private async void MainForm_MenuStrip_Development_SyncReports_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                // Disable menu item during sync
-                if (sender is ToolStripMenuItem menuItem)
-                {
-                    menuItem.Enabled = false;
-                }
-
-                // Show progress indication
-                Cursor = Cursors.WaitCursor;
-
-                // Trigger manual sync
-                var result = await Service_ErrorReportSync.SyncManuallyAsync();
-
-                Cursor = Cursors.Default;
-
-                // Show result to user
-                if (result.IsSuccess)
-                {
-                    Service_ErrorHandler.ShowInformation(
-                        result.StatusMessage ?? $"Sync completed successfully. {result.Data} report(s) submitted.",
-                        "Sync Complete");
-                }
-                else
-                {
-                    Service_ErrorHandler.ShowWarning(
-                        result.ErrorMessage ?? "Failed to synchronize pending error reports.",
-                        "Sync Failed");
-                }
-            }
-            catch (Exception ex)
-            {
-                Cursor = Cursors.Default;
-                LoggingUtility.LogApplicationError(ex);
-
-                Service_ErrorHandler.HandleException(
-                    ex,
-                    Enum_ErrorSeverity.Medium,
-                    contextData: new Dictionary<string, object>
-                    {
-                        ["Operation"] = "ManualSync",
-                        ["User"] = Model_Application_Variables.User
-                    },
-                    controlName: nameof(MainForm_MenuStrip_Development_SyncReports_Click));
-            }
-            finally
-            {
-                // Re-enable menu item
-                if (sender is ToolStripMenuItem menuItem)
-                {
-                    menuItem.Enabled = true;
-                }
-            }
-        }
-
-
-
-        private void MainForm_MenuStrip_Development_DeveloperTools_Click(object? sender, EventArgs e)
+        private void OpenDeveloperTools(int tabIndex)
         {
             try
             {
@@ -1501,11 +1428,37 @@ using MTM_WIP_Application_Winforms.Services.ErrorHandling;
 
                 var form = new Forms.DeveloperTools.DeveloperToolsForm(devToolsService, logger, errorHandler, feedbackManager);
                 form.Show();
+                form.SelectTab(tabIndex);
             }
             catch (Exception ex)
             {
-                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, controlName: nameof(MainForm_MenuStrip_Development_DeveloperTools_Click));
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, controlName: nameof(MainForm));
             }
+        }
+
+        private void MainForm_MenuStrip_Development_Dashboard_Click(object? sender, EventArgs e)
+        {
+            OpenDeveloperTools(0);
+        }
+
+        private void MainForm_MenuStrip_Development_Logs_Click(object? sender, EventArgs e)
+        {
+            OpenDeveloperTools(1);
+        }
+
+        private void MainForm_MenuStrip_Development_Feedback_Click(object? sender, EventArgs e)
+        {
+            OpenDeveloperTools(2);
+        }
+
+        private void MainForm_MenuStrip_Development_SystemInfo_Click(object? sender, EventArgs e)
+        {
+            OpenDeveloperTools(3);
+        }
+
+        private void MainForm_MenuStrip_Development_Database_Click(object? sender, EventArgs e)
+        {
+            OpenDeveloperTools(4);
         }
 
         #region Help Menu Event Handlers
