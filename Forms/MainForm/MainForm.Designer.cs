@@ -188,7 +188,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             MainForm_MenuStrip_Exit.Name = "MainForm_MenuStrip_Exit";
             MainForm_MenuStrip_Exit.ShortcutKeys = Keys.Alt | Keys.F4;
             MainForm_MenuStrip_Exit.Size = new Size(188, 22);
-            MainForm_MenuStrip_Exit.Text = "Exit";
+            MainForm_MenuStrip_Exit.Text = "🚪 Exit";
             MainForm_MenuStrip_Exit.Click += MainForm_MenuStrip_Exit_Click;
             // 
             // MainForm_MenuStrip_View

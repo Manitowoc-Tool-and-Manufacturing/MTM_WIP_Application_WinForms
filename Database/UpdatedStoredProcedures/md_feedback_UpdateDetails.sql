@@ -11,6 +11,7 @@ CREATE PROCEDURE `md_feedback_UpdateDetails`(
     IN p_Location1 VARCHAR(255),
     IN p_Location2 VARCHAR(255),
     IN p_ExpectedConsistency TEXT,
+    IN p_Priority VARCHAR(50),
     OUT p_Status INT,
     OUT p_ErrorMsg VARCHAR(255)
 )
@@ -32,6 +33,7 @@ BEGIN
         Location1 = p_Location1,
         Location2 = p_Location2,
         ExpectedConsistency = p_ExpectedConsistency,
+        Priority = p_Priority,
         LastUpdatedDateTime = NOW()
     WHERE FeedbackID = p_FeedbackID;
 

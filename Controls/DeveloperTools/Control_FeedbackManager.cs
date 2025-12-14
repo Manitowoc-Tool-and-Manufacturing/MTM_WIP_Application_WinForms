@@ -66,6 +66,18 @@ namespace MTM_WIP_Application_Winforms.Controls.DeveloperTools
             Control_FeedbackManager_DataGridView_Feedback.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Title", HeaderText = "Subject", Width = 200, ReadOnly = true });
             Control_FeedbackManager_DataGridView_Feedback.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Description", HeaderText = "Description", AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill, ReadOnly = true });
 
+            // Priority Column
+            var priorityColumn = new DataGridViewComboBoxColumn
+            {
+                DataPropertyName = "Priority",
+                HeaderText = "Priority",
+                Width = 80,
+                ReadOnly = false, // Editable
+                Name = "colPriority"
+            };
+            priorityColumn.Items.AddRange("Critical", "High", "Medium", "Low");
+            Control_FeedbackManager_DataGridView_Feedback.Columns.Add(priorityColumn);
+
             // Events
             Control_FeedbackManager_Button_Refresh.Click += async (s, e) => await LoadDataAsync();
             Control_FeedbackManager_ComboBox_Status.SelectedIndexChanged += async (s, e) => await LoadDataAsync();
@@ -80,6 +92,8 @@ namespace MTM_WIP_Application_Winforms.Controls.DeveloperTools
             Control_FeedbackManager_Button_MarkClosed.Click += async (s, e) => await BulkUpdateStatusAsync("Closed");
             
             Control_FeedbackManager_DataGridView_Feedback.RowPrePaint += Control_FeedbackManager_DataGridView_Feedback_RowPrePaint;
+            Control_FeedbackManager_DataGridView_Feedback.CellValueChanged += Control_FeedbackManager_DataGridView_Feedback_CellValueChanged;
+            Control_FeedbackManager_DataGridView_Feedback.CurrentCellDirtyStateChanged += Control_FeedbackManager_DataGridView_Feedback_CurrentCellDirtyStateChanged;
         }
 
         public async Task LoadDataAsync()
@@ -158,6 +172,57 @@ namespace MTM_WIP_Application_Winforms.Controls.DeveloperTools
             else if (priority.Equals("Medium", StringComparison.OrdinalIgnoreCase))
             {
                 row.DefaultCellStyle.BackColor = Color.FromArgb(255, 248, 225); // Light Yellow
+            }
+        }
+
+        private void Control_FeedbackManager_DataGridView_Feedback_CurrentCellDirtyStateChanged(object? sender, EventArgs e)
+        {
+            if (Control_FeedbackManager_DataGridView_Feedback.IsCurrentCellDirty)
+            {
+                Control_FeedbackManager_DataGridView_Feedback.CommitEdit(DataGridViewDataErrorContexts.Commit);
+            }
+        }
+
+        private async void Control_FeedbackManager_DataGridView_Feedback_CellValueChanged(object? sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex < 0 || e.ColumnIndex < 0) return;
+            if (_feedbackManager == null || _errorHandler == null) return;
+
+            if (Control_FeedbackManager_DataGridView_Feedback.Columns[e.ColumnIndex].Name == "colPriority")
+            {
+                var row = Control_FeedbackManager_DataGridView_Feedback.Rows[e.RowIndex];
+                var newPriority = row.Cells[e.ColumnIndex].Value?.ToString();
+                
+                if (row.DataBoundItem is DataRowView drv)
+                {
+                    if (int.TryParse(drv["FeedbackID"].ToString(), out int id))
+                    {
+                        try
+                        {
+                            // Fetch current feedback
+                            var currentResult = await _feedbackManager.GetSubmissionAsync(id);
+                            if (currentResult.IsSuccess && currentResult.Data != null)
+                            {
+                                var feedback = currentResult.Data;
+                                feedback.Priority = newPriority;
+                                
+                                // Update
+                                var updateResult = await _feedbackManager.UpdateDetailsAsync(feedback);
+                                if (!updateResult.IsSuccess)
+                                {
+                                    _errorHandler.ShowUserError(updateResult.ErrorMessage);
+                                    await LoadDataAsync(); // Revert change
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            _errorHandler.HandleException(ex, Models.Enum_ErrorSeverity.Medium,
+                                callerName: nameof(Control_FeedbackManager_DataGridView_Feedback_CellValueChanged),
+                                controlName: this.Name);
+                        }
+                    }
+                }
             }
         }
 

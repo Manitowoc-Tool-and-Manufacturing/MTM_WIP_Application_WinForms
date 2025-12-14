@@ -1,6 +1,8 @@
 using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Models.DeveloperTools;
+using MTM_WIP_Application_Winforms.Models.Entities;
+using MTM_WIP_Application_Winforms.Services;
 using MTM_WIP_Application_Winforms.Services.DeveloperTools;
 using MTM_WIP_Application_Winforms.Services.ErrorHandling;
 
@@ -11,9 +13,12 @@ namespace MTM_WIP_Application_Winforms.Forms.SystemHealth
         #region Fields
 
         private readonly IService_DeveloperTools _devToolsService;
+        private readonly IService_FeedbackManager _feedbackManager;
         private readonly IService_ErrorHandler _errorHandler;
         private readonly string _currentUserId;
         private readonly System.Windows.Forms.Timer _refreshTimer;
+        private List<Model_UserFeedback> _feedbackList = new List<Model_UserFeedback>();
+        private int _currentFeedbackIndex = 0;
 
         #endregion
 
@@ -21,9 +26,11 @@ namespace MTM_WIP_Application_Winforms.Forms.SystemHealth
 
         public Form_SystemHealth(
             IService_DeveloperTools devToolsService,
+            IService_FeedbackManager feedbackManager,
             IService_ErrorHandler errorHandler)
         {
             _devToolsService = devToolsService ?? throw new ArgumentNullException(nameof(devToolsService));
+            _feedbackManager = feedbackManager ?? throw new ArgumentNullException(nameof(feedbackManager));
             _errorHandler = errorHandler ?? throw new ArgumentNullException(nameof(errorHandler));
             _currentUserId = Model_Application_Variables.User;
             _refreshTimer = new System.Windows.Forms.Timer();
@@ -80,14 +87,20 @@ namespace MTM_WIP_Application_Winforms.Forms.SystemHealth
             {
                 case Enum_HealthIndicator.Green:
                     Form_SystemHealth_Panel_HealthIndicator.BackColor = Color.FromArgb(46, 204, 113); // Green
+                    Form_SystemHealth_Label_HealthIcon.BackColor = Color.FromArgb(46, 204, 113); // Green
+                    Form_SystemHealth_Label_HealthMessage.BackColor = Color.FromArgb(46, 204, 113); // Green
                     Form_SystemHealth_Label_HealthIcon.Text = "✅";
                     break;
                 case Enum_HealthIndicator.Yellow:
                     Form_SystemHealth_Panel_HealthIndicator.BackColor = Color.FromArgb(241, 196, 15); // Yellow
+                    Form_SystemHealth_Label_HealthIcon.BackColor = Color.FromArgb(241, 196, 15); // Yellow
+                    Form_SystemHealth_Label_HealthMessage.BackColor = Color.FromArgb(241, 196, 15); // Yellow
                     Form_SystemHealth_Label_HealthIcon.Text = "⚠️";
                     break;
                 case Enum_HealthIndicator.Red:
                     Form_SystemHealth_Panel_HealthIndicator.BackColor = Color.FromArgb(231, 76, 60); // Red
+                    Form_SystemHealth_Label_HealthIcon.BackColor = Color.FromArgb(231, 76, 60); // Red
+                    Form_SystemHealth_Label_HealthMessage.BackColor = Color.FromArgb(231, 76, 60); // Red
                     Form_SystemHealth_Label_HealthIcon.Text = "❌";
                     break;
             }
@@ -100,17 +113,34 @@ namespace MTM_WIP_Application_Winforms.Forms.SystemHealth
                 var result = await _devToolsService.GetUserFeedbackAsync(_currentUserId);
                 if (result.IsSuccess && result.Data != null)
                 {
-                    Form_SystemHealth_DataGridView_Feedback.DataSource = result.Data;
-                    
-                    if (result.Data.Rows.Count == 0)
+                    _feedbackList = new List<Model_UserFeedback>();
+                    foreach (System.Data.DataRow row in result.Data.Rows)
                     {
-                        Form_SystemHealth_Label_NoFeedback.Visible = true;
-                        Form_SystemHealth_DataGridView_Feedback.Visible = false;
+                        _feedbackList.Add(new Model_UserFeedback
+                        {
+                            FeedbackID = Convert.ToInt32(row["FeedbackID"]),
+                            FeedbackType = row["FeedbackType"].ToString() ?? "",
+                            SubmissionDateTime = Convert.ToDateTime(row["SubmissionDateTime"]),
+                            ActiveSection = row["ActiveSection"].ToString(),
+                            Category = row["Category"].ToString(),
+                            Severity = row["Severity"].ToString(),
+                            Priority = row["Priority"].ToString(),
+                            Title = row["Title"].ToString(),
+                            Description = row["Description"].ToString(),
+                            Status = row["Status"].ToString() ?? "New",
+                            UserFullName = row["UserFullName"].ToString()
+                        });
+                    }
+
+                    if (_feedbackList.Count > 0)
+                    {
+                        _currentFeedbackIndex = 0;
+                        ShowFeedback(_currentFeedbackIndex);
                     }
                     else
                     {
-                        Form_SystemHealth_Label_NoFeedback.Visible = false;
-                        Form_SystemHealth_DataGridView_Feedback.Visible = true;
+                        ClearFeedbackFields();
+                        Form_SystemHealth_Label_UserFullName.Text = "No feedback found.";
                     }
                 }
                 else
@@ -126,35 +156,65 @@ namespace MTM_WIP_Application_Winforms.Forms.SystemHealth
             }
         }
 
-        private void Form_SystemHealth_Button_SubmitFeedback_Click(object sender, EventArgs e)
+        private void ShowFeedback(int index)
         {
-            // Open feedback form (assuming it exists and is accessible)
-            // For now, we might need to check how to open it.
-            // Usually via MainForm or a specific service.
-            // If not available, show message.
-            _errorHandler.ShowInformation("Feedback submission form is not yet linked.");
+            if (index < 0 || index >= _feedbackList.Count) return;
+
+            var feedback = _feedbackList[index];
+            
+            Form_SystemHealth_Label_UserFullName.Text = $"User: {feedback.UserFullName}";
+            Form_SystemHealth_TextBox_FeedbackType.Text = feedback.FeedbackType;
+            Form_SystemHealth_TextBox_SubmissionDate.Text = feedback.SubmissionDateTime.ToShortDateString();
+            Form_SystemHealth_TextBox_ActiveSection.Text = feedback.ActiveSection;
+            Form_SystemHealth_TextBox_Category.Text = feedback.Category;
+            Form_SystemHealth_TextBox_Severity.Text = feedback.Severity;
+            Form_SystemHealth_TextBox_Priority.Text = feedback.Priority;
+            Form_SystemHealth_TextBox_Title.Text = feedback.Title;
+            Form_SystemHealth_TextBox_Description.Text = feedback.Description;
+            Form_SystemHealth_TextBox_Status.Text = feedback.Status;
+
+            // Update buttons state
+            Form_SystemHealth_Button_Previous.Enabled = index > 0;
+            Form_SystemHealth_Button_Next.Enabled = index < _feedbackList.Count - 1;
         }
 
-        private void Form_SystemHealth_Button_ContactSupport_Click(object sender, EventArgs e)
+        private void ClearFeedbackFields()
         {
-            try
+            Form_SystemHealth_TextBox_FeedbackType.Clear();
+            Form_SystemHealth_TextBox_SubmissionDate.Clear();
+            Form_SystemHealth_TextBox_ActiveSection.Clear();
+            Form_SystemHealth_TextBox_Category.Clear();
+            Form_SystemHealth_TextBox_Severity.Clear();
+            Form_SystemHealth_TextBox_Priority.Clear();
+            Form_SystemHealth_TextBox_Title.Clear();
+            Form_SystemHealth_TextBox_Description.Clear();
+            Form_SystemHealth_TextBox_Status.Clear();
+            Form_SystemHealth_Button_Previous.Enabled = false;
+            Form_SystemHealth_Button_Next.Enabled = false;
+        }
+
+        private void Form_SystemHealth_Button_Previous_Click(object sender, EventArgs e)
+        {
+            if (_currentFeedbackIndex > 0)
             {
-                var subject = $"Support Request - {Model_Application_Variables.User}";
-                var body = $"Machine: {Environment.MachineName}%0D%0AVersion: {Application.ProductVersion}";
-                var mailto = $"mailto:support@mtm.com?subject={subject}&body={body}";
-                
-                System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
-                {
-                    FileName = mailto,
-                    UseShellExecute = true
-                });
+                _currentFeedbackIndex--;
+                ShowFeedback(_currentFeedbackIndex);
             }
-            catch (Exception ex)
+        }
+
+        private void Form_SystemHealth_Button_Next_Click(object sender, EventArgs e)
+        {
+            if (_currentFeedbackIndex < _feedbackList.Count - 1)
             {
-                _errorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
-                    callerName: nameof(Form_SystemHealth_Button_ContactSupport_Click),
-                    controlName: Name);
+                _currentFeedbackIndex++;
+                ShowFeedback(_currentFeedbackIndex);
             }
+        }
+
+        private void Form_SystemHealth_Button_SubmitFeedback_Click(object sender, EventArgs e)
+        {
+            // TODO: Implement Submit Feedback
+            _errorHandler.ShowInformation("Feedback submission form is not yet linked.");
         }
 
         #endregion

@@ -1568,9 +1568,10 @@ using MTM_WIP_Application_Winforms.Services.ErrorHandling;
             {
                 if (Program.ServiceProvider == null) throw new InvalidOperationException("ServiceProvider is not initialized.");
                 var devToolsService = Program.ServiceProvider.GetRequiredService<IService_DeveloperTools>();
+                var feedbackManager = Program.ServiceProvider.GetRequiredService<IService_FeedbackManager>();
                 var errorHandler = Program.ServiceProvider.GetRequiredService<IService_ErrorHandler>();
                 
-                using var healthForm = new Forms.SystemHealth.Form_SystemHealth(devToolsService, errorHandler);
+                using var healthForm = new Forms.SystemHealth.Form_SystemHealth(devToolsService, feedbackManager, errorHandler);
                 healthForm.ShowDialog(this);
             }
             catch (Exception ex)
@@ -1593,7 +1594,7 @@ using MTM_WIP_Application_Winforms.Services.ErrorHandling;
 
             if (!hasDbMenu)
             {
-                var dbMenu = new ToolStripMenuItem("Database Maintenance");
+                var dbMenu = new ToolStripMenuItem("🗄️ Database Maintenance");
                 dbMenu.Click += MainForm_MenuStrip_Development_DatabaseMaintenance_Click;
                 MainForm_MenuStrip_Development.DropDownItems.Add(dbMenu);
             }
@@ -1606,7 +1607,7 @@ using MTM_WIP_Application_Winforms.Services.ErrorHandling;
             bool hasAnalyticsMenu = false;
             foreach (ToolStripItem item in MainForm_MenuStrip_View.DropDownItems)
             {
-                if (item.Text == "Material Handler Analytics") hasAnalyticsMenu = true;
+                if (item.Text == "📈 Material Handler Analytics") hasAnalyticsMenu = true;
             }
 
             if (!hasAnalyticsMenu)
@@ -1618,7 +1619,7 @@ using MTM_WIP_Application_Winforms.Services.ErrorHandling;
                      MainForm_MenuStrip_View.DropDownItems.Add(new ToolStripSeparator());
                 }
 
-                var analyticsMenu = new ToolStripMenuItem("Material Handler Analytics");
+                var analyticsMenu = new ToolStripMenuItem("📈 Material Handler Analytics");
                 analyticsMenu.Click += MainForm_MenuStrip_View_Analytics_Click;
                 MainForm_MenuStrip_View.DropDownItems.Add(analyticsMenu);
             }

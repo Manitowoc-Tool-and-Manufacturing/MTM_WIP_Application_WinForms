@@ -148,7 +148,8 @@ namespace MTM_WIP_Application_Winforms.Data
                 { "AffectedUsers", model.AffectedUsers ?? (object)DBNull.Value },
                 { "Location1", model.Location1 ?? (object)DBNull.Value },
                 { "Location2", model.Location2 ?? (object)DBNull.Value },
-                { "ExpectedConsistency", model.ExpectedConsistency ?? (object)DBNull.Value }
+                { "ExpectedConsistency", model.ExpectedConsistency ?? (object)DBNull.Value },
+                { "Priority", model.Priority ?? (object)DBNull.Value }
             };
 
             return await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
