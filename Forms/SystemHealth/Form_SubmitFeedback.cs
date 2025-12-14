@@ -66,7 +66,7 @@ namespace MTM_WIP_Application_Winforms.Forms.SystemHealth
                     UserName = Model_Application_Variables.User,
                     SubmissionDateTime = DateTime.Now,
                     Status = "New",
-                    WindowForm = this.Owner?.Name ?? "Unknown",
+                    WindowForm = "MainForm", // Default to MainForm to avoid validation errors with unmapped forms
                     ApplicationVersion = Application.ProductVersion,
                     MachineIdentifier = Environment.MachineName,
                     OSVersion = Environment.OSVersion.ToString()

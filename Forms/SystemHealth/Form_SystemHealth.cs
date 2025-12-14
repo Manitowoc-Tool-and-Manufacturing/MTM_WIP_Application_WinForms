@@ -46,6 +46,15 @@ namespace MTM_WIP_Application_Winforms.Forms.SystemHealth
 
         private async void Form_SystemHealth_Load(object sender, EventArgs e)
         {
+            // Ensure textboxes are visible
+            foreach (Control c in Form_SystemHealth_TableLayout_FeedbackDetails.Controls)
+            {
+                if (c is TextBox tb)
+                {
+                    tb.BorderStyle = BorderStyle.FixedSingle;
+                }
+            }
+
             await LoadHealthStatusAsync();
             await LoadUserFeedbackAsync();
             _refreshTimer.Start();
@@ -213,8 +222,11 @@ namespace MTM_WIP_Application_Winforms.Forms.SystemHealth
 
         private void Form_SystemHealth_Button_SubmitFeedback_Click(object sender, EventArgs e)
         {
-            // TODO: Implement Submit Feedback
-            _errorHandler.ShowInformation("Feedback submission form is not yet linked.");
+            using var form = new Form_SubmitFeedback(_feedbackManager, _errorHandler);
+            if (form.ShowDialog(this) == DialogResult.OK)
+            {
+                _ = LoadUserFeedbackAsync();
+            }
         }
 
         #endregion

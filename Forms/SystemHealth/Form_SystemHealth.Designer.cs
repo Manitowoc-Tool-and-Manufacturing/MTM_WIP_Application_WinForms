@@ -145,27 +145,27 @@ namespace MTM_WIP_Application_Winforms.Forms.SystemHealth
             this.Form_SystemHealth_TableLayout_FeedbackDetails.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.Form_SystemHealth_TableLayout_FeedbackDetails.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 100F));
             this.Form_SystemHealth_TableLayout_FeedbackDetails.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.Form_SystemHealth_TableLayout_FeedbackDetails.Controls.Add(new System.Windows.Forms.Label() { Text = "Type:", TextAlign = System.Drawing.ContentAlignment.MiddleLeft, Dock = System.Windows.Forms.DockStyle.Fill }, 0, 0);
+            this.Form_SystemHealth_TableLayout_FeedbackDetails.Controls.Add(new System.Windows.Forms.Label() { Text = "Type:", TextAlign = System.Drawing.ContentAlignment.MiddleLeft, Dock = System.Windows.Forms.DockStyle.Fill, AutoSize = true }, 0, 0);
             this.Form_SystemHealth_TableLayout_FeedbackDetails.Controls.Add(this.Form_SystemHealth_TextBox_FeedbackType, 1, 0);
-            this.Form_SystemHealth_TableLayout_FeedbackDetails.Controls.Add(new System.Windows.Forms.Label() { Text = "Date:", TextAlign = System.Drawing.ContentAlignment.MiddleLeft, Dock = System.Windows.Forms.DockStyle.Fill }, 2, 0);
+            this.Form_SystemHealth_TableLayout_FeedbackDetails.Controls.Add(new System.Windows.Forms.Label() { Text = "Date:", TextAlign = System.Drawing.ContentAlignment.MiddleLeft, Dock = System.Windows.Forms.DockStyle.Fill, AutoSize = true }, 2, 0);
             this.Form_SystemHealth_TableLayout_FeedbackDetails.Controls.Add(this.Form_SystemHealth_TextBox_SubmissionDate, 3, 0);
             
-            this.Form_SystemHealth_TableLayout_FeedbackDetails.Controls.Add(new System.Windows.Forms.Label() { Text = "Section:", TextAlign = System.Drawing.ContentAlignment.MiddleLeft, Dock = System.Windows.Forms.DockStyle.Fill }, 0, 1);
+            this.Form_SystemHealth_TableLayout_FeedbackDetails.Controls.Add(new System.Windows.Forms.Label() { Text = "Section:", TextAlign = System.Drawing.ContentAlignment.MiddleLeft, Dock = System.Windows.Forms.DockStyle.Fill, AutoSize = true }, 0, 1);
             this.Form_SystemHealth_TableLayout_FeedbackDetails.Controls.Add(this.Form_SystemHealth_TextBox_ActiveSection, 1, 1);
-            this.Form_SystemHealth_TableLayout_FeedbackDetails.Controls.Add(new System.Windows.Forms.Label() { Text = "Category:", TextAlign = System.Drawing.ContentAlignment.MiddleLeft, Dock = System.Windows.Forms.DockStyle.Fill }, 2, 1);
+            this.Form_SystemHealth_TableLayout_FeedbackDetails.Controls.Add(new System.Windows.Forms.Label() { Text = "Category:", TextAlign = System.Drawing.ContentAlignment.MiddleLeft, Dock = System.Windows.Forms.DockStyle.Fill, AutoSize = true }, 2, 1);
             this.Form_SystemHealth_TableLayout_FeedbackDetails.Controls.Add(this.Form_SystemHealth_TextBox_Category, 3, 1);
 
-            this.Form_SystemHealth_TableLayout_FeedbackDetails.Controls.Add(new System.Windows.Forms.Label() { Text = "Severity:", TextAlign = System.Drawing.ContentAlignment.MiddleLeft, Dock = System.Windows.Forms.DockStyle.Fill }, 0, 2);
+            this.Form_SystemHealth_TableLayout_FeedbackDetails.Controls.Add(new System.Windows.Forms.Label() { Text = "Severity:", TextAlign = System.Drawing.ContentAlignment.MiddleLeft, Dock = System.Windows.Forms.DockStyle.Fill, AutoSize = true }, 0, 2);
             this.Form_SystemHealth_TableLayout_FeedbackDetails.Controls.Add(this.Form_SystemHealth_TextBox_Severity, 1, 2);
-            this.Form_SystemHealth_TableLayout_FeedbackDetails.Controls.Add(new System.Windows.Forms.Label() { Text = "Priority:", TextAlign = System.Drawing.ContentAlignment.MiddleLeft, Dock = System.Windows.Forms.DockStyle.Fill }, 2, 2);
+            this.Form_SystemHealth_TableLayout_FeedbackDetails.Controls.Add(new System.Windows.Forms.Label() { Text = "Priority:", TextAlign = System.Drawing.ContentAlignment.MiddleLeft, Dock = System.Windows.Forms.DockStyle.Fill, AutoSize = true }, 2, 2);
             this.Form_SystemHealth_TableLayout_FeedbackDetails.Controls.Add(this.Form_SystemHealth_TextBox_Priority, 3, 2);
 
-            this.Form_SystemHealth_TableLayout_FeedbackDetails.Controls.Add(new System.Windows.Forms.Label() { Text = "Title:", TextAlign = System.Drawing.ContentAlignment.MiddleLeft, Dock = System.Windows.Forms.DockStyle.Fill }, 0, 3);
+            this.Form_SystemHealth_TableLayout_FeedbackDetails.Controls.Add(new System.Windows.Forms.Label() { Text = "Title:", TextAlign = System.Drawing.ContentAlignment.MiddleLeft, Dock = System.Windows.Forms.DockStyle.Fill, AutoSize = true }, 0, 3);
             this.Form_SystemHealth_TableLayout_FeedbackDetails.Controls.Add(this.Form_SystemHealth_TextBox_Title, 1, 3);
-            this.Form_SystemHealth_TableLayout_FeedbackDetails.Controls.Add(new System.Windows.Forms.Label() { Text = "Status:", TextAlign = System.Drawing.ContentAlignment.MiddleLeft, Dock = System.Windows.Forms.DockStyle.Fill }, 2, 3);
+            this.Form_SystemHealth_TableLayout_FeedbackDetails.Controls.Add(new System.Windows.Forms.Label() { Text = "Status:", TextAlign = System.Drawing.ContentAlignment.MiddleLeft, Dock = System.Windows.Forms.DockStyle.Fill, AutoSize = true }, 2, 3);
             this.Form_SystemHealth_TableLayout_FeedbackDetails.Controls.Add(this.Form_SystemHealth_TextBox_Status, 3, 3);
 
-            this.Form_SystemHealth_TableLayout_FeedbackDetails.Controls.Add(new System.Windows.Forms.Label() { Text = "Description:", TextAlign = System.Drawing.ContentAlignment.MiddleLeft, Dock = System.Windows.Forms.DockStyle.Top }, 0, 4);
+            this.Form_SystemHealth_TableLayout_FeedbackDetails.Controls.Add(new System.Windows.Forms.Label() { Text = "Description:", TextAlign = System.Drawing.ContentAlignment.MiddleLeft, Dock = System.Windows.Forms.DockStyle.Top, AutoSize = true }, 0, 4);
             this.Form_SystemHealth_TableLayout_FeedbackDetails.Controls.Add(this.Form_SystemHealth_TextBox_Description, 1, 4);
             this.Form_SystemHealth_TableLayout_FeedbackDetails.SetColumnSpan(this.Form_SystemHealth_TextBox_Description, 3);
 
@@ -235,6 +235,9 @@ namespace MTM_WIP_Application_Winforms.Forms.SystemHealth
             this.Form_SystemHealth_Panel_HealthIndicator.ResumeLayout(false);
             this.Form_SystemHealth_Panel_HealthIndicator.PerformLayout();
             this.Form_SystemHealth_GroupBox_Feedback.ResumeLayout(false);
+            this.Form_SystemHealth_GroupBox_Feedback.PerformLayout();
+            this.Form_SystemHealth_TableLayout_FeedbackDetails.ResumeLayout(false);
+            this.Form_SystemHealth_TableLayout_FeedbackDetails.PerformLayout();
             this.Form_SystemHealth_Panel_Actions.ResumeLayout(false);
             this.ResumeLayout(false);
 

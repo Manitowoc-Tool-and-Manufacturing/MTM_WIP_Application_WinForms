@@ -172,6 +172,16 @@ namespace MTM_WIP_Application_Winforms.Services
         {
             try
             {
+                // Resolve UserID if missing
+                if (feedback.UserID == 0 && !string.IsNullOrEmpty(feedback.UserName))
+                {
+                    var userResult = await Dao_User.GetUserByUsernameAsync(feedback.UserName);
+                    if (userResult.IsSuccess && userResult.Data != null)
+                    {
+                        feedback.UserID = Convert.ToInt32(userResult.Data["ID"]);
+                    }
+                }
+
                 // Validate inputs
                 var validationResult = await ValidateFeedbackAsync(feedback);
                 if (!validationResult.IsSuccess)
