@@ -1,4 +1,5 @@
 using System;
+using System.Data;
 
 namespace MTM_WIP_Application_Winforms.Models.DeveloperTools;
 
@@ -83,6 +84,10 @@ public class Model_DatabaseHealth
     /// Total queries executed.
     /// </summary>
     public int Queries { get; set; }
+    /// <summary>
+    /// Statistics about database tables (row counts, sizes).
+    /// </summary>
+    public DataTable? TableStatistics { get; set; }
 
     #endregion
 

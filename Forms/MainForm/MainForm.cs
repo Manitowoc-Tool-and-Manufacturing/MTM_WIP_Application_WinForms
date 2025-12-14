@@ -21,6 +21,9 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
 {
     #region MainForm
 
+using MTM_WIP_Application_Winforms.Services.DeveloperTools;
+using MTM_WIP_Application_Winforms.Services.ErrorHandling;
+
     public partial class MainForm : ThemedForm, IConnectionRecoveryView
     {
         #region Fields
@@ -30,7 +33,6 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
         public Helper_Control_MySqlSignal ConnectionStrengthChecker = null!;
         private Helper_StoredProcedureProgress? _progressHelper;
         private Form_ViewErrorReports? _viewErrorReportsForm;
-        private Forms.ViewLogs.ViewApplicationLogsForm? _viewApplicationLogsForm;
 
 
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -39,6 +41,9 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
 
         /// <summary>
         /// Flag to skip the next soft reset of the Inventory Tab.
+        /// Used when redirecting from Advanced Inventory with pre-populated data.
+        /// </summary>
+
         /// Used when redirecting from Advanced Inventory with pre-populated data.
         /// </summary>
         public bool SkipNextInventoryTabReset { get; set; }
@@ -1104,6 +1109,13 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                     return true;
                 }
 
+                // Ctrl+Shift+H - System Health
+                if (keyData == (Keys.Control | Keys.Shift | Keys.H))
+                {
+                    MainForm_MenuStrip_View_SystemHealth_Click(this, EventArgs.Empty);
+                    return true;
+                }
+
                 // Ctrl+P - Print active grid
                 if (keyData == (Keys.Control | Keys.P))
                 {
@@ -1255,13 +1267,6 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
                     _viewErrorReportsForm = null;
                 }
 
-                // Close View Application Logs form if it's open
-                if (_viewApplicationLogsForm != null && !_viewApplicationLogsForm.IsDisposed)
-                {
-                    _viewApplicationLogsForm.Close();
-                    _viewApplicationLogsForm.Dispose();
-                    _viewApplicationLogsForm = null;
-                }
             }
             catch (Exception ex)
             {
@@ -1422,59 +1427,13 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
         {
             try
             {
-                Service_DebugTracer.TraceUIAction("VIEW_APPLICATION_LOGS_MENU_CLICK", nameof(MainForm),
-                    new Dictionary<string, object>
-                    {
-                        ["MenuAction"] = "Development > View Application Logs",
-                        ["UserInitiated"] = true,
-                        ["CurrentUser"] = Model_Application_Variables.EnteredUser ?? "Unknown"
-                    });
-
-                // If form already exists and is not disposed, bring it to front
-                if (_viewApplicationLogsForm is { IsDisposed: false })
-                {
-                    if (_viewApplicationLogsForm.WindowState == FormWindowState.Minimized)
-                    {
-                        _viewApplicationLogsForm.WindowState = FormWindowState.Normal;
-                    }
-
-                    _viewApplicationLogsForm.BringToFront();
-                    _viewApplicationLogsForm.Focus();
-
-                    return;
-                }
-
-                // Create new form with current user pre-selected
-                string? currentUser = Model_Application_Variables.EnteredUser;
-                if (!string.IsNullOrWhiteSpace(currentUser))
-                {
-                    _viewApplicationLogsForm = new Forms.ViewLogs.ViewApplicationLogsForm(currentUser);
-
-                }
-                else
-                {
-                    _viewApplicationLogsForm = new Forms.ViewLogs.ViewApplicationLogsForm();
-
-                }
-
-                // Wire up form closed event to clean up reference
-                _viewApplicationLogsForm.FormClosed += (_, _) => _viewApplicationLogsForm = null;
-
-                // Show as modeless dialog
-                _viewApplicationLogsForm.Show(this);
-
-
+                // Redirect to Developer Tools
+                MainForm_MenuStrip_Development_DeveloperTools_Click(sender, e);
             }
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
-                    contextData: new Dictionary<string, object>
-                    {
-                        ["CurrentUser"] = Model_Application_Variables.EnteredUser ?? "Unknown",
-                        ["MenuAction"] = "Development > View Application Logs"
-                    },
-                    controlName: nameof(MainForm_MenuStrip_Development_ViewApplicationLogs_Click));
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, controlName: nameof(MainForm));
             }
         }
 
@@ -1673,6 +1632,24 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             {
                 using var analyticsForm = new Forms.WIPAppAnalytics.Form_WIPUserAnalytics();
                 analyticsForm.ShowDialog(this);
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, controlName: nameof(MainForm));
+            }
+        }
+
+        private void MainForm_MenuStrip_View_SystemHealth_Click(object? sender, EventArgs e)
+        {
+            try
+            {
+                if (Program.ServiceProvider == null) throw new InvalidOperationException("ServiceProvider is not initialized.");
+                var devToolsService = Program.ServiceProvider.GetRequiredService<IService_DeveloperTools>();
+                var errorHandler = Program.ServiceProvider.GetRequiredService<IService_ErrorHandler>();
+                
+                using var healthForm = new Forms.SystemHealth.Form_SystemHealth(devToolsService, errorHandler);
+                healthForm.ShowDialog(this);
             }
             catch (Exception ex)
             {

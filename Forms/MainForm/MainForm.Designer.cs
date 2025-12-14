@@ -23,6 +23,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
         private ToolStripMenuItem MainForm_MenuStrip_Exit;
         private ToolStripMenuItem MainForm_MenuStrip_View;
         private ToolStripMenuItem MainForm_MenuStrip_View_PersonalHistory;
+        private ToolStripMenuItem MainForm_MenuStrip_View_SystemHealth;
         private ToolStripSeparator MainForm_MenuStrip_View_Separator2;
         private ToolStripMenuItem MainForm_MenuStrip_Visual;
         private ToolStripMenuItem MainForm_MenuStrip_Visual_Inventory;
@@ -91,6 +92,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             MainForm_MenuStrip_Exit = new ToolStripMenuItem();
             MainForm_MenuStrip_View = new ToolStripMenuItem();
             MainForm_MenuStrip_View_PersonalHistory = new ToolStripMenuItem();
+            MainForm_MenuStrip_View_SystemHealth = new ToolStripMenuItem();
             MainForm_MenuStrip_View_Separator2 = new ToolStripSeparator();
             MainForm_MenuStrip_Visual = new ToolStripMenuItem();
             MainForm_MenuStrip_Visual_Inventory = new ToolStripMenuItem();
@@ -187,7 +189,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             // 
             // MainForm_MenuStrip_View
             // 
-            MainForm_MenuStrip_View.DropDownItems.AddRange(new ToolStripItem[] { MainForm_MenuStrip_View_PersonalHistory, MainForm_MenuStrip_View_Separator2 });
+            MainForm_MenuStrip_View.DropDownItems.AddRange(new ToolStripItem[] { MainForm_MenuStrip_View_PersonalHistory, MainForm_MenuStrip_View_SystemHealth, MainForm_MenuStrip_View_Separator2 });
             MainForm_MenuStrip_View.Name = "MainForm_MenuStrip_View";
             MainForm_MenuStrip_View.Size = new Size(44, 24);
             MainForm_MenuStrip_View.Text = "View";
@@ -199,6 +201,14 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             MainForm_MenuStrip_View_PersonalHistory.Size = new Size(219, 22);
             MainForm_MenuStrip_View_PersonalHistory.Text = "Transaction History";
             MainForm_MenuStrip_View_PersonalHistory.Click += MainForm_MenuStrip_View_PersonalHistory_Click;
+            // 
+            // MainForm_MenuStrip_View_SystemHealth
+            // 
+            MainForm_MenuStrip_View_SystemHealth.Name = "MainForm_MenuStrip_View_SystemHealth";
+            MainForm_MenuStrip_View_SystemHealth.ShortcutKeys = Keys.Control | Keys.Shift | Keys.H;
+            MainForm_MenuStrip_View_SystemHealth.Size = new Size(228, 22);
+            MainForm_MenuStrip_View_SystemHealth.Text = "System Health";
+            MainForm_MenuStrip_View_SystemHealth.Click += MainForm_MenuStrip_View_SystemHealth_Click;
             // 
             // MainForm_MenuStrip_View_Separator2
             // 

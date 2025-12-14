@@ -293,7 +293,8 @@ public class Service_DeveloperTools : IService_DeveloperTools
             {
                 IsConnected = true,
                 StatusMessage = "Connected",
-                LastSuccessfulQuery = DateTime.Now
+                LastSuccessfulQuery = DateTime.Now,
+                TableStatistics = result.Data
             };
 
             // Get detailed stats
@@ -345,10 +346,21 @@ public class Service_DeveloperTools : IService_DeveloperTools
 
     #region User Feedback
 
-    public async Task<Model_Dao_Result<DataTable>> GetUserFeedbackAsync(int userId)
+    public async Task<Model_Dao_Result<DataTable>> GetUserFeedbackAsync(string username)
     {
         try
         {
+            int userId = 0;
+            var userResult = await Dao_User.GetUserByUsernameAsync(username);
+            if (userResult.IsSuccess && userResult.Data != null)
+            {
+                userId = Convert.ToInt32(userResult.Data["ID"]);
+            }
+            else
+            {
+                return Model_Dao_Result<DataTable>.Failure($"User {username} not found");
+            }
+
             return await _feedbackManager.GetUserSubmissionsAsync(userId);
         }
         catch (Exception ex)

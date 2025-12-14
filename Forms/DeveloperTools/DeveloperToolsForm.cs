@@ -54,6 +54,14 @@ namespace MTM_WIP_Application_Winforms.Forms.DeveloperTools
             DeveloperToolsForm_Control_SystemInfo.Initialize(_devToolsService, _errorHandler);
             DeveloperToolsForm_Control_FeedbackManager.Initialize(_feedbackManager, _errorHandler);
             DeveloperToolsForm_Control_LogStatistics.Initialize(_devToolsService, _errorHandler);
+            
+            DeveloperToolsForm_TabControl_Main.SelectedIndexChanged += DeveloperToolsForm_TabControl_Main_SelectedIndexChanged;
+            DeveloperToolsForm_Control_DatabaseHealth.Initialize(_devToolsService, _errorHandler);
+        }
+
+        public void SelectLogsTab()
+        {
+            DeveloperToolsForm_TabControl_Main.SelectedTab = DeveloperToolsForm_TabPage_Logs;
         }
 
         #endregion
@@ -103,6 +111,36 @@ namespace MTM_WIP_Application_Winforms.Forms.DeveloperTools
             }
         }
 
+        private async void DeveloperToolsForm_TabControl_Main_SelectedIndexChanged(object? sender, EventArgs e)
+        {
+            try
+            {
+                if (DeveloperToolsForm_TabControl_Main.SelectedTab == DeveloperToolsForm_TabPage_Dashboard)
+                {
+                    await LoadDashboardAsync();
+                }
+                else if (DeveloperToolsForm_TabControl_Main.SelectedTab == DeveloperToolsForm_TabPage_Logs)
+                {
+                    // LogViewer usually loads on init or has its own refresh. 
+                    // We can trigger a refresh if needed.
+                }
+                else if (DeveloperToolsForm_TabControl_Main.SelectedTab == DeveloperToolsForm_TabPage_Feedback)
+                {
+                    DeveloperToolsForm_Control_FeedbackManager.LoadDataAsync();
+                }
+                else if (DeveloperToolsForm_TabControl_Main.SelectedTab == DeveloperToolsForm_TabPage_SystemInfo)
+                {
+                    await DeveloperToolsForm_Control_SystemInfo.RefreshDataAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                _errorHandler.HandleException(ex, Models.Enum_ErrorSeverity.Medium, 
+                    callerName: nameof(DeveloperToolsForm_TabControl_Main_SelectedIndexChanged), 
+                    controlName: this.Name);
+            }
+        }
+
         #endregion
 
         #region Methods
@@ -131,9 +169,6 @@ namespace MTM_WIP_Application_Winforms.Forms.DeveloperTools
                 {
                     DeveloperToolsForm_Control_RecentErrors.UpdateErrors(recentErrorsResult.Data);
                 }
-
-                // 4. System Info
-                await DeveloperToolsForm_Control_SystemInfo.RefreshDataAsync();
             }
             catch (Exception ex)
             {

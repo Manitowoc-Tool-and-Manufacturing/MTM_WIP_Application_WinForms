@@ -13,6 +13,8 @@ namespace MTM_WIP_Application_Winforms.Forms.ErrorDialog
     /// Enhanced error dialog with detailed exception information and retry capabilities.
     /// Migrated to ThemedForm for automatic DPI scaling and theme support.
     /// </summary>
+using Microsoft.Extensions.DependencyInjection;
+
     public partial class EnhancedErrorDialog : ThemedForm
     {
         #region Fields
@@ -593,11 +595,16 @@ namespace MTM_WIP_Application_Winforms.Forms.ErrorDialog
                     return;
                 }
 
-                // Create and show log viewer with user pre-selected (AS 7.1, AS 7.2)
-                var logViewerForm = new ViewLogs.ViewApplicationLogsForm(currentUsername);
-                logViewerForm.Show();
-                
-                
+                // Create and show Developer Tools Form
+                if (Program.ServiceProvider == null) throw new InvalidOperationException("ServiceProvider is not initialized.");
+                var devToolsService = Program.ServiceProvider.GetRequiredService<MTM_WIP_Application_Winforms.Services.DeveloperTools.IService_DeveloperTools>();
+                var logger = Program.ServiceProvider.GetRequiredService<MTM_WIP_Application_Winforms.Services.Logging.ILoggingService>();
+                var errorHandler = Program.ServiceProvider.GetRequiredService<MTM_WIP_Application_Winforms.Services.ErrorHandling.IService_ErrorHandler>();
+                var feedbackManager = Program.ServiceProvider.GetRequiredService<MTM_WIP_Application_Winforms.Services.IService_FeedbackManager>();
+
+                var form = new Forms.DeveloperTools.DeveloperToolsForm(devToolsService, logger, errorHandler, feedbackManager);
+                form.SelectLogsTab();
+                form.Show();
             }
             catch (Exception ex)
             {

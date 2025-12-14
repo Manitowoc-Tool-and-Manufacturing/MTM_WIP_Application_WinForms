@@ -59,7 +59,7 @@ namespace MTM_WIP_Application_Winforms.Services
         /// <param name="notes">Optional developer notes.</param>
         /// <param name="modifiedByUserId">ID of the user making the change.</param>
         /// <returns>True if successful.</returns>
-        Task<Model_Dao_Result<bool>> UpdateStatusAsync(int feedbackId, string newStatus, int? assignedDeveloperId, string? notes, int modifiedByUserId);
+        Task<Model_Dao_Result<bool>> UpdateStatusAsync(int feedbackId, string newStatus, int? assignedDeveloperId, string? notes, string modifiedByUser);
 
         /// <summary>
         /// Updates the details of a feedback record.
@@ -337,8 +337,21 @@ namespace MTM_WIP_Application_Winforms.Services
         }
 
         /// <inheritdoc/>
-        public async Task<Model_Dao_Result<bool>> UpdateStatusAsync(int feedbackId, string newStatus, int? assignedDeveloperId, string? notes, int modifiedByUserId)
+        /// <inheritdoc/>
+        public async Task<Model_Dao_Result<bool>> UpdateStatusAsync(int feedbackId, string newStatus, int? assignedDeveloperId, string? notes, string modifiedByUser)
         {
+            // Get User ID
+            int modifiedByUserId = 0;
+            var userResult = await Dao_User.GetUserByUsernameAsync(modifiedByUser);
+            if (userResult.IsSuccess && userResult.Data != null)
+            {
+                modifiedByUserId = Convert.ToInt32(userResult.Data["ID"]);
+            }
+            else
+            {
+                LoggingUtility.Log(Enum_LogLevel.Warning, "Feedback", $"Could not find UserID for {modifiedByUser}. Using 0.");
+            }
+
             // Get old status for logging (FR-037)
             string oldStatus = "Unknown";
             int? oldDevId = null;
@@ -359,20 +372,15 @@ namespace MTM_WIP_Application_Winforms.Services
                     LoggingUtility.Log(Enum_LogLevel.Information, "Feedback", $"Feedback {feedbackId} assigned to DevID: {assignedDeveloperId}", modifiedByUserId.ToString());
                 }
 
-                // T032.3: Log resolution
-                if (oldStatus != "Resolved" && newStatus == "Resolved")
+                // Log status change
+                if (newStatus != oldStatus)
                 {
-                    LoggingUtility.Log(Enum_LogLevel.Information, "Feedback", $"Feedback {feedbackId} marked Resolved by UserID: {modifiedByUserId}", modifiedByUserId.ToString());
-                }
-
-                // General status change log
-                if (oldStatus != newStatus)
-                {
-                    LoggingUtility.Log(Enum_LogLevel.Information, "Feedback", $"Feedback {feedbackId} status updated from {oldStatus} to {newStatus}.", modifiedByUserId.ToString());
+                    LoggingUtility.Log(Enum_LogLevel.Information, "Feedback", $"Feedback {feedbackId} status changed: {oldStatus} -> {newStatus}", modifiedByUserId.ToString());
                 }
 
                 return Model_Dao_Result<bool>.Success(true);
             }
+            
             return Model_Dao_Result<bool>.Failure(result.ErrorMessage);
         }
 

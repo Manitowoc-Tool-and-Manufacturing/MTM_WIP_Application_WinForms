@@ -221,14 +221,36 @@ namespace MTM_WIP_Application_Winforms.Forms.DeveloperTools
             DeveloperToolsForm_TableLayout_Dashboard.PerformLayout();
             DeveloperToolsForm_TabPage_Logs.ResumeLayout(false);
             DeveloperToolsForm_TabPage_Feedback.ResumeLayout(false);
+            DeveloperToolsForm_TabPage_Database = new TabPage();
+            DeveloperToolsForm_Control_DatabaseHealth = new MTM_WIP_Application_Winforms.Controls.DeveloperTools.Control_DatabaseHealth();
+            DeveloperToolsForm_TabPage_Database.SuspendLayout();
+            // 
+            // DeveloperToolsForm_TabPage_Database
+            // 
+            DeveloperToolsForm_TabPage_Database.Controls.Add(DeveloperToolsForm_Control_DatabaseHealth);
+            DeveloperToolsForm_TabPage_Database.Location = new Point(4, 24);
+            DeveloperToolsForm_TabPage_Database.Name = "DeveloperToolsForm_TabPage_Database";
+            DeveloperToolsForm_TabPage_Database.Padding = new Padding(3);
+            DeveloperToolsForm_TabPage_Database.Size = new Size(192, 72);
+            DeveloperToolsForm_TabPage_Database.TabIndex = 4;
+            DeveloperToolsForm_TabPage_Database.Text = "Database";
+            DeveloperToolsForm_TabPage_Database.UseVisualStyleBackColor = true;
+            // 
+            // DeveloperToolsForm_Control_DatabaseHealth
+            // 
+            DeveloperToolsForm_Control_DatabaseHealth.Dock = DockStyle.Fill;
+            DeveloperToolsForm_Control_DatabaseHealth.Location = new Point(3, 3);
+            DeveloperToolsForm_Control_DatabaseHealth.Name = "DeveloperToolsForm_Control_DatabaseHealth";
+            DeveloperToolsForm_Control_DatabaseHealth.Size = new Size(186, 66);
+            DeveloperToolsForm_Control_DatabaseHealth.TabIndex = 0;
+
+            DeveloperToolsForm_TabControl_Main.Controls.Add(DeveloperToolsForm_TabPage_Database);
             DeveloperToolsForm_TabPage_SystemInfo.ResumeLayout(false);
             DeveloperToolsForm_TabPage_SystemInfo.PerformLayout();
+            DeveloperToolsForm_TabPage_Database.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
-
         }
-
-        #endregion
 
         private ToolStrip DeveloperToolsForm_ToolStrip_Main;
         private ToolStripButton DeveloperToolsForm_Button_Refresh;
@@ -244,8 +266,8 @@ namespace MTM_WIP_Application_Winforms.Forms.DeveloperTools
         private MTM_WIP_Application_Winforms.Controls.DeveloperTools.Control_RecentErrors DeveloperToolsForm_Control_RecentErrors;
         private MTM_WIP_Application_Winforms.Controls.DeveloperTools.Control_SystemInfo DeveloperToolsForm_Control_SystemInfo;
         private MTM_WIP_Application_Winforms.Controls.DeveloperTools.Control_FeedbackManager DeveloperToolsForm_Control_FeedbackManager;
+        private TabPage DeveloperToolsForm_TabPage_Database;
+        private MTM_WIP_Application_Winforms.Controls.DeveloperTools.Control_DatabaseHealth DeveloperToolsForm_Control_DatabaseHealth;
+        #endregion
     }
 }
-
-
-

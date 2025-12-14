@@ -121,7 +121,7 @@ public interface IService_DeveloperTools
     /// </summary>
     /// <param name="userId">User ID to filter by.</param>
     /// <returns>Model_Dao_Result containing DataTable of user's feedback.</returns>
-    Task<Model_Dao_Result<DataTable>> GetUserFeedbackAsync(int userId);
+    Task<Model_Dao_Result<DataTable>> GetUserFeedbackAsync(string username);
 
     #endregion
 
