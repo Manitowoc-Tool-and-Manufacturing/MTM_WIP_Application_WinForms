@@ -36,6 +36,14 @@ public interface IService_DeveloperTools
     /// <returns>Model_Dao_Result containing list of Model_DevLogEntry on success.</returns>
     Task<Model_Dao_Result<List<Model_DevLogEntry>>> GetRecentErrorsAsync(int count = 10);
 
+    /// <summary>
+    /// Synchronizes logs from CSV files to the database.
+    /// Truncates the database table before inserting.
+    /// </summary>
+    /// <param name="progress">Optional progress reporter.</param>
+    /// <returns>Model_Dao_Result indicating success or failure.</returns>
+    Task<Model_Dao_Result> SyncLogsToDatabaseAsync(IProgress<(int current, int total)>? progress = null);
+
     #endregion
 
     #region Log Queries

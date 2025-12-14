@@ -51,24 +51,31 @@ namespace MTM_WIP_Application_Winforms.Controls.DeveloperTools
             this.Control_LogStatistics_Panel_Info = new Panel();
             this.Control_LogStatistics_Label_Info = new Label();
             this.Control_LogStatistics_Label_InfoLabel = new Label();
+            this.Control_LogStatistics_Panel_Sync = new Panel();
+            this.Control_LogStatistics_Button_Sync = new Button();
+            this.Control_LogStatistics_ProgressBar_Sync = new ProgressBar();
+            this.Control_LogStatistics_Label_SyncStatus = new Label();
             this.Control_LogStatistics_TableLayout_Main.SuspendLayout();
             this.Control_LogStatistics_Panel_Total.SuspendLayout();
             this.Control_LogStatistics_Panel_Errors.SuspendLayout();
             this.Control_LogStatistics_Panel_Warnings.SuspendLayout();
             this.Control_LogStatistics_Panel_Info.SuspendLayout();
+            this.Control_LogStatistics_Panel_Sync.SuspendLayout();
             this.SuspendLayout();
             // 
             // Control_LogStatistics_TableLayout_Main
             // 
-            this.Control_LogStatistics_TableLayout_Main.ColumnCount = 4;
-            this.Control_LogStatistics_TableLayout_Main.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
-            this.Control_LogStatistics_TableLayout_Main.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
-            this.Control_LogStatistics_TableLayout_Main.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
-            this.Control_LogStatistics_TableLayout_Main.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
+            this.Control_LogStatistics_TableLayout_Main.ColumnCount = 5;
+            this.Control_LogStatistics_TableLayout_Main.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
+            this.Control_LogStatistics_TableLayout_Main.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
+            this.Control_LogStatistics_TableLayout_Main.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
+            this.Control_LogStatistics_TableLayout_Main.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
+            this.Control_LogStatistics_TableLayout_Main.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
             this.Control_LogStatistics_TableLayout_Main.Controls.Add(this.Control_LogStatistics_Panel_Total, 0, 0);
             this.Control_LogStatistics_TableLayout_Main.Controls.Add(this.Control_LogStatistics_Panel_Errors, 1, 0);
             this.Control_LogStatistics_TableLayout_Main.Controls.Add(this.Control_LogStatistics_Panel_Warnings, 2, 0);
             this.Control_LogStatistics_TableLayout_Main.Controls.Add(this.Control_LogStatistics_Panel_Info, 3, 0);
+            this.Control_LogStatistics_TableLayout_Main.Controls.Add(this.Control_LogStatistics_Panel_Sync, 4, 0);
             this.Control_LogStatistics_TableLayout_Main.Dock = DockStyle.Fill;
             this.Control_LogStatistics_TableLayout_Main.Location = new Point(0, 0);
             this.Control_LogStatistics_TableLayout_Main.Name = "Control_LogStatistics_TableLayout_Main";
@@ -212,6 +219,48 @@ namespace MTM_WIP_Application_Winforms.Controls.DeveloperTools
             this.Control_LogStatistics_Label_InfoLabel.Text = "Info";
             this.Control_LogStatistics_Label_InfoLabel.TextAlign = ContentAlignment.MiddleCenter;
             // 
+            // Control_LogStatistics_Panel_Sync
+            // 
+            this.Control_LogStatistics_Panel_Sync.Controls.Add(this.Control_LogStatistics_Label_SyncStatus);
+            this.Control_LogStatistics_Panel_Sync.Controls.Add(this.Control_LogStatistics_ProgressBar_Sync);
+            this.Control_LogStatistics_Panel_Sync.Controls.Add(this.Control_LogStatistics_Button_Sync);
+            this.Control_LogStatistics_Panel_Sync.Dock = DockStyle.Fill;
+            this.Control_LogStatistics_Panel_Sync.Location = new Point(483, 3);
+            this.Control_LogStatistics_Panel_Sync.Name = "Control_LogStatistics_Panel_Sync";
+            this.Control_LogStatistics_Panel_Sync.Size = new Size(114, 74);
+            this.Control_LogStatistics_Panel_Sync.TabIndex = 4;
+            // 
+            // Control_LogStatistics_Button_Sync
+            // 
+            this.Control_LogStatistics_Button_Sync.Dock = DockStyle.Top;
+            this.Control_LogStatistics_Button_Sync.Location = new Point(0, 0);
+            this.Control_LogStatistics_Button_Sync.Name = "Control_LogStatistics_Button_Sync";
+            this.Control_LogStatistics_Button_Sync.Size = new Size(114, 23);
+            this.Control_LogStatistics_Button_Sync.TabIndex = 0;
+            this.Control_LogStatistics_Button_Sync.Text = "Sync Logs";
+            this.Control_LogStatistics_Button_Sync.UseVisualStyleBackColor = true;
+            this.Control_LogStatistics_Button_Sync.Click += new System.EventHandler(this.Control_LogStatistics_Button_Sync_Click);
+            // 
+            // Control_LogStatistics_ProgressBar_Sync
+            // 
+            this.Control_LogStatistics_ProgressBar_Sync.Dock = DockStyle.Top;
+            this.Control_LogStatistics_ProgressBar_Sync.Location = new Point(0, 23);
+            this.Control_LogStatistics_ProgressBar_Sync.Name = "Control_LogStatistics_ProgressBar_Sync";
+            this.Control_LogStatistics_ProgressBar_Sync.Size = new Size(114, 15);
+            this.Control_LogStatistics_ProgressBar_Sync.TabIndex = 1;
+            // 
+            // Control_LogStatistics_Label_SyncStatus
+            // 
+            this.Control_LogStatistics_Label_SyncStatus.Dock = DockStyle.Fill;
+            this.Control_LogStatistics_Label_SyncStatus.Font = new Font("Segoe UI", 8F, FontStyle.Regular, GraphicsUnit.Point);
+            this.Control_LogStatistics_Label_SyncStatus.ForeColor = Color.Gray;
+            this.Control_LogStatistics_Label_SyncStatus.Location = new Point(0, 38);
+            this.Control_LogStatistics_Label_SyncStatus.Name = "Control_LogStatistics_Label_SyncStatus";
+            this.Control_LogStatistics_Label_SyncStatus.Size = new Size(114, 36);
+            this.Control_LogStatistics_Label_SyncStatus.TabIndex = 2;
+            this.Control_LogStatistics_Label_SyncStatus.Text = "Ready";
+            this.Control_LogStatistics_Label_SyncStatus.TextAlign = ContentAlignment.MiddleCenter;
+            // 
             // Control_LogStatistics
             // 
             this.AutoScaleDimensions = new SizeF(7F, 15F);
@@ -224,6 +273,7 @@ namespace MTM_WIP_Application_Winforms.Controls.DeveloperTools
             this.Control_LogStatistics_Panel_Errors.ResumeLayout(false);
             this.Control_LogStatistics_Panel_Warnings.ResumeLayout(false);
             this.Control_LogStatistics_Panel_Info.ResumeLayout(false);
+            this.Control_LogStatistics_Panel_Sync.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -243,6 +293,10 @@ namespace MTM_WIP_Application_Winforms.Controls.DeveloperTools
         private Panel Control_LogStatistics_Panel_Info;
         private Label Control_LogStatistics_Label_Info;
         private Label Control_LogStatistics_Label_InfoLabel;
+        private Panel Control_LogStatistics_Panel_Sync;
+        private Button Control_LogStatistics_Button_Sync;
+        private ProgressBar Control_LogStatistics_ProgressBar_Sync;
+        private Label Control_LogStatistics_Label_SyncStatus;
     }
 }
 

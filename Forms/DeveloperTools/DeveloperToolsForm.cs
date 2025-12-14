@@ -53,6 +53,7 @@ namespace MTM_WIP_Application_Winforms.Forms.DeveloperTools
             DeveloperToolsForm_Control_LogViewer.Initialize(_devToolsService, _errorHandler);
             DeveloperToolsForm_Control_SystemInfo.Initialize(_devToolsService, _errorHandler);
             DeveloperToolsForm_Control_FeedbackManager.Initialize(_feedbackManager, _errorHandler);
+            DeveloperToolsForm_Control_LogStatistics.Initialize(_devToolsService, _errorHandler);
         }
 
         #endregion

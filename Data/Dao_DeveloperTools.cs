@@ -130,6 +130,102 @@ public class Dao_DeveloperTools : IDao_DeveloperTools
     }
 
     /// <summary>
+    /// Truncates the log table.
+    /// </summary>
+    /// <returns>Result indicating success or failure.</returns>
+    public async Task<Model_Dao_Result> TruncateLogsAsync()
+    {
+        return await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
+            Model_Application_Variables.ConnectionString,
+            "md_devtools_TruncateLogs",
+            null);
+    }
+
+    /// <summary>
+    /// Inserts a log entry into the database.
+    /// </summary>
+    /// <param name="entry">The log entry to insert.</param>
+    /// <returns>Result indicating success or failure.</returns>
+    public async Task<Model_Dao_Result> InsertLogEntryAsync(Model_DevLogEntry entry)
+    {
+        var parameters = new Dictionary<string, object>
+        {
+            { "ErrorTime", entry.Timestamp },
+            { "Severity", entry.Level },
+            { "ModuleName", entry.Source },
+            { "ErrorMessage", entry.Message },
+            { "AdditionalInfo", entry.Details ?? "" },
+            { "User", entry.User ?? "" },
+            { "ErrorType", entry.ErrorType ?? "" },
+            { "StackTrace", entry.StackTrace ?? "" },
+            { "MachineName", entry.MachineName ?? "" },
+            { "AppVersion", entry.AppVersion ?? "" }
+        };
+
+        return await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
+            Model_Application_Variables.ConnectionString,
+            "md_devtools_InsertLogEntry",
+            parameters);
+    }
+
+    /// <summary>
+    /// Inserts a batch of log entries into the database using a transaction.
+    /// </summary>
+    /// <param name="entries">The list of log entries to insert.</param>
+    /// <returns>Result indicating success or failure.</returns>
+    public async Task<Model_Dao_Result> InsertLogEntriesBatchAsync(List<Model_DevLogEntry> entries)
+    {
+        if (entries == null || entries.Count == 0)
+            return Model_Dao_Result.Success();
+
+        using var connection = new MySql.Data.MySqlClient.MySqlConnection(Model_Application_Variables.ConnectionString);
+        await connection.OpenAsync();
+
+        using var transaction = await connection.BeginTransactionAsync();
+
+        try
+        {
+            foreach (var entry in entries)
+            {
+                var parameters = new Dictionary<string, object>
+                {
+                    { "ErrorTime", entry.Timestamp },
+                    { "Severity", entry.Level },
+                    { "ModuleName", entry.Source },
+                    { "ErrorMessage", entry.Message },
+                    { "AdditionalInfo", entry.Details ?? "" },
+                    { "User", entry.User ?? "" },
+                    { "ErrorType", entry.ErrorType ?? "" },
+                    { "StackTrace", entry.StackTrace ?? "" },
+                    { "MachineName", entry.MachineName ?? "" },
+                    { "AppVersion", entry.AppVersion ?? "" }
+                };
+
+                var result = await Helper_Database_StoredProcedure.ExecuteNonQueryWithStatusAsync(
+                    Model_Application_Variables.ConnectionString,
+                    "md_devtools_InsertLogEntry",
+                    parameters,
+                    connection: connection,
+                    transaction: transaction);
+
+                if (!result.IsSuccess)
+                {
+                    await transaction.RollbackAsync();
+                    return result;
+                }
+            }
+
+            await transaction.CommitAsync();
+            return Model_Dao_Result.Success();
+        }
+        catch (Exception ex)
+        {
+            await transaction.RollbackAsync();
+            return Model_Dao_Result.Failure(ex.Message);
+        }
+    }
+
+    /// <summary>
     /// Gets feedback summary statistics.
     /// </summary>
     /// <returns>Result containing DataTable with feedback summary.</returns>

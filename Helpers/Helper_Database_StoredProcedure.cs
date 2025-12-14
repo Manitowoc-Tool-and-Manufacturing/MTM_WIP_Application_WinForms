@@ -477,38 +477,6 @@ public static class Helper_Database_StoredProcedure
                 }
             });
 
-            // ---------------------------------------------------------
-            // DUAL-WRITE LOGIC (Production -> Test) - DISABLED 2025-12-11
-            // ---------------------------------------------------------
-            // REASON: Reduces connection usage by 50%. Test database writes
-            // should be handled through dedicated test execution, not live mirroring.
-            // See: Documentation/Database_Connection_Improvements.md
-            // 
-            // if (result.IsSuccess)
-            // {
-            //     try
-            //     {
-            //         var builder = new MySqlConnectionStringBuilder(connectionString);
-            //         if (builder.Database.Equals("mtm_wip_application_winforms", StringComparison.OrdinalIgnoreCase))
-            //         {
-            //             builder.Database = "mtm_wip_application_winforms";
-            //             string testConnectionString = builder.ConnectionString;
-            //             await ExecuteScalarWithStatusAsync(
-            //                 testConnectionString,
-            //                 procedureName,
-            //                 parameters,
-            //                 null,
-            //                 null,
-            //                 null
-            //             );
-            //         }
-            //     }
-            //     catch (Exception ex)
-            //     {
-            //         LoggingUtility.LogApplicationError(new Exception($"Dual-write to Test Database failed for {procedureName}", ex));
-            //     }
-            // }
-
             return result;
         }
         catch (Exception ex)

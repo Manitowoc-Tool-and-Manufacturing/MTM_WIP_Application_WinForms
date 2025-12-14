@@ -24,7 +24,7 @@ namespace MTM_WIP_Application_Winforms.Controls.DeveloperTools
         {
             _devToolsService = devToolsService;
             _errorHandler = errorHandler;
-            
+
             // Initial load of database stats
             if (!DesignMode)
             {
@@ -32,7 +32,7 @@ namespace MTM_WIP_Application_Winforms.Controls.DeveloperTools
             }
 
             // Start refresh timer
-            _refreshTimer = new System.Threading.Timer(async _ => 
+            _refreshTimer = new System.Threading.Timer(async _ =>
             {
                 if (InvokeRequired) Invoke(new Action(async () => await RefreshDataAsync()));
                 else await RefreshDataAsync();
@@ -70,7 +70,7 @@ namespace MTM_WIP_Application_Winforms.Controls.DeveloperTools
             Control_SystemInfo_Label_MemoryValue.Text = $"{metrics.MemoryUsageMB:F2} MB";
             Control_SystemInfo_Label_ThreadsValue.Text = metrics.ThreadCount.ToString();
             Control_SystemInfo_Label_HandlesValue.Text = metrics.HandleCount.ToString();
-            
+
             var uptime = DateTime.Now - metrics.StartTime;
             Control_SystemInfo_Label_UptimeValue.Text = $"{uptime.Days}d {uptime.Hours}h {uptime.Minutes}m {uptime.Seconds}s";
         }
@@ -80,7 +80,7 @@ namespace MTM_WIP_Application_Winforms.Controls.DeveloperTools
             Control_SystemInfo_Label_DbStatusValue.Text = health.StatusMessage;
             Control_SystemInfo_Label_DbStatusValue.ForeColor = health.IsConnected ? System.Drawing.Color.Green : System.Drawing.Color.Red;
             Control_SystemInfo_Label_LastQueryValue.Text = health.LastSuccessfulQuery?.ToString("HH:mm:ss") ?? "-";
-            
+
             if (health.IsConnected)
             {
                 Control_SystemInfo_Label_ConnectionsValue.Text = health.ConnectionCount.ToString();
@@ -160,8 +160,8 @@ namespace MTM_WIP_Application_Winforms.Controls.DeveloperTools
             }
             catch (Exception ex)
             {
-                _errorHandler.HandleException(ex, Models.Enum_ErrorSeverity.Medium, 
-                    callerName: nameof(BtnTestConnection_Click), 
+                _errorHandler.HandleException(ex, Models.Enum_ErrorSeverity.Medium,
+                    callerName: nameof(BtnTestConnection_Click),
                     controlName: this.Name);
             }
             finally
@@ -179,6 +179,11 @@ namespace MTM_WIP_Application_Winforms.Controls.DeveloperTools
                 components?.Dispose();
             }
             base.Dispose(disposing);
+        }
+
+        private void Control_SystemInfo_Label_DbUptimeValue_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

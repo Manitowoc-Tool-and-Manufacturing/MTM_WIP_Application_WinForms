@@ -114,6 +114,7 @@ namespace MTM_WIP_Application_Winforms.Controls.DeveloperTools
             Control_LogViewer_CheckBox_Critical.CheckedChanged += (s, e) => _ = PerformSearchAsync();
             Control_LogViewer_ComboBox_GroupBy.SelectedIndexChanged += (s, e) => _ = PerformSearchAsync();
             Control_LogViewer_Button_Export.Click += BtnExport_Click;
+            Control_LogViewer_Button_Sync.Click += BtnSync_Click;
             Control_LogViewer_DataGridView_Logs.SelectionChanged += DgvLogs_SelectionChanged;
             Control_LogViewer_Button_Copy.Click += BtnCopy_Click;
         }
@@ -317,6 +318,45 @@ namespace MTM_WIP_Application_Winforms.Controls.DeveloperTools
             if (!string.IsNullOrEmpty(Control_LogViewer_TextBox_Details.Text))
             {
                 Clipboard.SetText(Control_LogViewer_TextBox_Details.Text);
+            }
+        }
+
+        private async void BtnSync_Click(object? sender, EventArgs e)
+        {
+            if (_devToolsService == null || _errorHandler == null) return;
+
+            if (MessageBox.Show("This will truncate the database log table and re-import all logs from CSV files. Continue?", 
+                "Sync Logs", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
+            {
+                return;
+            }
+
+            Control_LogViewer_Button_Sync.Enabled = false;
+            Control_LogViewer_Button_Sync.Text = "Syncing...";
+
+            try
+            {
+                var result = await _devToolsService.SyncLogsToDatabaseAsync();
+                if (result.IsSuccess)
+                {
+                    MessageBox.Show("Logs synchronized successfully.", "Sync Logs", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    await PerformSearchAsync();
+                }
+                else
+                {
+                    _errorHandler.ShowUserError(result.ErrorMessage);
+                }
+            }
+            catch (Exception ex)
+            {
+                _errorHandler.HandleException(ex, Models.Enum_ErrorSeverity.Medium, 
+                    callerName: nameof(BtnSync_Click), 
+                    controlName: this.Name);
+            }
+            finally
+            {
+                Control_LogViewer_Button_Sync.Enabled = true;
+                Control_LogViewer_Button_Sync.Text = "Sync DB";
             }
         }
 

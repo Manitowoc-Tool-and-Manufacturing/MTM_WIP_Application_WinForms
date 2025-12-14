@@ -11,6 +11,7 @@ using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Models.DeveloperTools;
 using MTM_WIP_Application_Winforms.Services.Logging;
+using System.Windows.Forms;
 
 namespace MTM_WIP_Application_Winforms.Services.DeveloperTools;
 
@@ -464,6 +465,176 @@ public class Service_DeveloperTools : IService_DeveloperTools
     {
         if (string.IsNullOrEmpty(field)) return "";
         return field.Replace("\\", "\\\\").Replace("\"", "\\\"").Replace("\n", "\\n").Replace("\r", "\\r");
+    }
+
+    public async Task<Model_Dao_Result> SyncLogsToDatabaseAsync(IProgress<(int current, int total)>? progress = null)
+    {
+        try
+        {
+            // 1. Truncate table
+            var truncResult = await _dao.TruncateLogsAsync();
+            if (!truncResult.IsSuccess) return truncResult;
+
+            // 2. Find all log files
+            var logRoot = Helper_LogPath.LogDirectory;
+            
+            if (!Directory.Exists(logRoot)) return Model_Dao_Result.Success("No logs found to sync.");
+
+            // Filter for app_error and db_error files only
+            var allFiles = Directory.GetFiles(logRoot, "*.csv", SearchOption.AllDirectories);
+            var logFiles = allFiles.Where(f => 
+                f.EndsWith("_app_error.csv", StringComparison.OrdinalIgnoreCase) || 
+                f.EndsWith("_db_error.csv", StringComparison.OrdinalIgnoreCase)).ToArray();
+            
+            // Calculate total rows
+            int totalRows = 0;
+            foreach (var file in logFiles)
+            {
+                totalRows += await CountLogEntriesInFileAsync(file);
+            }
+
+            int currentLine = 0;
+            progress?.Report((currentLine, totalRows));
+
+            foreach (var file in logFiles)
+            {
+                currentLine = await ProcessLogFileAsync(file, currentLine, totalRows, progress);
+            }
+
+            return Model_Dao_Result.Success("Logs synchronized successfully.");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogApplicationError(ex);
+            return Model_Dao_Result.Failure(ex.Message);
+        }
+    }
+
+    private async Task<int> CountLogEntriesInFileAsync(string filePath)
+    {
+        try 
+        {
+            var lines = await File.ReadAllLinesAsync(filePath);
+            if (lines.Length <= 1) return 0;
+
+            int count = 0;
+            for (int i = 1; i < lines.Length; i++)
+            {
+                var parts = ParseCsvLine(lines[i]);
+                if (parts.Count >= 4) count++;
+            }
+            return count;
+        }
+        catch { return 0; }
+    }
+
+    private async Task<int> ProcessLogFileAsync(string filePath, int currentLine, int totalLines, IProgress<(int current, int total)>? progress)
+    {
+        try 
+        {
+            var lines = await File.ReadAllLinesAsync(filePath);
+            if (lines.Length <= 1) return currentLine; // Header only or empty
+
+            // Extract user from path if possible, or filename
+            var user = Path.GetFileName(Path.GetDirectoryName(filePath));
+            if (user == "Logs") user = "System";
+
+            var batch = new List<Model_DevLogEntry>();
+            const int BATCH_SIZE = 100;
+
+            // Skip header
+            for (int i = 1; i < lines.Length; i++)
+            {
+                var line = lines[i];
+                var parts = ParseCsvLine(line);
+                if (parts.Count < 4) continue;
+
+                var entry = new Model_DevLogEntry
+                {
+                    Timestamp = DateTime.TryParse(parts[0], out var dt) ? dt : DateTime.Now,
+                    Level = MapToDatabaseSeverity(parts[1]),
+                    Source = parts[2],
+                    Message = parts[3],
+                    Details = parts.Count > 4 ? parts[4] : "",
+                    User = user,
+                    MachineName = Environment.MachineName, // Approximate
+                    AppVersion = Application.ProductVersion // Approximate
+                };
+
+                batch.Add(entry);
+                
+                if (batch.Count >= BATCH_SIZE)
+                {
+                    await _dao.InsertLogEntriesBatchAsync(batch);
+                    currentLine += batch.Count;
+                    progress?.Report((currentLine, totalLines));
+                    batch.Clear();
+                }
+            }
+
+            if (batch.Count > 0)
+            {
+                await _dao.InsertLogEntriesBatchAsync(batch);
+                currentLine += batch.Count;
+                progress?.Report((currentLine, totalLines));
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.Log(Enum_LogLevel.Error, "SyncLogs", $"Failed to process file {filePath}: {ex.Message}");
+        }
+        return currentLine;
+    }
+
+    private string MapToDatabaseSeverity(string csvLevel)
+    {
+        if (string.IsNullOrWhiteSpace(csvLevel)) return "Information";
+
+        var upper = csvLevel.Trim().ToUpperInvariant();
+        
+        if (upper.Contains("INFO")) return "Information";
+        if (upper.Contains("WARN")) return "Warning";
+        if (upper.Contains("ERROR")) return "Error";
+        if (upper.Contains("CRIT")) return "Critical";
+        if (upper.Contains("HIGH")) return "High";
+        if (upper.Contains("DEBUG")) return "Information"; // Map Debug to Info as DB doesn't have Debug
+
+        return "Information"; // Default fallback
+    }
+
+    private List<string> ParseCsvLine(string line)
+    {
+        var result = new List<string>();
+        var current = new StringBuilder();
+        bool inQuotes = false;
+
+        for (int i = 0; i < line.Length; i++)
+        {
+            char c = line[i];
+            if (c == '"')
+            {
+                if (inQuotes && i + 1 < line.Length && line[i + 1] == '"')
+                {
+                    current.Append('"');
+                    i++;
+                }
+                else
+                {
+                    inQuotes = !inQuotes;
+                }
+            }
+            else if (c == ',' && !inQuotes)
+            {
+                result.Add(current.ToString());
+                current.Clear();
+            }
+            else
+            {
+                current.Append(c);
+            }
+        }
+        result.Add(current.ToString());
+        return result;
     }
 
     #endregion

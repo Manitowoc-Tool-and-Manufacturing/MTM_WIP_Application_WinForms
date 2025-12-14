@@ -51,6 +51,7 @@ namespace MTM_WIP_Application_Winforms.Controls.DeveloperTools
             this.Control_LogViewer_Label_To = new Label();
             this.Control_LogViewer_DateTimePicker_To = new DateTimePicker();
             this.Control_LogViewer_Button_Export = new Button();
+            this.Control_LogViewer_Button_Sync = new Button();
             this.Control_LogViewer_FlowLayout_Row2 = new FlowLayoutPanel();
             this.Control_LogViewer_Label_Severity = new Label();
             this.Control_LogViewer_CheckBox_Info = new CheckBox();
@@ -124,6 +125,7 @@ namespace MTM_WIP_Application_Winforms.Controls.DeveloperTools
             this.Control_LogViewer_FlowLayout_Row1.Controls.Add(this.Control_LogViewer_Label_To);
             this.Control_LogViewer_FlowLayout_Row1.Controls.Add(this.Control_LogViewer_DateTimePicker_To);
             this.Control_LogViewer_FlowLayout_Row1.Controls.Add(this.Control_LogViewer_Button_Export);
+            this.Control_LogViewer_FlowLayout_Row1.Controls.Add(this.Control_LogViewer_Button_Sync);
             this.Control_LogViewer_FlowLayout_Row1.Dock = DockStyle.Fill;
             this.Control_LogViewer_FlowLayout_Row1.Location = new Point(3, 3);
             this.Control_LogViewer_FlowLayout_Row1.Name = "Control_LogViewer_FlowLayout_Row1";
@@ -227,6 +229,15 @@ namespace MTM_WIP_Application_Winforms.Controls.DeveloperTools
             this.Control_LogViewer_Button_Export.TabIndex = 14;
             this.Control_LogViewer_Button_Export.Text = "Export";
             this.Control_LogViewer_Button_Export.UseVisualStyleBackColor = true;
+            // 
+            // Control_LogViewer_Button_Sync
+            // 
+            this.Control_LogViewer_Button_Sync.Location = new Point(805, 3);
+            this.Control_LogViewer_Button_Sync.Name = "Control_LogViewer_Button_Sync";
+            this.Control_LogViewer_Button_Sync.Size = new Size(75, 23);
+            this.Control_LogViewer_Button_Sync.TabIndex = 15;
+            this.Control_LogViewer_Button_Sync.Text = "Sync DB";
+            this.Control_LogViewer_Button_Sync.UseVisualStyleBackColor = true;
             // 
             // Control_LogViewer_FlowLayout_Row2
             // 
@@ -477,6 +488,7 @@ namespace MTM_WIP_Application_Winforms.Controls.DeveloperTools
         private CheckBox Control_LogViewer_CheckBox_Error;
         private CheckBox Control_LogViewer_CheckBox_Critical;
         private Button Control_LogViewer_Button_Export;
+        private Button Control_LogViewer_Button_Sync;
         private Label Control_LogViewer_Label_Count;
         private SplitContainer Control_LogViewer_SplitContainer_Main;
         private DataGridView Control_LogViewer_DataGridView_Logs;

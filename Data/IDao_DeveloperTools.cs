@@ -51,6 +51,26 @@ public interface IDao_DeveloperTools
     Task<Model_Dao_Result<DataTable>> GetRecentErrorsAsync(int count);
 
     /// <summary>
+    /// Truncates the log table.
+    /// </summary>
+    /// <returns>Result indicating success or failure.</returns>
+    Task<Model_Dao_Result> TruncateLogsAsync();
+
+    /// <summary>
+    /// Inserts a log entry into the database.
+    /// </summary>
+    /// <param name="entry">The log entry to insert.</param>
+    /// <returns>Result indicating success or failure.</returns>
+    Task<Model_Dao_Result> InsertLogEntryAsync(Model_DevLogEntry entry);
+
+    /// <summary>
+    /// Inserts a batch of log entries into the database using a transaction.
+    /// </summary>
+    /// <param name="entries">The list of log entries to insert.</param>
+    /// <returns>Result indicating success or failure.</returns>
+    Task<Model_Dao_Result> InsertLogEntriesBatchAsync(List<Model_DevLogEntry> entries);
+
+    /// <summary>
     /// Gets feedback summary statistics.
     /// </summary>
     /// <returns>Result containing DataTable with feedback summary.</returns>
