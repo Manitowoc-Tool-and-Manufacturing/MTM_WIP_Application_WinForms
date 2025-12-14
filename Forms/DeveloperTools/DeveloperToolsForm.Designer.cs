@@ -113,8 +113,8 @@ namespace MTM_WIP_Application_Winforms.Forms.DeveloperTools
             DeveloperToolsForm_TableLayout_Dashboard.Location = new Point(3, 3);
             DeveloperToolsForm_TableLayout_Dashboard.Name = "DeveloperToolsForm_TableLayout_Dashboard";
             DeveloperToolsForm_TableLayout_Dashboard.RowCount = 3;
-            DeveloperToolsForm_TableLayout_Dashboard.RowStyles.Add(new RowStyle(SizeType.Absolute, 80F));
-            DeveloperToolsForm_TableLayout_Dashboard.RowStyles.Add(new RowStyle(SizeType.Absolute, 90F));
+            DeveloperToolsForm_TableLayout_Dashboard.RowStyles.Add(new RowStyle());
+            DeveloperToolsForm_TableLayout_Dashboard.RowStyles.Add(new RowStyle());
             DeveloperToolsForm_TableLayout_Dashboard.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
             DeveloperToolsForm_TableLayout_Dashboard.Size = new Size(786, 491);
             DeveloperToolsForm_TableLayout_Dashboard.TabIndex = 0;
@@ -129,18 +129,20 @@ namespace MTM_WIP_Application_Winforms.Forms.DeveloperTools
             // 
             // DeveloperToolsForm_Control_LogStatistics
             // 
+            DeveloperToolsForm_Control_LogStatistics.AutoSize = true;
+            DeveloperToolsForm_Control_LogStatistics.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             DeveloperToolsForm_Control_LogStatistics.Dock = DockStyle.Fill;
             DeveloperToolsForm_Control_LogStatistics.Location = new Point(3, 83);
             DeveloperToolsForm_Control_LogStatistics.Name = "DeveloperToolsForm_Control_LogStatistics";
-            DeveloperToolsForm_Control_LogStatistics.Size = new Size(780, 84);
+            DeveloperToolsForm_Control_LogStatistics.Size = new Size(780, 111);
             DeveloperToolsForm_Control_LogStatistics.TabIndex = 1;
             // 
             // DeveloperToolsForm_Control_RecentErrors
             // 
             DeveloperToolsForm_Control_RecentErrors.Dock = DockStyle.Fill;
-            DeveloperToolsForm_Control_RecentErrors.Location = new Point(3, 173);
+            DeveloperToolsForm_Control_RecentErrors.Location = new Point(3, 200);
             DeveloperToolsForm_Control_RecentErrors.Name = "DeveloperToolsForm_Control_RecentErrors";
-            DeveloperToolsForm_Control_RecentErrors.Size = new Size(780, 315);
+            DeveloperToolsForm_Control_RecentErrors.Size = new Size(780, 288);
             DeveloperToolsForm_Control_RecentErrors.TabIndex = 2;
             // 
             // DeveloperToolsForm_TabPage_Logs
@@ -149,7 +151,7 @@ namespace MTM_WIP_Application_Winforms.Forms.DeveloperTools
             DeveloperToolsForm_TabPage_Logs.Location = new Point(4, 24);
             DeveloperToolsForm_TabPage_Logs.Name = "DeveloperToolsForm_TabPage_Logs";
             DeveloperToolsForm_TabPage_Logs.Padding = new Padding(3);
-            DeveloperToolsForm_TabPage_Logs.Size = new Size(192, 72);
+            DeveloperToolsForm_TabPage_Logs.Size = new Size(792, 497);
             DeveloperToolsForm_TabPage_Logs.TabIndex = 1;
             DeveloperToolsForm_TabPage_Logs.Text = "Logs";
             DeveloperToolsForm_TabPage_Logs.UseVisualStyleBackColor = true;
@@ -159,7 +161,7 @@ namespace MTM_WIP_Application_Winforms.Forms.DeveloperTools
             DeveloperToolsForm_Control_LogViewer.Dock = DockStyle.Fill;
             DeveloperToolsForm_Control_LogViewer.Location = new Point(3, 3);
             DeveloperToolsForm_Control_LogViewer.Name = "DeveloperToolsForm_Control_LogViewer";
-            DeveloperToolsForm_Control_LogViewer.Size = new Size(186, 66);
+            DeveloperToolsForm_Control_LogViewer.Size = new Size(786, 491);
             DeveloperToolsForm_Control_LogViewer.TabIndex = 0;
             // 
             // DeveloperToolsForm_TabPage_Feedback
@@ -187,7 +189,7 @@ namespace MTM_WIP_Application_Winforms.Forms.DeveloperTools
             DeveloperToolsForm_TabPage_SystemInfo.Location = new Point(4, 24);
             DeveloperToolsForm_TabPage_SystemInfo.Name = "DeveloperToolsForm_TabPage_SystemInfo";
             DeveloperToolsForm_TabPage_SystemInfo.Padding = new Padding(3);
-            DeveloperToolsForm_TabPage_SystemInfo.Size = new Size(792, 497);
+            DeveloperToolsForm_TabPage_SystemInfo.Size = new Size(192, 72);
             DeveloperToolsForm_TabPage_SystemInfo.TabIndex = 3;
             DeveloperToolsForm_TabPage_SystemInfo.Text = "System Info";
             DeveloperToolsForm_TabPage_SystemInfo.UseVisualStyleBackColor = true;
@@ -198,7 +200,7 @@ namespace MTM_WIP_Application_Winforms.Forms.DeveloperTools
             DeveloperToolsForm_Control_SystemInfo.Dock = DockStyle.Fill;
             DeveloperToolsForm_Control_SystemInfo.Location = new Point(3, 3);
             DeveloperToolsForm_Control_SystemInfo.Name = "DeveloperToolsForm_Control_SystemInfo";
-            DeveloperToolsForm_Control_SystemInfo.Size = new Size(786, 491);
+            DeveloperToolsForm_Control_SystemInfo.Size = new Size(186, 66);
             DeveloperToolsForm_Control_SystemInfo.TabIndex = 0;
             // 
             // DeveloperToolsForm
@@ -216,6 +218,7 @@ namespace MTM_WIP_Application_Winforms.Forms.DeveloperTools
             DeveloperToolsForm_TabControl_Main.ResumeLayout(false);
             DeveloperToolsForm_TabPage_Dashboard.ResumeLayout(false);
             DeveloperToolsForm_TableLayout_Dashboard.ResumeLayout(false);
+            DeveloperToolsForm_TableLayout_Dashboard.PerformLayout();
             DeveloperToolsForm_TabPage_Logs.ResumeLayout(false);
             DeveloperToolsForm_TabPage_Feedback.ResumeLayout(false);
             DeveloperToolsForm_TabPage_SystemInfo.ResumeLayout(false);

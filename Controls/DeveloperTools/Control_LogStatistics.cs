@@ -96,7 +96,7 @@ namespace MTM_WIP_Application_Winforms.Controls.DeveloperTools
                 
                 if (result.IsSuccess)
                 {
-                    MessageBox.Show(result.ErrorMessage, "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show(result.StatusMessage, "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else if (_errorHandler != null)
                 {
