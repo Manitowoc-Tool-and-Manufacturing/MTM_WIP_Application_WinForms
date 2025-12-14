@@ -20,7 +20,16 @@ namespace MTM_WIP_Application_Winforms.Helpers
             {
                 return string.Empty;
             }
-            return _sanitizer.Sanitize(html);
+            try
+            {
+                return _sanitizer.Sanitize(html);
+            }
+            catch (ArgumentException)
+            {
+                // Fallback for cases where AngleSharp throws ArgumentException on certain inputs
+                // Return plain text or original input if sanitization fails
+                return html;
+            }
         }
     }
 }

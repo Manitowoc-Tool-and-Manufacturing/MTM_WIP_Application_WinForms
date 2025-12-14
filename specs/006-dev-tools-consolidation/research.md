@@ -48,6 +48,11 @@ Fields are escaped via `EscapeCsvField()` method to handle commas/quotes in cont
 
 ### Findings
 
+**MySQL 5.7.24 Constraints**:
+- `information_schema.GLOBAL_STATUS` is disabled/deprecated in newer 5.7 versions.
+- Must use `performance_schema.global_status` for server metrics (Threads_connected, Uptime, etc.).
+- `DateTime.MaxValue` (.NET) maps to `9999-12-31`, which can cause overflow in some MySQL configurations. Safe max date is `2100-01-01`.
+
 **Table Schema** (`Database/UpdatedDatabase/07_log_error.sql`):
 
 | Column | Type | Notes |

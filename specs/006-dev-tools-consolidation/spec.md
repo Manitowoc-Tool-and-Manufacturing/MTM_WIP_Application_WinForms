@@ -50,6 +50,7 @@ As a developer, I want to see a dashboard with real-time statistics, recent erro
 2. **Given** the Dashboard tab is displayed, **When** I look at the timeline chart, **Then** I see a 7-day error trend with severity breakdown
 3. **Given** errors have occurred, **When** I view the "Recent Errors" list, **Then** I see the 10 most recent errors with timestamp and brief description, and clicking one navigates to the Logs tab filtered to that error
 4. **Given** the Dashboard is visible, **When** I click the "Refresh" button, **Then** all statistics and charts update to reflect the latest data
+5. **Given** the System Health widget is visible, **When** I click it, **Then** I am navigated to the Logs tab filtered to "Today"
 
 ---
 
@@ -98,6 +99,11 @@ As a developer, I want to see database health, application info, and performance
 **Independent Test**: Can be fully tested by verifying each panel displays accurate information about the database, application, and current performance.
 
 **Acceptance Scenarios**:
+
+1. **Given** I am on the System Info tab, **When** I view the Environment section, **Then** I see OS version, .NET version, Machine Name, User, and App Version
+2. **Given** I am on the System Info tab, **When** I view the Performance section, **Then** I see Memory Usage, Thread Count, Handle Count, and App Uptime
+3. **Given** I am on the System Info tab, **When** I view the Database section, **Then** I see Connection Status, Last Query Time, Active Connections, Uptime, Version, and Query Count
+4. **Given** the database is connected, **When** I click "Test Connection", **Then** a fresh connection check is performed and the status updates with latency
 
 1. **Given** I am on the System Info tab, **When** I view Database Health, **Then** I see connection status (online/offline), database version, and uptime
 2. **Given** the application is running, **When** I view Application Info, **Then** I see version number, start time, current user, and role

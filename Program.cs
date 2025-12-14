@@ -76,6 +76,9 @@ namespace MTM_WIP_Application_Winforms
                     return;
                 }
 
+                // Configure dependency injection
+                ServiceProvider = Service_OnStartup_DependencyInjection.ConfigureServices();
+
                 // Logging initialization
                 Service_OnStartup_Reporting.InitializeLogging();
 
@@ -90,9 +93,6 @@ namespace MTM_WIP_Application_Winforms
 
                 // Trace setup
                 Service_OnStartup_System.SetupTrace();
-
-                // Configure dependency injection
-                ServiceProvider = Service_OnStartup_DependencyInjection.ConfigureServices();
 
                 // Start application
                 try

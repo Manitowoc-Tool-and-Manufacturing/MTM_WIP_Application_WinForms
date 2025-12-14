@@ -1566,7 +1566,12 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
         {
             try
             {
-                var form = new Forms.DeveloperTools.Form_DeveloperTools();
+                var devToolsService = ServiceProviderServiceExtensions.GetRequiredService<Services.DeveloperTools.IService_DeveloperTools>(Program.ServiceProvider!);
+                var logger = ServiceProviderServiceExtensions.GetRequiredService<Services.Logging.ILoggingService>(Program.ServiceProvider!);
+                var errorHandler = ServiceProviderServiceExtensions.GetRequiredService<Services.ErrorHandling.IService_ErrorHandler>(Program.ServiceProvider!);
+                var feedbackManager = ServiceProviderServiceExtensions.GetRequiredService<Services.IService_FeedbackManager>(Program.ServiceProvider!);
+
+                var form = new Forms.DeveloperTools.DeveloperToolsForm(devToolsService, logger, errorHandler, feedbackManager);
                 form.Show();
             }
             catch (Exception ex)

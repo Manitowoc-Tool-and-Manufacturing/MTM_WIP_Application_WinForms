@@ -573,6 +573,41 @@ public class Model_DatabaseHealth
     /// </summary>
     public int? LatencyMs { get; set; }
 
+    /// <summary>
+    /// Number of active connections.
+    /// </summary>
+    public int ConnectionCount { get; set; }
+
+    /// <summary>
+    /// Database uptime in seconds.
+    /// </summary>
+    public long UptimeSeconds { get; set; }
+
+    /// <summary>
+    /// Database version string.
+    /// </summary>
+    public string Version { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Total bytes received.
+    /// </summary>
+    public long BytesReceived { get; set; }
+
+    /// <summary>
+    /// Total bytes sent.
+    /// </summary>
+    public long BytesSent { get; set; }
+
+    /// <summary>
+    /// Number of open tables.
+    /// </summary>
+    public int OpenTables { get; set; }
+
+    /// <summary>
+    /// Total queries executed.
+    /// </summary>
+    public int Queries { get; set; }
+
     #endregion
 
     #region Factory Methods

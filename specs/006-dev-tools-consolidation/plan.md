@@ -210,6 +210,7 @@ Key entities to define:
 | `md_devtools_GetLogEntries` | Filtered log retrieval with pagination |
 | `md_devtools_GetErrorGroupings` | Group errors by type/source/day |
 | `md_devtools_GetLogTimeline` | Hourly/daily counts for charting |
+| `md_devtools_GetDatabaseStats` | Detailed database metrics (connections, uptime, etc.) |
 
 ### 1.4 Quickstart Guide
 

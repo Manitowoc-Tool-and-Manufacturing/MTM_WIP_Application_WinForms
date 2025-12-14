@@ -359,6 +359,18 @@ namespace MTM_WIP_Application_Winforms.Forms.Help
                 var result = await _feedbackManager.AddCommentAsync(feedbackId, userId, comment!, false);
                 if (result.IsSuccess)
                 {
+                    // Also append comment to the main description for better visibility in the grid
+                    var feedbackResult = await _feedbackManager.GetSubmissionAsync(feedbackId);
+                    if (feedbackResult.IsSuccess && feedbackResult.Data != null)
+                    {
+                        var feedback = feedbackResult.Data;
+                        if (feedback.FeedbackType == "HelpSystem")
+                        {
+                            feedback.Description += $"\n\nUser Comment: {comment}";
+                            await _feedbackManager.UpdateDetailsAsync(feedback);
+                        }
+                    }
+
                     await webView.CoreWebView2.ExecuteScriptAsync("alert('Comment added!'); if(typeof refreshSubmissions === 'function') { refreshSubmissions(); }");
                 }
                 else
@@ -469,7 +481,11 @@ namespace MTM_WIP_Application_Winforms.Forms.Help
                         Status = "New",
                         SubmissionDateTime = DateTime.Now,
                         Severity = "Low",
-                        Priority = "Low"
+                        Priority = "Low",
+                        ApplicationVersion = Application.ProductVersion,
+                        OSVersion = Environment.OSVersion.ToString(),
+                        MachineIdentifier = Environment.MachineName,
+                        WindowForm = "HelpViewerForm"
                     };
                     
                     // Append comment to description if present for legacy
@@ -486,7 +502,10 @@ namespace MTM_WIP_Application_Winforms.Forms.Help
                     {
                         UserID = userId,
                         SubmissionDateTime = DateTime.Now,
-                        Status = "New"
+                        Status = "New",
+                        ApplicationVersion = Application.ProductVersion,
+                        OSVersion = Environment.OSVersion.ToString(),
+                        MachineIdentifier = Environment.MachineName
                     };
 
                     if (safeData.TryGetProperty("bugCategory", out _))
