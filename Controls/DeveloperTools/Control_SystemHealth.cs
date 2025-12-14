@@ -21,10 +21,20 @@ namespace MTM_WIP_Application_Winforms.Controls.DeveloperTools
             this.Cursor = Cursors.Hand;
             this.Click += (s, e) => StatusClicked?.Invoke(this, EventArgs.Empty);
             
-            foreach (Control c in this.Controls)
+            // Recursively attach click handlers to all child controls
+            AttachClickHandlers(this);
+        }
+
+        private void AttachClickHandlers(Control parent)
+        {
+            foreach (Control c in parent.Controls)
             {
                 c.Cursor = Cursors.Hand;
                 c.Click += (s, e) => StatusClicked?.Invoke(this, EventArgs.Empty);
+                if (c.HasChildren)
+                {
+                    AttachClickHandlers(c);
+                }
             }
         }
 

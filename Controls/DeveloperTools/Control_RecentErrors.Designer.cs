@@ -1,3 +1,6 @@
+using System.Drawing;
+using System.Windows.Forms;
+
 namespace MTM_WIP_Application_Winforms.Controls.DeveloperTools
 {
     partial class Control_RecentErrors
@@ -5,12 +8,18 @@ namespace MTM_WIP_Application_Winforms.Controls.DeveloperTools
         /// <summary> 
         /// Required designer variable.
         /// </summary>
+        #region Fields
+
         private System.ComponentModel.IContainer components = null;
+
+        #endregion
 
         /// <summary> 
         /// Clean up any resources being used.
         /// </summary>
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        #region Methods
+
         protected override void Dispose(bool disposing)
         {
             if (disposing && (components != null))
@@ -19,6 +28,7 @@ namespace MTM_WIP_Application_Winforms.Controls.DeveloperTools
             }
             base.Dispose(disposing);
         }
+        #endregion
 
         #region Component Designer generated code
 
@@ -28,8 +38,8 @@ namespace MTM_WIP_Application_Winforms.Controls.DeveloperTools
         /// </summary>
         private void InitializeComponent()
         {
-            this.Control_RecentErrors_DataGridView_Errors = new System.Windows.Forms.DataGridView();
-            this.Control_RecentErrors_Label_Title = new System.Windows.Forms.Label();
+            this.Control_RecentErrors_DataGridView_Errors = new DataGridView();
+            this.Control_RecentErrors_Label_Title = new Label();
             ((System.ComponentModel.ISupportInitialize)(this.Control_RecentErrors_DataGridView_Errors)).BeginInit();
             this.SuspendLayout();
             // 
@@ -38,39 +48,39 @@ namespace MTM_WIP_Application_Winforms.Controls.DeveloperTools
             this.Control_RecentErrors_DataGridView_Errors.AllowUserToAddRows = false;
             this.Control_RecentErrors_DataGridView_Errors.AllowUserToDeleteRows = false;
             this.Control_RecentErrors_DataGridView_Errors.AllowUserToResizeRows = false;
-            this.Control_RecentErrors_DataGridView_Errors.BackgroundColor = System.Drawing.Color.White;
-            this.Control_RecentErrors_DataGridView_Errors.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.Control_RecentErrors_DataGridView_Errors.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.Control_RecentErrors_DataGridView_Errors.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Control_RecentErrors_DataGridView_Errors.Location = new System.Drawing.Point(0, 25);
+            this.Control_RecentErrors_DataGridView_Errors.BackgroundColor = Color.White;
+            this.Control_RecentErrors_DataGridView_Errors.BorderStyle = BorderStyle.None;
+            this.Control_RecentErrors_DataGridView_Errors.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.Control_RecentErrors_DataGridView_Errors.Dock = DockStyle.Fill;
+            this.Control_RecentErrors_DataGridView_Errors.Location = new Point(0, 25);
             this.Control_RecentErrors_DataGridView_Errors.MultiSelect = false;
             this.Control_RecentErrors_DataGridView_Errors.Name = "Control_RecentErrors_DataGridView_Errors";
             this.Control_RecentErrors_DataGridView_Errors.ReadOnly = true;
             this.Control_RecentErrors_DataGridView_Errors.RowHeadersVisible = false;
-            this.Control_RecentErrors_DataGridView_Errors.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.Control_RecentErrors_DataGridView_Errors.Size = new System.Drawing.Size(600, 275);
+            this.Control_RecentErrors_DataGridView_Errors.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            this.Control_RecentErrors_DataGridView_Errors.Size = new Size(600, 275);
             this.Control_RecentErrors_DataGridView_Errors.TabIndex = 1;
             // 
             // Control_RecentErrors_Label_Title
             // 
-            this.Control_RecentErrors_Label_Title.Dock = System.Windows.Forms.DockStyle.Top;
-            this.Control_RecentErrors_Label_Title.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.Control_RecentErrors_Label_Title.Location = new System.Drawing.Point(0, 0);
+            this.Control_RecentErrors_Label_Title.Dock = DockStyle.Top;
+            this.Control_RecentErrors_Label_Title.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point);
+            this.Control_RecentErrors_Label_Title.Location = new Point(0, 0);
             this.Control_RecentErrors_Label_Title.Name = "Control_RecentErrors_Label_Title";
-            this.Control_RecentErrors_Label_Title.Padding = new System.Windows.Forms.Padding(5, 0, 0, 0);
-            this.Control_RecentErrors_Label_Title.Size = new System.Drawing.Size(600, 25);
+            this.Control_RecentErrors_Label_Title.Padding = new Padding(5, 0, 0, 0);
+            this.Control_RecentErrors_Label_Title.Size = new Size(600, 25);
             this.Control_RecentErrors_Label_Title.TabIndex = 0;
             this.Control_RecentErrors_Label_Title.Text = "Recent Critical Errors";
-            this.Control_RecentErrors_Label_Title.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.Control_RecentErrors_Label_Title.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // Control_RecentErrors
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleDimensions = new SizeF(7F, 15F);
+            this.AutoScaleMode = AutoScaleMode.Font;
             this.Controls.Add(this.Control_RecentErrors_DataGridView_Errors);
             this.Controls.Add(this.Control_RecentErrors_Label_Title);
             this.Name = "Control_RecentErrors";
-            this.Size = new System.Drawing.Size(600, 300);
+            this.Size = new Size(600, 300);
             ((System.ComponentModel.ISupportInitialize)(this.Control_RecentErrors_DataGridView_Errors)).EndInit();
             this.ResumeLayout(false);
 
@@ -78,8 +88,10 @@ namespace MTM_WIP_Application_Winforms.Controls.DeveloperTools
 
         #endregion
 
-        private System.Windows.Forms.DataGridView Control_RecentErrors_DataGridView_Errors;
-        private System.Windows.Forms.Label Control_RecentErrors_Label_Title;
+        private DataGridView Control_RecentErrors_DataGridView_Errors;
+        private Label Control_RecentErrors_Label_Title;
     }
 }
+
+
 
