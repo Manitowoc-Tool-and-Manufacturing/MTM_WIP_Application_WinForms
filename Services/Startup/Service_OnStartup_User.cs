@@ -81,6 +81,40 @@ namespace MTM_WIP_Application_Winforms.Services.Startup
                     }
 #endif
                 }
+
+                // Check and set default Infor Visual credentials if missing
+                var visualUserResult = await Dao_User.GetVisualUserNameAsync(Model_Application_Variables.User);
+                var visualPassResult = await Dao_User.GetVisualPasswordAsync(Model_Application_Variables.User);
+
+                string? visualUser = visualUserResult.IsSuccess ? visualUserResult.Data : null;
+                string? visualPass = visualPassResult.IsSuccess ? visualPassResult.Data : null;
+
+                if (string.IsNullOrWhiteSpace(visualUser) || string.IsNullOrWhiteSpace(visualPass))
+                {
+                    LoggingUtility.Log($"[Startup] Missing Infor Visual credentials for user {Model_Application_Variables.User}. Setting defaults.");
+
+                    string defaultUser = "SHOP2";
+                    string defaultPass = "SHOP";
+
+                    // Update Memory
+                    Model_Application_Variables.VisualUserName = defaultUser;
+                    Model_Application_Variables.VisualPassword = defaultPass;
+                    Model_Shared_Users.VisualUserName = defaultUser;
+                    Model_Shared_Users.VisualPassword = defaultPass;
+
+                    // Update Database
+                    await Dao_User.SetVisualUserNameAsync(Model_Application_Variables.User, defaultUser);
+                    await Dao_User.SetVisualPasswordAsync(Model_Application_Variables.User, defaultPass);
+
+                    LoggingUtility.Log($"[Startup] Assigned default Infor Visual credentials (SHOP2/SHOP) to user {Model_Application_Variables.User}.");
+                }
+                else
+                {
+                    // Populate memory if they exist
+                    Model_Application_Variables.VisualUserName = visualUser;
+                    Model_Application_Variables.VisualPassword = visualPass;
+                    // Note: Dao_User.GetVisualUserNameAsync/GetVisualPasswordAsync already set Model_Shared_Users properties
+                }
             }
             catch (Exception ex)
             {
