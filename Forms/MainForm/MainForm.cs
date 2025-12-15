@@ -1581,6 +1581,50 @@ using MTM_WIP_Application_Winforms.Services.ErrorHandling;
             }
         }
 
+        /// <summary>
+        /// TEST: Opens the Quick User Creation form for testing purposes.
+        /// This allows testing the user creation flow without manipulating the database or startup logic.
+        /// </summary>
+        private void MainForm_MenuStrip_View_TestQuickUserCreation_Click(object? sender, EventArgs e)
+        {
+            try
+            {
+                LoggingUtility.Log("[TEST] Opening Form_QuickUserCreation for testing");
+                
+                using var testForm = new Form_QuickUserCreation();
+                var result = testForm.ShowDialog(this);
+                
+                if (result == DialogResult.OK)
+                {
+                    LoggingUtility.Log($"[TEST] User creation completed. New user: {Model_Application_Variables.User}");
+                    Service_ErrorHandler.ShowInformation(
+                        $"Test completed successfully!\n\nNew user created: {Model_Application_Variables.User}\n\nNote: This was a test. In production, this dialog appears automatically when a Windows user is not found in the database at startup.",
+                        "Test Complete",
+                        controlName: nameof(MainForm));
+                }
+                else if (result == DialogResult.Cancel)
+                {
+                    LoggingUtility.Log("[TEST] User cancelled the user creation form");
+                    Service_ErrorHandler.ShowInformation(
+                        "User creation was cancelled.\n\nNote: In production, cancelling this dialog would exit the application.",
+                        "Test Cancelled",
+                        controlName: nameof(MainForm));
+                }
+                else
+                {
+                    LoggingUtility.Log("[TEST] User creation form closed without completion");
+                }
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium,
+                    contextData: new Dictionary<string, object> { ["TestMode"] = true },
+                    callerName: nameof(MainForm_MenuStrip_View_TestQuickUserCreation_Click),
+                    controlName: nameof(MainForm));
+            }
+        }
+
         private void InitializeDevelopmentMenuItems()
         {
             if (MainForm_MenuStrip_Development == null) return;

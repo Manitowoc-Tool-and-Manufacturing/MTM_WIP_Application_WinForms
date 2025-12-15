@@ -228,7 +228,47 @@ namespace MTM_WIP_Application_Winforms.Services.Startup
 
                 if (!hasAccess)
                 {
-                    return Model_StartupResult.Failure("User Not Found: You do not currently have a username set.");
+                    LoggingUtility.Log($"[Startup] User '{Model_Application_Variables.User}' not found in database. Showing Quick User Creation form.");
+                    
+                    // User not found - show Quick User Creation form
+                    progress.Report((52, "User not found. Please create user account..."));
+                    
+                    using var createUserForm = new Forms.Shared.Form_QuickUserCreation();
+                    var createUserResult = createUserForm.ShowDialog();
+                    
+                    if (createUserResult == DialogResult.Cancel)
+                    {
+                        LoggingUtility.Log("[Startup] User chose to exit application instead of creating account.");
+                        return Model_StartupResult.Failure("Application startup cancelled by user.");
+                    }
+                    
+                    if (createUserResult != DialogResult.OK)
+                    {
+                        LoggingUtility.Log("[Startup] User creation form closed without successful user creation.");
+                        return Model_StartupResult.Failure("User creation was not completed. Application cannot continue.");
+                    }
+                    
+                    // User was created - reload user access
+                    LoggingUtility.Log($"[Startup] User created successfully. Reloading user access for: {Model_Application_Variables.User}");
+                    progress.Report((54, "User created. Loading permissions..."));
+                    
+                    var reloadAccessResult = await Service_OnStartup_User.LoadUserAccessAsync();
+                    if (!reloadAccessResult.IsSuccess)
+                    {
+                        return reloadAccessResult;
+                    }
+                    
+                    // Verify user now has access
+                    hasAccess = Model_Application_Variables.UserTypeNormal || 
+                                Model_Application_Variables.UserTypeReadOnly || 
+                                Model_Application_Variables.UserTypeAdmin || 
+                                Model_Application_Variables.UserTypeDeveloper;
+                    
+                    if (!hasAccess)
+                    {
+                        LoggingUtility.Log($"[Startup] User '{Model_Application_Variables.User}' still does not have access after creation.");
+                        return Model_StartupResult.Failure("User was created but permissions could not be verified. Please contact your system administrator.");
+                    }
                 }
                 progress.Report((55, "Permissions verified."));
 
