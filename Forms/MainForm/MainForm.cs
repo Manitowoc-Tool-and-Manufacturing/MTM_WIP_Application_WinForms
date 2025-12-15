@@ -562,7 +562,7 @@ using MTM_WIP_Application_Winforms.Services.ErrorHandling;
         {
             try
             {
-                MainForm_TabControl.SelectedIndexChanged += async (s, e) =>
+                MainForm_TabControl.SelectedIndexChanged += (s, e) =>
                 {
                     try
                     {
@@ -745,7 +745,7 @@ using MTM_WIP_Application_Winforms.Services.ErrorHandling;
             }
         }
 
-        private async void MainForm_OnStartup_SetupConnectionStrengthControl()
+        private void MainForm_OnStartup_SetupConnectionStrengthControl()
         {
             try
             {
@@ -1252,7 +1252,7 @@ using MTM_WIP_Application_Winforms.Services.ErrorHandling;
 
         #region Form Closing
 
-        protected override async void OnFormClosing(FormClosingEventArgs e)
+        protected override void OnFormClosing(FormClosingEventArgs e)
         {
             try
             {
@@ -1275,7 +1275,7 @@ using MTM_WIP_Application_Winforms.Services.ErrorHandling;
 
         #region Menu Event Handlers
 
-        private async void MainForm_MenuStrip_File_Settings_Click(object sender, EventArgs e)
+        private void MainForm_MenuStrip_File_Settings_Click(object sender, EventArgs e)
         {
             Service_DebugTracer.TraceUIAction("SETTINGS_MENU_CLICK", nameof(MainForm),
                 new Dictionary<string, object>

@@ -52,9 +52,17 @@ namespace MTM_WIP_Application_Winforms.Controls.DeveloperTools
 
             try
             {
-                // Performance Metrics
-                var metrics = _devToolsService.GetPerformanceMetrics();
-                UpdatePerformanceUI(metrics);
+                // Performance Metrics - run on background thread to avoid blocking UI
+                Model_PerformanceMetrics metrics = await Task.Run(() => _devToolsService.GetPerformanceMetrics()).ConfigureAwait(false);
+                
+                if (InvokeRequired)
+                {
+                    Invoke(new Action(() => UpdatePerformanceUI(metrics)));
+                }
+                else
+                {
+                    UpdatePerformanceUI(metrics);
+                }
             }
             catch (Exception ex)
             {
