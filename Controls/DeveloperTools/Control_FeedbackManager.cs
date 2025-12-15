@@ -152,26 +152,39 @@ namespace MTM_WIP_Application_Winforms.Controls.DeveloperTools
             
             var row = Control_FeedbackManager_DataGridView_Feedback.Rows[e.RowIndex];
             
-            // Check if we have a Priority column in the data source
-            string? priority = null;
+            // Check if we have a Status column in the data source
+            string? status = null;
             if (row.DataBoundItem is DataRowView drv)
             {
                 // Check if column exists
-                if (drv.DataView != null && drv.DataView.Table != null && drv.DataView.Table.Columns.Contains("Priority"))
+                if (drv.DataView != null && drv.DataView.Table != null && drv.DataView.Table.Columns.Contains("Status"))
                 {
-                    priority = drv["Priority"]?.ToString();
+                    status = drv["Status"]?.ToString();
                 }
             }
 
-            if (string.IsNullOrEmpty(priority)) return;
+            if (string.IsNullOrEmpty(status)) return;
 
-            if (priority.Equals("High", StringComparison.OrdinalIgnoreCase))
+            // Apply colors based on Status (Light Pastel Colors)
+            if (status.Equals("New", StringComparison.OrdinalIgnoreCase))
             {
                 row.DefaultCellStyle.BackColor = Color.FromArgb(255, 235, 238); // Light Red
             }
-            else if (priority.Equals("Medium", StringComparison.OrdinalIgnoreCase))
+            else if (status.Equals("Open", StringComparison.OrdinalIgnoreCase))
+            {
+                row.DefaultCellStyle.BackColor = Color.FromArgb(255, 243, 224); // Light Orange
+            }
+            else if (status.Equals("In Progress", StringComparison.OrdinalIgnoreCase))
             {
                 row.DefaultCellStyle.BackColor = Color.FromArgb(255, 248, 225); // Light Yellow
+            }
+            else if (status.Equals("Resolved", StringComparison.OrdinalIgnoreCase))
+            {
+                row.DefaultCellStyle.BackColor = Color.FromArgb(232, 245, 233); // Light Green
+            }
+            else if (status.Equals("Closed", StringComparison.OrdinalIgnoreCase))
+            {
+                row.DefaultCellStyle.BackColor = Color.FromArgb(200, 230, 201); // Green
             }
         }
 

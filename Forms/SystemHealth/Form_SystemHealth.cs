@@ -182,6 +182,54 @@ namespace MTM_WIP_Application_Winforms.Forms.SystemHealth
             Form_SystemHealth_TextBox_Description.Text = feedback.Description;
             Form_SystemHealth_TextBox_Status.Text = feedback.Status;
 
+            // Apply colors based on Status
+            Color statusColor = Color.White;
+            if (string.Equals(feedback.Status, "New", StringComparison.OrdinalIgnoreCase))
+            {
+                statusColor = Color.FromArgb(255, 235, 238); // Light Red
+            }
+            else if (string.Equals(feedback.Status, "Open", StringComparison.OrdinalIgnoreCase))
+            {
+                statusColor = Color.FromArgb(255, 243, 224); // Light Orange
+            }
+            else if (string.Equals(feedback.Status, "In Progress", StringComparison.OrdinalIgnoreCase))
+            {
+                statusColor = Color.FromArgb(255, 248, 225); // Light Yellow
+            }
+            else if (string.Equals(feedback.Status, "Resolved", StringComparison.OrdinalIgnoreCase))
+            {
+                statusColor = Color.FromArgb(232, 245, 233); // Light Green
+            }
+            else if (string.Equals(feedback.Status, "Closed", StringComparison.OrdinalIgnoreCase))
+            {
+                statusColor = Color.FromArgb(200, 230, 201); // Green
+            }
+
+            // Apply to Form Background and Controls
+            this.BackColor = statusColor;
+            Form_SystemHealth_GroupBox_Feedback.BackColor = statusColor;
+            Form_SystemHealth_TableLayout_FeedbackDetails.BackColor = statusColor;
+            Form_SystemHealth_Panel_Actions.BackColor = statusColor;
+            Form_SystemHealth_Label_UserFullName.BackColor = statusColor;
+            Form_SystemHealth_TextBox_FeedbackType.BackColor = statusColor;
+            Form_SystemHealth_TextBox_SubmissionDate.BackColor = statusColor;
+            Form_SystemHealth_TextBox_ActiveSection.BackColor = statusColor;
+            Form_SystemHealth_TextBox_Category.BackColor = statusColor;
+            Form_SystemHealth_TextBox_Severity.BackColor = statusColor;
+            Form_SystemHealth_TextBox_Priority.BackColor = statusColor;
+            Form_SystemHealth_TextBox_Title.BackColor = statusColor;
+            Form_SystemHealth_TextBox_Description.BackColor = statusColor;
+            Form_SystemHealth_TextBox_Status.BackColor = statusColor;
+
+            // Update labels inside TableLayoutPanel
+            foreach (Control c in Form_SystemHealth_TableLayout_FeedbackDetails.Controls)
+            {
+                if (c is Label)
+                {
+                    c.BackColor = statusColor;
+                }
+            }
+
             // Update buttons state
             Form_SystemHealth_Button_Previous.Enabled = index > 0;
             Form_SystemHealth_Button_Next.Enabled = index < _feedbackList.Count - 1;
