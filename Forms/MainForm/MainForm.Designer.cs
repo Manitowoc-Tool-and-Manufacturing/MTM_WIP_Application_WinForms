@@ -195,7 +195,11 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             // 
             // MainForm_MenuStrip_View
             // 
+#if DEBUG
             MainForm_MenuStrip_View.DropDownItems.AddRange(new ToolStripItem[] { MainForm_MenuStrip_View_PersonalHistory, MainForm_MenuStrip_View_SystemHealth, MainForm_MenuStrip_View_Separator2, MainForm_MenuStrip_View_TestQuickUserCreation });
+#else
+            MainForm_MenuStrip_View.DropDownItems.AddRange(new ToolStripItem[] { MainForm_MenuStrip_View_PersonalHistory, MainForm_MenuStrip_View_SystemHealth, MainForm_MenuStrip_View_Separator2 });
+#endif
             MainForm_MenuStrip_View.Name = "MainForm_MenuStrip_View";
             MainForm_MenuStrip_View.Size = new Size(44, 24);
             MainForm_MenuStrip_View.Text = "View";
@@ -220,6 +224,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             // 
             MainForm_MenuStrip_View_Separator2.Name = "MainForm_MenuStrip_View_Separator2";
             MainForm_MenuStrip_View_Separator2.Size = new Size(216, 6);
+#if DEBUG
             // 
             // MainForm_MenuStrip_View_TestQuickUserCreation
             // 
@@ -227,6 +232,7 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
             MainForm_MenuStrip_View_TestQuickUserCreation.Size = new Size(280, 22);
             MainForm_MenuStrip_View_TestQuickUserCreation.Text = "🧪 TEST: Quick User Creation";
             MainForm_MenuStrip_View_TestQuickUserCreation.Click += MainForm_MenuStrip_View_TestQuickUserCreation_Click;
+#endif
             // 
             // MainForm_MenuStrip_Visual
             // 
