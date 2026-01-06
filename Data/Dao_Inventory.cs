@@ -457,7 +457,7 @@ public static class Dao_Inventory
                 int quantity = int.TryParse(row.Cells["Quantity"].Value?.ToString(), out int qty) ? qty : 0;
                 string batchNumber = row.Cells["BatchNumber"].Value?.ToString() ?? "";
                 string itemType = row.Cells["ItemType"].Value?.ToString() ?? "";
-                string user = row.Cells["User"].Value?.ToString() ?? "";
+                string user = Model_Application_Variables.User;
                 string notes = row.Cells["Notes"].Value?.ToString() ?? "";
 
                 if (string.IsNullOrWhiteSpace(partId) || string.IsNullOrWhiteSpace(location) ||

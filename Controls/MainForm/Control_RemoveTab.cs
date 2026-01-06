@@ -612,7 +612,14 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 }
 
                 _progressHelper?.UpdateProgress(80, "Refreshing results...");
-                Control_RemoveTab_Button_Search_Click(null, null);
+                if (!string.IsNullOrWhiteSpace(Control_RemoveTab_TextBox_Part.Text))
+                {
+                    Control_RemoveTab_Button_Search_Click(null, null);
+                }
+                else
+                {
+                    Control_RemoveTab_Button_ShowAll_Click(null, null);
+                }
                 _progressHelper?.UpdateProgress(100, "Delete complete");
 
                 // --- Enable Undo button if items were removed ---
@@ -670,7 +677,14 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
                 Control_RemoveTab_Button_Undo.Enabled = false;
 
-                Control_RemoveTab_Button_Search_Click(null, null);
+                if (!string.IsNullOrWhiteSpace(Control_RemoveTab_TextBox_Part.Text))
+                {
+                    Control_RemoveTab_Button_Search_Click(null, null);
+                }
+                else
+                {
+                    Control_RemoveTab_Button_ShowAll_Click(null, null);
+                }
                 _progressHelper?.UpdateProgress(100, "Undo complete");
             }
             catch (Exception ex)

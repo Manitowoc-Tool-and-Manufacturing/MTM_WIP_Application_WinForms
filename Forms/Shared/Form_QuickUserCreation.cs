@@ -64,7 +64,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            
+
             // Populate shift combo box
             Form_QuickUserCreation_ComboBox_Shift.Items.Clear();
             Form_QuickUserCreation_ComboBox_Shift.Items.AddRange(new object[]
