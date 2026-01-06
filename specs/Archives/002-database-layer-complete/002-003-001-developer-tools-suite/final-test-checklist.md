@@ -386,7 +386,7 @@ dotnet test --no-build --filter "FullyQualifiedName~Dao_ErrorLog_Tests"
 dotnet test --no-build --filter "FullyQualifiedName~UpdateQuickButtonAsync_ValidData" --logger "console;verbosity=detailed"
 
 # Check database
-mysql -h localhost -u root -proot mtm_wip_application_winforms_test -e "SHOW TABLES;"
+mysql -h 172.16.1.104 -u root -proot mtm_wip_application_winforms_test -e "SHOW TABLES;"
 ```
 
 ---

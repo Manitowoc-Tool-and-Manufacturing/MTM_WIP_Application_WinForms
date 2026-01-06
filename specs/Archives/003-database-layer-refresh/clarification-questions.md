@@ -16,7 +16,7 @@
 **Options**:
 
 1. Production database only (`MTM_WIP_Application_Winforms` on 172.16.1.104)
-2. Test database only (`mtm_wip_application_winforms_test` on localhost)
+2. Test database only (`mtm_wip_application_winforms_test` on 172.16.1.104)
 3. Both databases (audit both, reconcile differences)
 4. Code analysis only (discover procedures from C# call sites)
 
@@ -348,12 +348,12 @@
 
 **Options**:
 
-1. **Local only**: Developers run tests on localhost test database (fast feedback but inconsistent environments)
+1. **Local only**: Developers run tests on 172.16.1.104 test database (fast feedback but inconsistent environments)
 2. **CI/CD only**: Tests run in GitHub Actions/Azure DevOps pipeline (consistent but slower feedback)
 3. **Hybrid**: Developers run locally, CI/CD gates deployment (best of both but requires dual configuration)
 4. **Containerized**: Docker container with MySQL for tests (portable but adds complexity)
 
-**User Response**: Hybrid (Option 3) with shared test database configuration. Developers run tests locally against `localhost:3306/mtm_wip_application_winforms_test`. CI/CD pipeline uses same database on build agent (pre-seeded). Shared `appsettings.Test.json` configuration with connection string. Local runs provide fast feedback during development. CI/CD runs validate before PR merge (gates deployment to production).
+**User Response**: Hybrid (Option 3) with shared test database configuration. Developers run tests locally against `172.16.1.104:3306/mtm_wip_application_winforms_test`. CI/CD pipeline uses same database on build agent (pre-seeded). Shared `appsettings.Test.json` configuration with connection string. Local runs provide fast feedback during development. CI/CD runs validate before PR merge (gates deployment to production).
 
 **Decision Impact**: T107 BaseIntegrationTest reads configuration from appsettings.Test.json. Developers configure local test database during onboarding. CI/CD pipeline (future Phase 3 task) includes test execution step with connection to build agent database. T122 post-deployment tests run in both environments (local for DBA validation, CI/CD for audit trail).
 

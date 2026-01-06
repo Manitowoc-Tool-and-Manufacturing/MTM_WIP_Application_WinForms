@@ -843,7 +843,7 @@ execute_shell_command(
 
 # 3. Execute stored procedure migration
 execute_shell_command(
-    command='& "C:\\MAMP\\bin\\mysql\\bin\\mysql.exe" -h localhost -P 3306 -u root -proot mtm_wip_application_winforms < Database/UpdatedStoredProcedures/md_inventory_GetAll.sql'
+    command='& "C:\\MAMP\\bin\\mysql\\bin\\mysql.exe" -h 172.16.1.104 -P 3306 -u root -proot mtm_wip_application_winforms < Database/UpdatedStoredProcedures/md_inventory_GetAll.sql'
 )
 
 # 4. Git diff before committing

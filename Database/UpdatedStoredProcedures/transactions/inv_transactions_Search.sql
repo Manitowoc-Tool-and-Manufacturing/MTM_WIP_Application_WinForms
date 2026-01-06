@@ -8,7 +8,7 @@
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_transactions_Search`(IN `p_UserName` VARCHAR(100), IN `p_IsAdmin` BOOLEAN, IN `p_PartID` VARCHAR(300), IN `p_BatchNumber` VARCHAR(300), IN `p_FromLocation` VARCHAR(100), IN `p_ToLocation` VARCHAR(100), IN `p_Operation` VARCHAR(100), IN `p_TransactionType` VARCHAR(50), IN `p_Quantity` INT, IN `p_Notes` VARCHAR(1000), IN `p_ItemType` VARCHAR(100), IN `p_FromDate` DATETIME, IN `p_ToDate` DATETIME, IN `p_SortColumn` VARCHAR(100), IN `p_SortDescending` BOOLEAN, IN `p_Page` INT, IN `p_PageSize` INT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `inv_transactions_Search`(IN `p_UserName` VARCHAR(100), IN `p_IsAdmin` BOOLEAN, IN `p_PartID` VARCHAR(300), IN `p_BatchNumber` VARCHAR(300), IN `p_FromLocation` VARCHAR(100), IN `p_ToLocation` VARCHAR(100), IN `p_Operation` VARCHAR(100), IN `p_TransactionType` VARCHAR(50), IN `p_Quantity` INT, IN `p_Notes` VARCHAR(1000), IN `p_ItemType` VARCHAR(100), IN `p_FromDate` DATETIME, IN `p_ToDate` DATETIME, IN `p_SortColumn` VARCHAR(100), IN `p_SortDescending` BOOLEAN, IN `p_Page` INT, IN `p_PageSize` INT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))
 BEGIN
 
     DECLARE v_Count INT DEFAULT 0;

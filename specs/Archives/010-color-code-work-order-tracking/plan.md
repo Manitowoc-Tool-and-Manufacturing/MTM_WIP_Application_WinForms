@@ -10,7 +10,7 @@ Add color code and work order tracking to the MTM WIP Application's inventory ma
 
 **Language/Version**: C# 12.0, .NET 8.0 Windows Forms  
 **Primary Dependencies**: MySql.Data 9.4.0, Microsoft.Extensions.DependencyInjection 8.0.0  
-**Storage**: MySQL 5.7.24 (MAMP localhost:3306) - mtm_wip_application_winforms database  
+**Storage**: MySQL 5.7.24 (MAMP 172.16.1.104:3306) - mtm_wip_application_winforms database  
 **Testing**: Manual testing with test scenarios  
 **Target Platform**: Windows 10/11 Desktop Application  
 **Project Type**: Single WinForms application with layered architecture (Data/Services/Forms/Controls/Helpers)  

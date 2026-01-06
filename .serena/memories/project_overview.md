@@ -45,7 +45,7 @@ MTM_WIP_Application_WinForms/
 ## Database
 - **Production**: `mtm_wip_application_winforms` (24 tables)
 - **Test**: `mtm_wip_application_winforms_test` (20 tables)
-- **Server**: MAMP MySQL on localhost:3306
+- **Server**: MAMP MySQL on 172.16.1.104:3306
 - **Credentials**: root/root (development)
 - **Stored Procedures**: All database access via stored procedures
 

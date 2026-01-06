@@ -2,7 +2,7 @@
 -- version 5.2.2
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost:3306
+-- Host: 172.16.1.104:3306
 -- Generation Time: Nov 24, 2025 at 01:45 PM
 -- Server version: 5.7.24
 -- PHP Version: 8.3.1
@@ -25,7 +25,7 @@ DELIMITER $$
 --
 -- Procedures
 --
-CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_inventory_Add_Item` (IN `p_PartID` VARCHAR(100), IN `p_Location` VARCHAR(100), IN `p_Operation` VARCHAR(100), IN `p_Quantity` INT, IN `p_ItemType` VARCHAR(200), IN `p_User` VARCHAR(100), IN `p_Notes` VARCHAR(1000), IN `p_ColorCode` VARCHAR(50), IN `p_WorkOrder` VARCHAR(10), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `inv_inventory_Add_Item` (IN `p_PartID` VARCHAR(100), IN `p_Location` VARCHAR(100), IN `p_Operation` VARCHAR(100), IN `p_Quantity` INT, IN `p_ItemType` VARCHAR(200), IN `p_User` VARCHAR(100), IN `p_Notes` VARCHAR(1000), IN `p_ColorCode` VARCHAR(50), IN `p_WorkOrder` VARCHAR(10), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_RowsAffected INT DEFAULT 0;
     DECLARE nextBatch BIGINT;
     DECLARE batchStr VARCHAR(10);
@@ -120,7 +120,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_inventory_Add_Item` (IN `p_Part
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_inventory_Fix_BatchNumbers` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `inv_inventory_Fix_BatchNumbers` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_RowsAffected INT DEFAULT 0;
     DECLARE done INT DEFAULT FALSE;
     DECLARE null_id INT;
@@ -158,7 +158,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_inventory_Fix_BatchNumbers` (OU
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_inventory_GetNextBatchNumber` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `inv_inventory_GetNextBatchNumber` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_NextBatch BIGINT;
     -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -184,7 +184,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_inventory_GetNextBatchNumber` (
     SET p_ErrorMsg = CONCAT('Generated batch number: ', v_NextBatch);
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_inventory_Get_All` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `inv_inventory_Get_All` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_Count INT DEFAULT 0;
     -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -221,7 +221,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_inventory_Get_All` (OUT `p_Stat
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_inventory_Get_ByPartID` (IN `p_PartID` VARCHAR(300), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `inv_inventory_Get_ByPartID` (IN `p_PartID` VARCHAR(300), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_Count INT DEFAULT 0;
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -259,7 +259,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_inventory_Get_ByPartID` (IN `p_
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_inventory_Get_ByPartIDandOperation` (IN `p_PartID` VARCHAR(300), IN `p_Operation` VARCHAR(300), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `inv_inventory_Get_ByPartIDandOperation` (IN `p_PartID` VARCHAR(300), IN `p_Operation` VARCHAR(300), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_Count INT DEFAULT 0;
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -300,7 +300,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_inventory_Get_ByPartIDandOperat
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_inventory_Get_ByUser` (IN `p_User` VARCHAR(100), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `inv_inventory_Get_ByUser` (IN `p_User` VARCHAR(100), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_Count INT DEFAULT 0;
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -320,7 +320,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_inventory_Get_ByUser` (IN `p_Us
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_inventory_Remove_Item` (IN `p_PartID` VARCHAR(300), IN `p_Location` VARCHAR(100), IN `p_Operation` VARCHAR(100), IN `p_Quantity` INT, IN `p_ItemType` VARCHAR(100), IN `p_User` VARCHAR(100), IN `p_BatchNumber` VARCHAR(100), IN `p_Notes` VARCHAR(1000), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(255))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `inv_inventory_Remove_Item` (IN `p_PartID` VARCHAR(300), IN `p_Location` VARCHAR(100), IN `p_Operation` VARCHAR(100), IN `p_Quantity` INT, IN `p_ItemType` VARCHAR(100), IN `p_User` VARCHAR(100), IN `p_BatchNumber` VARCHAR(100), IN `p_Notes` VARCHAR(1000), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(255))   BEGIN
     DECLARE v_RowsAffected INT DEFAULT 0;
     DECLARE v_ErrorMessage TEXT DEFAULT '';
     DECLARE v_RecordCount INT DEFAULT 0;
@@ -360,7 +360,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_inventory_Remove_Item` (IN `p_P
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_inventory_Search_Advanced` (IN `p_PartID` VARCHAR(300), IN `p_Operation` VARCHAR(300), IN `p_Location` VARCHAR(300), IN `p_QtyMin` DECIMAL(10,2), IN `p_QtyMax` DECIMAL(10,2), IN `p_Notes` TEXT, IN `p_User` VARCHAR(300), IN `p_FilterByDate` BOOLEAN, IN `p_DateFrom` DATETIME, IN `p_DateTo` DATETIME, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `inv_inventory_Search_Advanced` (IN `p_PartID` VARCHAR(300), IN `p_Operation` VARCHAR(300), IN `p_Location` VARCHAR(300), IN `p_QtyMin` DECIMAL(10,2), IN `p_QtyMax` DECIMAL(10,2), IN `p_Notes` TEXT, IN `p_User` VARCHAR(300), IN `p_FilterByDate` BOOLEAN, IN `p_DateFrom` DATETIME, IN `p_DateTo` DATETIME, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_Count INT DEFAULT 0;
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -408,7 +408,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_inventory_Search_Advanced` (IN 
     COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_inventory_Transfer_Part` (IN `p_BatchNumber` VARCHAR(300), IN `p_PartID` VARCHAR(300), IN `p_Operation` VARCHAR(100), IN `p_NewLocation` VARCHAR(100), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `inv_inventory_Transfer_Part` (IN `p_BatchNumber` VARCHAR(300), IN `p_PartID` VARCHAR(300), IN `p_Operation` VARCHAR(100), IN `p_NewLocation` VARCHAR(100), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_RowsAffected INT DEFAULT 0;
     DECLARE v_Exists INT DEFAULT 0;
     -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -461,7 +461,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_inventory_Transfer_Part` (IN `p
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_inventory_Transfer_Quantity` (IN `p_BatchNumber` VARCHAR(255), IN `p_PartID` VARCHAR(255), IN `p_Operation` VARCHAR(255), IN `p_TransferQuantity` INT, IN `p_OriginalQuantity` INT, IN `p_NewLocation` VARCHAR(255), IN `p_User` VARCHAR(255), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `inv_inventory_Transfer_Quantity` (IN `p_BatchNumber` VARCHAR(255), IN `p_PartID` VARCHAR(255), IN `p_Operation` VARCHAR(255), IN `p_TransferQuantity` INT, IN `p_OriginalQuantity` INT, IN `p_NewLocation` VARCHAR(255), IN `p_User` VARCHAR(255), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_RowsAffected INT DEFAULT 0;
     -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -503,7 +503,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_inventory_Transfer_Quantity` (I
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_transactions_GetAnalytics` (IN `p_UserName` VARCHAR(100), IN `p_IsAdmin` BOOLEAN, IN `p_FromDate` DATETIME, IN `p_ToDate` DATETIME, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `inv_transactions_GetAnalytics` (IN `p_UserName` VARCHAR(100), IN `p_IsAdmin` BOOLEAN, IN `p_FromDate` DATETIME, IN `p_ToDate` DATETIME, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     
     
     DECLARE v_Count INT DEFAULT 0;
@@ -725,7 +725,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_transactions_GetAnalytics` (IN 
     
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_transactions_GetBatchLifecycle` (IN `p_BatchNumber` VARCHAR(50), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `inv_transactions_GetBatchLifecycle` (IN `p_BatchNumber` VARCHAR(50), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_Count INT DEFAULT 0;
     
     
@@ -777,7 +777,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_transactions_GetBatchLifecycle`
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_transactions_Search` (IN `p_UserName` VARCHAR(100), IN `p_IsAdmin` BOOLEAN, IN `p_PartID` VARCHAR(300), IN `p_BatchNumber` VARCHAR(300), IN `p_FromLocation` VARCHAR(100), IN `p_ToLocation` VARCHAR(100), IN `p_Operation` VARCHAR(100), IN `p_TransactionType` VARCHAR(50), IN `p_Quantity` INT, IN `p_Notes` VARCHAR(1000), IN `p_ItemType` VARCHAR(100), IN `p_FromDate` DATETIME, IN `p_ToDate` DATETIME, IN `p_SortColumn` VARCHAR(100), IN `p_SortDescending` BOOLEAN, IN `p_Page` INT, IN `p_PageSize` INT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `inv_transactions_Search` (IN `p_UserName` VARCHAR(100), IN `p_IsAdmin` BOOLEAN, IN `p_PartID` VARCHAR(300), IN `p_BatchNumber` VARCHAR(300), IN `p_FromLocation` VARCHAR(100), IN `p_ToLocation` VARCHAR(100), IN `p_Operation` VARCHAR(100), IN `p_TransactionType` VARCHAR(50), IN `p_Quantity` INT, IN `p_Notes` VARCHAR(1000), IN `p_ItemType` VARCHAR(100), IN `p_FromDate` DATETIME, IN `p_ToDate` DATETIME, IN `p_SortColumn` VARCHAR(100), IN `p_SortDescending` BOOLEAN, IN `p_Page` INT, IN `p_PageSize` INT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_Count INT DEFAULT 0;
     DECLARE v_Offset INT DEFAULT 0;
     DECLARE v_OrderBy VARCHAR(200) DEFAULT 'ORDER BY ReceiveDate DESC';
@@ -892,7 +892,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_transactions_Search` (IN `p_Use
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_transactions_SmartSearch` (IN `p_WhereClause` TEXT, IN `p_Page` INT, IN `p_PageSize` INT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `inv_transactions_SmartSearch` (IN `p_WhereClause` TEXT, IN `p_Page` INT, IN `p_PageSize` INT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_Count INT DEFAULT 0;
     DECLARE v_ErrorMessage VARCHAR(500) DEFAULT '';
     DECLARE v_Offset INT DEFAULT 0;
@@ -946,7 +946,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_transactions_SmartSearch` (IN `
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_transaction_Add` (IN `p_TransactionType` ENUM('IN','OUT','TRANSFER'), IN `p_PartID` VARCHAR(300), IN `p_BatchNumber` VARCHAR(100), IN `p_FromLocation` VARCHAR(300), IN `p_ToLocation` VARCHAR(300), IN `p_Operation` VARCHAR(100), IN `p_Quantity` INT, IN `p_Notes` VARCHAR(1000), IN `p_User` VARCHAR(100), IN `p_ItemType` VARCHAR(100), IN `p_ReceiveDate` DATETIME, IN `p_ColorCode` VARCHAR(50), IN `p_WorkOrder` VARCHAR(10), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `inv_transaction_Add` (IN `p_TransactionType` ENUM('IN','OUT','TRANSFER'), IN `p_PartID` VARCHAR(300), IN `p_BatchNumber` VARCHAR(100), IN `p_FromLocation` VARCHAR(300), IN `p_ToLocation` VARCHAR(300), IN `p_Operation` VARCHAR(100), IN `p_Quantity` INT, IN `p_Notes` VARCHAR(1000), IN `p_User` VARCHAR(100), IN `p_ItemType` VARCHAR(100), IN `p_ReceiveDate` DATETIME, IN `p_ColorCode` VARCHAR(50), IN `p_WorkOrder` VARCHAR(10), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_RowsAffected INT DEFAULT 0;
     DECLARE v_ColorCode VARCHAR(50);
     DECLARE v_WorkOrder VARCHAR(10);
@@ -998,7 +998,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_transaction_Add` (IN `p_Transac
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_transaction_Delete_ByID` (IN `p_ID` INT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `inv_transaction_Delete_ByID` (IN `p_ID` INT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_RowsAffected INT DEFAULT 0;
     DECLARE v_ErrorMessage TEXT DEFAULT '';
     DECLARE v_TransactionExists INT DEFAULT 0;
@@ -1041,7 +1041,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_transaction_Delete_ByID` (IN `p
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_transaction_Fix_Duplicates_Analysis` (IN `p_DryRun` BOOLEAN, IN `p_DeleteDuplicates` BOOLEAN, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `inv_transaction_Fix_Duplicates_Analysis` (IN `p_DryRun` BOOLEAN, IN `p_DeleteDuplicates` BOOLEAN, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_DuplicateGroups INT DEFAULT 0;
     DECLARE v_TotalDuplicates INT DEFAULT 0;
     DECLARE v_DuplicatesDeleted INT DEFAULT 0;
@@ -1256,7 +1256,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_transaction_Fix_Duplicates_Anal
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_transaction_Fix_IN_ColumnSwap` (IN `p_DryRun` BOOLEAN, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `inv_transaction_Fix_IN_ColumnSwap` (IN `p_DryRun` BOOLEAN, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_AffectedCount INT DEFAULT 0;
     DECLARE v_BeforeIncorrect INT DEFAULT 0;
     DECLARE v_AfterIncorrect INT DEFAULT 0;
@@ -1409,7 +1409,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_transaction_Fix_IN_ColumnSwap` 
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `log_changelog_Get_Current` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `log_changelog_Get_Current` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE table_exists INT DEFAULT 0;
     DECLARE row_count INT DEFAULT 0;
     
@@ -1463,7 +1463,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `log_changelog_Get_Current` (OUT `p_
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `log_error_Add_Error` (IN `p_User` VARCHAR(100), IN `p_Severity` VARCHAR(50), IN `p_ErrorType` VARCHAR(100), IN `p_ErrorMessage` TEXT, IN `p_StackTrace` TEXT, IN `p_ModuleName` VARCHAR(100), IN `p_MethodName` VARCHAR(100), IN `p_AdditionalInfo` TEXT, IN `p_MachineName` VARCHAR(100), IN `p_OSVersion` VARCHAR(100), IN `p_AppVersion` VARCHAR(50), IN `p_ErrorTime` DATETIME, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `log_error_Add_Error` (IN `p_User` VARCHAR(100), IN `p_Severity` VARCHAR(50), IN `p_ErrorType` VARCHAR(100), IN `p_ErrorMessage` TEXT, IN `p_StackTrace` TEXT, IN `p_ModuleName` VARCHAR(100), IN `p_MethodName` VARCHAR(100), IN `p_AdditionalInfo` TEXT, IN `p_MachineName` VARCHAR(100), IN `p_OSVersion` VARCHAR(100), IN `p_AppVersion` VARCHAR(50), IN `p_ErrorTime` DATETIME, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_RowCount INT DEFAULT 0;
     -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -1504,7 +1504,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `log_error_Add_Error` (IN `p_User` V
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `log_error_Delete_All` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `log_error_Delete_All` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_Count INT DEFAULT 0;
     DECLARE v_RowCount INT DEFAULT 0;
     -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -1530,7 +1530,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `log_error_Delete_All` (OUT `p_Statu
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `log_error_Delete_ById` (IN `p_Id` INT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `log_error_Delete_ById` (IN `p_Id` INT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_Exists INT DEFAULT 0;
     DECLARE v_RowCount INT DEFAULT 0;
     -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -1561,7 +1561,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `log_error_Delete_ById` (IN `p_Id` I
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `log_error_Get_All` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `log_error_Get_All` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_Count INT DEFAULT 0;
     -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -1589,7 +1589,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `log_error_Get_All` (OUT `p_Status` 
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `log_error_Get_ByDateRange` (IN `p_StartDate` DATETIME, IN `p_EndDate` DATETIME, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `log_error_Get_ByDateRange` (IN `p_StartDate` DATETIME, IN `p_EndDate` DATETIME, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_Count INT DEFAULT 0;
     -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -1622,7 +1622,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `log_error_Get_ByDateRange` (IN `p_S
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `log_error_Get_ByUser` (IN `p_User` VARCHAR(100), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `log_error_Get_ByUser` (IN `p_User` VARCHAR(100), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_Count INT DEFAULT 0;
     -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -1648,7 +1648,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `log_error_Get_ByUser` (IN `p_User` 
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `log_error_Get_Unique` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `log_error_Get_Unique` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_Count INT DEFAULT 0;
     -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -1670,7 +1670,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `log_error_Get_Unique` (OUT `p_Statu
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `maint_InsertMissingUserUiSettings` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `maint_InsertMissingUserUiSettings` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_RowCount INT DEFAULT 0;
     -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -1693,7 +1693,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `maint_InsertMissingUserUiSettings` 
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `maint_reload_part_ids_and_operation_numbers` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `maint_reload_part_ids_and_operation_numbers` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         GET DIAGNOSTICS CONDITION 1
@@ -1762,7 +1762,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `maint_reload_part_ids_and_operation
     SET p_ErrorMsg = 'Part IDs and operation numbers reloaded successfully';
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `maint_transactions_FindDuplicates` (IN `p_DuplicateType` VARCHAR(50), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `maint_transactions_FindDuplicates` (IN `p_DuplicateType` VARCHAR(50), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     
     
     
@@ -1990,7 +1990,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `maint_transactions_FindDuplicates` 
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `maint_transactions_RemoveDuplicates` (IN `p_DuplicateType` VARCHAR(50), IN `p_CreateBackup` BOOLEAN, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `maint_transactions_RemoveDuplicates` (IN `p_DuplicateType` VARCHAR(50), IN `p_CreateBackup` BOOLEAN, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     
     
     
@@ -2247,7 +2247,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `maint_transactions_RemoveDuplicates
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `md_color_codes_Add` (IN `p_ColorCode` VARCHAR(50), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `md_color_codes_Add` (IN `p_ColorCode` VARCHAR(50), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE color_exists INT DEFAULT 0;
     
     
@@ -2293,7 +2293,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `md_color_codes_Add` (IN `p_ColorCod
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `md_color_codes_GetAll` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `md_color_codes_GetAll` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -2326,7 +2326,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `md_color_codes_GetAll` (OUT `p_Stat
     COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `md_item_types_Add_ItemType` (IN `p_ItemType` VARCHAR(100), IN `p_IssuedBy` VARCHAR(100), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `md_item_types_Add_ItemType` (IN `p_ItemType` VARCHAR(100), IN `p_IssuedBy` VARCHAR(100), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_RowCount INT DEFAULT 0;
     -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -2354,7 +2354,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `md_item_types_Add_ItemType` (IN `p_
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `md_item_types_Delete_ByID` (IN `p_ID` INT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `md_item_types_Delete_ByID` (IN `p_ID` INT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_RowCount INT DEFAULT 0;
     -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -2379,7 +2379,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `md_item_types_Delete_ByID` (IN `p_I
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `md_item_types_Delete_ByType` (IN `p_ItemType` VARCHAR(100), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `md_item_types_Delete_ByType` (IN `p_ItemType` VARCHAR(100), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_RowCount INT DEFAULT 0;
     -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -2404,7 +2404,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `md_item_types_Delete_ByType` (IN `p
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `md_item_types_Exists_ByType` (IN `p_ItemType` VARCHAR(100), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `md_item_types_Exists_ByType` (IN `p_ItemType` VARCHAR(100), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_Exists INT DEFAULT 0;
     
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -2437,7 +2437,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `md_item_types_Exists_ByType` (IN `p
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `md_item_types_GetDistinct` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `md_item_types_GetDistinct` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_Count INT DEFAULT 0;
     -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -2462,7 +2462,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `md_item_types_GetDistinct` (OUT `p_
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `md_item_types_Get_All` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `md_item_types_Get_All` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_Count INT DEFAULT 0;
     -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -2482,7 +2482,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `md_item_types_Get_All` (OUT `p_Stat
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `md_item_types_Update_ItemType` (IN `p_ID` INT, IN `p_ItemType` VARCHAR(100), IN `p_IssuedBy` VARCHAR(100), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `md_item_types_Update_ItemType` (IN `p_ID` INT, IN `p_ItemType` VARCHAR(100), IN `p_IssuedBy` VARCHAR(100), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_RowCount INT DEFAULT 0;
     -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -2515,7 +2515,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `md_item_types_Update_ItemType` (IN 
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `md_locations_Add_Location` (IN `p_Location` VARCHAR(100), IN `p_IssuedBy` VARCHAR(100), IN `p_Building` VARCHAR(100), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `md_locations_Add_Location` (IN `p_Location` VARCHAR(100), IN `p_IssuedBy` VARCHAR(100), IN `p_Building` VARCHAR(100), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_RowCount INT DEFAULT 0;
     -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -2546,7 +2546,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `md_locations_Add_Location` (IN `p_L
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `md_locations_Delete_ByLocation` (IN `p_Location` VARCHAR(100), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `md_locations_Delete_ByLocation` (IN `p_Location` VARCHAR(100), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_RowCount INT DEFAULT 0;
     -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -2571,7 +2571,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `md_locations_Delete_ByLocation` (IN
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `md_locations_Exists_ByLocation` (IN `p_Location` VARCHAR(100), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `md_locations_Exists_ByLocation` (IN `p_Location` VARCHAR(100), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_Exists INT DEFAULT 0;
     
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -2604,7 +2604,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `md_locations_Exists_ByLocation` (IN
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `md_locations_Get_All` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `md_locations_Get_All` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_Count INT DEFAULT 0;
     -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -2624,7 +2624,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `md_locations_Get_All` (OUT `p_Statu
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `md_locations_Update_Location` (IN `p_OldLocation` VARCHAR(100), IN `p_Location` VARCHAR(100), IN `p_IssuedBy` VARCHAR(100), IN `p_Building` VARCHAR(100), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `md_locations_Update_Location` (IN `p_OldLocation` VARCHAR(100), IN `p_Location` VARCHAR(100), IN `p_IssuedBy` VARCHAR(100), IN `p_Building` VARCHAR(100), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_RowCount INT DEFAULT 0;
     -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -2661,7 +2661,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `md_locations_Update_Location` (IN `
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `md_operation_numbers_Add_Operation` (IN `p_Operation` VARCHAR(100), IN `p_IssuedBy` VARCHAR(100), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `md_operation_numbers_Add_Operation` (IN `p_Operation` VARCHAR(100), IN `p_IssuedBy` VARCHAR(100), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_RowCount INT DEFAULT 0;
     -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -2689,7 +2689,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `md_operation_numbers_Add_Operation`
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `md_operation_numbers_Delete_ByOperation` (IN `p_Operation` VARCHAR(100), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `md_operation_numbers_Delete_ByOperation` (IN `p_Operation` VARCHAR(100), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_RowCount INT DEFAULT 0;
     -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -2714,7 +2714,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `md_operation_numbers_Delete_ByOpera
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `md_operation_numbers_Exists_ByOperation` (IN `p_Operation` VARCHAR(100), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `md_operation_numbers_Exists_ByOperation` (IN `p_Operation` VARCHAR(100), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_Exists INT DEFAULT 0;
     
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -2747,7 +2747,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `md_operation_numbers_Exists_ByOpera
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `md_operation_numbers_Get_All` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `md_operation_numbers_Get_All` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_Count INT DEFAULT 0;
     -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -2767,7 +2767,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `md_operation_numbers_Get_All` (OUT 
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `md_operation_numbers_Update_Operation` (IN `p_Operation` VARCHAR(100), IN `p_NewOperation` VARCHAR(100), IN `p_IssuedBy` VARCHAR(100), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `md_operation_numbers_Update_Operation` (IN `p_Operation` VARCHAR(100), IN `p_NewOperation` VARCHAR(100), IN `p_IssuedBy` VARCHAR(100), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_RowCount INT DEFAULT 0;
     -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -2800,7 +2800,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `md_operation_numbers_Update_Operati
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `md_part_ids_Add_Part` (IN `p_ItemNumber` VARCHAR(300), IN `p_Customer` VARCHAR(300), IN `p_Description` VARCHAR(300), IN `p_IssuedBy` VARCHAR(100), IN `p_ItemType` VARCHAR(100), IN `p_RequiresColorCode` TINYINT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `md_part_ids_Add_Part` (IN `p_ItemNumber` VARCHAR(300), IN `p_Customer` VARCHAR(300), IN `p_Description` VARCHAR(300), IN `p_IssuedBy` VARCHAR(100), IN `p_ItemType` VARCHAR(100), IN `p_RequiresColorCode` TINYINT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_RowCount INT DEFAULT 0;
     
     BEGIN
@@ -2828,7 +2828,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `md_part_ids_Add_Part` (IN `p_ItemNu
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `md_part_ids_Delete_ByItemNumber` (IN `p_ItemNumber` VARCHAR(300), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `md_part_ids_Delete_ByItemNumber` (IN `p_ItemNumber` VARCHAR(300), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_RowCount INT DEFAULT 0;
     -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -2853,7 +2853,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `md_part_ids_Delete_ByItemNumber` (I
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `md_part_ids_GetAllColorCodeFlagged` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `md_part_ids_GetAllColorCodeFlagged` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -2882,7 +2882,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `md_part_ids_GetAllColorCodeFlagged`
     COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `md_part_ids_Get_All` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `md_part_ids_Get_All` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_Count INT DEFAULT 0;
     -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -2902,7 +2902,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `md_part_ids_Get_All` (OUT `p_Status
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `md_part_ids_Get_ByItemNumber` (IN `p_ItemNumber` VARCHAR(300), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `md_part_ids_Get_ByItemNumber` (IN `p_ItemNumber` VARCHAR(300), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_Count INT DEFAULT 0;
     -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -2927,7 +2927,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `md_part_ids_Get_ByItemNumber` (IN `
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `md_part_ids_UpdateColorCodeFlag` (IN `p_PartID` VARCHAR(300), IN `p_RequiresColorCode` BOOLEAN, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `md_part_ids_UpdateColorCodeFlag` (IN `p_PartID` VARCHAR(300), IN `p_RequiresColorCode` BOOLEAN, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE part_exists INT DEFAULT 0;
     
     
@@ -2967,7 +2967,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `md_part_ids_UpdateColorCodeFlag` (I
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `md_part_ids_Update_Part` (IN `p_ID` INT, IN `p_ItemNumber` VARCHAR(300), IN `p_Customer` VARCHAR(300), IN `p_Description` VARCHAR(300), IN `p_IssuedBy` VARCHAR(100), IN `p_ItemType` VARCHAR(100), IN `p_RequiresColorCode` TINYINT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `md_part_ids_Update_Part` (IN `p_ID` INT, IN `p_ItemNumber` VARCHAR(300), IN `p_Customer` VARCHAR(300), IN `p_Description` VARCHAR(300), IN `p_IssuedBy` VARCHAR(100), IN `p_ItemType` VARCHAR(100), IN `p_RequiresColorCode` TINYINT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_RowCount INT DEFAULT 0;
     
     BEGIN
@@ -3004,7 +3004,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `md_part_ids_Update_Part` (IN `p_ID`
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `migrate_user_roles_debug` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `migrate_user_roles_debug` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE done INT DEFAULT FALSE;
     DECLARE v_old_username VARCHAR(100);
     DECLARE v_new_userid INT;
@@ -3094,7 +3094,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `migrate_user_roles_debug` (OUT `p_S
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `query_check_procedure_exists` (IN `p_ProcedureName` VARCHAR(255), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `query_check_procedure_exists` (IN `p_ProcedureName` VARCHAR(255), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_Count INT DEFAULT 0;
 
     -- Initialize output parameters
@@ -3125,7 +3125,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `query_check_procedure_exists` (IN `
     END;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `query_get_all_stored_procedures` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `query_get_all_stored_procedures` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         GET DIAGNOSTICS CONDITION 1
@@ -3146,7 +3146,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `query_get_all_stored_procedures` (O
     SET p_ErrorMsg = 'Query executed successfully';
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `query_get_all_usernames_and_roles` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `query_get_all_usernames_and_roles` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_Count INT DEFAULT 0;
     -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -3169,7 +3169,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `query_get_all_usernames_and_roles` 
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `query_get_procedure_parameters` (IN `p_ProcedureName` VARCHAR(255), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `query_get_procedure_parameters` (IN `p_ProcedureName` VARCHAR(255), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_Count INT DEFAULT 0;
     -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -3211,7 +3211,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `query_get_procedure_parameters` (IN
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_error_reports_Delete` (IN `p_ReportID` INT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(255))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `sp_error_reports_Delete` (IN `p_ReportID` INT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(255))   BEGIN
     
     IF NOT EXISTS (SELECT 1 FROM error_reports WHERE ReportID = p_ReportID) THEN
         SET p_Status = 0;
@@ -3223,7 +3223,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_error_reports_Delete` (IN `p_Rep
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_error_reports_GetAll` (IN `p_DateFrom` DATETIME, IN `p_DateTo` DATETIME, IN `p_UserName` VARCHAR(100), IN `p_MachineName` VARCHAR(200), IN `p_StatusFilter` VARCHAR(20), IN `p_SearchText` VARCHAR(255), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `sp_error_reports_GetAll` (IN `p_DateFrom` DATETIME, IN `p_DateTo` DATETIME, IN `p_UserName` VARCHAR(100), IN `p_MachineName` VARCHAR(200), IN `p_StatusFilter` VARCHAR(20), IN `p_SearchText` VARCHAR(255), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_row_count INT DEFAULT 0;
 
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -3271,7 +3271,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_error_reports_GetAll` (IN `p_Dat
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_error_reports_GetByID` (IN `p_ReportID` INT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `sp_error_reports_GetByID` (IN `p_ReportID` INT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_row_count INT DEFAULT 0;
 
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -3312,7 +3312,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_error_reports_GetByID` (IN `p_Re
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_error_reports_GetMachineList` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `sp_error_reports_GetMachineList` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_row_count INT DEFAULT 0;
 
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -3340,7 +3340,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_error_reports_GetMachineList` (O
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_error_reports_GetUserList` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `sp_error_reports_GetUserList` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_row_count INT DEFAULT 0;
 
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -3367,7 +3367,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_error_reports_GetUserList` (OUT 
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_error_reports_Insert` (IN `p_UserName` VARCHAR(100), IN `p_MachineName` VARCHAR(200), IN `p_AppVersion` VARCHAR(50), IN `p_ErrorType` VARCHAR(255), IN `p_ErrorSummary` TEXT, IN `p_UserNotes` TEXT, IN `p_TechnicalDetails` TEXT, IN `p_CallStack` TEXT, OUT `p_ReportID` INT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `sp_error_reports_Insert` (IN `p_UserName` VARCHAR(100), IN `p_MachineName` VARCHAR(200), IN `p_AppVersion` VARCHAR(50), IN `p_ErrorType` VARCHAR(255), IN `p_ErrorSummary` TEXT, IN `p_UserNotes` TEXT, IN `p_TechnicalDetails` TEXT, IN `p_CallStack` TEXT, OUT `p_ReportID` INT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     -- Declare variables
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -3421,7 +3421,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_error_reports_Insert` (IN `p_Use
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_error_reports_UpdateStatus` (IN `p_ReportID` INT, IN `p_NewStatus` VARCHAR(20), IN `p_DeveloperNotes` TEXT, IN `p_ReviewedBy` VARCHAR(100), IN `p_ReviewedDate` DATETIME, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   proc:BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `sp_error_reports_UpdateStatus` (IN `p_ReportID` INT, IN `p_NewStatus` VARCHAR(20), IN `p_DeveloperNotes` TEXT, IN `p_ReviewedBy` VARCHAR(100), IN `p_ReviewedDate` DATETIME, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   proc:BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         ROLLBACK;
@@ -3465,7 +3465,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_error_reports_UpdateStatus` (IN 
     SET p_ErrorMsg = 'Error report status updated successfully';
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_ReassignBatchNumbers` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `sp_ReassignBatchNumbers` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE done INT DEFAULT 0;
     DECLARE curINID BIGINT;
     DECLARE curPartID VARCHAR(50);
@@ -3536,7 +3536,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_ReassignBatchNumbers` (OUT `p_St
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_GetRoleIdByName` (IN `p_RoleName` VARCHAR(100), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `sys_GetRoleIdByName` (IN `p_RoleName` VARCHAR(100), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE p_RoleId INT DEFAULT NULL;
     -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -3570,7 +3570,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_GetRoleIdByName` (IN `p_RoleNam
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_GetUserAccessType` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `sys_GetUserAccessType` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_Count INT DEFAULT 0;
     -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -3613,7 +3613,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_GetUserAccessType` (OUT `p_Stat
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_AddQuickButton` (IN `p_User` VARCHAR(255), IN `p_PartID` VARCHAR(255), IN `p_Operation` VARCHAR(255), IN `p_Quantity` INT, IN `p_Position` INT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `sys_last_10_transactions_AddQuickButton` (IN `p_User` VARCHAR(255), IN `p_PartID` VARCHAR(255), IN `p_Operation` VARCHAR(255), IN `p_Quantity` INT, IN `p_Position` INT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_RowCount INT DEFAULT 0;
     -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -3653,7 +3653,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_AddQuickBu
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_AddQuickButton_1` (IN `p_User` VARCHAR(255), IN `p_PartID` VARCHAR(255), IN `p_Operation` VARCHAR(255), IN `p_Quantity` INT, IN `p_Position` INT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `sys_last_10_transactions_AddQuickButton_1` (IN `p_User` VARCHAR(255), IN `p_PartID` VARCHAR(255), IN `p_Operation` VARCHAR(255), IN `p_Quantity` INT, IN `p_Position` INT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_RowCount INT DEFAULT 0;
     
     BEGIN
@@ -3693,7 +3693,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_AddQuickBu
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_Add_AtPosition` (IN `p_User` VARCHAR(100), IN `p_PartID` VARCHAR(300), IN `p_Operation` VARCHAR(100), IN `p_Quantity` INT, IN `p_Position` INT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `sys_last_10_transactions_Add_AtPosition` (IN `p_User` VARCHAR(100), IN `p_PartID` VARCHAR(300), IN `p_Operation` VARCHAR(100), IN `p_Quantity` INT, IN `p_Position` INT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_RowsAffected INT DEFAULT 0;
     -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -3741,7 +3741,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_Add_AtPosi
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_DeleteAll_ByUser` (IN `p_User` VARCHAR(100), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `sys_last_10_transactions_DeleteAll_ByUser` (IN `p_User` VARCHAR(100), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_RowsAffected INT DEFAULT 0;
     -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -3771,7 +3771,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_DeleteAll_
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_Delete_ByUserAndPosition` (IN `p_User` VARCHAR(100), IN `p_Position` INT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `sys_last_10_transactions_Delete_ByUserAndPosition` (IN `p_User` VARCHAR(100), IN `p_Position` INT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_RowsAffected INT DEFAULT 0;
     -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -3810,7 +3810,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_Delete_ByU
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_Delete_ByUserAndPosition_1` (IN `p_User` VARCHAR(100), IN `p_Position` INT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `sys_last_10_transactions_Delete_ByUserAndPosition_1` (IN `p_User` VARCHAR(100), IN `p_Position` INT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_RowsAffected INT DEFAULT 0;
     
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -3849,7 +3849,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_Delete_ByU
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_Get_ByUser` (IN `p_User` VARCHAR(255), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `sys_last_10_transactions_Get_ByUser` (IN `p_User` VARCHAR(255), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_Count INT DEFAULT 0;
     -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -3877,7 +3877,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_Get_ByUser
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_Get_ByUser_1` (IN `p_User` VARCHAR(255), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `sys_last_10_transactions_Get_ByUser_1` (IN `p_User` VARCHAR(255), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_Count INT DEFAULT 0;
     
     BEGIN
@@ -3905,7 +3905,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_Get_ByUser
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_Insert` (IN `p_User` VARCHAR(255), IN `p_PartID` VARCHAR(255), IN `p_Operation` VARCHAR(255), IN `p_Quantity` INT, IN `p_Position` INT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `sys_last_10_transactions_Insert` (IN `p_User` VARCHAR(255), IN `p_PartID` VARCHAR(255), IN `p_Operation` VARCHAR(255), IN `p_Quantity` INT, IN `p_Position` INT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_RowCount INT DEFAULT 0;
     
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -3946,7 +3946,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_Insert` (I
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_Move` (IN `p_User` VARCHAR(255), IN `p_FromPosition` INT, IN `p_ToPosition` INT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `sys_last_10_transactions_Move` (IN `p_User` VARCHAR(255), IN `p_FromPosition` INT, IN `p_ToPosition` INT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE tempPartID VARCHAR(255);
     DECLARE tempOperation VARCHAR(255);
     DECLARE tempQuantity INT;
@@ -4001,7 +4001,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_Move` (IN 
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_MoveToLast_ByUser` (IN `p_User` VARCHAR(255), IN `p_ReceiveDate` DATETIME, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `sys_last_10_transactions_MoveToLast_ByUser` (IN `p_User` VARCHAR(255), IN `p_ReceiveDate` DATETIME, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE latest_date DATETIME;
     DECLARE target_id INT;
     DECLARE v_RowCount INT DEFAULT 0;
@@ -4049,7 +4049,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_MoveToLast
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_Move_1` (IN `p_User` VARCHAR(255), IN `p_FromPosition` INT, IN `p_ToPosition` INT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `sys_last_10_transactions_Move_1` (IN `p_User` VARCHAR(255), IN `p_FromPosition` INT, IN `p_ToPosition` INT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE tempPartID VARCHAR(255);
     DECLARE tempOperation VARCHAR(255);
     DECLARE tempQuantity INT;
@@ -4104,7 +4104,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_Move_1` (I
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_RemoveAndShift_ByUser` (IN `p_User` VARCHAR(255), IN `p_Position` INT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `sys_last_10_transactions_RemoveAndShift_ByUser` (IN `p_User` VARCHAR(255), IN `p_Position` INT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_Exists INT DEFAULT 0;
     DECLARE v_RowCount INT DEFAULT 0;
     -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -4144,7 +4144,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_RemoveAndS
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_RemoveAndShift_ByUser_1` (IN `p_User` VARCHAR(255), IN `p_Position` INT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `sys_last_10_transactions_RemoveAndShift_ByUser_1` (IN `p_User` VARCHAR(255), IN `p_Position` INT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_Exists INT DEFAULT 0;
     DECLARE v_RowCount INT DEFAULT 0;
     
@@ -4184,7 +4184,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_RemoveAndS
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_Reorder_ByUser` (IN `p_User` VARCHAR(255), IN `p_SrcReceiveDate` DATETIME, IN `p_TargetIndex` INT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `sys_last_10_transactions_Reorder_ByUser` (IN `p_User` VARCHAR(255), IN `p_SrcReceiveDate` DATETIME, IN `p_TargetIndex` INT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_SrcIdx INT;
     DECLARE v_TotalCount INT;
     DECLARE v_SrcDate DATETIME;
@@ -4245,7 +4245,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_Reorder_By
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_SwapPositions_ByUser` (IN `p_User` VARCHAR(255), IN `p_ReceiveDate1` DATETIME, IN `p_ReceiveDate2` DATETIME, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `sys_last_10_transactions_SwapPositions_ByUser` (IN `p_User` VARCHAR(255), IN `p_ReceiveDate1` DATETIME, IN `p_ReceiveDate2` DATETIME, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE id1 INT;
     DECLARE id2 INT;
     DECLARE temp_date DATETIME;
@@ -4297,7 +4297,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_SwapPositi
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_Update_ByUserAndDate` (IN `p_User` VARCHAR(255), IN `p_OldReceiveDate` DATETIME, IN `p_PartID` VARCHAR(255), IN `p_Operation` VARCHAR(255), IN `p_Quantity` INT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `sys_last_10_transactions_Update_ByUserAndDate` (IN `p_User` VARCHAR(255), IN `p_OldReceiveDate` DATETIME, IN `p_PartID` VARCHAR(255), IN `p_Operation` VARCHAR(255), IN `p_Quantity` INT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_Exists INT DEFAULT 0;
     DECLARE v_RowCount INT DEFAULT 0;
     -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -4347,7 +4347,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_Update_ByU
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_Update_ByUserAndPosition` (IN `p_User` VARCHAR(255), IN `p_Position` INT, IN `p_PartID` VARCHAR(255), IN `p_Operation` VARCHAR(255), IN `p_Quantity` INT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `sys_last_10_transactions_Update_ByUserAndPosition` (IN `p_User` VARCHAR(255), IN `p_Position` INT, IN `p_PartID` VARCHAR(255), IN `p_Operation` VARCHAR(255), IN `p_Quantity` INT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_Exists INT DEFAULT 0;
     DECLARE v_RowCount INT DEFAULT 0;
     -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -4396,7 +4396,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_Update_ByU
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_Update_ByUserAndPosition_1` (IN `p_User` VARCHAR(255), IN `p_Position` INT, IN `p_PartID` VARCHAR(255), IN `p_Operation` VARCHAR(255), IN `p_Quantity` INT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `sys_last_10_transactions_Update_ByUserAndPosition_1` (IN `p_User` VARCHAR(255), IN `p_Position` INT, IN `p_PartID` VARCHAR(255), IN `p_Operation` VARCHAR(255), IN `p_Quantity` INT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_Exists INT DEFAULT 0;
     DECLARE v_RowCount INT DEFAULT 0;
     
@@ -4445,7 +4445,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_Update_ByU
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_parameter_prefix_overrides_Add` (IN `p_ProcedureName` VARCHAR(128), IN `p_ParameterName` VARCHAR(128), IN `p_OverridePrefix` VARCHAR(10), IN `p_Reason` VARCHAR(500), IN `p_CreatedBy` VARCHAR(50), OUT `p_OverrideId` INT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `sys_parameter_prefix_overrides_Add` (IN `p_ProcedureName` VARCHAR(128), IN `p_ParameterName` VARCHAR(128), IN `p_OverridePrefix` VARCHAR(10), IN `p_Reason` VARCHAR(500), IN `p_CreatedBy` VARCHAR(50), OUT `p_OverrideId` INT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         GET DIAGNOSTICS CONDITION 1 p_ErrorMsg = MESSAGE_TEXT;
@@ -4491,7 +4491,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_parameter_prefix_overrides_Add`
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_parameter_prefix_overrides_Delete_ById` (IN `p_OverrideId` INT, IN `p_ModifiedBy` VARCHAR(50), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `sys_parameter_prefix_overrides_Delete_ById` (IN `p_OverrideId` INT, IN `p_ModifiedBy` VARCHAR(50), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         GET DIAGNOSTICS CONDITION 1 p_ErrorMsg = MESSAGE_TEXT;
@@ -4523,7 +4523,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_parameter_prefix_overrides_Dele
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_parameter_prefix_overrides_Get_All` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `sys_parameter_prefix_overrides_Get_All` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         GET DIAGNOSTICS CONDITION 1 p_ErrorMsg = MESSAGE_TEXT;
@@ -4570,7 +4570,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_parameter_prefix_overrides_Get_
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_parameter_prefix_overrides_Get_ById` (IN `p_OverrideId` INT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `sys_parameter_prefix_overrides_Get_ById` (IN `p_OverrideId` INT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         GET DIAGNOSTICS CONDITION 1 p_ErrorMsg = MESSAGE_TEXT;
@@ -4594,7 +4594,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_parameter_prefix_overrides_Get_
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_parameter_prefix_overrides_Update_ById` (IN `p_OverrideId` INT, IN `p_ProcedureName` VARCHAR(128), IN `p_ParameterName` VARCHAR(128), IN `p_OverridePrefix` VARCHAR(10), IN `p_Reason` VARCHAR(500), IN `p_ModifiedBy` VARCHAR(50), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `sys_parameter_prefix_overrides_Update_ById` (IN `p_OverrideId` INT, IN `p_ProcedureName` VARCHAR(128), IN `p_ParameterName` VARCHAR(128), IN `p_OverridePrefix` VARCHAR(10), IN `p_Reason` VARCHAR(500), IN `p_ModifiedBy` VARCHAR(50), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         GET DIAGNOSTICS CONDITION 1 p_ErrorMsg = MESSAGE_TEXT;
@@ -4647,7 +4647,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_parameter_prefix_overrides_Upda
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_roles_Get_ById` (IN `p_ID` INT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `sys_roles_Get_ById` (IN `p_ID` INT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_Count INT DEFAULT 0;
     -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -4671,7 +4671,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_roles_Get_ById` (IN `p_ID` INT,
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_role_GetIdByName` (IN `p_RoleName` VARCHAR(50), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `sys_role_GetIdByName` (IN `p_RoleName` VARCHAR(50), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_RoleId INT DEFAULT 0;
     -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -4697,11 +4697,11 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_role_GetIdByName` (IN `p_RoleNa
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_shortcuts_GetAll` ()   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `sys_shortcuts_GetAll` ()   BEGIN
     SELECT * FROM sys_shortcuts;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_theme_GetAll` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `sys_theme_GetAll` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_Count INT DEFAULT 0;
     -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -4722,7 +4722,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_theme_GetAll` (OUT `p_Status` I
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_user_access_SetType` (IN `p_User` VARCHAR(100), IN `p_AccessType` INT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `sys_user_access_SetType` (IN `p_User` VARCHAR(100), IN `p_AccessType` INT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_Exists INT DEFAULT 0;
     DECLARE v_RowCount INT DEFAULT 0;
     -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -4756,7 +4756,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_user_access_SetType` (IN `p_Use
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_user_GetByName` (IN `p_User` VARCHAR(100), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `sys_user_GetByName` (IN `p_User` VARCHAR(100), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_Count INT DEFAULT 0;
     -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -4780,7 +4780,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_user_GetByName` (IN `p_User` VA
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_user_GetIdByName` (IN `p_UserName` VARCHAR(100), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `sys_user_GetIdByName` (IN `p_UserName` VARCHAR(100), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE p_UserId INT DEFAULT 0;
     -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -4806,7 +4806,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_user_GetIdByName` (IN `p_UserNa
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_user_roles_Add` (IN `p_UserID` INT, IN `p_RoleID` INT, IN `p_AssignedBy` VARCHAR(100), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `sys_user_roles_Add` (IN `p_UserID` INT, IN `p_RoleID` INT, IN `p_AssignedBy` VARCHAR(100), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_UserExists INT DEFAULT 0;
     DECLARE v_RoleExists INT DEFAULT 0;
     DECLARE v_DuplicateExists INT DEFAULT 0;
@@ -4860,7 +4860,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_user_roles_Add` (IN `p_UserID` 
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_user_roles_Delete` (IN `p_UserID` INT, IN `p_RoleID` INT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `sys_user_roles_Delete` (IN `p_UserID` INT, IN `p_RoleID` INT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_Exists INT DEFAULT 0;
     DECLARE v_RowCount INT DEFAULT 0;
     -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -4897,7 +4897,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_user_roles_Delete` (IN `p_UserI
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_user_roles_Get_ById` (IN `p_UserID` INT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `sys_user_roles_Get_ById` (IN `p_UserID` INT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_Count INT DEFAULT 0;
     
     
@@ -4932,7 +4932,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_user_roles_Get_ById` (IN `p_Use
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_user_roles_Update` (IN `p_UserID` INT, IN `p_NewRoleID` INT, IN `p_AssignedBy` VARCHAR(100), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `sys_user_roles_Update` (IN `p_UserID` INT, IN `p_NewRoleID` INT, IN `p_AssignedBy` VARCHAR(100), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_UserExists INT DEFAULT 0;
     DECLARE v_RoleExists INT DEFAULT 0;
     DECLARE v_OldRoleExists INT DEFAULT 0;
@@ -4980,7 +4980,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_user_roles_Update` (IN `p_UserI
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_dgv_settings_Get` (IN `p_UserId` VARCHAR(64), IN `p_DgvName` VARCHAR(100), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `usr_dgv_settings_Get` (IN `p_UserId` VARCHAR(64), IN `p_DgvName` VARCHAR(100), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_Count INT DEFAULT 0;
     
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -5005,7 +5005,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_dgv_settings_Get` (IN `p_UserId
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_dgv_settings_Set` (IN `p_UserId` VARCHAR(64), IN `p_DgvName` VARCHAR(100), IN `p_SettingsJson` LONGTEXT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `usr_dgv_settings_Set` (IN `p_UserId` VARCHAR(64), IN `p_DgvName` VARCHAR(100), IN `p_SettingsJson` LONGTEXT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         GET DIAGNOSTICS CONDITION 1
@@ -5027,7 +5027,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_dgv_settings_Set` (IN `p_UserId
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_settings_Delete_ByUserId` (IN `p_UserId` VARCHAR(64), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `usr_settings_Delete_ByUserId` (IN `p_UserId` VARCHAR(64), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         GET DIAGNOSTICS CONDITION 1
@@ -5046,7 +5046,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_settings_Delete_ByUserId` (IN `
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_settings_Get` (IN `p_UserId` VARCHAR(64), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `usr_settings_Get` (IN `p_UserId` VARCHAR(64), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_Count INT DEFAULT 0;
     
     BEGIN
@@ -5072,7 +5072,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_settings_Get` (IN `p_UserId` VA
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_settings_GetJsonSetting` (IN `p_UserId` VARCHAR(64), IN `p_DgvName` VARCHAR(100), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `usr_settings_GetJsonSetting` (IN `p_UserId` VARCHAR(64), IN `p_DgvName` VARCHAR(100), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         GET DIAGNOSTICS CONDITION 1
@@ -5093,7 +5093,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_settings_GetJsonSetting` (IN `p
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_settings_Get_All` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `usr_settings_Get_All` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         GET DIAGNOSTICS CONDITION 1
@@ -5108,7 +5108,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_settings_Get_All` (OUT `p_Statu
     SET p_ErrorMsg = CONCAT('Retrieved ', ROW_COUNT(), ' user settings');
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_settings_SaveFullJson` (IN `p_UserId` VARCHAR(64), IN `p_Json` LONGTEXT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `usr_settings_SaveFullJson` (IN `p_UserId` VARCHAR(64), IN `p_Json` LONGTEXT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         GET DIAGNOSTICS CONDITION 1
@@ -5131,7 +5131,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_settings_SaveFullJson` (IN `p_U
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_settings_SetJsonSetting` (IN `p_UserId` VARCHAR(64), IN `p_DgvName` VARCHAR(100), IN `p_SettingJson` LONGTEXT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `usr_settings_SetJsonSetting` (IN `p_UserId` VARCHAR(64), IN `p_DgvName` VARCHAR(100), IN `p_SettingJson` LONGTEXT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         GET DIAGNOSTICS CONDITION 1
@@ -5154,7 +5154,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_settings_SetJsonSetting` (IN `p
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_settings_SetThemeJson` (IN `p_UserId` VARCHAR(64), IN `p_ThemeJson` JSON, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `usr_settings_SetThemeJson` (IN `p_UserId` VARCHAR(64), IN `p_ThemeJson` JSON, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_RowCount INT DEFAULT 0;
     
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -5191,7 +5191,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_settings_SetThemeJson` (IN `p_U
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_settings_SetUserSetting_ByUserAndField` (IN `p_User` VARCHAR(100), IN `p_Field` VARCHAR(100), IN `p_Value` VARCHAR(500), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `usr_settings_SetUserSetting_ByUserAndField` (IN `p_User` VARCHAR(100), IN `p_Field` VARCHAR(100), IN `p_Value` VARCHAR(500), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_RowsAffected INT DEFAULT 0;
     DECLARE v_AllowedFields VARCHAR(1000) DEFAULT 'Theme_Name,Theme_FontSize,VisualUserName,VisualPassword,WipServerAddress,WIPDatabase,WipServerPort,AnimationsEnabled,AutoExpandPanels,ShowTotalSummaryPanel';
     
@@ -5234,7 +5234,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_settings_SetUserSetting_ByUserA
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_users_Add_User` (IN `p_User` VARCHAR(100), IN `p_FullName` VARCHAR(200), IN `p_Shift` VARCHAR(50), IN `p_VitsUser` TINYINT, IN `p_Pin` VARCHAR(50), IN `p_LastShownVersion` VARCHAR(50), IN `p_HideChangeLog` VARCHAR(50), IN `p_ThemeName` VARCHAR(50), IN `p_ThemeFontSize` INT, IN `p_VisualUserName` VARCHAR(50), IN `p_VisualPassword` VARCHAR(50), IN `p_WipServerAddress` VARCHAR(15), IN `p_WipServerPort` VARCHAR(10), IN `p_WipDatabase` VARCHAR(100), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `usr_users_Add_User` (IN `p_User` VARCHAR(100), IN `p_FullName` VARCHAR(200), IN `p_Shift` VARCHAR(50), IN `p_VitsUser` TINYINT, IN `p_Pin` VARCHAR(50), IN `p_LastShownVersion` VARCHAR(50), IN `p_HideChangeLog` VARCHAR(50), IN `p_ThemeName` VARCHAR(50), IN `p_ThemeFontSize` INT, IN `p_VisualUserName` VARCHAR(50), IN `p_VisualPassword` VARCHAR(50), IN `p_WipServerAddress` VARCHAR(15), IN `p_WipServerPort` VARCHAR(10), IN `p_WipDatabase` VARCHAR(100), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_RowCount INT DEFAULT 0;
     -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -5278,7 +5278,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_users_Add_User` (IN `p_User` VA
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_users_Delete_User` (IN `p_User` VARCHAR(100), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `usr_users_Delete_User` (IN `p_User` VARCHAR(100), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_RowCount INT DEFAULT 0;
     DECLARE v_UserId INT DEFAULT 0;
     
@@ -5320,7 +5320,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_users_Delete_User` (IN `p_User`
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_users_Exists` (IN `p_User` VARCHAR(100), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `usr_users_Exists` (IN `p_User` VARCHAR(100), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_Count INT DEFAULT 0;
     -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -5346,7 +5346,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_users_Exists` (IN `p_User` VARC
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_users_Get_All` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `usr_users_Get_All` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_Count INT DEFAULT 0;
     -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -5366,7 +5366,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_users_Get_All` (OUT `p_Status` 
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_users_Get_ByUser` (IN `p_User` VARCHAR(100), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `usr_users_Get_ByUser` (IN `p_User` VARCHAR(100), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_Count INT DEFAULT 0;
     -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -5398,7 +5398,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_users_Get_ByUser` (IN `p_User` 
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_users_SetUserSetting_ByUserAndField` (IN `p_User` VARCHAR(100), IN `p_Field` VARCHAR(100), IN `p_Value` VARCHAR(500), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `usr_users_SetUserSetting_ByUserAndField` (IN `p_User` VARCHAR(100), IN `p_Field` VARCHAR(100), IN `p_Value` VARCHAR(500), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_RowsAffected INT DEFAULT 0;
     DECLARE v_AllowedFields VARCHAR(1000) DEFAULT 'LastShownVersion,HideChangeLog';
     
@@ -5439,7 +5439,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_users_SetUserSetting_ByUserAndF
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_users_Update_User` (IN `p_User` VARCHAR(100), IN `p_FullName` VARCHAR(200), IN `p_Shift` VARCHAR(50), IN `p_Pin` VARCHAR(50), IN `p_VisualUserName` VARCHAR(50), IN `p_VisualPassword` VARCHAR(50), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `usr_users_Update_User` (IN `p_User` VARCHAR(100), IN `p_FullName` VARCHAR(200), IN `p_Shift` VARCHAR(50), IN `p_Pin` VARCHAR(50), IN `p_VisualUserName` VARCHAR(50), IN `p_VisualPassword` VARCHAR(50), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))   BEGIN
     DECLARE v_RowCount INT DEFAULT 0;
     DECLARE v_SettingsJson JSON;
     -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -5492,7 +5492,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_users_Update_User` (IN `p_User`
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_user_shortcuts_GetByUser` (IN `p_UserName` VARCHAR(50))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `usr_user_shortcuts_GetByUser` (IN `p_UserName` VARCHAR(50))   BEGIN
     SELECT 
         s.ShortcutName,
         COALESCE(u.CustomKeys, s.ShortcutKeys) as EffectiveKeys,
@@ -5503,11 +5503,11 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_user_shortcuts_GetByUser` (IN `
     LEFT JOIN usr_user_shortcuts u ON s.ShortcutName = u.ShortcutName AND u.UserName = p_UserName;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_user_shortcuts_Reset` (IN `p_UserName` VARCHAR(50))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `usr_user_shortcuts_Reset` (IN `p_UserName` VARCHAR(50))   BEGIN
     DELETE FROM usr_user_shortcuts WHERE UserName = p_UserName;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_user_shortcuts_Upsert` (IN `p_UserName` VARCHAR(50), IN `p_ShortcutName` VARCHAR(100), IN `p_CustomKeys` INT)   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `usr_user_shortcuts_Upsert` (IN `p_UserName` VARCHAR(50), IN `p_ShortcutName` VARCHAR(100), IN `p_CustomKeys` INT)   BEGIN
     INSERT INTO usr_user_shortcuts (UserName, ShortcutName, CustomKeys)
     VALUES (p_UserName, p_ShortcutName, p_CustomKeys)
     ON DUPLICATE KEY UPDATE CustomKeys = p_CustomKeys;
@@ -32116,7 +32116,7 @@ INSERT INTO `usr_settings` (`UserId`, `SettingsJson`, `UpdatedAt`) VALUES
 ('JKOLL', '{\"Theme_Name\": \"Arctic\", \"WIPDatabase\": \"mtm_wip_application\", \"WipServerPort\": \"3306\", \"Theme_FontSize\": 9, \"VisualPassword\": \"KOLL\", \"VisualUserName\": \"JKOLL\", \"WipServerAddress\": \"172.16.1.104\"}', '2025-11-18 21:24:17'),
 ('JMAUER', '{\"Theme_Name\": \"Default\", \"WIPDatabase\": \"mtm_wip_application\", \"WipServerPort\": \"3306\", \"Theme_FontSize\": 9, \"VisualPassword\": \"Password\", \"VisualUserName\": \"User Name\", \"WipServerAddress\": \"172.16.1.104\"}', '2025-11-18 21:24:17'),
 ('JMILLER', '{\"Theme_Name\": \"Default\", \"WIPDatabase\": \"mtm_wip_application\", \"WipServerPort\": \"3306\", \"Theme_FontSize\": 9, \"VisualPassword\": \"Password\", \"VisualUserName\": \"User Name\", \"WipServerAddress\": \"172.16.1.104\"}', '2025-11-18 21:24:17'),
-('JOHNK', '{\"Theme_Name\": \"Arctic\", \"WIPDatabase\": \"mtm_wip_application_winforms\", \"WipServerPort\": \"3306\", \"AutoExpandPanels\": \"False\", \"WipServerAddress\": \"localhost\", \"AnimationsEnabled\": \"false\", \"ShowTotalSummaryPanel\": \"true\", \"Control_RemoveTab_DataGridView_Main\": {\"Columns\": [{\"Name\": \"Location\", \"Visible\": true, \"DisplayIndex\": 0}, {\"Name\": \"PartID\", \"Visible\": true, \"DisplayIndex\": 1}, {\"Name\": \"ColorCode\", \"Visible\": false, \"DisplayIndex\": 2}, {\"Name\": \"WorkOrder\", \"Visible\": false, \"DisplayIndex\": 3}, {\"Name\": \"Operation\", \"Visible\": true, \"DisplayIndex\": 4}, {\"Name\": \"Quantity\", \"Visible\": true, \"DisplayIndex\": 5}, {\"Name\": \"Notes\", \"Visible\": false, \"DisplayIndex\": 6}, {\"Name\": \"ID\", \"Visible\": false, \"DisplayIndex\": 7}, {\"Name\": \"ItemType\", \"Visible\": false, \"DisplayIndex\": 8}, {\"Name\": \"ReceiveDate\", \"Visible\": false, \"DisplayIndex\": 9}, {\"Name\": \"LastUpdated\", \"Visible\": false, \"DisplayIndex\": 10}, {\"Name\": \"User\", \"Visible\": false, \"DisplayIndex\": 11}, {\"Name\": \"BatchNumber\", \"Visible\": false, \"DisplayIndex\": 12}]}, \"Control_TransferTab_DataGridView_Main\": {\"Columns\": [{\"Name\": \"Location\", \"Visible\": true, \"DisplayIndex\": 0}, {\"Name\": \"PartID\", \"Visible\": true, \"DisplayIndex\": 1}, {\"Name\": \"ColorCode\", \"Visible\": false, \"DisplayIndex\": 2}, {\"Name\": \"WorkOrder\", \"Visible\": false, \"DisplayIndex\": 3}, {\"Name\": \"Operation\", \"Visible\": true, \"DisplayIndex\": 4}, {\"Name\": \"Quantity\", \"Visible\": true, \"DisplayIndex\": 5}, {\"Name\": \"Notes\", \"Visible\": false, \"DisplayIndex\": 6}, {\"Name\": \"ID\", \"Visible\": false, \"DisplayIndex\": 7}, {\"Name\": \"ItemType\", \"Visible\": false, \"DisplayIndex\": 8}, {\"Name\": \"ReceiveDate\", \"Visible\": false, \"DisplayIndex\": 9}, {\"Name\": \"LastUpdated\", \"Visible\": false, \"DisplayIndex\": 10}, {\"Name\": \"User\", \"Visible\": false, \"DisplayIndex\": 11}, {\"Name\": \"BatchNumber\", \"Visible\": false, \"DisplayIndex\": 12}]}}', '2025-11-23 22:31:58'),
+('JOHNK', '{\"Theme_Name\": \"Arctic\", \"WIPDatabase\": \"mtm_wip_application_winforms\", \"WipServerPort\": \"3306\", \"AutoExpandPanels\": \"False\", \"WipServerAddress\": \"172.16.1.104\", \"AnimationsEnabled\": \"false\", \"ShowTotalSummaryPanel\": \"true\", \"Control_RemoveTab_DataGridView_Main\": {\"Columns\": [{\"Name\": \"Location\", \"Visible\": true, \"DisplayIndex\": 0}, {\"Name\": \"PartID\", \"Visible\": true, \"DisplayIndex\": 1}, {\"Name\": \"ColorCode\", \"Visible\": false, \"DisplayIndex\": 2}, {\"Name\": \"WorkOrder\", \"Visible\": false, \"DisplayIndex\": 3}, {\"Name\": \"Operation\", \"Visible\": true, \"DisplayIndex\": 4}, {\"Name\": \"Quantity\", \"Visible\": true, \"DisplayIndex\": 5}, {\"Name\": \"Notes\", \"Visible\": false, \"DisplayIndex\": 6}, {\"Name\": \"ID\", \"Visible\": false, \"DisplayIndex\": 7}, {\"Name\": \"ItemType\", \"Visible\": false, \"DisplayIndex\": 8}, {\"Name\": \"ReceiveDate\", \"Visible\": false, \"DisplayIndex\": 9}, {\"Name\": \"LastUpdated\", \"Visible\": false, \"DisplayIndex\": 10}, {\"Name\": \"User\", \"Visible\": false, \"DisplayIndex\": 11}, {\"Name\": \"BatchNumber\", \"Visible\": false, \"DisplayIndex\": 12}]}, \"Control_TransferTab_DataGridView_Main\": {\"Columns\": [{\"Name\": \"Location\", \"Visible\": true, \"DisplayIndex\": 0}, {\"Name\": \"PartID\", \"Visible\": true, \"DisplayIndex\": 1}, {\"Name\": \"ColorCode\", \"Visible\": false, \"DisplayIndex\": 2}, {\"Name\": \"WorkOrder\", \"Visible\": false, \"DisplayIndex\": 3}, {\"Name\": \"Operation\", \"Visible\": true, \"DisplayIndex\": 4}, {\"Name\": \"Quantity\", \"Visible\": true, \"DisplayIndex\": 5}, {\"Name\": \"Notes\", \"Visible\": false, \"DisplayIndex\": 6}, {\"Name\": \"ID\", \"Visible\": false, \"DisplayIndex\": 7}, {\"Name\": \"ItemType\", \"Visible\": false, \"DisplayIndex\": 8}, {\"Name\": \"ReceiveDate\", \"Visible\": false, \"DisplayIndex\": 9}, {\"Name\": \"LastUpdated\", \"Visible\": false, \"DisplayIndex\": 10}, {\"Name\": \"User\", \"Visible\": false, \"DisplayIndex\": 11}, {\"Name\": \"BatchNumber\", \"Visible\": false, \"DisplayIndex\": 12}]}}', '2025-11-23 22:31:58'),
 ('JORNALES', '{\"Theme_Name\": \"Default\", \"WIPDatabase\": \"mtm_wip_application\", \"WipServerPort\": \"3306\", \"Theme_FontSize\": 9, \"VisualPassword\": \"Password\", \"VisualUserName\": \"User Name\", \"WipServerAddress\": \"172.16.1.104\"}', '2025-11-18 21:24:17'),
 ('JPATTERSON', '{\"Theme_Name\": \"Default\", \"WIPDatabase\": \"mtm_wip_application\", \"WipServerPort\": \"3306\", \"Theme_FontSize\": 9, \"VisualPassword\": \"Password\", \"VisualUserName\": \"User Name\", \"WipServerAddress\": \"172.16.1.104\"}', '2025-11-18 21:24:17'),
 ('JRODRIGUEZ', '{\"Theme_Name\": \"Default\", \"WIPDatabase\": \"mtm_wip_application\", \"WipServerPort\": \"3306\", \"Theme_FontSize\": 9, \"VisualPassword\": \"Password\", \"VisualUserName\": \"User Name\", \"WipServerAddress\": \"172.16.1.104\"}', '2025-11-18 21:24:17'),
@@ -32153,7 +32153,7 @@ INSERT INTO `usr_settings` (`UserId`, `SettingsJson`, `UpdatedAt`) VALUES
 ('SHOP2', '{\"Theme_Name\": \"Default\", \"WIPDatabase\": \"mtm_wip_application\", \"WipServerPort\": \"3306\", \"Theme_FontSize\": 9, \"VisualPassword\": \"Password\", \"VisualUserName\": \"User Name\", \"WipServerAddress\": \"172.16.1.104\"}', '2025-11-18 21:24:17'),
 ('SJACKSON', '{\"Theme_Name\": \"Default\", \"WIPDatabase\": \"mtm_wip_application\", \"WipServerPort\": \"3306\", \"Theme_FontSize\": 9, \"VisualPassword\": \"Password\", \"VisualUserName\": \"User Name\", \"WipServerAddress\": \"172.16.1.104\"}', '2025-11-18 21:24:17'),
 ('SSNYDER', '{\"Theme_Name\": \"Default\", \"WIPDatabase\": \"mtm_wip_application\", \"WipServerPort\": \"3306\", \"Theme_FontSize\": 9, \"VisualPassword\": \"Password\", \"VisualUserName\": \"User Name\", \"WipServerAddress\": \"172.16.1.104\"}', '2025-11-18 21:24:17'),
-('TESTUSERA', '{\"Theme_Name\": \"Default\", \"WIPDatabase\": \"MTM_WIP_Application_Winforms\", \"WipServerPort\": \"3306\", \"Theme_FontSize\": 9, \"VisualPassword\": \"\", \"VisualUserName\": \"\", \"WipServerAddress\": \"localhost\"}', '2025-11-18 21:24:17'),
+('TESTUSERA', '{\"Theme_Name\": \"Default\", \"WIPDatabase\": \"MTM_WIP_Application_Winforms\", \"WipServerPort\": \"3306\", \"Theme_FontSize\": 9, \"VisualPassword\": \"\", \"VisualUserName\": \"\", \"WipServerAddress\": \"172.16.1.104\"}', '2025-11-18 21:24:17'),
 ('TLINDLOFF', '{\"Theme_Name\": \"Default\", \"WIPDatabase\": \"mtm_wip_application\", \"WipServerPort\": \"3306\", \"Theme_FontSize\": 9, \"VisualPassword\": \"Password\", \"VisualUserName\": \"User Name\", \"WipServerAddress\": \"172.16.1.104\"}', '2025-11-18 21:24:17'),
 ('TLOHSE', '{\"Theme_Name\": \"Default\", \"WIPDatabase\": \"mtm_wip_application\", \"WipServerPort\": \"3306\", \"Theme_FontSize\": 9, \"VisualPassword\": \"Password\", \"VisualUserName\": \"User Name\", \"WipServerAddress\": \"172.16.1.104\"}', '2025-11-18 21:24:17'),
 ('TMUELLER', '{\"Theme_Name\": \"Default\", \"WIPDatabase\": \"mtm_wip_application\", \"WipServerPort\": \"3306\", \"Theme_FontSize\": 9, \"VisualPassword\": \"Password\", \"VisualUserName\": \"User Name\", \"WipServerAddress\": \"172.16.1.104\"}', '2025-11-18 21:24:17'),

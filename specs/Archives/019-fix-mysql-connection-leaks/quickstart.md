@@ -8,7 +8,7 @@
 
 - .NET 8.0 SDK installed
 - Visual Studio 2022 or VS Code with C# extension
-- MySQL 5.7.24 server running (localhost:3306)
+- MySQL 5.7.24 server running (172.16.1.104:3306)
 - MAMP or equivalent MySQL server management tool
 - Access to production database: `mtm_wip_application_winforms`
 - Serena MCP server running (optional but recommended for code navigation)
@@ -294,7 +294,7 @@ DELIMITER ;
 
 **Installation**: Run script in MAMP MySQL console or via command line:
 ```powershell
-& "C:\MAMP\bin\mysql\bin\mysql.exe" -h localhost -P 3306 -u root -proot mtm_wip_application_winforms < Database/UpdatedStoredProcedures/md_analytics_GetTransactionsByRange.sql
+& "C:\MAMP\bin\mysql\bin\mysql.exe" -h 172.16.1.104 -P 3306 -u root -proot mtm_wip_application_winforms < Database/UpdatedStoredProcedures/md_analytics_GetTransactionsByRange.sql
 ```
 
 ---
@@ -497,10 +497,10 @@ public static class Helper_Database_ConnectionMonitor
 **Solution**:
 ```powershell
 # Verify stored procedures exist
-& "C:\MAMP\bin\mysql\bin\mysql.exe" -h localhost -P 3306 -u root -proot mtm_wip_application_winforms -e "SHOW PROCEDURE STATUS WHERE Db = 'mtm_wip_application_winforms' AND Name LIKE 'md_analytics%';"
+& "C:\MAMP\bin\mysql\bin\mysql.exe" -h 172.16.1.104 -P 3306 -u root -proot mtm_wip_application_winforms -e "SHOW PROCEDURE STATUS WHERE Db = 'mtm_wip_application_winforms' AND Name LIKE 'md_analytics%';"
 
 # Re-run installation scripts if missing
-& "C:\MAMP\bin\mysql\bin\mysql.exe" -h localhost -P 3306 -u root -proot mtm_wip_application_winforms < Database/UpdatedStoredProcedures/md_analytics_GetTransactionsByRange.sql
+& "C:\MAMP\bin\mysql\bin\mysql.exe" -h 172.16.1.104 -P 3306 -u root -proot mtm_wip_application_winforms < Database/UpdatedStoredProcedures/md_analytics_GetTransactionsByRange.sql
 ```
 
 ---

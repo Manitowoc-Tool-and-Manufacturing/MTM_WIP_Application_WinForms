@@ -319,7 +319,7 @@ public class Dao_EntityTests : BaseIntegrationTest
 ### MySQL Database Access
 
 **MAMP MySQL Server Configuration:**
-- **Host**: localhost
+- **Host**: 172.16.1.104
 - **Port**: 3306
 - **Username**: root
 - **Password**: root
@@ -332,19 +332,19 @@ public class Dao_EntityTests : BaseIntegrationTest
 **Quick Access Commands:**
 ```powershell
 # Connect to production database
-& "C:\MAMP\bin\mysql\bin\mysql.exe" -h localhost -P 3306 -u root -proot mtm_wip_application_winforms
+& "C:\MAMP\bin\mysql\bin\mysql.exe" -h 172.16.1.104 -P 3306 -u root -proot mtm_wip_application_winforms
 
 # Connect to test database
-& "C:\MAMP\bin\mysql\bin\mysql.exe" -h localhost -P 3306 -u root -proot mtm_wip_application_winforms_test
+& "C:\MAMP\bin\mysql\bin\mysql.exe" -h 172.16.1.104 -P 3306 -u root -proot mtm_wip_application_winforms_test
 
 # Show all databases
-& "C:\MAMP\bin\mysql\bin\mysql.exe" -h localhost -P 3306 -u root -proot -e "SHOW DATABASES;"
+& "C:\MAMP\bin\mysql\bin\mysql.exe" -h 172.16.1.104 -P 3306 -u root -proot -e "SHOW DATABASES;"
 
 # Show tables in production
-& "C:\MAMP\bin\mysql\bin\mysql.exe" -h localhost -P 3306 -u root -proot mtm_wip_application_winforms -e "SHOW TABLES;"
+& "C:\MAMP\bin\mysql\bin\mysql.exe" -h 172.16.1.104 -P 3306 -u root -proot mtm_wip_application_winforms -e "SHOW TABLES;"
 
 # Execute SQL file
-& "C:\MAMP\bin\mysql\bin\mysql.exe" -h localhost -P 3306 -u root -proot mtm_wip_application_winforms < path/to/script.sql
+& "C:\MAMP\bin\mysql\bin\mysql.exe" -h 172.16.1.104 -P 3306 -u root -proot mtm_wip_application_winforms < path/to/script.sql
 ```
 
 ## Constitution Compliance

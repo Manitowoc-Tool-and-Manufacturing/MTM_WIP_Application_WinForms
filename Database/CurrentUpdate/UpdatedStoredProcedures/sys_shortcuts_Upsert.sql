@@ -1,6 +1,6 @@
 DELIMITER $$
 DROP PROCEDURE IF EXISTS `sys_shortcuts_Upsert`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_shortcuts_Upsert`(
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `sys_shortcuts_Upsert`(
     IN p_ShortcutName VARCHAR(100),
     IN p_ShortcutKeys INT,
     IN p_Description VARCHAR(255),

@@ -3,8 +3,8 @@
 ## Phases
 
 ### Phase 1 – Setup
-- [X] T001 Ensure MySQL 5.7.24 reachable (localhost:3306, root/root) and WebView2 runtime installed (manual check)
-  - [X] T001.1 Verify MySQL connection: `& "C:\MAMP\bin\mysql\bin\mysql.exe" -h localhost -P 3306 -u root -proot -e "SELECT VERSION();"`
+- [X] T001 Ensure MySQL 5.7.24 reachable (172.16.1.104:3306, root/root) and WebView2 runtime installed (manual check)
+  - [X] T001.1 Verify MySQL connection: `& "C:\MAMP\bin\mysql\bin\mysql.exe" -h 172.16.1.104 -P 3306 -u root -proot -e "SELECT VERSION();"`
   - [X] T001.2 Verify WebView2 runtime installed via registry or test app launch
   - [X] T001.3 Document any missing prerequisites in quickstart.md
 - [X] T002 Restore/build solution: `dotnet build MTM_WIP_Application_Winforms.csproj -c Debug`

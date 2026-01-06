@@ -270,19 +270,19 @@ public async Task GetBatchLifecycleAsync_ValidBatch_ReturnsChronologicalTransact
 # File location: Database/UpdatedStoredProcedures/ReadyForVerification/inv_transactions_GetBatchLifecycle.sql
 
 # Deploy to test database
-mysql -h localhost -P 3306 -u root -p mtm_wip_application_winforms_test < inv_transactions_GetBatchLifecycle.sql
+mysql -h 172.16.1.104 -P 3306 -u root -p mtm_wip_application_winforms_test < inv_transactions_GetBatchLifecycle.sql
 
 # Verify creation
-mysql -h localhost -P 3306 -u root -p mtm_wip_application_winforms_test -e "SHOW PROCEDURE STATUS WHERE Name='inv_transactions_GetBatchLifecycle';"
+mysql -h 172.16.1.104 -P 3306 -u root -p mtm_wip_application_winforms_test -e "SHOW PROCEDURE STATUS WHERE Name='inv_transactions_GetBatchLifecycle';"
 ```
 
 ### Step 2: Create Index (If Missing)
 ```bash
 # Check if index exists
-mysql -h localhost -P 3306 -u root -p mtm_wip_application_winforms_test -e "SHOW INDEX FROM inv_transaction WHERE Key_name='idx_batchnumber';"
+mysql -h 172.16.1.104 -P 3306 -u root -p mtm_wip_application_winforms_test -e "SHOW INDEX FROM inv_transaction WHERE Key_name='idx_batchnumber';"
 
 # Create if missing
-mysql -h localhost -P 3306 -u root -p mtm_wip_application_winforms_test -e "CREATE INDEX idx_batchnumber ON inv_transaction(BatchNumber);"
+mysql -h 172.16.1.104 -P 3306 -u root -p mtm_wip_application_winforms_test -e "CREATE INDEX idx_batchnumber ON inv_transaction(BatchNumber);"
 ```
 
 ### Step 3: Implement DAO Method

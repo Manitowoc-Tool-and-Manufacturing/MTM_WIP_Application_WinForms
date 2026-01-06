@@ -33,27 +33,27 @@ dotnet run --project MTM_WIP_Application_Winforms.csproj
 
 ### Connect to Production Database
 ```powershell
-& "C:\MAMP\bin\mysql\bin\mysql.exe" -h localhost -P 3306 -u root -proot mtm_wip_application_winforms
+& "C:\MAMP\bin\mysql\bin\mysql.exe" -h 172.16.1.104 -P 3306 -u root -proot mtm_wip_application_winforms
 ```
 
 ### Connect to Test Database
 ```powershell
-& "C:\MAMP\bin\mysql\bin\mysql.exe" -h localhost -P 3306 -u root -proot mtm_wip_application_winforms_test
+& "C:\MAMP\bin\mysql\bin\mysql.exe" -h 172.16.1.104 -P 3306 -u root -proot mtm_wip_application_winforms_test
 ```
 
 ### Show All Databases
 ```powershell
-& "C:\MAMP\bin\mysql\bin\mysql.exe" -h localhost -P 3306 -u root -proot -e "SHOW DATABASES;"
+& "C:\MAMP\bin\mysql\bin\mysql.exe" -h 172.16.1.104 -P 3306 -u root -proot -e "SHOW DATABASES;"
 ```
 
 ### Show Tables in Production
 ```powershell
-& "C:\MAMP\bin\mysql\bin\mysql.exe" -h localhost -P 3306 -u root -proot mtm_wip_application_winforms -e "SHOW TABLES;"
+& "C:\MAMP\bin\mysql\bin\mysql.exe" -h 172.16.1.104 -P 3306 -u root -proot mtm_wip_application_winforms -e "SHOW TABLES;"
 ```
 
 ### Execute SQL File
 ```powershell
-& "C:\MAMP\bin\mysql\bin\mysql.exe" -h localhost -P 3306 -u root -proot mtm_wip_application_winforms < Database/CurrentDatabase/schema.sql
+& "C:\MAMP\bin\mysql\bin\mysql.exe" -h 172.16.1.104 -P 3306 -u root -proot mtm_wip_application_winforms < Database/CurrentDatabase/schema.sql
 ```
 
 ## Windows Utility Commands

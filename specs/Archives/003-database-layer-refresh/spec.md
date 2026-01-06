@@ -556,7 +556,7 @@ Enables easy environment switching and credential rotation.
 System MUST validate database connectivity before loading MainForm:
 
 -   Call `Dao_System.CheckConnectivityAsync()` during `Program.cs` startup
--   Display actionable error message if database unavailable ("Unable to connect to database at localhost:3306. Check network connection.")
+-   Display actionable error message if database unavailable ("Unable to connect to database at 172.16.1.104:3306. Check network connection.")
 -   Terminate gracefully with exit code 1 if validation fails
 -   Log startup validation result with timing
 -   Prevent partial application initialization without database
@@ -1080,7 +1080,7 @@ Application must handle parameter prefix cache initialization failure with clear
 
 1. **MySQL 5.7 Compatibility**: All stored procedures and queries must remain compatible with MySQL 5.7.24+ (no use of MySQL 8.0+ features like CTEs or window functions)
 
-2. **MAMP Development Environment**: Local development uses MAMP MySQL installation on localhost:3306 with root/root credentials
+2. **MAMP Development Environment**: Local development uses MAMP MySQL installation on 172.16.1.104:3306 with root/root credentials
 
 3. **Windows Platform Primary**: Application primarily targets Windows 10/11 desktop environments (WinForms dependency)
 

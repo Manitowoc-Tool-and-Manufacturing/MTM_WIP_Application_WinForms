@@ -8,17 +8,27 @@
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_error_reports_Delete`(IN `p_ReportID` INT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(255))
-BEGIN
-    
-    IF NOT EXISTS (SELECT 1 FROM error_reports WHERE ReportID = p_ReportID) THEN
-        SET p_Status = 0;
-        SET p_ErrorMsg = 'Error report not found.';
-    ELSE
-        DELETE FROM error_reports WHERE ReportID = p_ReportID;
-        SET p_Status = 1;
-        SET p_ErrorMsg = 'Error report deleted successfully.';
-    END IF;
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `sp_error_reports_Delete`(IN `p_ReportID` INT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(255))
+BEGIN
+
+    
+
+    IF NOT EXISTS (SELECT 1 FROM error_reports WHERE ReportID = p_ReportID) THEN
+
+        SET p_Status = 0;
+
+        SET p_ErrorMsg = 'Error report not found.';
+
+    ELSE
+
+        DELETE FROM error_reports WHERE ReportID = p_ReportID;
+
+        SET p_Status = 1;
+
+        SET p_ErrorMsg = 'Error report deleted successfully.';
+
+    END IF;
+
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;

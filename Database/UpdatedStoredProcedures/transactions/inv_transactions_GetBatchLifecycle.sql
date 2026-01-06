@@ -8,57 +8,107 @@
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_transactions_GetBatchLifecycle`(IN `p_BatchNumber` VARCHAR(50), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))
-BEGIN
-    DECLARE v_Count INT DEFAULT 0;
-    
-    
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-    BEGIN
-        GET DIAGNOSTICS CONDITION 1
-            p_ErrorMsg = MESSAGE_TEXT;
-        SET p_Status = -1;
-    END;
-    
-    
-    IF p_BatchNumber IS NULL OR TRIM(p_BatchNumber) = '' THEN
-        SET p_Status = -2;
-        SET p_ErrorMsg = 'Batch number is required';
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Batch number is required';
-    END IF;
-    
-    
-    SELECT COUNT(*)
-    INTO v_Count
-    FROM inv_transaction
-    WHERE BatchNumber = p_BatchNumber;
-    
-    
-    SELECT 
-        ID,
-        TransactionType,
-        PartID,
-        BatchNumber,
-        Quantity,
-        FromLocation,
-        ToLocation,
-        Operation,
-        User,
-        ReceiveDate,
-        ItemType,
-        Notes
-    FROM inv_transaction
-    WHERE BatchNumber = p_BatchNumber
-    ORDER BY ReceiveDate ASC;
-    
-    
-    IF v_Count > 0 THEN
-        SET p_Status = 1;
-        SET p_ErrorMsg = CONCAT('Found ', v_Count, ' transaction(s) for batch ', p_BatchNumber);
-    ELSE
-        SET p_Status = 0;
-        SET p_ErrorMsg = CONCAT('No transactions found for batch ', p_BatchNumber);
-    END IF;
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `inv_transactions_GetBatchLifecycle`(IN `p_BatchNumber` VARCHAR(50), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))
+BEGIN
+
+    DECLARE v_Count INT DEFAULT 0;
+
+    
+
+    
+
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+
+    BEGIN
+
+        GET DIAGNOSTICS CONDITION 1
+
+            p_ErrorMsg = MESSAGE_TEXT;
+
+        SET p_Status = -1;
+
+    END;
+
+    
+
+    
+
+    IF p_BatchNumber IS NULL OR TRIM(p_BatchNumber) = '' THEN
+
+        SET p_Status = -2;
+
+        SET p_ErrorMsg = 'Batch number is required';
+
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Batch number is required';
+
+    END IF;
+
+    
+
+    
+
+    SELECT COUNT(*)
+
+    INTO v_Count
+
+    FROM inv_transaction
+
+    WHERE BatchNumber = p_BatchNumber;
+
+    
+
+    
+
+    SELECT 
+
+        ID,
+
+        TransactionType,
+
+        PartID,
+
+        BatchNumber,
+
+        Quantity,
+
+        FromLocation,
+
+        ToLocation,
+
+        Operation,
+
+        User,
+
+        ReceiveDate,
+
+        ItemType,
+
+        Notes
+
+    FROM inv_transaction
+
+    WHERE BatchNumber = p_BatchNumber
+
+    ORDER BY ReceiveDate ASC;
+
+    
+
+    
+
+    IF v_Count > 0 THEN
+
+        SET p_Status = 1;
+
+        SET p_ErrorMsg = CONCAT('Found ', v_Count, ' transaction(s) for batch ', p_BatchNumber);
+
+    ELSE
+
+        SET p_Status = 0;
+
+        SET p_ErrorMsg = CONCAT('No transactions found for batch ', p_BatchNumber);
+
+    END IF;
+
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;

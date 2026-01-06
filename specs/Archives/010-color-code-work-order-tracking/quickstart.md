@@ -12,7 +12,7 @@ This guide helps developers set up their environment, understand the architectur
 
 - .NET 8.0 SDK installed
 - Visual Studio 2022 or VS Code with C# extension
-- MySQL 5.7.24 (MAMP) running on localhost:3306
+- MySQL 5.7.24 (MAMP) running on 172.16.1.104:3306
 - Git access to MTM_WIP_Application_WinForms repository
 - Branch: `001-color-code-work-order-tracking` checked out
 
@@ -36,7 +36,7 @@ dotnet restore MTM_WIP_Application_Winforms.csproj
 
 ```powershell
 # Connect to MySQL (MAMP)
-& "C:\MAMP\bin\mysql\bin\mysql.exe" -h localhost -P 3306 -u root -proot
+& "C:\MAMP\bin\mysql\bin\mysql.exe" -h 172.16.1.104 -P 3306 -u root -proot
 
 # Select test database
 USE mtm_wip_application_winforms_test;

@@ -17,7 +17,7 @@
 
 **Database Access**:
 
--   **Development**: `mtm_wip_application_winforms_test` on `localhost` or `172.16.1.104`
+-   **Development**: `mtm_wip_application_winforms_test` on `172.16.1.104` or `172.16.1.104`
 -   **Production**: `MTM_WIP_Application_Winforms` on `172.16.1.104` (Release builds only)
 
 **Test Data**:
@@ -690,8 +690,8 @@ Before submitting PR:
 
 1. Verify MAMP is running (or standalone MySQL service)
 2. Check `Helper_Database_Variables.GetConnectionString()` returns correct server
-3. Debug configuration should use `localhost` or `172.16.1.104`
-4. Test connection manually: `mysql -h localhost -u root -p`
+3. Debug configuration should use `172.16.1.104` or `172.16.1.104`
+4. Test connection manually: `mysql -h 172.16.1.104 -u root -p`
 
 ### Issue: Stored Procedure Not Found
 

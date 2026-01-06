@@ -8,7 +8,7 @@
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_inventory_Search_Advanced`(IN `p_PartID` VARCHAR(300), IN `p_Operation` VARCHAR(300), IN `p_Location` VARCHAR(300), IN `p_QtyMin` DECIMAL(10,2), IN `p_QtyMax` DECIMAL(10,2), IN `p_Notes` TEXT, IN `p_User` VARCHAR(300), IN `p_FilterByDate` BOOLEAN, IN `p_DateFrom` DATETIME, IN `p_DateTo` DATETIME, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `inv_inventory_Search_Advanced`(IN `p_PartID` VARCHAR(300), IN `p_Operation` VARCHAR(300), IN `p_Location` VARCHAR(300), IN `p_QtyMin` DECIMAL(10,2), IN `p_QtyMax` DECIMAL(10,2), IN `p_Notes` TEXT, IN `p_User` VARCHAR(300), IN `p_FilterByDate` BOOLEAN, IN `p_DateFrom` DATETIME, IN `p_DateTo` DATETIME, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))
 BEGIN
 
     DECLARE v_Count INT DEFAULT 0;

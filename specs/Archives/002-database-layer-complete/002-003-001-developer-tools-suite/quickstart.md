@@ -722,7 +722,7 @@ Test-Path "Database/STORED_PROCEDURE_CALLSITES.csv"
 1. Check Database Connection Monitor (Settings → Developer → Database)
 2. If Red indicator:
    - Verify MAMP MySQL is running
-   - Test connection: mysql -h localhost -u root -p
+   - Test connection: mysql -h 172.16.1.104 -u root -p
 3. If Yellow/Orange indicator:
    - Slow connection, wait and retry
 4. Click "Retry" button in Schema Inspector

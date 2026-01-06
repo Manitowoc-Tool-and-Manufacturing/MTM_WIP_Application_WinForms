@@ -2,7 +2,7 @@
 
 ## Prerequisites
 - .NET 8.0 SDK (windowsdesktop)
-- MySQL 5.7.24 running (localhost:3306, root/root per project defaults)
+- MySQL 5.7.24 running (172.16.1.104:3306, root/root per project defaults)
 - WebView2 Runtime installed
 - HtmlSanitizer NuGet (installed)
 

@@ -61,7 +61,7 @@
 
 ### 2.1 Test Execution Process (5 items)
 - [ ] **T122 execution**: `dotnet test --filter "Category=IntegrationTest"` command specified
-- [ ] **Test environment**: Uses `mtm_wip_application_winforms_test` database on localhost
+- [ ] **Test environment**: Uses `mtm_wip_application_winforms_test` database on 172.16.1.104
 - [ ] **Test isolation**: Per-test transactions ensure clean state (BEGIN at setup, ROLLBACK at teardown)
 - [ ] **Failure handling**: Test failures break CI/CD pipeline (no production promotion until 100% pass)
 - [ ] **Test reporting**: TRX file generated with detailed results

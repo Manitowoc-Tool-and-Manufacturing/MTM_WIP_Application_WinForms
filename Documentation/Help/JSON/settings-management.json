@@ -41,7 +41,7 @@
       "TopicId": "database-settings",
       "Title": "Database Configuration",
       "Summary": "Configure MySQL database connection settings.",
-      "Content": "<h2>Database Configuration</h2><p>Configure the connection to the MySQL database server. <strong>Warning: Changing these settings may disconnect the application from the server.</strong></p><h3>Settings</h3><ul><li><strong>Server Address:</strong> The hostname or IP address of the MySQL server (e.g., <em>localhost</em>).</li><li><strong>Port:</strong> The port number (default: <em>3306</em>).</li><li><strong>Database Name:</strong> The name of the application database (default: <em>mtm_wip_application_winforms</em>).</li></ul><p>Click <strong>Save</strong> to apply changes. The application may need to restart to reconnect.</p>",
+      "Content": "<h2>Database Configuration</h2><p>Configure the connection to the MySQL database server. <strong>Warning: Changing these settings may disconnect the application from the server.</strong></p><h3>Settings</h3><ul><li><strong>Server Address:</strong> The hostname or IP address of the MySQL server (e.g., <em>172.16.1.104</em>).</li><li><strong>Port:</strong> The port number (default: <em>3306</em>).</li><li><strong>Database Name:</strong> The name of the application database (default: <em>mtm_wip_application_winforms</em>).</li></ul><p>Click <strong>Save</strong> to apply changes. The application may need to restart to reconnect.</p>",
       "Keywords": ["database", "mysql", "connection", "server", "port"],
       "LastUpdated": "2025-12-07T10:00:00"
     },

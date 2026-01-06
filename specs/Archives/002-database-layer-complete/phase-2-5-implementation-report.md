@@ -299,7 +299,7 @@ All tests inherit from `BaseIntegrationTest`:
 **Test Database**:
 
 -   Database: mtm_wip_application_winforms_test
--   Server: localhost / 172.16.1.104
+-   Server: 172.16.1.104 / 172.16.1.104
 -   Result: ✅ All 83 procedures deployed successfully
 
 **Production Database**:

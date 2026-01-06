@@ -8,42 +8,77 @@
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_inventory_Get_All`(OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))
-BEGIN
-    DECLARE v_Count INT DEFAULT 0;
-    -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-    BEGIN
-        GET DIAGNOSTICS CONDITION 1
-            p_ErrorMsg = MESSAGE_TEXT;
-        SET p_Status = -1;
-    END;
-    -- Get all inventory records
-    SELECT 
-        ID,
-        PartID,
-        Location,
-        Operation,
-        Quantity,
-        ItemType,
-        ReceiveDate,
-        LastUpdated,
-        User,
-        BatchNumber,
-        Notes
-    FROM inv_inventory
-    ORDER BY LastUpdated DESC;
-    
-    -- Check row count
-    SELECT FOUND_ROWS() INTO v_Count;
-    
-    IF v_Count > 0 THEN
-        SET p_Status = 1;
-        SET p_ErrorMsg = CONCAT('Retrieved ', v_Count, ' inventory record(s)');
-    ELSE
-        SET p_Status = 0;
-        SET p_ErrorMsg = 'No inventory records found';
-    END IF;
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `inv_inventory_Get_All`(OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))
+BEGIN
+
+    DECLARE v_Count INT DEFAULT 0;
+
+    -- Transaction management removed: Works within caller's transaction context (tests use transactions)`r`n    
+
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+
+    BEGIN
+
+        GET DIAGNOSTICS CONDITION 1
+
+            p_ErrorMsg = MESSAGE_TEXT;
+
+        SET p_Status = -1;
+
+    END;
+
+    -- Get all inventory records
+
+    SELECT 
+
+        ID,
+
+        PartID,
+
+        Location,
+
+        Operation,
+
+        Quantity,
+
+        ItemType,
+
+        ReceiveDate,
+
+        LastUpdated,
+
+        User,
+
+        BatchNumber,
+
+        Notes
+
+    FROM inv_inventory
+
+    ORDER BY LastUpdated DESC;
+
+    
+
+    -- Check row count
+
+    SELECT FOUND_ROWS() INTO v_Count;
+
+    
+
+    IF v_Count > 0 THEN
+
+        SET p_Status = 1;
+
+        SET p_ErrorMsg = CONCAT('Retrieved ', v_Count, ' inventory record(s)');
+
+    ELSE
+
+        SET p_Status = 0;
+
+        SET p_ErrorMsg = 'No inventory records found';
+
+    END IF;
+
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;

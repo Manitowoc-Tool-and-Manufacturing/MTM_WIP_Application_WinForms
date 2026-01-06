@@ -8,51 +8,95 @@
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'NO_AUTO_VALUE_ON_ZERO' */ ;
 DELIMITER ;;
-CREATE DEFINER=`root`@`localhost` PROCEDURE `md_color_codes_Add`(IN `p_ColorCode` VARCHAR(50), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))
-BEGIN
-    DECLARE color_exists INT DEFAULT 0;
-    
-    
-    DECLARE EXIT HANDLER FOR SQLEXCEPTION
-    BEGIN
-        SET p_Status = -1;
-        SET p_ErrorMsg = 'Error adding color code';
-        ROLLBACK;
-    END;
-
-    
-    IF p_ColorCode IS NULL OR p_ColorCode = '' THEN
-        SET p_Status = -2;
-        SET p_ErrorMsg = 'ColorCode is required';
-    ELSE
-        
-        IF p_ColorCode IN ('Unknown', 'Other') THEN
-            SET p_Status = -3;
-            SET p_ErrorMsg = 'Cannot add reserved color codes';
-        ELSE
-            START TRANSACTION;
-
-            
-            SELECT COUNT(*) INTO color_exists
-            FROM md_color_codes
-            WHERE ColorCode = p_ColorCode;
-
-            IF color_exists > 0 THEN
-                
-                SET p_Status = 0;
-                SET p_ErrorMsg = NULL;
-                COMMIT;
-            ELSE
-                
-                INSERT INTO md_color_codes (ColorCode, IsUserDefined, CreatedDate)
-                VALUES (p_ColorCode, TRUE, NOW());
-
-                SET p_Status = 1;
-                SET p_ErrorMsg = NULL;
-                COMMIT;
-            END IF;
-        END IF;
-    END IF;
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `md_color_codes_Add`(IN `p_ColorCode` VARCHAR(50), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(500))
+BEGIN
+
+    DECLARE color_exists INT DEFAULT 0;
+
+    
+
+    
+
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+
+    BEGIN
+
+        SET p_Status = -1;
+
+        SET p_ErrorMsg = 'Error adding color code';
+
+        ROLLBACK;
+
+    END;
+
+
+
+    
+
+    IF p_ColorCode IS NULL OR p_ColorCode = '' THEN
+
+        SET p_Status = -2;
+
+        SET p_ErrorMsg = 'ColorCode is required';
+
+    ELSE
+
+        
+
+        IF p_ColorCode IN ('Unknown', 'Other') THEN
+
+            SET p_Status = -3;
+
+            SET p_ErrorMsg = 'Cannot add reserved color codes';
+
+        ELSE
+
+            START TRANSACTION;
+
+
+
+            
+
+            SELECT COUNT(*) INTO color_exists
+
+            FROM md_color_codes
+
+            WHERE ColorCode = p_ColorCode;
+
+
+
+            IF color_exists > 0 THEN
+
+                
+
+                SET p_Status = 0;
+
+                SET p_ErrorMsg = NULL;
+
+                COMMIT;
+
+            ELSE
+
+                
+
+                INSERT INTO md_color_codes (ColorCode, IsUserDefined, CreatedDate)
+
+                VALUES (p_ColorCode, TRUE, NOW());
+
+
+
+                SET p_Status = 1;
+
+                SET p_ErrorMsg = NULL;
+
+                COMMIT;
+
+            END IF;
+
+        END IF;
+
+    END IF;
+
 END ;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;

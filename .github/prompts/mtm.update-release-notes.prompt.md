@@ -79,10 +79,10 @@ Update `log_changelog` table in BOTH databases:
 
 **Production database**:
 ```powershell
-& "C:\MAMP\bin\mysql\bin\mysql.exe" -h localhost -P 3306 -u root -proot mtm_wip_application_winforms -e "UPDATE log_changelog SET Version = 'X.X.X.X', Notes = 'Brief summary of changes' WHERE Version = '[OLD_VERSION]';"
+& "C:\MAMP\bin\mysql\bin\mysql.exe" -h 172.16.1.104 -P 3306 -u root -proot mtm_wip_application_winforms -e "UPDATE log_changelog SET Version = 'X.X.X.X', Notes = 'Brief summary of changes' WHERE Version = '[OLD_VERSION]';"
 ```
 
 **Test database**:
 ```powershell
-& "C:\MAMP\bin\mysql\bin\mysql.exe" -h localhost -P 3306 -u root -proot mtm_wip_application_winforms_test -e "UPDATE log_changelog SET Version = 'X.X.X.X', Notes = 'Brief summary of changes' WHERE Version = '[OLD_VERSION]';"
+& "C:\MAMP\bin\mysql\bin\mysql.exe" -h 172.16.1.104 -P 3306 -u root -proot mtm_wip_application_winforms_test -e "UPDATE log_changelog SET Version = 'X.X.X.X', Notes = 'Brief summary of changes' WHERE Version = '[OLD_VERSION]';"
 ```

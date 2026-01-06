@@ -2,7 +2,7 @@
 -- version 5.2.2
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost:3306
+-- Host: 172.16.1.104:3306
 -- Generation Time: Nov 24, 2025 at 01:35 PM
 -- Server version: 5.7.24
 -- PHP Version: 8.3.1
@@ -25,14 +25,14 @@ DELIMITER $$
 --
 -- Procedures
 --
-CREATE DEFINER=`root`@`localhost` PROCEDURE `assign_BatchNumber_Step0` ()   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `assign_BatchNumber_Step0` ()   BEGIN
     UPDATE inv_inventory SET BatchNumber = 'MIGRATED';
     UPDATE inv_transaction SET BatchNumber = 'MIGRATED';
     UPDATE inv_inventory_batch_seq SET last_batch_number = '0' WHERE 1;
     UPDATE inv_inventory_batch_seq SET current_match = '0' WHERE 1;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `assign_BatchNumber_Step1` ()   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `assign_BatchNumber_Step1` ()   BEGIN
     DECLARE done INT DEFAULT FALSE;
     DECLARE inv_id INT;
     DECLARE batch_num INT DEFAULT 0;
@@ -92,7 +92,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `assign_BatchNumber_Step1` ()   BEGI
     CLOSE inv_cursor;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `assign_BatchNumber_Step2` ()   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `assign_BatchNumber_Step2` ()   BEGIN
     DECLARE done INT DEFAULT FALSE;
     DECLARE txn_id INT;
     DECLARE batch_num INT;
@@ -121,7 +121,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `assign_BatchNumber_Step2` ()   BEGI
     CLOSE txn_cursor;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `assign_BatchNumber_Step3` ()   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `assign_BatchNumber_Step3` ()   BEGIN
     DECLARE done INT DEFAULT FALSE;
     DECLARE loop_counter INT DEFAULT 0;
     DECLARE in_id INT;
@@ -195,7 +195,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `assign_BatchNumber_Step3` ()   BEGI
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `assign_BatchNumber_Step4` ()   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `assign_BatchNumber_Step4` ()   BEGIN
     DECLARE done INT DEFAULT FALSE;
     DECLARE loop_counter INT DEFAULT 0;
     DECLARE in_id INT;
@@ -270,7 +270,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `assign_BatchNumber_Step4` ()   BEGI
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_inventory_Add_Item` (IN `p_PartID` VARCHAR(100), IN `p_Location` VARCHAR(100), IN `p_Operation` VARCHAR(100), IN `p_Quantity` INT, IN `p_ItemType` VARCHAR(200), IN `p_User` VARCHAR(100), IN `p_Notes` VARCHAR(1000))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `inv_inventory_Add_Item` (IN `p_PartID` VARCHAR(100), IN `p_Location` VARCHAR(100), IN `p_Operation` VARCHAR(100), IN `p_Quantity` INT, IN `p_ItemType` VARCHAR(200), IN `p_User` VARCHAR(100), IN `p_Notes` VARCHAR(1000))   BEGIN
     DECLARE nextBatch BIGINT;
     DECLARE batchStr VARCHAR(10);
 
@@ -317,7 +317,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_inventory_Add_Item` (IN `p_Part
         );
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_inventory_Fix_BatchNumbers` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(255))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `inv_inventory_Fix_BatchNumbers` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(255))   BEGIN
     -- 1. Declare variables first
     DECLARE done INT DEFAULT FALSE;
     DECLARE null_id INT;
@@ -359,7 +359,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_inventory_Fix_BatchNumbers` (OU
     SET p_ErrorMsg = NULL;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_inventory_Get_ByPartID` (IN `p_PartID` VARCHAR(300))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `inv_inventory_Get_ByPartID` (IN `p_PartID` VARCHAR(300))   BEGIN
 SELECT 
     ID,
     PartID,
@@ -376,7 +376,7 @@ FROM inv_inventory
     WHERE PartID = p_PartID;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_inventory_Get_ByPartIDandOperation` (IN `p_PartID` VARCHAR(300), IN `o_Operation` VARCHAR(300))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `inv_inventory_Get_ByPartIDandOperation` (IN `p_PartID` VARCHAR(300), IN `o_Operation` VARCHAR(300))   BEGIN
 SELECT 
     ID,
     PartID,
@@ -393,13 +393,13 @@ FROM inv_inventory
     WHERE PartID = p_PartID AND Operation = o_Operation;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_inventory_Get_ByUser` (IN `p_User` VARCHAR(100))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `inv_inventory_Get_ByUser` (IN `p_User` VARCHAR(100))   BEGIN
     SELECT * FROM inv_inventory
     WHERE User = p_User
     ORDER BY LastUpdated DESC;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_inventory_Remove_Item` (IN `p_PartID` VARCHAR(300), IN `p_Location` VARCHAR(100), IN `p_Operation` VARCHAR(100), IN `p_Quantity` INT, IN `p_ItemType` VARCHAR(100), IN `p_User` VARCHAR(100), IN `p_BatchNumber` VARCHAR(100), IN `p_Notes` VARCHAR(1000), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(255))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `inv_inventory_Remove_Item` (IN `p_PartID` VARCHAR(300), IN `p_Location` VARCHAR(100), IN `p_Operation` VARCHAR(100), IN `p_Quantity` INT, IN `p_ItemType` VARCHAR(100), IN `p_User` VARCHAR(100), IN `p_BatchNumber` VARCHAR(100), IN `p_Notes` VARCHAR(1000), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(255))   BEGIN
     DECLARE v_RowsAffected INT DEFAULT 0;
     DECLARE v_ErrorMessage TEXT DEFAULT '';
     DECLARE v_RecordCount INT DEFAULT 0;
@@ -451,7 +451,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_inventory_Remove_Item` (IN `p_P
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_inventory_Remove_Item_1_1` (IN `p_PartID` VARCHAR(300), IN `p_Location` VARCHAR(100), IN `p_Operation` VARCHAR(100), IN `p_Quantity` INT, IN `p_ItemType` VARCHAR(100), IN `p_User` VARCHAR(100), IN `p_BatchNumber` VARCHAR(100), IN `p_Notes` VARCHAR(1000), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(255))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `inv_inventory_Remove_Item_1_1` (IN `p_PartID` VARCHAR(300), IN `p_Location` VARCHAR(100), IN `p_Operation` VARCHAR(100), IN `p_Quantity` INT, IN `p_ItemType` VARCHAR(100), IN `p_User` VARCHAR(100), IN `p_BatchNumber` VARCHAR(100), IN `p_Notes` VARCHAR(1000), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(255))   BEGIN
     DECLARE v_RowsAffected INT DEFAULT 0;
     DECLARE v_ErrorMessage TEXT DEFAULT '';
     DECLARE v_RecordCount INT DEFAULT 0;
@@ -503,7 +503,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_inventory_Remove_Item_1_1` (IN 
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_inventory_Transfer_Part` (IN `in_BatchNumber` VARCHAR(300), IN `in_PartID` VARCHAR(300), IN `in_Operation` VARCHAR(100), IN `in_NewLocation` VARCHAR(100))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `inv_inventory_Transfer_Part` (IN `in_BatchNumber` VARCHAR(300), IN `in_PartID` VARCHAR(300), IN `in_Operation` VARCHAR(100), IN `in_NewLocation` VARCHAR(100))   BEGIN
     -- Validate that the record exists
     IF EXISTS (
         SELECT 1 FROM inv_inventory
@@ -521,7 +521,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_inventory_Transfer_Part` (IN `i
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_inventory_Transfer_Quantity` (IN `in_BatchNumber` VARCHAR(255), IN `in_PartID` VARCHAR(255), IN `in_Operation` VARCHAR(255), IN `in_TransferQuantity` INT, IN `in_OriginalQuantity` INT, IN `in_NewLocation` VARCHAR(255), IN `in_User` VARCHAR(255))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `inv_inventory_Transfer_Quantity` (IN `in_BatchNumber` VARCHAR(255), IN `in_PartID` VARCHAR(255), IN `in_Operation` VARCHAR(255), IN `in_TransferQuantity` INT, IN `in_OriginalQuantity` INT, IN `in_NewLocation` VARCHAR(255), IN `in_User` VARCHAR(255))   BEGIN
     -- Check if transfer quantity is valid
     IF in_TransferQuantity <= 0 OR in_TransferQuantity > in_OriginalQuantity THEN
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Invalid transfer quantity';
@@ -541,20 +541,20 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_inventory_Transfer_Quantity` (I
     VALUES (in_BatchNumber, in_PartID, in_Operation, in_TransferQuantity, in_NewLocation, in_User);
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `inv_transaction_Add` (IN `in_TransactionType` ENUM('IN','OUT','TRANSFER'), IN `in_PartID` VARCHAR(300), IN `in_BatchNumber` VARCHAR(100), IN `in_FromLocation` VARCHAR(300), IN `in_ToLocation` VARCHAR(100), IN `in_Operation` VARCHAR(100), IN `in_Quantity` INT, IN `in_Notes` VARCHAR(1000), IN `in_User` VARCHAR(100), IN `in_ItemType` VARCHAR(100), IN `in_ReceiveDate` DATETIME)   INSERT INTO inv_transaction (
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `inv_transaction_Add` (IN `in_TransactionType` ENUM('IN','OUT','TRANSFER'), IN `in_PartID` VARCHAR(300), IN `in_BatchNumber` VARCHAR(100), IN `in_FromLocation` VARCHAR(300), IN `in_ToLocation` VARCHAR(100), IN `in_Operation` VARCHAR(100), IN `in_Quantity` INT, IN `in_Notes` VARCHAR(1000), IN `in_User` VARCHAR(100), IN `in_ItemType` VARCHAR(100), IN `in_ReceiveDate` DATETIME)   INSERT INTO inv_transaction (
         TransactionType, PartID, `BatchNumber`, FromLocation, ToLocation, Operation, Quantity, Notes, User, ItemType, ReceiveDate
     ) VALUES (
         in_TransactionType, in_PartID, in_BatchNumber, in_FromLocation, in_ToLocation, in_Operation, in_Quantity, in_Notes, in_User, in_ItemType, in_ReceiveDate
     )$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `log_changelog_Get_Current` ()   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `log_changelog_Get_Current` ()   BEGIN
     SELECT *
     FROM log_changelog
     ORDER BY Version DESC
     LIMIT 1;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `log_error_Add_Error` (IN `p_User` VARCHAR(100), IN `p_Severity` VARCHAR(50), IN `p_ErrorType` VARCHAR(100), IN `p_ErrorMessage` TEXT, IN `p_StackTrace` TEXT, IN `p_ModuleName` VARCHAR(100), IN `p_MethodName` VARCHAR(100), IN `p_AdditionalInfo` TEXT, IN `p_MachineName` VARCHAR(100), IN `p_OSVersion` VARCHAR(100), IN `p_AppVersion` VARCHAR(50), IN `p_ErrorTime` DATETIME, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(255))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `log_error_Add_Error` (IN `p_User` VARCHAR(100), IN `p_Severity` VARCHAR(50), IN `p_ErrorType` VARCHAR(100), IN `p_ErrorMessage` TEXT, IN `p_StackTrace` TEXT, IN `p_ModuleName` VARCHAR(100), IN `p_MethodName` VARCHAR(100), IN `p_AdditionalInfo` TEXT, IN `p_MachineName` VARCHAR(100), IN `p_OSVersion` VARCHAR(100), IN `p_AppVersion` VARCHAR(50), IN `p_ErrorTime` DATETIME, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(255))   BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         ROLLBACK;
@@ -608,7 +608,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `log_error_Add_Error` (IN `p_User` V
     COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `log_error_Delete_All` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(255))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `log_error_Delete_All` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(255))   BEGIN
     DECLARE v_Count INT DEFAULT 0;
 
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -648,7 +648,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `log_error_Delete_All` (OUT `p_Statu
     COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `log_error_Delete_ById` (IN `p_Id` INT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(255))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `log_error_Delete_ById` (IN `p_Id` INT, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(255))   BEGIN
     DECLARE v_Count INT DEFAULT 0;
 
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -694,7 +694,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `log_error_Delete_ById` (IN `p_Id` I
     COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `log_error_Get_All` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(255))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `log_error_Get_All` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(255))   BEGIN
     DECLARE v_Count INT DEFAULT 0;
 
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -727,7 +727,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `log_error_Get_All` (OUT `p_Status` 
     SET p_ErrorMsg = CONCAT('Retrieved ', v_Count, ' error log entries successfully');
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `log_error_Get_ByDateRange` (IN `p_StartDate` DATETIME, IN `p_EndDate` DATETIME, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(255))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `log_error_Get_ByDateRange` (IN `p_StartDate` DATETIME, IN `p_EndDate` DATETIME, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(255))   BEGIN
     DECLARE v_Count INT DEFAULT 0;
 
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -765,7 +765,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `log_error_Get_ByDateRange` (IN `p_S
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `log_error_Get_ByUser` (IN `p_User` VARCHAR(100), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(255))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `log_error_Get_ByUser` (IN `p_User` VARCHAR(100), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(255))   BEGIN
     DECLARE v_Count INT DEFAULT 0;
 
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -796,7 +796,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `log_error_Get_ByUser` (IN `p_User` 
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `log_error_Get_Unique` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(255))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `log_error_Get_Unique` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(255))   BEGIN
     DECLARE v_Count INT DEFAULT 0;
 
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
@@ -825,7 +825,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `log_error_Get_Unique` (OUT `p_Statu
     SET p_ErrorMsg = CONCAT('Retrieved ', v_Count, ' unique error combinations');
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `maint_InsertMissingUserUiSettings` ()   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `maint_InsertMissingUserUiSettings` ()   BEGIN
     -- For each user in usr_users, if no usr_ui_settings row exists, insert default settings
     INSERT INTO `mtm_wip_application`.usr_ui_settings (UserId, SettingsJson, ShortcutsJson, UpdatedAt)
     SELECT u.User, '{"Theme_Name": "Default"}', '{}', NOW()
@@ -834,7 +834,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `maint_InsertMissingUserUiSettings` 
     WHERE s.UserId IS NULL;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `maint_reload_part_ids_and_operation_numbers` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(255))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `maint_reload_part_ids_and_operation_numbers` (OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(255))   BEGIN
     -- Error handler for the whole procedure
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
@@ -918,47 +918,47 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `maint_reload_part_ids_and_operation
     SET p_ErrorMsg = NULL;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `md_item_types_Add_ItemType` (IN `p_ItemType` VARCHAR(100), IN `p_IssuedBy` VARCHAR(100))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `md_item_types_Add_ItemType` (IN `p_ItemType` VARCHAR(100), IN `p_IssuedBy` VARCHAR(100))   BEGIN
     INSERT INTO `md_item_types` (`ItemType`, `IssuedBy`)
     VALUES (p_ItemType, p_IssuedBy);
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `md_item_types_Delete_ByID` (IN `p_ID` INT)   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `md_item_types_Delete_ByID` (IN `p_ID` INT)   BEGIN
     DELETE FROM `md_item_types`
     WHERE `ID` = p_ID;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `md_item_types_Delete_ByType` (IN `p_ItemType` VARCHAR(100))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `md_item_types_Delete_ByType` (IN `p_ItemType` VARCHAR(100))   BEGIN
     DELETE FROM `md_item_types`
     WHERE `ItemType` = p_ItemType;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `md_item_types_Get_All` ()   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `md_item_types_Get_All` ()   BEGIN
     SELECT * FROM `md_item_types`;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `md_item_types_Update_ItemType` (IN `p_ID` INT, IN `p_ItemType` VARCHAR(100), IN `p_IssuedBy` VARCHAR(100))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `md_item_types_Update_ItemType` (IN `p_ID` INT, IN `p_ItemType` VARCHAR(100), IN `p_IssuedBy` VARCHAR(100))   BEGIN
     UPDATE `md_item_types`
     SET `ItemType` = p_ItemType,
         `IssuedBy` = p_IssuedBy
     WHERE `ID` = p_ID;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `md_locations_Add_Location` (IN `p_Location` VARCHAR(100), IN `p_IssuedBy` VARCHAR(100), IN `p_Building` VARCHAR(100))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `md_locations_Add_Location` (IN `p_Location` VARCHAR(100), IN `p_IssuedBy` VARCHAR(100), IN `p_Building` VARCHAR(100))   BEGIN
     INSERT INTO `md_locations` (`Location`, `Building` , `IssuedBy`)
     VALUES (p_Location, p_Building ,p_IssuedBy);
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `md_locations_Delete_ByLocation` (IN `p_Location` VARCHAR(100))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `md_locations_Delete_ByLocation` (IN `p_Location` VARCHAR(100))   BEGIN
     DELETE FROM `md_locations`
     WHERE `Location` = p_Location;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `md_locations_Get_All` ()   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `md_locations_Get_All` ()   BEGIN
     SELECT * FROM `md_locations`;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `md_locations_Update_Location` (IN `p_OldLocation` VARCHAR(100), IN `p_Location` VARCHAR(100), IN `p_IssuedBy` VARCHAR(100), IN `p_Building` VARCHAR(100))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `md_locations_Update_Location` (IN `p_OldLocation` VARCHAR(100), IN `p_Location` VARCHAR(100), IN `p_IssuedBy` VARCHAR(100), IN `p_Building` VARCHAR(100))   BEGIN
     UPDATE `md_locations`
     SET `Location` = p_Location,
     	`Building` = p_Building,
@@ -966,47 +966,47 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `md_locations_Update_Location` (IN `
     WHERE `Location` = p_OldLocation;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `md_operation_numbers_Add_Operation` (IN `p_Operation` VARCHAR(100), IN `p_IssuedBy` VARCHAR(100))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `md_operation_numbers_Add_Operation` (IN `p_Operation` VARCHAR(100), IN `p_IssuedBy` VARCHAR(100))   BEGIN
     INSERT INTO `md_operation_numbers` (`Operation`, `IssuedBy`)
     VALUES (p_Operation, p_IssuedBy);
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `md_operation_numbers_Delete_ByOperation` (IN `p_Operation` VARCHAR(100))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `md_operation_numbers_Delete_ByOperation` (IN `p_Operation` VARCHAR(100))   BEGIN
     DELETE FROM `md_operation_numbers`
     WHERE `Operation` = p_Operation;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `md_operation_numbers_Get_All` ()   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `md_operation_numbers_Get_All` ()   BEGIN
     SELECT * FROM `md_operation_numbers`;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `md_operation_numbers_Update_Operation` (IN `p_Operation` VARCHAR(100), IN `p_NewOperation` VARCHAR(100), IN `p_IssuedBy` VARCHAR(100))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `md_operation_numbers_Update_Operation` (IN `p_Operation` VARCHAR(100), IN `p_NewOperation` VARCHAR(100), IN `p_IssuedBy` VARCHAR(100))   BEGIN
     UPDATE `md_operation_numbers`
     SET `Operation` = p_NewOperation,
         `IssuedBy` = p_IssuedBy
     WHERE `Operation` = p_Operation;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `md_part_ids_Add_Part` (IN `p_ItemNumber` VARCHAR(300), IN `p_Customer` VARCHAR(300), IN `p_Description` VARCHAR(300), IN `p_IssuedBy` VARCHAR(100), IN `p_ItemType` VARCHAR(100))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `md_part_ids_Add_Part` (IN `p_ItemNumber` VARCHAR(300), IN `p_Customer` VARCHAR(300), IN `p_Description` VARCHAR(300), IN `p_IssuedBy` VARCHAR(100), IN `p_ItemType` VARCHAR(100))   BEGIN
     INSERT INTO `md_part_ids` (`PartID`, `Customer`, `Description`, `IssuedBy`, `ItemType`)
     VALUES (p_ItemNumber, p_Customer, p_Description, p_IssuedBy, p_ItemType);
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `md_part_ids_Delete_ByItemNumber` (IN `p_ItemNumber` VARCHAR(300))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `md_part_ids_Delete_ByItemNumber` (IN `p_ItemNumber` VARCHAR(300))   BEGIN
     DELETE FROM `md_part_ids`
     WHERE `PartID` = p_ItemNumber;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `md_part_ids_Get_All` ()   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `md_part_ids_Get_All` ()   BEGIN
     SELECT * FROM `md_part_ids`;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `md_part_ids_Get_ByItemNumber` (IN `p_ItemNumber` VARCHAR(300))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `md_part_ids_Get_ByItemNumber` (IN `p_ItemNumber` VARCHAR(300))   BEGIN
     SELECT * FROM `md_part_ids`
     WHERE `PartID` = p_ItemNumber;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `md_part_ids_Update_Part` (IN `p_ID` INT, IN `p_ItemNumber` VARCHAR(300), IN `p_Customer` VARCHAR(300), IN `p_Description` VARCHAR(300), IN `p_IssuedBy` VARCHAR(100), IN `p_ItemType` VARCHAR(100))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `md_part_ids_Update_Part` (IN `p_ID` INT, IN `p_ItemNumber` VARCHAR(300), IN `p_Customer` VARCHAR(300), IN `p_Description` VARCHAR(300), IN `p_IssuedBy` VARCHAR(100), IN `p_ItemType` VARCHAR(100))   BEGIN
     UPDATE `md_part_ids`
     SET `PartID` = p_ItemNumber,
         `Customer` = p_Customer,
@@ -1016,7 +1016,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `md_part_ids_Update_Part` (IN `p_ID`
     WHERE `ID` = p_ID;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `migrate_user_roles_debug` ()   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `migrate_user_roles_debug` ()   BEGIN
     DECLARE done INT DEFAULT FALSE;
     DECLARE v_old_username VARCHAR(100);
     DECLARE v_new_userid INT;
@@ -1107,7 +1107,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `migrate_user_roles_debug` ()   BEGI
     CLOSE user_cur;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `query_get_all_usernames_and_roles` ()   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `query_get_all_usernames_and_roles` ()   BEGIN
     SELECT u.User AS Username, s.RoleName
     FROM `mtm_wip_application`.usr_users u
     JOIN `mtm_wip_application`.sys_user_roles r ON r.UserID = u.ID
@@ -1115,7 +1115,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `query_get_all_usernames_and_roles` 
     ORDER BY u.User;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_ReassignBatchNumbers` ()   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `sp_ReassignBatchNumbers` ()   BEGIN
     -- Declare all variables
     DECLARE done INT DEFAULT 0;
     DECLARE curINID BIGINT;
@@ -1183,7 +1183,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_ReassignBatchNumbers` ()   BEGIN
     COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_AddQuickButton_1` (IN `p_User` VARCHAR(255), IN `p_PartID` VARCHAR(255), IN `p_Operation` VARCHAR(255), IN `p_Quantity` INT, IN `p_Position` INT)   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `sys_last_10_transactions_AddQuickButton_1` (IN `p_User` VARCHAR(255), IN `p_PartID` VARCHAR(255), IN `p_Operation` VARCHAR(255), IN `p_Quantity` INT, IN `p_Position` INT)   BEGIN
     UPDATE sys_last_10_transactions
     SET Position = Position + 1
     WHERE User = p_User AND Position >= p_Position;
@@ -1192,7 +1192,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_AddQuickBu
     VALUES (p_User, p_PartID, p_Operation, p_Quantity, p_Position);
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_Get_ByUser` (IN `p_User` VARCHAR(100))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `sys_last_10_transactions_Get_ByUser` (IN `p_User` VARCHAR(100))   BEGIN
     -- 1. Remove older duplicates for this user (keep only the most recent for each PartID+Operation)
     DELETE t1 FROM sys_last_10_transactions t1
     INNER JOIN sys_last_10_transactions t2
@@ -1223,7 +1223,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_Get_ByUser
     LIMIT 10;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_Get_ByUser_1` (IN `p_User` VARCHAR(255))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `sys_last_10_transactions_Get_ByUser_1` (IN `p_User` VARCHAR(255))   BEGIN
     SELECT *
     FROM sys_last_10_transactions
     WHERE User = p_User
@@ -1231,7 +1231,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_Get_ByUser
     LIMIT 10;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_MoveToLast_ByUser` (IN `p_User` VARCHAR(255), IN `p_ReceiveDate` DATETIME)   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `sys_last_10_transactions_MoveToLast_ByUser` (IN `p_User` VARCHAR(255), IN `p_ReceiveDate` DATETIME)   BEGIN
     DECLARE latest_date DATETIME;
     DECLARE target_id INT;
     
@@ -1255,7 +1255,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_MoveToLast
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_Move_1` (IN `p_User` VARCHAR(255), IN `p_FromPosition` INT, IN `p_ToPosition` INT)   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `sys_last_10_transactions_Move_1` (IN `p_User` VARCHAR(255), IN `p_FromPosition` INT, IN `p_ToPosition` INT)   BEGIN
     DECLARE tempPartID VARCHAR(255);
     DECLARE tempOperation VARCHAR(255);
     DECLARE tempQuantity INT;
@@ -1282,7 +1282,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_Move_1` (I
     VALUES (p_User, tempPartID, tempOperation, tempQuantity, p_ToPosition);
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_RemoveAndShift_ByUser` (IN `p_User` VARCHAR(255), IN `p_ReceiveDate` DATETIME)   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `sys_last_10_transactions_RemoveAndShift_ByUser` (IN `p_User` VARCHAR(255), IN `p_ReceiveDate` DATETIME)   BEGIN
     -- Variables must be declared first
     DECLARE target_exists INT;
     DECLARE last_id INT;
@@ -1336,7 +1336,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_RemoveAndS
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_RemoveAndShift_ByUser_1` (IN `p_User` VARCHAR(255), IN `p_Position` INT)   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `sys_last_10_transactions_RemoveAndShift_ByUser_1` (IN `p_User` VARCHAR(255), IN `p_Position` INT)   BEGIN
     DELETE FROM sys_last_10_transactions
     WHERE User = p_User AND Position = p_Position;
 
@@ -1345,7 +1345,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_RemoveAndS
     WHERE User = p_User AND Position > p_Position;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_Reorder_ByUser` (IN `p_User` VARCHAR(255), IN `p_SrcReceiveDate` DATETIME, IN `p_TargetIndex` INT)   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `sys_last_10_transactions_Reorder_ByUser` (IN `p_User` VARCHAR(255), IN `p_SrcReceiveDate` DATETIME, IN `p_TargetIndex` INT)   BEGIN
     -- Create a temp table with the current order
     CREATE TEMPORARY TABLE tempDates (idx INT AUTO_INCREMENT PRIMARY KEY, dt DATETIME);
     INSERT INTO tempDates (dt)
@@ -1393,7 +1393,7 @@ END WHILE;
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_SwapPositions_ByUser` (IN `p_User` VARCHAR(255), IN `p_ReceiveDate1` DATETIME, IN `p_ReceiveDate2` DATETIME)   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `sys_last_10_transactions_SwapPositions_ByUser` (IN `p_User` VARCHAR(255), IN `p_ReceiveDate1` DATETIME, IN `p_ReceiveDate2` DATETIME)   BEGIN
     DECLARE id1 INT;
     DECLARE id2 INT;
     DECLARE temp_date DATETIME;
@@ -1426,7 +1426,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_SwapPositi
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_Update_ByUserAndDate` (IN `p_User` VARCHAR(255), IN `p_OldReceiveDate` DATETIME, IN `p_PartID` VARCHAR(255), IN `p_Operation` VARCHAR(255), IN `p_Quantity` INT)   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `sys_last_10_transactions_Update_ByUserAndDate` (IN `p_User` VARCHAR(255), IN `p_OldReceiveDate` DATETIME, IN `p_PartID` VARCHAR(255), IN `p_Operation` VARCHAR(255), IN `p_Quantity` INT)   BEGIN
     UPDATE sys_last_10_transactions
     SET PartID = p_PartID,
         Operation = p_Operation,
@@ -1435,7 +1435,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_Update_ByU
     WHERE User = p_User AND ReceiveDate = p_OldReceiveDate;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_Update_ByUserAndPosition_1` (IN `p_User` VARCHAR(255), IN `p_Position` INT, IN `p_PartID` VARCHAR(255), IN `p_Operation` VARCHAR(255), IN `p_Quantity` INT)   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `sys_last_10_transactions_Update_ByUserAndPosition_1` (IN `p_User` VARCHAR(255), IN `p_Position` INT, IN `p_PartID` VARCHAR(255), IN `p_Operation` VARCHAR(255), IN `p_Quantity` INT)   BEGIN
     UPDATE sys_last_10_transactions
     SET PartID = p_PartID,
         Operation = p_Operation,
@@ -1443,21 +1443,21 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_last_10_transactions_Update_ByU
     WHERE User = p_User AND Position = p_Position;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_roles_Get_ById` (IN `p_ID` INT)   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `sys_roles_Get_ById` (IN `p_ID` INT)   BEGIN
     SELECT * FROM sys_roles WHERE ID = p_ID;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_user_roles_Add` (IN `p_UserID` INT, IN `p_RoleID` INT, IN `p_AssignedBy` VARCHAR(100))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `sys_user_roles_Add` (IN `p_UserID` INT, IN `p_RoleID` INT, IN `p_AssignedBy` VARCHAR(100))   BEGIN
     INSERT INTO sys_user_roles (UserID, RoleID, AssignedBy)
     VALUES (p_UserID, p_RoleID, p_AssignedBy);
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_user_roles_Delete` (IN `p_UserID` INT, IN `p_RoleID` INT)   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `sys_user_roles_Delete` (IN `p_UserID` INT, IN `p_RoleID` INT)   BEGIN
     DELETE FROM sys_user_roles
     WHERE UserID = p_UserID AND RoleID = p_RoleID;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_user_roles_Update` (IN `p_UserID` INT, IN `p_NewRoleID` INT, IN `p_AssignedBy` VARCHAR(100))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `sys_user_roles_Update` (IN `p_UserID` INT, IN `p_NewRoleID` INT, IN `p_AssignedBy` VARCHAR(100))   BEGIN
     -- Remove all roles for the user
     DELETE FROM sys_user_roles WHERE UserID = p_UserID;
 
@@ -1466,7 +1466,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sys_user_roles_Update` (IN `p_UserI
     VALUES (p_UserID, p_NewRoleID, p_AssignedBy);
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_ui_settings_Get` (IN `p_UserId` VARCHAR(64), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(255))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `usr_ui_settings_Get` (IN `p_UserId` VARCHAR(64), OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(255))   BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         SET p_Status = 1;
@@ -1481,14 +1481,14 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_ui_settings_Get` (IN `p_UserId`
     SET p_ErrorMsg = NULL;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_ui_settings_GetShortcutsJson` (IN `p_UserId` VARCHAR(255), OUT `p_ShortcutsJson` JSON)   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `usr_ui_settings_GetShortcutsJson` (IN `p_UserId` VARCHAR(255), OUT `p_ShortcutsJson` JSON)   BEGIN
     SELECT ShortcutsJson INTO p_ShortcutsJson
     FROM usr_ui_settings
     WHERE UserId = p_UserId
     LIMIT 1;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_ui_settings_SetJsonSetting` (IN `p_UserId` VARCHAR(64), IN `p_DgvName` VARCHAR(128), IN `p_SettingJson` JSON, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(255))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `usr_ui_settings_SetJsonSetting` (IN `p_UserId` VARCHAR(64), IN `p_DgvName` VARCHAR(128), IN `p_SettingJson` JSON, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(255))   BEGIN
     DECLARE existing INT DEFAULT 0;
     DECLARE currentJson JSON;
 
@@ -1512,7 +1512,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_ui_settings_SetJsonSetting` (IN
     END IF;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_ui_settings_SetShortcutsJson` (IN `p_UserId` VARCHAR(255), IN `p_ShortcutsJson` JSON, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(255))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `usr_ui_settings_SetShortcutsJson` (IN `p_UserId` VARCHAR(255), IN `p_ShortcutsJson` JSON, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(255))   BEGIN
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         SET p_Status = 1;
@@ -1532,7 +1532,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_ui_settings_SetShortcutsJson` (
     COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_ui_settings_SetThemeJson` (IN `p_UserId` VARCHAR(64), IN `p_ThemeJson` JSON, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(255))   main_block: BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `usr_ui_settings_SetThemeJson` (IN `p_UserId` VARCHAR(64), IN `p_ThemeJson` JSON, OUT `p_Status` INT, OUT `p_ErrorMsg` VARCHAR(255))   main_block: BEGIN
     DECLARE v_sqlstate CHAR(5) DEFAULT '';
     DECLARE v_message TEXT DEFAULT '';
     DECLARE v_exists INT DEFAULT 0;
@@ -1575,7 +1575,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_ui_settings_SetThemeJson` (IN `
     COMMIT;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_users_Add_User` (IN `p_User` VARCHAR(100), IN `p_FullName` VARCHAR(200), IN `p_Shift` VARCHAR(50), IN `p_VitsUser` TINYINT, IN `p_Pin` VARCHAR(50), IN `p_LastShownVersion` VARCHAR(50), IN `p_HideChangeLog` VARCHAR(50), IN `p_Theme_Name` VARCHAR(50), IN `p_Theme_FontSize` INT, IN `p_VisualUserName` VARCHAR(50), IN `p_VisualPassword` VARCHAR(50), IN `p_WipServerAddress` VARCHAR(15), IN `p_WipServerPort` VARCHAR(10), IN `p_WipDatabase` VARCHAR(100))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `usr_users_Add_User` (IN `p_User` VARCHAR(100), IN `p_FullName` VARCHAR(200), IN `p_Shift` VARCHAR(50), IN `p_VitsUser` TINYINT, IN `p_Pin` VARCHAR(50), IN `p_LastShownVersion` VARCHAR(50), IN `p_HideChangeLog` VARCHAR(50), IN `p_Theme_Name` VARCHAR(50), IN `p_Theme_FontSize` INT, IN `p_VisualUserName` VARCHAR(50), IN `p_VisualPassword` VARCHAR(50), IN `p_WipServerAddress` VARCHAR(15), IN `p_WipServerPort` VARCHAR(10), IN `p_WipDatabase` VARCHAR(100))   BEGIN
     -- Insert into application users table
     INSERT INTO usr_users (
         `User`, `Full Name`, `Shift`, `VitsUser`, `Pin`, `LastShownVersion`, `HideChangeLog`, 
@@ -1606,7 +1606,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_users_Add_User` (IN `p_User` VA
     FLUSH PRIVILEGES;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_users_Delete_User` (IN `p_User` VARCHAR(100))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `usr_users_Delete_User` (IN `p_User` VARCHAR(100))   BEGIN
     -- Remove MySQL user
     SET @d := CONCAT('DROP USER IF EXISTS \'', REPLACE(p_User, '\'', '\\\''), '\'@\'%\';');
     PREPARE stmt FROM @d;
@@ -1617,19 +1617,19 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_users_Delete_User` (IN `p_User`
     DELETE FROM usr_users WHERE `User` = p_User;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_users_Exists` (IN `p_User` VARCHAR(100))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `usr_users_Exists` (IN `p_User` VARCHAR(100))   BEGIN
     SELECT COUNT(*) AS UserExists FROM usr_users WHERE `User` = p_User;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_users_Get_All` ()   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `usr_users_Get_All` ()   BEGIN
     SELECT * FROM usr_users;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_users_Get_ByUser` (IN `p_User` VARCHAR(100))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `usr_users_Get_ByUser` (IN `p_User` VARCHAR(100))   BEGIN
     SELECT * FROM usr_users WHERE `User` = p_User;
 END$$
 
-CREATE DEFINER=`root`@`localhost` PROCEDURE `usr_users_Update_User` (IN `p_User` VARCHAR(100), IN `p_FullName` VARCHAR(200), IN `p_Shift` VARCHAR(50), IN `p_Pin` VARCHAR(50), IN `p_VisualUserName` VARCHAR(50), IN `p_VisualPassword` VARCHAR(50))   BEGIN
+CREATE DEFINER=`root`@`172.16.1.104` PROCEDURE `usr_users_Update_User` (IN `p_User` VARCHAR(100), IN `p_FullName` VARCHAR(200), IN `p_Shift` VARCHAR(50), IN `p_Pin` VARCHAR(50), IN `p_VisualUserName` VARCHAR(50), IN `p_VisualPassword` VARCHAR(50))   BEGIN
     UPDATE usr_users SET
         `Full Name` = p_FullName,
         `Shift` = p_Shift,
@@ -23445,7 +23445,7 @@ INSERT INTO `log_error` (`ID`, `User`, `Severity`, `ErrorType`, `ErrorMessage`, 
 (55, 'JOHNK', 'Error', 'System.ApplicationException', 'An error occurred while filling location combo boxes.', '   at MTM_WIP_Application.Helpers.Helper_ComboBoxes.FillLocationComboBoxesAsync(ComboBox comboBox) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application\\Helpers\\Helper_ComboBoxes.cs:line 142\r\n   at MTM_WIP_Application.Controls.MainForm.ControlInventoryTab.Control_InventoryTab_OnStartup_LoadDataComboBoxesAsync() in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application\\Controls\\MainForm\\Control_InventoryTab.cs:line 101', '', 'MainForm_LoadInventoryTabComboBoxesAsync', '', 'JOHNSPC', 'Microsoft Windows NT 10.0.26100.0', '4.6.0.0+ab77b684e9ec12894e9efdea82023d40591a894f', '2025-06-21 00:49:03'),
 (56, 'JOHNK', 'Error', 'System.ApplicationException', 'An error occurred while filling location combo boxes.', '   at MTM_WIP_Application.Helpers.Helper_ComboBoxes.FillLocationComboBoxesAsync(ComboBox comboBox) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application\\Helpers\\Helper_ComboBoxes.cs:line 142\r\n   at MTM_WIP_Application.Controls.MainForm.ControlInventoryTab.Control_InventoryTab_OnStartup_LoadDataComboBoxesAsync() in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application\\Controls\\MainForm\\Control_InventoryTab.cs:line 101', '', 'MainForm_LoadInventoryTabComboBoxesAsync', '', 'JOHNSPC', 'Microsoft Windows NT 10.0.26100.0', '4.6.0.0+ab77b684e9ec12894e9efdea82023d40591a894f', '2025-06-21 00:49:20'),
 (57, 'JOHNK', 'Error', 'System.ApplicationException', 'An error occurred while filling location combo boxes.', '   at MTM_WIP_Application.Helpers.Helper_ComboBoxes.FillLocationComboBoxesAsync(ComboBox comboBox) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application\\Helpers\\Helper_ComboBoxes.cs:line 145\r\n   at MTM_WIP_Application.Controls.MainForm.ControlInventoryTab.Control_InventoryTab_OnStartup_LoadDataComboBoxesAsync() in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application\\Controls\\MainForm\\Control_InventoryTab.cs:line 89', '', 'MainForm_LoadInventoryTabComboBoxesAsync', '', 'JOHNSPC', 'Microsoft Windows NT 10.0.26100.0', '4.6.0.0+ab77b684e9ec12894e9efdea82023d40591a894f', '2025-06-21 08:53:28'),
-(58, 'JOHNK', 'Error', 'MySql.Data.MySqlClient.MySqlException', 'Procedure or function \'sp_get_last_10_transactions\' cannot be found in database \'\' Verify that user \'JOHNK\'@\'localhost\' has enough privileges to execute', '   at MySql.Data.MySqlClient.ProcedureCache.GetProcDataAsync(MySqlConnection connection, String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.ProcedureCache.AddNewAsync(MySqlConnection connection, String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.ProcedureCache.GetProcedureAsync(MySqlConnection conn, String spName, String cacheKey, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.GetParametersAsync(String procName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.CheckParametersAsync(String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.Resolve(Boolean preparing)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReader()\r\n   at MTM_WIP_Application.Controls.MainForm.Control_QuickButtons.LoadLast10Transactions(String currentUser) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application\\Controls\\MainForm\\Control_QuickButtons.cs:line 40\r\n   at MTM_WIP_Application.Controls.MainForm.Control_QuickButtons..ctor() in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application\\Controls\\MainForm\\Control_QuickButtons.cs:line 26\r\n   at MTM_WIP_Application.Forms.MainForm.MainForm.InitializeComponent() in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application\\Forms\\MainForm\\MainForm.Designer.cs:line 89\r\n   at MTM_WIP_Application.Forms.MainForm.MainForm..ctor() in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application\\Forms\\MainForm\\MainForm.cs:line 34', '', 'MainForm', '', 'JOHNSPC', 'Microsoft Windows NT 10.0.26100.0', '4.6.0.0+f827094989642d361bdf3ff6974d99f47f6c1ada', '2025-06-21 15:47:38'),
+(58, 'JOHNK', 'Error', 'MySql.Data.MySqlClient.MySqlException', 'Procedure or function \'sp_get_last_10_transactions\' cannot be found in database \'\' Verify that user \'JOHNK\'@\'172.16.1.104\' has enough privileges to execute', '   at MySql.Data.MySqlClient.ProcedureCache.GetProcDataAsync(MySqlConnection connection, String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.ProcedureCache.AddNewAsync(MySqlConnection connection, String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.ProcedureCache.GetProcedureAsync(MySqlConnection conn, String spName, String cacheKey, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.GetParametersAsync(String procName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.CheckParametersAsync(String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.Resolve(Boolean preparing)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReader()\r\n   at MTM_WIP_Application.Controls.MainForm.Control_QuickButtons.LoadLast10Transactions(String currentUser) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application\\Controls\\MainForm\\Control_QuickButtons.cs:line 40\r\n   at MTM_WIP_Application.Controls.MainForm.Control_QuickButtons..ctor() in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application\\Controls\\MainForm\\Control_QuickButtons.cs:line 26\r\n   at MTM_WIP_Application.Forms.MainForm.MainForm.InitializeComponent() in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application\\Forms\\MainForm\\MainForm.Designer.cs:line 89\r\n   at MTM_WIP_Application.Forms.MainForm.MainForm..ctor() in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application\\Forms\\MainForm\\MainForm.cs:line 34', '', 'MainForm', '', 'JOHNSPC', 'Microsoft Windows NT 10.0.26100.0', '4.6.0.0+f827094989642d361bdf3ff6974d99f47f6c1ada', '2025-06-21 15:47:38'),
 (59, 'JOHNK', 'Error', 'System.Runtime.InteropServices.ExternalException', 'A generic error occurred in GDI+.', '   at System.Drawing.Graphics.MeasureStringInternal(ReadOnlySpan`1 text, Font font, RectangleF layoutArea, StringFormat stringFormat, Int32& charactersFitted, Int32& linesFilled)\r\n   at System.Drawing.Graphics.MeasureString(String text, Font font)\r\n   at MTM_WIP_Application.Controls.MainForm.Control_QuickButtons.TruncateTextToFitMultiline(String text, Button btn) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application\\Controls\\MainForm\\Control_QuickButtons.cs:line 101\r\n   at MTM_WIP_Application.Controls.MainForm.Control_QuickButtons.LoadLast10Transactions(String currentUser) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application\\Controls\\MainForm\\Control_QuickButtons.cs:line 57\r\n   at MTM_WIP_Application.Controls.MainForm.Control_QuickButtons..ctor() in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application\\Controls\\MainForm\\Control_QuickButtons.cs:line 28\r\n   at MTM_WIP_Application.Forms.MainForm.MainForm.InitializeComponent() in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application\\Forms\\MainForm\\MainForm.Designer.cs:line 89\r\n   at MTM_WIP_Application.Forms.MainForm.MainForm..ctor() in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application\\Forms\\MainForm\\MainForm.cs:line 34', '', 'MainForm', '', 'JOHNSPC', 'Microsoft Windows NT 10.0.26100.0', '4.6.0.0+f827094989642d361bdf3ff6974d99f47f6c1ada', '2025-06-21 16:39:14'),
 (60, 'JOHNK', 'Error', 'System.Runtime.InteropServices.ExternalException', 'A generic error occurred in GDI+.', '   at System.Drawing.Graphics.MeasureStringInternal(ReadOnlySpan`1 text, Font font, RectangleF layoutArea, StringFormat stringFormat, Int32& charactersFitted, Int32& linesFilled)\r\n   at System.Drawing.Graphics.MeasureString(String text, Font font)\r\n   at MTM_WIP_Application.Controls.MainForm.Control_QuickButtons.TruncateTextToFitMultiline(String text, Button btn) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application\\Controls\\MainForm\\Control_QuickButtons.cs:line 101\r\n   at MTM_WIP_Application.Controls.MainForm.Control_QuickButtons.LoadLast10Transactions(String currentUser) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application\\Controls\\MainForm\\Control_QuickButtons.cs:line 57\r\n   at MTM_WIP_Application.Controls.MainForm.Control_QuickButtons..ctor() in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application\\Controls\\MainForm\\Control_QuickButtons.cs:line 28\r\n   at MTM_WIP_Application.Forms.MainForm.MainForm.InitializeComponent() in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application\\Forms\\MainForm\\MainForm.Designer.cs:line 89\r\n   at MTM_WIP_Application.Forms.MainForm.MainForm..ctor() in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application\\Forms\\MainForm\\MainForm.cs:line 34', '', 'MainForm', '', 'JOHNSPC', 'Microsoft Windows NT 10.0.26100.0', '4.6.0.0+f827094989642d361bdf3ff6974d99f47f6c1ada', '2025-06-21 16:39:35'),
 (61, 'JOHNK', 'Error', 'System.ArgumentOutOfRangeException', 'value (\'0\') must be less than \'0\'. (Parameter \'value\')\r\nActual value was 0.', '   at System.ArgumentOutOfRangeException.ThrowGreaterEqual[T](T value, T other, String paramName)\r\n   at System.ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual[T](T value, T other, String paramName)\r\n   at System.Windows.Forms.ComboBox.set_SelectedIndex(Int32 value)\r\n   at MTM_WIP_Application.Controls.MainForm.ControlInventoryTab.Control_InventoryTab_Button_AdvancedEntry_Click() in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application\\Controls\\MainForm\\Control_InventoryTab.cs:line 205', '', 'Control_InventoryTab_Button_AdvancedEntry_Click', '', 'JOHNSPC', 'Microsoft Windows NT 10.0.26100.0', '4.6.0.0+f827094989642d361bdf3ff6974d99f47f6c1ada', '2025-06-21 17:13:46'),
@@ -23538,32 +23538,32 @@ INSERT INTO `log_error` (`ID`, `User`, `Severity`, `ErrorType`, `ErrorMessage`, 
 (146, 'JOHNK', 'Error', 'System.ArgumentException', 'Parameter \'p_ActionName\' not found in the collection.', '   at MySql.Data.MySqlClient.MySqlParameterCollection.GetParameterFlexible(String parameterName, Boolean throwOnNotFound)\r\n   at MySql.Data.MySqlClient.StoredProcedure.GetAndFixParameter(String spName, MySqlSchemaRow param, Boolean realAsFloat, MySqlParameter returnParameter)\r\n   at MySql.Data.MySqlClient.StoredProcedure.CheckParametersAsync(String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.Resolve(Boolean preparing)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteNonQueryAsync(Boolean execAsync, CancellationToken cancellationToken)\r\n   at MTM_Inventory_Application.Data.Dao_User.SetUserShortcutAsync(String userId, String actionName, String shortcut) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application\\Data\\Dao_User.cs:line 584', '', 'SetUserShortcutAsync', '', 'JOHNSPC', 'Microsoft Windows NT 10.0.26100.0', '4.6.0.0+590a479a00cd31ff1e40eca1b2ec6ee15e7cd16b', '2025-07-06 14:45:04'),
 (147, 'JOHNK', 'Error', 'System.ArgumentException', 'Parameter \'p_ActionName\' not found in the collection.', '   at MySql.Data.MySqlClient.MySqlParameterCollection.GetParameterFlexible(String parameterName, Boolean throwOnNotFound)\r\n   at MySql.Data.MySqlClient.StoredProcedure.GetAndFixParameter(String spName, MySqlSchemaRow param, Boolean realAsFloat, MySqlParameter returnParameter)\r\n   at MySql.Data.MySqlClient.StoredProcedure.CheckParametersAsync(String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.Resolve(Boolean preparing)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteNonQueryAsync(Boolean execAsync, CancellationToken cancellationToken)\r\n   at MTM_Inventory_Application.Data.Dao_User.SetUserShortcutAsync(String userId, String actionName, String shortcut) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application\\Data\\Dao_User.cs:line 584', '', 'SetUserShortcutAsync', '', 'JOHNSPC', 'Microsoft Windows NT 10.0.26100.0', '4.6.0.0+590a479a00cd31ff1e40eca1b2ec6ee15e7cd16b', '2025-07-06 14:45:04'),
 (148, 'JOHNK', 'Error', 'System.ArgumentException', 'Parameter \'p_ActionName\' not found in the collection.', '   at MySql.Data.MySqlClient.MySqlParameterCollection.GetParameterFlexible(String parameterName, Boolean throwOnNotFound)\r\n   at MySql.Data.MySqlClient.StoredProcedure.GetAndFixParameter(String spName, MySqlSchemaRow param, Boolean realAsFloat, MySqlParameter returnParameter)\r\n   at MySql.Data.MySqlClient.StoredProcedure.CheckParametersAsync(String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.Resolve(Boolean preparing)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteNonQueryAsync(Boolean execAsync, CancellationToken cancellationToken)\r\n   at MTM_Inventory_Application.Data.Dao_User.SetUserShortcutAsync(String userId, String actionName, String shortcut) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application\\Data\\Dao_User.cs:line 584', '', 'SetUserShortcutAsync', '', 'JOHNSPC', 'Microsoft Windows NT 10.0.26100.0', '4.6.0.0+590a479a00cd31ff1e40eca1b2ec6ee15e7cd16b', '2025-07-06 14:45:04'),
-(149, 'JOHNK', 'Error', 'MySql.Data.MySqlClient.MySqlException', 'Procedure or function \'usr_ui_settings_SetShortcutsJson\' cannot be found in database \'\' Verify that user \'JOHNK\'@\'localhost\' has enough privileges to execute', '   at MySql.Data.MySqlClient.ProcedureCache.GetProcDataAsync(MySqlConnection connection, String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.ProcedureCache.AddNewAsync(MySqlConnection connection, String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.ProcedureCache.GetProcedureAsync(MySqlConnection conn, String spName, String cacheKey, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.GetParametersAsync(String procName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.CheckParametersAsync(String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.Resolve(Boolean preparing)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteNonQueryAsync(Boolean execAsync, CancellationToken cancellationToken)\r\n   at MTM_Inventory_Application.Data.Dao_User.SetShortcutsJsonAsync(String userId, String shortcutsJson) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application\\Data\\Dao_User.cs:line 666', '', 'SetShortcutsJsonAsync', '', 'JOHNSPC', 'Microsoft Windows NT 10.0.26100.0', '4.6.0.0+590a479a00cd31ff1e40eca1b2ec6ee15e7cd16b', '2025-07-06 15:44:32'),
+(149, 'JOHNK', 'Error', 'MySql.Data.MySqlClient.MySqlException', 'Procedure or function \'usr_ui_settings_SetShortcutsJson\' cannot be found in database \'\' Verify that user \'JOHNK\'@\'172.16.1.104\' has enough privileges to execute', '   at MySql.Data.MySqlClient.ProcedureCache.GetProcDataAsync(MySqlConnection connection, String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.ProcedureCache.AddNewAsync(MySqlConnection connection, String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.ProcedureCache.GetProcedureAsync(MySqlConnection conn, String spName, String cacheKey, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.GetParametersAsync(String procName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.CheckParametersAsync(String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.Resolve(Boolean preparing)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteNonQueryAsync(Boolean execAsync, CancellationToken cancellationToken)\r\n   at MTM_Inventory_Application.Data.Dao_User.SetShortcutsJsonAsync(String userId, String shortcutsJson) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application\\Data\\Dao_User.cs:line 666', '', 'SetShortcutsJsonAsync', '', 'JOHNSPC', 'Microsoft Windows NT 10.0.26100.0', '4.6.0.0+590a479a00cd31ff1e40eca1b2ec6ee15e7cd16b', '2025-07-06 15:44:32'),
 (150, 'JOHNK', 'Error', 'MySql.Data.MySqlClient.MySqlException', 'Unknown column \'Database\' in \'field list\'', '   at MySql.Data.MySqlClient.MySqlStream.ReadPacketAsync(Boolean execAsync)\r\n   at MySql.Data.MySqlClient.NativeDriver.GetResultAsync(Int32 affectedRow, Int64 insertedId, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.Driver.GetResultAsync(Int32 statementId, Int32 affectedRows, Int64 insertedId, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.Driver.NextResultAsync(Int32 statementId, Boolean force, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.MySqlDataReader.NextResultAsync(Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlDataReader.NextResultAsync(Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteScalarAsync(Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteScalar()\r\n   at MTM_Inventory_Application.Helpers.Helper_Database_Core.ExecuteScalar(String procedureOrSql, Dictionary`2 parameters, Boolean useAsync, CommandType commandType) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application\\Helpers\\Helper_Database_Core.cs:line 137\r\n   at MTM_Inventory_Application.Data.Dao_User.GetUserSettingAsync(String field, String user, Boolean useAsync) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application\\Data\\Dao_User.cs:line 184', '', 'GetUserSettingAsync', '', 'JOHNSPC', 'Microsoft Windows NT 10.0.26100.0', '4.6.0.0+f3385fdb33780cd95139a921213bf27b30b722d3', '2025-07-06 16:27:27'),
 (151, 'JOHNK', 'Error', 'System.Exception', 'Database error occurred', '   at MTM_Inventory_Application.Data.Dao_User.SetThemeNameInSettingsJsonAsync(String userId, String themeName) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application\\Data\\Dao_User.cs:line 732', '', 'SetThemeNameInSettingsJsonAsync', '', 'JOHNSPC', 'Microsoft Windows NT 10.0.26100.0', '4.6.0.0+f3385fdb33780cd95139a921213bf27b30b722d3', '2025-07-06 16:43:02'),
 (152, 'JOHNK', 'Error', 'System.Exception', 'Database error occurred', '   at MTM_Inventory_Application.Data.Dao_User.SetThemeNameInSettingsJsonAsync(String userId, String themeName) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application\\Data\\Dao_User.cs:line 732', '', 'SetThemeNameInSettingsJsonAsync', '', 'JOHNSPC', 'Microsoft Windows NT 10.0.26100.0', '4.6.0.0+f3385fdb33780cd95139a921213bf27b30b722d3', '2025-07-06 16:43:53'),
-(153, 'JOHNK', 'Error', 'MySql.Data.MySqlClient.MySqlException', 'Procedure or function \'usr_ui_settings_SetThemeNameJson\' cannot be found in database \'\' Verify that user \'JOHNK\'@\'localhost\' has enough privileges to execute', '   at MySql.Data.MySqlClient.ProcedureCache.GetProcDataAsync(MySqlConnection connection, String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.ProcedureCache.AddNewAsync(MySqlConnection connection, String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.ProcedureCache.GetProcedureAsync(MySqlConnection conn, String spName, String cacheKey, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.GetParametersAsync(String procName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.CheckParametersAsync(String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.Resolve(Boolean preparing)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteNonQueryAsync(Boolean execAsync, CancellationToken cancellationToken)\r\n   at MTM_Inventory_Application.Data.Dao_User.SetThemeNameInSettingsJsonAsync(String userId, String themeName) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application\\Data\\Dao_User.cs:line 724', '', 'SetThemeNameInSettingsJsonAsync', '', 'JOHNSPC', 'Microsoft Windows NT 10.0.26100.0', '4.6.0.0+f3385fdb33780cd95139a921213bf27b30b722d3', '2025-07-06 16:47:59'),
+(153, 'JOHNK', 'Error', 'MySql.Data.MySqlClient.MySqlException', 'Procedure or function \'usr_ui_settings_SetThemeNameJson\' cannot be found in database \'\' Verify that user \'JOHNK\'@\'172.16.1.104\' has enough privileges to execute', '   at MySql.Data.MySqlClient.ProcedureCache.GetProcDataAsync(MySqlConnection connection, String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.ProcedureCache.AddNewAsync(MySqlConnection connection, String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.ProcedureCache.GetProcedureAsync(MySqlConnection conn, String spName, String cacheKey, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.GetParametersAsync(String procName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.CheckParametersAsync(String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.Resolve(Boolean preparing)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteNonQueryAsync(Boolean execAsync, CancellationToken cancellationToken)\r\n   at MTM_Inventory_Application.Data.Dao_User.SetThemeNameInSettingsJsonAsync(String userId, String themeName) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application\\Data\\Dao_User.cs:line 724', '', 'SetThemeNameInSettingsJsonAsync', '', 'JOHNSPC', 'Microsoft Windows NT 10.0.26100.0', '4.6.0.0+f3385fdb33780cd95139a921213bf27b30b722d3', '2025-07-06 16:47:59'),
 (154, 'JOHNK', 'Error', 'System.Exception', 'Database error while saving theme name.', '   at MTM_Inventory_Application.Data.Dao_User.SetThemeNameInSettingsJsonAsync(String userId, String themeName) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application\\Data\\Dao_User.cs:line 732', '', 'SetThemeNameInSettingsJsonAsync', '', 'JOHNSPC', 'Microsoft Windows NT 10.0.26100.0', '4.6.0.0+f3385fdb33780cd95139a921213bf27b30b722d3', '2025-07-06 16:49:05'),
 (155, 'JOHNK', 'Error', 'System.Exception', 'Database error while saving theme name.', '   at MTM_Inventory_Application.Data.Dao_User.SetThemeNameInSettingsJsonAsync(String userId, String themeName) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application\\Data\\Dao_User.cs:line 732', '', 'SetThemeNameInSettingsJsonAsync', '', 'JOHNSPC', 'Microsoft Windows NT 10.0.26100.0', '4.6.0.0+f3385fdb33780cd95139a921213bf27b30b722d3', '2025-07-06 16:50:50'),
 (156, 'JOHNK', 'Error', 'System.Exception', 'Database error [42S22]: Unknown column \'ThemeName\' in \'field list\'', '   at MTM_Inventory_Application.Data.Dao_User.SetThemeNameInSettingsJsonAsync(String userId, String themeName) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application\\Data\\Dao_User.cs:line 732', '', 'SetThemeNameInSettingsJsonAsync', '', 'JOHNSPC', 'Microsoft Windows NT 10.0.26100.0', '4.6.0.0+f3385fdb33780cd95139a921213bf27b30b722d3', '2025-07-06 16:52:43'),
-(157, 'JOHNK', 'Error', 'MySql.Data.MySqlClient.MySqlException', 'Procedure or function \'usr_ui_settings_SetThemeJson\' cannot be found in database \'\' Verify that user \'JOHNK\'@\'localhost\' has enough privileges to execute', '   at MySql.Data.MySqlClient.ProcedureCache.GetProcDataAsync(MySqlConnection connection, String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.ProcedureCache.AddNewAsync(MySqlConnection connection, String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.ProcedureCache.GetProcedureAsync(MySqlConnection conn, String spName, String cacheKey, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.GetParametersAsync(String procName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.CheckParametersAsync(String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.Resolve(Boolean preparing)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteNonQueryAsync(Boolean execAsync, CancellationToken cancellationToken)\r\n   at MTM_Inventory_Application.Data.Dao_User.SetThemeJsonAsync(String userId, String themeJson) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application\\Data\\Dao_User.cs:line 724', '', 'SetThemeJsonAsync', '', 'JOHNSPC', 'Microsoft Windows NT 10.0.26100.0', '4.6.0.0+f3385fdb33780cd95139a921213bf27b30b722d3', '2025-07-06 17:10:45'),
+(157, 'JOHNK', 'Error', 'MySql.Data.MySqlClient.MySqlException', 'Procedure or function \'usr_ui_settings_SetThemeJson\' cannot be found in database \'\' Verify that user \'JOHNK\'@\'172.16.1.104\' has enough privileges to execute', '   at MySql.Data.MySqlClient.ProcedureCache.GetProcDataAsync(MySqlConnection connection, String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.ProcedureCache.AddNewAsync(MySqlConnection connection, String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.ProcedureCache.GetProcedureAsync(MySqlConnection conn, String spName, String cacheKey, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.GetParametersAsync(String procName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.CheckParametersAsync(String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.Resolve(Boolean preparing)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteNonQueryAsync(Boolean execAsync, CancellationToken cancellationToken)\r\n   at MTM_Inventory_Application.Data.Dao_User.SetThemeJsonAsync(String userId, String themeJson) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application\\Data\\Dao_User.cs:line 724', '', 'SetThemeJsonAsync', '', 'JOHNSPC', 'Microsoft Windows NT 10.0.26100.0', '4.6.0.0+f3385fdb33780cd95139a921213bf27b30b722d3', '2025-07-06 17:10:45'),
 (158, 'JOHNK', 'Error', 'System.ArgumentException', 'Parameter \'p_ThemeName\' not found in the collection.', '   at MySql.Data.MySqlClient.MySqlParameterCollection.GetParameterFlexible(String parameterName, Boolean throwOnNotFound)\r\n   at MySql.Data.MySqlClient.StoredProcedure.GetAndFixParameter(String spName, MySqlSchemaRow param, Boolean realAsFloat, MySqlParameter returnParameter)\r\n   at MySql.Data.MySqlClient.StoredProcedure.CheckParametersAsync(String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.Resolve(Boolean preparing)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteNonQueryAsync(Boolean execAsync, CancellationToken cancellationToken)\r\n   at MTM_Inventory_Application.Data.Dao_User.SetThemeJsonAsync(String userId, String themeJson) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application\\Data\\Dao_User.cs:line 724', '', 'SetThemeJsonAsync', '', 'JOHNSPC', 'Microsoft Windows NT 10.0.26100.0', '4.6.0.0+f3385fdb33780cd95139a921213bf27b30b722d3', '2025-07-06 17:11:46'),
 (159, 'JOHNK', 'Error', 'System.InvalidOperationException', 'The requested operation requires an element of type \'String\', but the target element has type \'Number\'.', '   at System.Text.Json.ThrowHelper.ThrowJsonElementWrongTypeException(JsonTokenType expectedType, JsonTokenType actualType)\r\n   at System.Text.Json.JsonDocument.GetString(Int32 index, JsonTokenType expectedType)\r\n   at MTM_Inventory_Application.Data.Dao_User.GetSettingsJsonAsync(String field, String user, Boolean useAsync) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application\\Data\\Dao_User.cs:line 193', '', 'GetSettingsJsonAsync', '', 'JOHNSPC', 'Microsoft Windows NT 10.0.26100.0', '4.6.0.0+f3385fdb33780cd95139a921213bf27b30b722d3', '2025-07-06 18:13:57'),
 (160, 'JOHNK', 'Error', 'System.InvalidOperationException', 'The requested operation requires an element of type \'String\', but the target element has type \'Number\'.', '   at System.Text.Json.ThrowHelper.ThrowJsonElementWrongTypeException(JsonTokenType expectedType, JsonTokenType actualType)\r\n   at System.Text.Json.JsonDocument.GetString(Int32 index, JsonTokenType expectedType)\r\n   at MTM_Inventory_Application.Data.Dao_User.GetSettingsJsonAsync(String field, String user, Boolean useAsync) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application\\Data\\Dao_User.cs:line 193', '', 'GetSettingsJsonAsync', '', 'JOHNSPC', 'Microsoft Windows NT 10.0.26100.0', '4.6.0.0+f3385fdb33780cd95139a921213bf27b30b722d3', '2025-07-06 18:18:09'),
 (161, 'JOHNK', 'Error', 'System.InvalidOperationException', 'The requested operation requires an element of type \'String\', but the target element has type \'Number\'.', '   at System.Text.Json.ThrowHelper.ThrowJsonElementWrongTypeException(JsonTokenType expectedType, JsonTokenType actualType)\r\n   at System.Text.Json.JsonDocument.GetString(Int32 index, JsonTokenType expectedType)\r\n   at MTM_Inventory_Application.Data.Dao_User.GetSettingsJsonAsync(String field, String user, Boolean useAsync) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application\\Data\\Dao_User.cs:line 216', '', 'GetSettingsJsonAsync', '', 'JOHNSPC', 'Microsoft Windows NT 10.0.26100.0', '4.6.0.0+f3385fdb33780cd95139a921213bf27b30b722d3', '2025-07-06 18:18:31'),
 (162, 'JOHNK', 'Error', 'System.InvalidOperationException', 'The requested operation requires an element of type \'String\', but the target element has type \'Number\'.', '   at System.Text.Json.ThrowHelper.ThrowJsonElementWrongTypeException(JsonTokenType expectedType, JsonTokenType actualType)\r\n   at System.Text.Json.JsonDocument.GetString(Int32 index, JsonTokenType expectedType)\r\n   at MTM_Inventory_Application.Data.Dao_User.GetSettingsJsonAsync(String field, String user, Boolean useAsync) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application\\Data\\Dao_User.cs:line 193', '', 'GetSettingsJsonAsync', '', 'JOHNSPC', 'Microsoft Windows NT 10.0.26100.0', '4.6.0.0+f3385fdb33780cd95139a921213bf27b30b722d3', '2025-07-06 18:18:54'),
-(163, 'JOHNK', 'Critical', 'MySql.Data.MySqlClient.MySqlException', 'Procedure or function \'`SELECT * FROM ``md_part_ids```\' cannot be found in database \'\' Verify that user \'JOHNK\'@\'localhost\' has enough privileges to execute', '   at MySql.Data.MySqlClient.ProcedureCache.GetProcDataAsync(MySqlConnection connection, String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.ProcedureCache.AddNewAsync(MySqlConnection connection, String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.ProcedureCache.GetProcedureAsync(MySqlConnection conn, String spName, String cacheKey, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.GetParametersAsync(String procName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.CheckParametersAsync(String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.Resolve(Boolean preparing)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReader()\r\n   at MTM_Inventory_Application.Helpers.Helper_Database_Core.ExecuteDataTable(String procedureOrSql, Dictionary`2 parameters, Boolean useAsync, CommandType commandType) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application-copilot-fix-9\\Helpers\\Helper_Database_Core.cs:line 95\r\n   at MTM_Inventory_Application.Data.Dao_Part.GetPartByQueryAsync(String sql, Dictionary`2 parameters, Boolean useAsync) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application-copilot-fix-9\\Data\\Dao_Part.cs:line 232', '', 'GetPartByQueryAsync', '', 'JOHNSPC', 'Microsoft Windows NT 10.0.26100.0', '4.6.0.0', '2025-07-06 23:09:23'),
-(164, 'JOHNK', 'Critical', 'MySql.Data.MySqlClient.MySqlException', 'Procedure or function \'`SELECT * FROM ``md_part_ids```\' cannot be found in database \'\' Verify that user \'JOHNK\'@\'localhost\' has enough privileges to execute', '   at MySql.Data.MySqlClient.ProcedureCache.GetProcDataAsync(MySqlConnection connection, String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.ProcedureCache.AddNewAsync(MySqlConnection connection, String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.ProcedureCache.GetProcedureAsync(MySqlConnection conn, String spName, String cacheKey, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.GetParametersAsync(String procName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.CheckParametersAsync(String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.Resolve(Boolean preparing)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReader()\r\n   at MTM_Inventory_Application.Helpers.Helper_Database_Core.ExecuteDataTable(String procedureOrSql, Dictionary`2 parameters, Boolean useAsync, CommandType commandType) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application-copilot-fix-9\\Helpers\\Helper_Database_Core.cs:line 95\r\n   at MTM_Inventory_Application.Data.Dao_Part.GetPartByQueryAsync(String sql, Dictionary`2 parameters, Boolean useAsync) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application-copilot-fix-9\\Data\\Dao_Part.cs:line 232', '', 'GetPartByQueryAsync', '', 'JOHNSPC', 'Microsoft Windows NT 10.0.26100.0', '4.6.0.0', '2025-07-06 23:09:23'),
-(165, 'JOHNK', 'Critical', 'MySql.Data.MySqlClient.MySqlException', 'Procedure or function \'`SELECT * FROM ``md_part_ids```\' cannot be found in database \'\' Verify that user \'JOHNK\'@\'localhost\' has enough privileges to execute', '   at MySql.Data.MySqlClient.ProcedureCache.GetProcDataAsync(MySqlConnection connection, String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.ProcedureCache.AddNewAsync(MySqlConnection connection, String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.ProcedureCache.GetProcedureAsync(MySqlConnection conn, String spName, String cacheKey, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.GetParametersAsync(String procName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.CheckParametersAsync(String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.Resolve(Boolean preparing)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReader()\r\n   at MTM_Inventory_Application.Helpers.Helper_Database_Core.ExecuteDataTable(String procedureOrSql, Dictionary`2 parameters, Boolean useAsync, CommandType commandType) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application-copilot-fix-9\\Helpers\\Helper_Database_Core.cs:line 95\r\n   at MTM_Inventory_Application.Data.Dao_Part.GetPartByQueryAsync(String sql, Dictionary`2 parameters, Boolean useAsync) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application-copilot-fix-9\\Data\\Dao_Part.cs:line 232', '', 'GetPartByQueryAsync', '', 'JOHNSPC', 'Microsoft Windows NT 10.0.26100.0', '4.6.0.0', '2025-07-06 23:10:24'),
-(166, 'JOHNK', 'Critical', 'MySql.Data.MySqlClient.MySqlException', 'Procedure or function \'`SELECT * FROM ``md_part_ids```\' cannot be found in database \'\' Verify that user \'JOHNK\'@\'localhost\' has enough privileges to execute', '   at MySql.Data.MySqlClient.ProcedureCache.GetProcDataAsync(MySqlConnection connection, String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.ProcedureCache.AddNewAsync(MySqlConnection connection, String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.ProcedureCache.GetProcedureAsync(MySqlConnection conn, String spName, String cacheKey, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.GetParametersAsync(String procName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.CheckParametersAsync(String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.Resolve(Boolean preparing)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReader()\r\n   at MTM_Inventory_Application.Helpers.Helper_Database_Core.ExecuteDataTable(String procedureOrSql, Dictionary`2 parameters, Boolean useAsync, CommandType commandType) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application-copilot-fix-9\\Helpers\\Helper_Database_Core.cs:line 95\r\n   at MTM_Inventory_Application.Data.Dao_Part.GetPartByQueryAsync(String sql, Dictionary`2 parameters, Boolean useAsync) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application-copilot-fix-9\\Data\\Dao_Part.cs:line 232', '', 'GetPartByQueryAsync', '', 'JOHNSPC', 'Microsoft Windows NT 10.0.26100.0', '4.6.0.0', '2025-07-06 23:10:24'),
-(167, 'JOHNK', 'Critical', 'MySql.Data.MySqlClient.MySqlException', 'Procedure or function \'md_part_ids_Exists_ByItemNumber\' cannot be found in database \'\' Verify that user \'JOHNK\'@\'localhost\' has enough privileges to execute', '   at MySql.Data.MySqlClient.ProcedureCache.GetProcDataAsync(MySqlConnection connection, String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.ProcedureCache.AddNewAsync(MySqlConnection connection, String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.ProcedureCache.GetProcedureAsync(MySqlConnection conn, String spName, String cacheKey, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.GetParametersAsync(String procName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.CheckParametersAsync(String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.Resolve(Boolean preparing)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteScalarAsync(Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteScalar()\r\n   at MTM_Inventory_Application.Helpers.Helper_Database_Core.ExecuteScalar(String procedureOrSql, Dictionary`2 parameters, Boolean useAsync, CommandType commandType) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application-copilot-fix-9\\Helpers\\Helper_Database_Core.cs:line 137\r\n   at MTM_Inventory_Application.Data.Dao_Part.PartExists(String partNumber, Boolean useAsync) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application-copilot-fix-9\\Data\\Dao_Part.cs:line 142', '', 'PartExists', '', 'JOHNSPC', 'Microsoft Windows NT 10.0.26100.0', '4.6.0.0', '2025-07-06 23:23:10');
+(163, 'JOHNK', 'Critical', 'MySql.Data.MySqlClient.MySqlException', 'Procedure or function \'`SELECT * FROM ``md_part_ids```\' cannot be found in database \'\' Verify that user \'JOHNK\'@\'172.16.1.104\' has enough privileges to execute', '   at MySql.Data.MySqlClient.ProcedureCache.GetProcDataAsync(MySqlConnection connection, String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.ProcedureCache.AddNewAsync(MySqlConnection connection, String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.ProcedureCache.GetProcedureAsync(MySqlConnection conn, String spName, String cacheKey, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.GetParametersAsync(String procName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.CheckParametersAsync(String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.Resolve(Boolean preparing)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReader()\r\n   at MTM_Inventory_Application.Helpers.Helper_Database_Core.ExecuteDataTable(String procedureOrSql, Dictionary`2 parameters, Boolean useAsync, CommandType commandType) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application-copilot-fix-9\\Helpers\\Helper_Database_Core.cs:line 95\r\n   at MTM_Inventory_Application.Data.Dao_Part.GetPartByQueryAsync(String sql, Dictionary`2 parameters, Boolean useAsync) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application-copilot-fix-9\\Data\\Dao_Part.cs:line 232', '', 'GetPartByQueryAsync', '', 'JOHNSPC', 'Microsoft Windows NT 10.0.26100.0', '4.6.0.0', '2025-07-06 23:09:23'),
+(164, 'JOHNK', 'Critical', 'MySql.Data.MySqlClient.MySqlException', 'Procedure or function \'`SELECT * FROM ``md_part_ids```\' cannot be found in database \'\' Verify that user \'JOHNK\'@\'172.16.1.104\' has enough privileges to execute', '   at MySql.Data.MySqlClient.ProcedureCache.GetProcDataAsync(MySqlConnection connection, String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.ProcedureCache.AddNewAsync(MySqlConnection connection, String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.ProcedureCache.GetProcedureAsync(MySqlConnection conn, String spName, String cacheKey, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.GetParametersAsync(String procName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.CheckParametersAsync(String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.Resolve(Boolean preparing)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReader()\r\n   at MTM_Inventory_Application.Helpers.Helper_Database_Core.ExecuteDataTable(String procedureOrSql, Dictionary`2 parameters, Boolean useAsync, CommandType commandType) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application-copilot-fix-9\\Helpers\\Helper_Database_Core.cs:line 95\r\n   at MTM_Inventory_Application.Data.Dao_Part.GetPartByQueryAsync(String sql, Dictionary`2 parameters, Boolean useAsync) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application-copilot-fix-9\\Data\\Dao_Part.cs:line 232', '', 'GetPartByQueryAsync', '', 'JOHNSPC', 'Microsoft Windows NT 10.0.26100.0', '4.6.0.0', '2025-07-06 23:09:23'),
+(165, 'JOHNK', 'Critical', 'MySql.Data.MySqlClient.MySqlException', 'Procedure or function \'`SELECT * FROM ``md_part_ids```\' cannot be found in database \'\' Verify that user \'JOHNK\'@\'172.16.1.104\' has enough privileges to execute', '   at MySql.Data.MySqlClient.ProcedureCache.GetProcDataAsync(MySqlConnection connection, String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.ProcedureCache.AddNewAsync(MySqlConnection connection, String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.ProcedureCache.GetProcedureAsync(MySqlConnection conn, String spName, String cacheKey, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.GetParametersAsync(String procName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.CheckParametersAsync(String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.Resolve(Boolean preparing)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReader()\r\n   at MTM_Inventory_Application.Helpers.Helper_Database_Core.ExecuteDataTable(String procedureOrSql, Dictionary`2 parameters, Boolean useAsync, CommandType commandType) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application-copilot-fix-9\\Helpers\\Helper_Database_Core.cs:line 95\r\n   at MTM_Inventory_Application.Data.Dao_Part.GetPartByQueryAsync(String sql, Dictionary`2 parameters, Boolean useAsync) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application-copilot-fix-9\\Data\\Dao_Part.cs:line 232', '', 'GetPartByQueryAsync', '', 'JOHNSPC', 'Microsoft Windows NT 10.0.26100.0', '4.6.0.0', '2025-07-06 23:10:24'),
+(166, 'JOHNK', 'Critical', 'MySql.Data.MySqlClient.MySqlException', 'Procedure or function \'`SELECT * FROM ``md_part_ids```\' cannot be found in database \'\' Verify that user \'JOHNK\'@\'172.16.1.104\' has enough privileges to execute', '   at MySql.Data.MySqlClient.ProcedureCache.GetProcDataAsync(MySqlConnection connection, String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.ProcedureCache.AddNewAsync(MySqlConnection connection, String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.ProcedureCache.GetProcedureAsync(MySqlConnection conn, String spName, String cacheKey, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.GetParametersAsync(String procName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.CheckParametersAsync(String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.Resolve(Boolean preparing)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReader()\r\n   at MTM_Inventory_Application.Helpers.Helper_Database_Core.ExecuteDataTable(String procedureOrSql, Dictionary`2 parameters, Boolean useAsync, CommandType commandType) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application-copilot-fix-9\\Helpers\\Helper_Database_Core.cs:line 95\r\n   at MTM_Inventory_Application.Data.Dao_Part.GetPartByQueryAsync(String sql, Dictionary`2 parameters, Boolean useAsync) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application-copilot-fix-9\\Data\\Dao_Part.cs:line 232', '', 'GetPartByQueryAsync', '', 'JOHNSPC', 'Microsoft Windows NT 10.0.26100.0', '4.6.0.0', '2025-07-06 23:10:24'),
+(167, 'JOHNK', 'Critical', 'MySql.Data.MySqlClient.MySqlException', 'Procedure or function \'md_part_ids_Exists_ByItemNumber\' cannot be found in database \'\' Verify that user \'JOHNK\'@\'172.16.1.104\' has enough privileges to execute', '   at MySql.Data.MySqlClient.ProcedureCache.GetProcDataAsync(MySqlConnection connection, String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.ProcedureCache.AddNewAsync(MySqlConnection connection, String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.ProcedureCache.GetProcedureAsync(MySqlConnection conn, String spName, String cacheKey, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.GetParametersAsync(String procName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.CheckParametersAsync(String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.Resolve(Boolean preparing)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteScalarAsync(Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteScalar()\r\n   at MTM_Inventory_Application.Helpers.Helper_Database_Core.ExecuteScalar(String procedureOrSql, Dictionary`2 parameters, Boolean useAsync, CommandType commandType) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application-copilot-fix-9\\Helpers\\Helper_Database_Core.cs:line 137\r\n   at MTM_Inventory_Application.Data.Dao_Part.PartExists(String partNumber, Boolean useAsync) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application-copilot-fix-9\\Data\\Dao_Part.cs:line 142', '', 'PartExists', '', 'JOHNSPC', 'Microsoft Windows NT 10.0.26100.0', '4.6.0.0', '2025-07-06 23:23:10');
 INSERT INTO `log_error` (`ID`, `User`, `Severity`, `ErrorType`, `ErrorMessage`, `StackTrace`, `ModuleName`, `MethodName`, `AdditionalInfo`, `MachineName`, `OSVersion`, `AppVersion`, `ErrorTime`) VALUES
 (168, 'JOHNK', 'Critical', 'MySql.Data.MySqlClient.MySqlException', 'Unknown column \'Die Location\' in \'field list\'', '   at MySql.Data.MySqlClient.MySqlStream.ReadPacketAsync(Boolean execAsync)\r\n   at MySql.Data.MySqlClient.NativeDriver.GetResultAsync(Int32 affectedRow, Int64 insertedId, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.Driver.GetResultAsync(Int32 statementId, Int32 affectedRows, Int64 insertedId, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.Driver.NextResultAsync(Int32 statementId, Boolean force, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.MySqlDataReader.NextResultAsync(Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlDataReader.NextResultAsync(Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteNonQueryAsync(Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteNonQuery()\r\n   at MTM_Inventory_Application.Helpers.Helper_Database_Core.ExecuteNonQuery(String procedureOrSql, Dictionary`2 parameters, Boolean useAsync, CommandType commandType) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application-copilot-fix-9\\Helpers\\Helper_Database_Core.cs:line 43\r\n   at MTM_Inventory_Application.Data.Dao_Part.AddPartWithStoredProcedure(String itemNumber, String customer, String description, String issuedBy, String type, Boolean useAsync) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application-copilot-fix-9\\Data\\Dao_Part.cs:line 184', '', 'AddPartWithStoredProcedure', '', 'JOHNSPC', 'Microsoft Windows NT 10.0.26100.0', '4.6.0.0', '2025-07-06 23:23:25'),
-(169, 'JOHNK', 'Critical', 'MySql.Data.MySqlClient.MySqlException', 'Procedure or function \'md_part_ids_Exists_ByItemNumber\' cannot be found in database \'\' Verify that user \'JOHNK\'@\'localhost\' has enough privileges to execute', '   at MySql.Data.MySqlClient.ProcedureCache.GetProcDataAsync(MySqlConnection connection, String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.ProcedureCache.AddNewAsync(MySqlConnection connection, String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.ProcedureCache.GetProcedureAsync(MySqlConnection conn, String spName, String cacheKey, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.GetParametersAsync(String procName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.CheckParametersAsync(String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.Resolve(Boolean preparing)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteScalarAsync(Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteScalar()\r\n   at MTM_Inventory_Application.Helpers.Helper_Database_Core.ExecuteScalar(String procedureOrSql, Dictionary`2 parameters, Boolean useAsync, CommandType commandType) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application-copilot-fix-9\\Helpers\\Helper_Database_Core.cs:line 137\r\n   at MTM_Inventory_Application.Data.Dao_Part.PartExists(String partNumber, Boolean useAsync) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application-copilot-fix-9\\Data\\Dao_Part.cs:line 142', '', 'PartExists', '', 'JOHNSPC', 'Microsoft Windows NT 10.0.26100.0', '4.6.0.0', '2025-07-06 23:26:31'),
+(169, 'JOHNK', 'Critical', 'MySql.Data.MySqlClient.MySqlException', 'Procedure or function \'md_part_ids_Exists_ByItemNumber\' cannot be found in database \'\' Verify that user \'JOHNK\'@\'172.16.1.104\' has enough privileges to execute', '   at MySql.Data.MySqlClient.ProcedureCache.GetProcDataAsync(MySqlConnection connection, String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.ProcedureCache.AddNewAsync(MySqlConnection connection, String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.ProcedureCache.GetProcedureAsync(MySqlConnection conn, String spName, String cacheKey, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.GetParametersAsync(String procName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.CheckParametersAsync(String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.Resolve(Boolean preparing)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteScalarAsync(Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteScalar()\r\n   at MTM_Inventory_Application.Helpers.Helper_Database_Core.ExecuteScalar(String procedureOrSql, Dictionary`2 parameters, Boolean useAsync, CommandType commandType) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application-copilot-fix-9\\Helpers\\Helper_Database_Core.cs:line 137\r\n   at MTM_Inventory_Application.Data.Dao_Part.PartExists(String partNumber, Boolean useAsync) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application-copilot-fix-9\\Data\\Dao_Part.cs:line 142', '', 'PartExists', '', 'JOHNSPC', 'Microsoft Windows NT 10.0.26100.0', '4.6.0.0', '2025-07-06 23:26:31'),
 (170, 'JOHNK', 'Error', 'System.ArgumentException', 'Parameter \'p_DieLocation\' not found in the collection.', '   at MySql.Data.MySqlClient.MySqlParameterCollection.GetParameterFlexible(String parameterName, Boolean throwOnNotFound)\r\n   at MySql.Data.MySqlClient.StoredProcedure.GetAndFixParameter(String spName, MySqlSchemaRow param, Boolean realAsFloat, MySqlParameter returnParameter)\r\n   at MySql.Data.MySqlClient.StoredProcedure.CheckParametersAsync(String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.Resolve(Boolean preparing)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteNonQueryAsync(Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteNonQuery()\r\n   at MTM_Inventory_Application.Helpers.Helper_Database_Core.ExecuteNonQuery(String procedureOrSql, Dictionary`2 parameters, Boolean useAsync, CommandType commandType) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application-copilot-fix-9\\Helpers\\Helper_Database_Core.cs:line 43\r\n   at MTM_Inventory_Application.Data.Dao_Part.AddPartWithStoredProcedure(String itemNumber, String customer, String description, String issuedBy, String type, Boolean useAsync) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application-copilot-fix-9\\Data\\Dao_Part.cs:line 182', '', 'AddPartWithStoredProcedure', '', 'JOHNSPC', 'Microsoft Windows NT 10.0.26100.0', '4.6.0.0', '2025-07-06 23:26:33'),
-(171, 'JOHNK', 'Critical', 'MySql.Data.MySqlClient.MySqlException', 'Procedure or function \'md_part_ids_Exists_ByItemNumber\' cannot be found in database \'\' Verify that user \'JOHNK\'@\'localhost\' has enough privileges to execute', '   at MySql.Data.MySqlClient.ProcedureCache.GetProcDataAsync(MySqlConnection connection, String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.ProcedureCache.AddNewAsync(MySqlConnection connection, String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.ProcedureCache.GetProcedureAsync(MySqlConnection conn, String spName, String cacheKey, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.GetParametersAsync(String procName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.CheckParametersAsync(String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.Resolve(Boolean preparing)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteScalarAsync(Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteScalar()\r\n   at MTM_Inventory_Application.Helpers.Helper_Database_Core.ExecuteScalar(String procedureOrSql, Dictionary`2 parameters, Boolean useAsync, CommandType commandType) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application-copilot-fix-9\\Helpers\\Helper_Database_Core.cs:line 137\r\n   at MTM_Inventory_Application.Data.Dao_Part.PartExists(String partNumber, Boolean useAsync) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application-copilot-fix-9\\Data\\Dao_Part.cs:line 142', '', 'PartExists', '', 'JOHNSPC', 'Microsoft Windows NT 10.0.26100.0', '4.6.0.0', '2025-07-06 23:27:30'),
+(171, 'JOHNK', 'Critical', 'MySql.Data.MySqlClient.MySqlException', 'Procedure or function \'md_part_ids_Exists_ByItemNumber\' cannot be found in database \'\' Verify that user \'JOHNK\'@\'172.16.1.104\' has enough privileges to execute', '   at MySql.Data.MySqlClient.ProcedureCache.GetProcDataAsync(MySqlConnection connection, String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.ProcedureCache.AddNewAsync(MySqlConnection connection, String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.ProcedureCache.GetProcedureAsync(MySqlConnection conn, String spName, String cacheKey, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.GetParametersAsync(String procName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.CheckParametersAsync(String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.Resolve(Boolean preparing)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteScalarAsync(Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteScalar()\r\n   at MTM_Inventory_Application.Helpers.Helper_Database_Core.ExecuteScalar(String procedureOrSql, Dictionary`2 parameters, Boolean useAsync, CommandType commandType) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application-copilot-fix-9\\Helpers\\Helper_Database_Core.cs:line 137\r\n   at MTM_Inventory_Application.Data.Dao_Part.PartExists(String partNumber, Boolean useAsync) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application-copilot-fix-9\\Data\\Dao_Part.cs:line 142', '', 'PartExists', '', 'JOHNSPC', 'Microsoft Windows NT 10.0.26100.0', '4.6.0.0', '2025-07-06 23:27:30'),
 (172, 'JOHNK', 'Error', 'System.ArgumentException', 'Parameter \'p_DieLocation\' not found in the collection.', '   at MySql.Data.MySqlClient.MySqlParameterCollection.GetParameterFlexible(String parameterName, Boolean throwOnNotFound)\r\n   at MySql.Data.MySqlClient.StoredProcedure.GetAndFixParameter(String spName, MySqlSchemaRow param, Boolean realAsFloat, MySqlParameter returnParameter)\r\n   at MySql.Data.MySqlClient.StoredProcedure.CheckParametersAsync(String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.Resolve(Boolean preparing)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteNonQueryAsync(Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteNonQuery()\r\n   at MTM_Inventory_Application.Helpers.Helper_Database_Core.ExecuteNonQuery(String procedureOrSql, Dictionary`2 parameters, Boolean useAsync, CommandType commandType) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application-copilot-fix-9\\Helpers\\Helper_Database_Core.cs:line 43\r\n   at MTM_Inventory_Application.Data.Dao_Part.AddPartWithStoredProcedure(String itemNumber, String customer, String description, String issuedBy, String type, Boolean useAsync) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application-copilot-fix-9\\Data\\Dao_Part.cs:line 182', '', 'AddPartWithStoredProcedure', '', 'JOHNSPC', 'Microsoft Windows NT 10.0.26100.0', '4.6.0.0', '2025-07-06 23:29:42'),
-(173, 'JOHNK', 'Critical', 'MySql.Data.MySqlClient.MySqlException', 'Procedure or function \'md_part_ids_Exists_ByItemNumber\' cannot be found in database \'\' Verify that user \'JOHNK\'@\'localhost\' has enough privileges to execute', '   at MySql.Data.MySqlClient.ProcedureCache.GetProcDataAsync(MySqlConnection connection, String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.ProcedureCache.AddNewAsync(MySqlConnection connection, String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.ProcedureCache.GetProcedureAsync(MySqlConnection conn, String spName, String cacheKey, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.GetParametersAsync(String procName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.CheckParametersAsync(String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.Resolve(Boolean preparing)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteScalarAsync(Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteScalar()\r\n   at MTM_Inventory_Application.Helpers.Helper_Database_Core.ExecuteScalar(String procedureOrSql, Dictionary`2 parameters, Boolean useAsync, CommandType commandType) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application-copilot-fix-9\\Helpers\\Helper_Database_Core.cs:line 137\r\n   at MTM_Inventory_Application.Data.Dao_Part.PartExists(String partNumber, Boolean useAsync) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application-copilot-fix-9\\Data\\Dao_Part.cs:line 142', '', 'PartExists', '', 'JOHNSPC', 'Microsoft Windows NT 10.0.26100.0', '4.6.0.0', '2025-07-06 23:29:52'),
+(173, 'JOHNK', 'Critical', 'MySql.Data.MySqlClient.MySqlException', 'Procedure or function \'md_part_ids_Exists_ByItemNumber\' cannot be found in database \'\' Verify that user \'JOHNK\'@\'172.16.1.104\' has enough privileges to execute', '   at MySql.Data.MySqlClient.ProcedureCache.GetProcDataAsync(MySqlConnection connection, String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.ProcedureCache.AddNewAsync(MySqlConnection connection, String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.ProcedureCache.GetProcedureAsync(MySqlConnection conn, String spName, String cacheKey, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.GetParametersAsync(String procName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.CheckParametersAsync(String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.Resolve(Boolean preparing)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteScalarAsync(Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteScalar()\r\n   at MTM_Inventory_Application.Helpers.Helper_Database_Core.ExecuteScalar(String procedureOrSql, Dictionary`2 parameters, Boolean useAsync, CommandType commandType) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application-copilot-fix-9\\Helpers\\Helper_Database_Core.cs:line 137\r\n   at MTM_Inventory_Application.Data.Dao_Part.PartExists(String partNumber, Boolean useAsync) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application-copilot-fix-9\\Data\\Dao_Part.cs:line 142', '', 'PartExists', '', 'JOHNSPC', 'Microsoft Windows NT 10.0.26100.0', '4.6.0.0', '2025-07-06 23:29:52'),
 (174, 'JOHNK', 'Error', 'System.ArgumentException', 'Parameter \'p_DieLocation\' not found in the collection.', '   at MySql.Data.MySqlClient.MySqlParameterCollection.GetParameterFlexible(String parameterName, Boolean throwOnNotFound)\r\n   at MySql.Data.MySqlClient.StoredProcedure.GetAndFixParameter(String spName, MySqlSchemaRow param, Boolean realAsFloat, MySqlParameter returnParameter)\r\n   at MySql.Data.MySqlClient.StoredProcedure.CheckParametersAsync(String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.Resolve(Boolean preparing)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteNonQueryAsync(Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteNonQuery()\r\n   at MTM_Inventory_Application.Helpers.Helper_Database_Core.ExecuteNonQuery(String procedureOrSql, Dictionary`2 parameters, Boolean useAsync, CommandType commandType) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application-copilot-fix-9\\Helpers\\Helper_Database_Core.cs:line 43\r\n   at MTM_Inventory_Application.Data.Dao_Part.AddPartWithStoredProcedure(String itemNumber, String customer, String description, String issuedBy, String type, Boolean useAsync) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application-copilot-fix-9\\Data\\Dao_Part.cs:line 182', '', 'AddPartWithStoredProcedure', '', 'JOHNSPC', 'Microsoft Windows NT 10.0.26100.0', '4.6.0.0', '2025-07-06 23:29:55'),
 (175, 'JOHNK', 'Error', 'System.ArgumentException', 'Parameter \'p_DieLocation\' not found in the collection.', '   at MySql.Data.MySqlClient.MySqlParameterCollection.GetParameterFlexible(String parameterName, Boolean throwOnNotFound)\r\n   at MySql.Data.MySqlClient.StoredProcedure.GetAndFixParameter(String spName, MySqlSchemaRow param, Boolean realAsFloat, MySqlParameter returnParameter)\r\n   at MySql.Data.MySqlClient.StoredProcedure.CheckParametersAsync(String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.Resolve(Boolean preparing)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteNonQueryAsync(Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteNonQuery()\r\n   at MTM_Inventory_Application.Helpers.Helper_Database_Core.ExecuteNonQuery(String procedureOrSql, Dictionary`2 parameters, Boolean useAsync, CommandType commandType) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application-copilot-fix-9\\Helpers\\Helper_Database_Core.cs:line 43\r\n   at MTM_Inventory_Application.Data.Dao_Part.AddPartWithStoredProcedure(String itemNumber, String customer, String description, String issuedBy, String type, Boolean useAsync) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application-copilot-fix-9\\Data\\Dao_Part.cs:line 182', '', 'AddPartWithStoredProcedure', '', 'JOHNSPC', 'Microsoft Windows NT 10.0.26100.0', '4.6.0.0', '2025-07-06 23:30:15'),
 (176, 'JOHNK', 'Error', 'System.ApplicationException', 'An error occurred while filling operation combo boxes.', '   at MTM_Inventory_Application.Helpers.Helper_UI_ComboBoxes.FillOperationComboBoxesAsync(ComboBox comboBox) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application-copilot-fix-9\\Helpers\\Helper_UI_ComboBoxes.cs:line 161\r\n   at MTM_Inventory_Application.Controls.MainForm.ControlInventoryTab.Control_InventoryTab_OnStartup_LoadDataComboBoxesAsync() in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application-copilot-fix-9\\Controls\\MainForm\\Control_InventoryTab.cs:line 60', '', 'MainForm_LoadInventoryTabComboBoxesAsync', '', 'JOHNSPC', 'Microsoft Windows NT 10.0.26100.0', '4.6.0.0', '2025-07-06 23:39:54'),
@@ -23643,7 +23643,7 @@ INSERT INTO `log_error` (`ID`, `User`, `Severity`, `ErrorType`, `ErrorMessage`, 
 (248, 'JOHNK', 'Critical', 'MySql.Data.MySqlClient.MySqlException', 'Unknown column \'Type\' in \'field list\'', '   at MySql.Data.MySqlClient.MySqlStream.ReadPacketAsync(Boolean execAsync)\r\n   at MySql.Data.MySqlClient.NativeDriver.GetResultAsync(Int32 affectedRow, Int64 insertedId, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.Driver.GetResultAsync(Int32 statementId, Int32 affectedRows, Int64 insertedId, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.Driver.NextResultAsync(Int32 statementId, Boolean force, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.MySqlDataReader.NextResultAsync(Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlDataReader.NextResultAsync(Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReader()\r\n   at MTM_Inventory_Application.Helpers.Helper_Database_Core.ExecuteDataTable(String procedureOrSql, Dictionary`2 parameters, Boolean useAsync, CommandType commandType) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application\\Helpers\\Helper_Database_Core.cs:line 95\r\n   at MTM_Inventory_Application.Data.Dao_Part.GetPartTypes(Boolean useAsync) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application\\Data\\Dao_Part.cs:line 255', '', 'GetPartTypes', '', 'JOHNSPC', 'Microsoft Windows NT 10.0.26100.0', '4.7.5.0+6cb4dd3e94ed6076bed39ea1124041b4a11b0958', '2025-07-12 20:36:35'),
 (249, 'JOHNK', 'Critical', 'MySql.Data.MySqlClient.MySqlException', 'Unknown column \'Type\' in \'field list\'', '   at MySql.Data.MySqlClient.MySqlStream.ReadPacketAsync(Boolean execAsync)\r\n   at MySql.Data.MySqlClient.NativeDriver.GetResultAsync(Int32 affectedRow, Int64 insertedId, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.Driver.GetResultAsync(Int32 statementId, Int32 affectedRows, Int64 insertedId, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.Driver.NextResultAsync(Int32 statementId, Boolean force, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.MySqlDataReader.NextResultAsync(Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlDataReader.NextResultAsync(Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReader()\r\n   at MTM_Inventory_Application.Helpers.Helper_Database_Core.ExecuteDataTable(String procedureOrSql, Dictionary`2 parameters, Boolean useAsync, CommandType commandType) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application\\Helpers\\Helper_Database_Core.cs:line 95\r\n   at MTM_Inventory_Application.Data.Dao_Part.GetPartTypes(Boolean useAsync) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application\\Data\\Dao_Part.cs:line 255', '', 'GetPartTypes', '', 'JOHNSPC', 'Microsoft Windows NT 10.0.26100.0', '4.7.5.0+6cb4dd3e94ed6076bed39ea1124041b4a11b0958', '2025-07-12 20:36:35'),
 (250, 'JOHNK', 'Critical', 'MySql.Data.MySqlClient.MySqlException', 'Unknown column \'Issued By\' in \'field list\'', '   at MySql.Data.MySqlClient.MySqlStream.ReadPacketAsync(Boolean execAsync)\r\n   at MySql.Data.MySqlClient.NativeDriver.GetResultAsync(Int32 affectedRow, Int64 insertedId, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.Driver.GetResultAsync(Int32 statementId, Int32 affectedRows, Int64 insertedId, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.Driver.NextResultAsync(Int32 statementId, Boolean force, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.MySqlDataReader.NextResultAsync(Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlDataReader.NextResultAsync(Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteNonQueryAsync(Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteNonQuery()\r\n   at MTM_Inventory_Application.Helpers.Helper_Database_Core.ExecuteNonQuery(String procedureOrSql, Dictionary`2 parameters, Boolean useAsync, CommandType commandType) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application\\Helpers\\Helper_Database_Core.cs:line 43\r\n   at MTM_Inventory_Application.Data.Dao_Part.AddPartWithStoredProcedure(String itemNumber, String customer, String description, String issuedBy, String type, Boolean useAsync) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application\\Data\\Dao_Part.cs:line 182', '', 'AddPartWithStoredProcedure', '', 'JOHNSPC', 'Microsoft Windows NT 10.0.26100.0', '4.7.5.0+6cb4dd3e94ed6076bed39ea1124041b4a11b0958', '2025-07-12 20:38:44'),
-(251, 'JOHNK', 'Critical', 'MySql.Data.MySqlClient.MySqlException', 'Procedure or function \'md_item_types_Delete_ByType\' cannot be found in database \'\' Verify that user \'JOHNK\'@\'localhost\' has enough privileges to execute', '   at MySql.Data.MySqlClient.ProcedureCache.GetProcDataAsync(MySqlConnection connection, String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.ProcedureCache.AddNewAsync(MySqlConnection connection, String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.ProcedureCache.GetProcedureAsync(MySqlConnection conn, String spName, String cacheKey, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.GetParametersAsync(String procName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.CheckParametersAsync(String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteNonQueryAsync(Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteNonQuery()\r\n   at MTM_Inventory_Application.Helpers.Helper_Database_Core.ExecuteNonQuery(String procedureOrSql, Dictionary`2 parameters, Boolean useAsync, CommandType commandType)\r\n   at MTM_Inventory_Application.Data.Dao_ItemType.DeleteItemType(String itemType, Boolean useAsync)', '', 'DeleteItemType', '', 'JOHNSPC', 'Microsoft Windows NT 10.0.26100.0', '4.7.5.0+6cb4dd3e94ed6076bed39ea1124041b4a11b0958', '2025-07-12 21:06:40');
+(251, 'JOHNK', 'Critical', 'MySql.Data.MySqlClient.MySqlException', 'Procedure or function \'md_item_types_Delete_ByType\' cannot be found in database \'\' Verify that user \'JOHNK\'@\'172.16.1.104\' has enough privileges to execute', '   at MySql.Data.MySqlClient.ProcedureCache.GetProcDataAsync(MySqlConnection connection, String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.ProcedureCache.AddNewAsync(MySqlConnection connection, String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.ProcedureCache.GetProcedureAsync(MySqlConnection conn, String spName, String cacheKey, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.GetParametersAsync(String procName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.StoredProcedure.CheckParametersAsync(String spName, Boolean execAsync)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteReaderAsync(CommandBehavior behavior, Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteNonQueryAsync(Boolean execAsync, CancellationToken cancellationToken)\r\n   at MySql.Data.MySqlClient.MySqlCommand.ExecuteNonQuery()\r\n   at MTM_Inventory_Application.Helpers.Helper_Database_Core.ExecuteNonQuery(String procedureOrSql, Dictionary`2 parameters, Boolean useAsync, CommandType commandType)\r\n   at MTM_Inventory_Application.Data.Dao_ItemType.DeleteItemType(String itemType, Boolean useAsync)', '', 'DeleteItemType', '', 'JOHNSPC', 'Microsoft Windows NT 10.0.26100.0', '4.7.5.0+6cb4dd3e94ed6076bed39ea1124041b4a11b0958', '2025-07-12 21:06:40');
 INSERT INTO `log_error` (`ID`, `User`, `Severity`, `ErrorType`, `ErrorMessage`, `StackTrace`, `ModuleName`, `MethodName`, `AdditionalInfo`, `MachineName`, `OSVersion`, `AppVersion`, `ErrorTime`) VALUES
 (252, 'JOHNK', 'Error', 'System.IO.DirectoryNotFoundException', 'Could not find a part of the path \'C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application\\bin\\Debug\\net8.0-windows\\Forms\'.', '   at System.IO.Enumeration.FileSystemEnumerator`1.CreateDirectoryHandle(String path, Boolean ignoreNotFound)\r\n   at System.IO.Enumeration.FileSystemEnumerator`1.Init()\r\n   at System.IO.Enumeration.FileSystemEnumerable`1..ctor(String directory, FindTransform transform, EnumerationOptions options, Boolean isNormalized)\r\n   at System.IO.Enumeration.FileSystemEnumerableFactory.UserFiles(String directory, String expression, EnumerationOptions options)\r\n   at System.IO.Directory.InternalEnumeratePaths(String path, String searchPattern, SearchTarget searchTarget, EnumerationOptions options)\r\n   at System.IO.Directory.GetFiles(String path, String searchPattern, EnumerationOptions enumerationOptions)\r\n   at MTM_Inventory_Application.Controls.SettingsForm.AddPartControl.GenerateDiagramButton_Click(Object sender, EventArgs e) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application\\Controls\\SettingsForm\\AddPartControl.cs:line 199\r\n   at System.Windows.Forms.Button.OnClick(EventArgs e)\r\n   at System.Windows.Forms.Button.OnMouseUp(MouseEventArgs mevent)\r\n   at System.Windows.Forms.Control.WmMouseUp(Message& m, MouseButtons button, Int32 clicks)\r\n   at System.Windows.Forms.Control.WndProc(Message& m)\r\n   at System.Windows.Forms.ButtonBase.WndProc(Message& m)\r\n   at System.Windows.Forms.NativeWindow.Callback(HWND hWnd, MessageId msg, WPARAM wparam, LPARAM lparam)\r\n   at Windows.Win32.PInvoke.DispatchMessage(MSG* lpMsg)\r\n   at System.Windows.Forms.Application.ComponentManager.Microsoft.Office.IMsoComponentManager.FPushMessageLoop(UIntPtr dwComponentID, msoloop uReason, Void* pvLoopData)\r\n   at System.Windows.Forms.Application.ThreadContext.RunMessageLoopInner(msoloop reason, ApplicationContext context)\r\n   at System.Windows.Forms.Application.ThreadContext.RunMessageLoop(msoloop reason, ApplicationContext context)\r\n   at System.Windows.Forms.Form.ShowDialog(IWin32Window owner)\r\n   at MTM_Inventory_Application.Forms.MainForm.MainForm.MainForm_MenuStrip_File_Settings_Click(Object sender, EventArgs e) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application\\Forms\\MainForm\\MainForm.cs:line 456\r\n   at System.Windows.Forms.ToolStripMenuItem.OnClick(EventArgs e)\r\n   at System.Windows.Forms.ToolStripItem.HandleClick(EventArgs e)\r\n   at System.Windows.Forms.ToolStripItem.HandleMouseUp(MouseEventArgs e)\r\n   at System.Windows.Forms.ToolStrip.OnMouseUp(MouseEventArgs mea)\r\n   at System.Windows.Forms.ToolStripDropDown.OnMouseUp(MouseEventArgs mea)\r\n   at System.Windows.Forms.Control.WmMouseUp(Message& m, MouseButtons button, Int32 clicks)\r\n   at System.Windows.Forms.Control.WndProc(Message& m)\r\n   at System.Windows.Forms.ToolStrip.WndProc(Message& m)\r\n   at System.Windows.Forms.NativeWindow.Callback(HWND hWnd, MessageId msg, WPARAM wparam, LPARAM lparam)\r\n   at Windows.Win32.PInvoke.DispatchMessage(MSG* lpMsg)\r\n   at System.Windows.Forms.Application.ComponentManager.Microsoft.Office.IMsoComponentManager.FPushMessageLoop(UIntPtr dwComponentID, msoloop uReason, Void* pvLoopData)\r\n   at System.Windows.Forms.Application.ThreadContext.RunMessageLoopInner(msoloop reason, ApplicationContext context)\r\n   at System.Windows.Forms.Application.ThreadContext.RunMessageLoop(msoloop reason, ApplicationContext context)\r\n   at MTM_Inventory_Application.Program.Main() in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application\\Program.cs:line 33', '', 'Main', '', 'JOHNSPC', 'Microsoft Windows NT 10.0.26100.0', '4.7.5.0+9c2334888fff173ff6c662ec407d6d104026e919', '2025-07-13 10:42:58'),
 (253, 'JOHNK', 'Error', 'System.Reflection.TargetInvocationException', 'Exception has been thrown by the target of an invocation.', '   at System.Reflection.MethodBaseInvoker.InvokeWithOneArg(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)\r\n   at System.Delegate.DynamicInvokeImpl(Object[] args)\r\n   at System.Windows.Forms.Control.InvokeMarshaledCallbackDo(ThreadMethodEntry tme)\r\n   at System.Windows.Forms.Control.InvokeMarshaledCallbackHelper(Object obj)\r\n   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)\r\n--- End of stack trace from previous location ---\r\n   at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)\r\n   at System.Windows.Forms.Control.InvokeMarshaledCallbacks()\r\n   at System.Windows.Forms.Control.WndProc(Message& m)\r\n   at System.Windows.Forms.NativeWindow.Callback(HWND hWnd, MessageId msg, WPARAM wparam, LPARAM lparam)\r\n   at Windows.Win32.PInvoke.DispatchMessage(MSG* lpMsg)\r\n   at System.Windows.Forms.Application.ComponentManager.Microsoft.Office.IMsoComponentManager.FPushMessageLoop(UIntPtr dwComponentID, msoloop uReason, Void* pvLoopData)\r\n   at System.Windows.Forms.Application.ThreadContext.RunMessageLoopInner(msoloop reason, ApplicationContext context)\r\n   at System.Windows.Forms.Application.ThreadContext.RunMessageLoop(msoloop reason, ApplicationContext context)\r\n   at System.Windows.Forms.Form.ShowDialog(IWin32Window owner)\r\n   at MTM_Inventory_Application.Forms.MainForm.MainForm.MainForm_MenuStrip_File_Settings_Click(Object sender, EventArgs e) in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application\\Forms\\MainForm\\MainForm.cs:line 459\r\n   at System.Windows.Forms.ToolStripMenuItem.OnClick(EventArgs e)\r\n   at System.Windows.Forms.ToolStripItem.HandleClick(EventArgs e)\r\n   at System.Windows.Forms.ToolStripItem.HandleMouseUp(MouseEventArgs e)\r\n   at System.Windows.Forms.ToolStrip.OnMouseUp(MouseEventArgs mea)\r\n   at System.Windows.Forms.ToolStripDropDown.OnMouseUp(MouseEventArgs mea)\r\n   at System.Windows.Forms.Control.WmMouseUp(Message& m, MouseButtons button, Int32 clicks)\r\n   at System.Windows.Forms.Control.WndProc(Message& m)\r\n   at System.Windows.Forms.ToolStrip.WndProc(Message& m)\r\n   at System.Windows.Forms.NativeWindow.Callback(HWND hWnd, MessageId msg, WPARAM wparam, LPARAM lparam)\r\n   at Windows.Win32.PInvoke.DispatchMessage(MSG* lpMsg)\r\n   at System.Windows.Forms.Application.ComponentManager.Microsoft.Office.IMsoComponentManager.FPushMessageLoop(UIntPtr dwComponentID, msoloop uReason, Void* pvLoopData)\r\n   at System.Windows.Forms.Application.ThreadContext.RunMessageLoopInner(msoloop reason, ApplicationContext context)\r\n   at System.Windows.Forms.Application.ThreadContext.RunMessageLoop(msoloop reason, ApplicationContext context)\r\n   at MTM_Inventory_Application.Program.Main() in C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application\\Program.cs:line 33', '', 'Main', '', 'JOHNSPC', 'Microsoft Windows NT 10.0.26100.0', '4.7.5.0+a87a632f70552ec7d4f4689cf065b1b8c52f46bd', '2025-07-13 14:37:28'),
@@ -41855,7 +41855,7 @@ INSERT INTO `usr_users` (`ID`, `User`, `Full Name`, `Shift`, `VitsUser`, `Pin`, 
 (64, 'JHERMAN', 'Jamie Herman', 'First', 0, '0000', '0.0.0.0', 'false', 'Default', 9, 'User Name', 'Password', '172.16.1.104', 'mtm_wip_application', '3306'),
 (65, 'DSANCHEZ', 'Daniel Sanchez', 'Third', 0, '0000', '4.6.0.0', 'true', 'Midnight', 9, 'User Name', 'Password', '172.16.1.104', 'mtm_wip_application', '3306'),
 (66, 'TLOHSE', 'Tim Lohse', 'First', 0, '0000', '4.6.0.0', 'false', 'Default', 9, 'User Name', 'Password', '172.16.1.104', 'mtm_wip_application', '3306'),
-(67, 'JOHNK', 'John Koll', 'Swing Shift', 0, '0000', '4.6.0.0', 'true', 'Default', 9, 'JKOLL', 'KOLL', 'localhost', 'mtm_wip_application', '3306'),
+(67, 'JOHNK', 'John Koll', 'Swing Shift', 0, '0000', '4.6.0.0', 'true', 'Default', 9, 'JKOLL', 'KOLL', '172.16.1.104', 'mtm_wip_application', '3306'),
 (68, 'BSTEEVES', 'Becky Steeves', 'First', 0, '1974', '4.6.0.0', 'true', 'Default', 9, 'User Name', 'Password', '172.16.1.104', 'mtm_wip_application', '3306'),
 (69, 'JHALLOCK', 'Jackquelyn Hallock', 'First', 0, '0901', '4.6.0.0', 'true', 'Default', 9, 'User Name', 'Password', '172.16.1.104', 'mtm_wip_application', '3306'),
 (70, 'GGERK', 'Greg Gerk', 'Second', 0, '0000', '4.6.0.0', 'true', 'Default', 9, 'User Name', 'Password', '172.16.1.104', 'mtm_wip_application', '3306'),

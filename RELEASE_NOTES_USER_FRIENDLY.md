@@ -828,21 +828,21 @@ Under the hood, we also made reliability and performance improvements so theme c
 **What's fixed**:
 - **Settings form no longer crashes when opening**: Opening Settings → Database, Theme, or other settings now works reliably for all users in all environments
 - **Fixed database connection switching issue**: The application no longer tries to switch to unreachable servers when loading saved settings (was causing "Unable to connect to MySQL host" errors)
-- **Environment-aware server selection**: In development/test mode, the app stays connected to localhost even if saved settings mention a production server
+- **Environment-aware server selection**: In development/test mode, the app stays connected to 172.16.1.104 even if saved settings mention a production server
 - **Fresh database support**: The application handles empty settings tables gracefully (important for test environments and new installations)
 - **Better error recovery**: If settings can't be loaded, the form displays default values instead of crashing
 
 **Why this broke before**:
 - When opening Settings form, it loaded saved database connection preferences
 - If those preferences contained a production server address (172.16.1.104), the app tried to switch to it
-- In test/development environments running on localhost, this caused connection failures and error spam
+- In test/development environments running on 172.16.1.104, this caused connection failures and error spam
 - Multiple stored procedures failed trying to reach the unreachable production server
 
 **What's better now**:
-- Test/development environments stay connected to localhost regardless of saved settings
+- Test/development environments stay connected to 172.16.1.104 regardless of saved settings
 - Production environments still work normally with saved server preferences
 - Server address changes are validated before being applied
-- First-time users see sensible defaults (localhost in dev, production server in release builds)
+- First-time users see sensible defaults (172.16.1.104 in dev, production server in release builds)
 - Settings form loads instantly even with no saved preferences
 - Makes testing and new installations smoother
 

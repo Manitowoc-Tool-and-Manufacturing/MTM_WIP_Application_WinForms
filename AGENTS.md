@@ -20,7 +20,7 @@
 
 ### Prerequisites
 - .NET 8.0 SDK
-- MySQL Server 5.7.24 (running on localhost:3306)
+- MySQL Server 5.7.24 (running on 172.16.1.104:3306)
 - Visual Studio 2022 or VS Code with C# extension
 
 ### Initial Setup
@@ -44,7 +44,7 @@ dotnet run --project MTM_WIP_Application_Winforms.csproj
 
 ```powershell
 # MAMP MySQL Connection Details:
-# Host: localhost
+# Host: 172.16.1.104
 # Port: 3306
 # Username: root
 # Password: root
@@ -52,32 +52,32 @@ dotnet run --project MTM_WIP_Application_Winforms.csproj
 
 # Connect to MySQL (add to PATH or use full path)
 # Option 1: If mysql is in PATH
-mysql -h localhost -P 3306 -u root -proot
+mysql -h 172.16.1.104 -P 3306 -u root -proot
 
 # Option 2: Using full MAMP path
-& "C:\MAMP\bin\mysql\bin\mysql.exe" -h localhost -P 3306 -u root -proot
+& "C:\MAMP\bin\mysql\bin\mysql.exe" -h 172.16.1.104 -P 3306 -u root -proot
 
 # Connect to production database
-& "C:\MAMP\bin\mysql\bin\mysql.exe" -h localhost -P 3306 -u root -proot mtm_wip_application_winforms
+& "C:\MAMP\bin\mysql\bin\mysql.exe" -h 172.16.1.104 -P 3306 -u root -proot mtm_wip_application_winforms
 
 # Connect to test database
-& "C:\MAMP\bin\mysql\bin\mysql.exe" -h localhost -P 3306 -u root -proot mtm_wip_application_winforms_test
+& "C:\MAMP\bin\mysql\bin\mysql.exe" -h 172.16.1.104 -P 3306 -u root -proot mtm_wip_application_winforms_test
 
 # Show all databases
-& "C:\MAMP\bin\mysql\bin\mysql.exe" -h localhost -P 3306 -u root -proot -e "SHOW DATABASES;"
+& "C:\MAMP\bin\mysql\bin\mysql.exe" -h 172.16.1.104 -P 3306 -u root -proot -e "SHOW DATABASES;"
 
 # Verify production database tables
-& "C:\MAMP\bin\mysql\bin\mysql.exe" -h localhost -P 3306 -u root -proot mtm_wip_application_winforms -e "SHOW TABLES;"
+& "C:\MAMP\bin\mysql\bin\mysql.exe" -h 172.16.1.104 -P 3306 -u root -proot mtm_wip_application_winforms -e "SHOW TABLES;"
 
 # Verify test database tables
-& "C:\MAMP\bin\mysql\bin\mysql.exe" -h localhost -P 3306 -u root -proot mtm_wip_application_winforms_test -e "SHOW TABLES;"
+& "C:\MAMP\bin\mysql\bin\mysql.exe" -h 172.16.1.104 -P 3306 -u root -proot mtm_wip_application_winforms_test -e "SHOW TABLES;"
 
 # Run database schema scripts (from Database/ directory)
 # Schema files located in: Database/CurrentDatabase/
 # Stored procedures in: Database/CurrentStoredProcedures/
 
 # Execute a SQL file
-& "C:\MAMP\bin\mysql\bin\mysql.exe" -h localhost -P 3306 -u root -proot mtm_wip_application_winforms < Database/CurrentDatabase/schema.sql
+& "C:\MAMP\bin\mysql\bin\mysql.exe" -h 172.16.1.104 -P 3306 -u root -proot mtm_wip_application_winforms < Database/CurrentDatabase/schema.sql
 ```
 
 ## Development Workflow
@@ -112,7 +112,7 @@ dotnet run --project MTM_WIP_Application_Winforms.csproj
 ### Environment Configuration
 
 **MAMP MySQL Server Configuration:**
-- **Host**: localhost
+- **Host**: 172.16.1.104
 - **Port**: 3306
 - **Username**: root
 - **Password**: root
@@ -612,8 +612,8 @@ ignore_patterns:
 serena start-mcp-server --context ide --project "C:\Users\johnk\source\repos\MTM_WIP_Application_WinForms"
 
 # Server will:
-# 1. Start on http://localhost:24282 (or next available port)
-# 2. Open dashboard at http://localhost:24282/dashboard/
+# 1. Start on http://172.16.1.104:24282 (or next available port)
+# 2. Open dashboard at http://172.16.1.104:24282/dashboard/
 # 3. Expose 35+ tools via MCP protocol
 # 4. Auto-index C# files in background
 ```
@@ -880,7 +880,7 @@ Serena enables specialized agent workflows for MTM project. Choose profile based
    → Verify parameter mapping
 
 4. Execute SP migration:
-   execute_shell_command('& "C:\\MAMP\\bin\\mysql\\bin\\mysql.exe" -h localhost -P 3306 -u root -proot mtm_wip_application_winforms < Database/UpdatedStoredProcedures/new_sp.sql')
+   execute_shell_command('& "C:\\MAMP\\bin\\mysql\\bin\\mysql.exe" -h 172.16.1.104 -P 3306 -u root -proot mtm_wip_application_winforms < Database/UpdatedStoredProcedures/new_sp.sql')
 ```
 
 **Memories to Load:**

@@ -39,7 +39,7 @@
 - [ ] **Step 4**: Validate installation (count procedures, spot-check 5 critical procedures)
 
 ### 1.3 Validation Requirements (4 items)
-- [ ] **T120 test deployment**: Deploy to `mtm_wip_application_winforms_test` on localhost first
+- [ ] **T120 test deployment**: Deploy to `mtm_wip_application_winforms_test` on 172.16.1.104 first
 - [ ] **T120 integration tests**: Run T108-T111 tests (280 tests) against test database → 100% pass rate
 - [ ] **T120 manual validation**: Test 5 high-priority procedures via DAO calls from Forms
 - [ ] **T121 smoke tests**: 5 critical procedures (inventory add, user auth, transaction log, part search, location get) tested post-production deployment

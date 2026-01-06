@@ -753,7 +753,7 @@ Build PowerShell script that wipes old procedures and installs new ones with saf
     # Environment configuration
     $config = @{
         'Test' = @{
-            Server = 'localhost'
+            Server = '172.16.1.104'
             Database = 'mtm_wip_application_winforms_test'
             Port = 3306
         }

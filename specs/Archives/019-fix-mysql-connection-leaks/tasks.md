@@ -25,14 +25,14 @@ Establish development branch and verify environment is ready for implementation.
 ### Independent Test Criteria
 - Branch `001-fix-mysql-connection-leaks` exists and is checked out
 - Repository builds successfully with no errors
-- MySQL 5.7.24 server is accessible on localhost:3306
+- MySQL 5.7.24 server is accessible on 172.16.1.104:3306
 - Serena MCP server is running (optional but recommended)
 
 ### Tasks
 
 - [x] T001 Create feature branch `001-fix-mysql-connection-leaks` from master
 - [x] T002 [P] Verify .NET 8.0 SDK installed and project builds: `dotnet build MTM_WIP_Application_Winforms.csproj`
-- [ ] T003 [P] Verify MySQL 5.7.24 accessible via: `& "C:\MAMP\bin\mysql\bin\mysql.exe" -h localhost -P 3306 -u root -proot mtm_wip_application_winforms -e "SELECT VERSION();"`
+- [ ] T003 [P] Verify MySQL 5.7.24 accessible via: `& "C:\MAMP\bin\mysql\bin\mysql.exe" -h 172.16.1.104 -P 3306 -u root -proot mtm_wip_application_winforms -e "SELECT VERSION();"`
 - [ ] T004 [P] Run constitution compliance baseline: `.\.specify\scripts\powershell\validate-constitution-compliance.ps1` (expect violations to be fixed)
 
 ---
@@ -194,7 +194,7 @@ Refactor Service_Migration and Service_Analytics to use Helper_Database_StoredPr
 - [x] T063 [P] [US4] Add validation in stored procedure: StartDate < EndDate, date range ≤ 1 year
 - [x] T064 [P] [US4] Create Database/UpdatedStoredProcedures/md_analytics_GetUsersByDateRange.sql with same parameter pattern
 - [x] T065 [P] [US4] Implement md_analytics_GetUsersByDateRange: Query app_transactions grouped by user, return UserID, UserName, ActivityCount, LastActivityDate
-- [x] T066 [P] [US4] Install both stored procedures in MySQL database: `& "C:\MAMP\bin\mysql\bin\mysql.exe" -h localhost -P 3306 -u root -proot mtm_wip_application_winforms < Database/UpdatedStoredProcedures/md_analytics_GetTransactionsByRange.sql`
+- [x] T066 [P] [US4] Install both stored procedures in MySQL database: `& "C:\MAMP\bin\mysql\bin\mysql.exe" -h 172.16.1.104 -P 3306 -u root -proot mtm_wip_application_winforms < Database/UpdatedStoredProcedures/md_analytics_GetTransactionsByRange.sql`
 
 #### Subtask: Refactor Service_Migration to Use ExecuteRawSqlAsync
 
