@@ -1,5 +1,11 @@
 [
   {
+    "Version": "6.7.0",
+    "Date": "December 15, 2025",
+    "Summary": "New Quick User Creation wizard and performance improvements.",
+    "Details": "<h3>Quick User Creation</h3><p><strong>What's new</strong>:</p><ul><li><strong>Streamlined Wizard</strong>: A new, easy-to-use form for adding new users to the system.</li><li><strong>Smart Defaults</strong>: Automatically sets up standard permissions and settings based on user role.</li></ul><h3>Performance & Stability</h3><p><strong>What's new</strong>:</p><ul><li><strong>Background Monitoring</strong>: System health checks now run in the background to prevent screen freezes.</li><li><strong>Smoother Experience</strong>: The application remains responsive even while gathering performance data.</li></ul>"
+  },
+  {
     "Version": "6.6.0",
     "Date": "December 14, 2025",
     "Summary": "New Developer Tools Dashboard, System Health Monitor, and Core Performance Improvements.",

@@ -8,7 +8,8 @@
 
 | Date | Version | Summary | What to do |
 | --- | --- | --- | --- |
-| [Dec 14, 2025](#latest-update---december-14-2025-version-660) | [6.6.0](#latest-update---december-14-2025-version-660) | New Developer Tools Dashboard, System Health Monitor, and Core Performance Improvements. | Check out the new System Health view in the View menu! |
+| [Dec 15, 2025](#latest-update---december-15-2025-version-670) | [6.7.0](#latest-update---december-15-2025-version-670) | New Quick User Creation wizard and performance improvements. | Check out the new User Onboarding tool in Settings! |
+| [Dec 14, 2025](#previous-update---december-14-2025-version-660) | [6.6.0](#previous-update---december-14-2025-version-660) | New Developer Tools Dashboard, System Health Monitor, and Core Performance Improvements. | Check out the new System Health view in the View menu! |
 | [Dec 13, 2025](#previous-update---december-13-2025-version-650) | [6.5.0](#previous-update---december-13-2025-version-650) | Help System with Feedback, Connection Stability, and Performance Improvements. | Check out the new Help menu and enjoy faster startup! |
 | [Dec 08, 2025](#previous-update---december-08-2025-version-641) | [6.4.1](#previous-update---december-08-2025-version-641) | Print Preview sorting and reliability improvements. | Try the new "Sort By" dropdown in Print Preview! |
 | [Dec 06, 2025](#previous-update---december-06-2025-version-640) | [6.4.0](#previous-update---december-06-2025-version-640) | New Infor Visual Dashboard with Receiving Analytics, Inventory Audit, and Die Tool Discovery. | Check out the new Dashboard tab! |
@@ -42,7 +43,38 @@
 
 ---
 
-## Latest Update - December 14, 2025 (Version 6.6.0)
+## Latest Update - December 15, 2025 (Version 6.7.0)
+
+**What Changed**: We've added a new **Quick User Creation** wizard to streamline onboarding, improved **Performance Metrics** reliability, and prepared the database for upcoming email notification features.
+**Do I Need To Do Anything?**: No, but Admins can now use the new "Quick Create" button in User Settings.
+
+---
+
+### 🎯 What This Means For You
+
+#### Quick User Creation
+
+**What's new**:
+- **Streamlined Wizard**: A new, easy-to-use form for adding new users to the system.
+- **Smart Defaults**: Automatically sets up standard permissions and settings based on user role.
+- **Instant Access**: New users can start working immediately with correct configurations.
+
+**Why this helps**:
+- **Faster Onboarding**: Get new employees up and running in seconds, not minutes.
+- **Consistency**: Ensures all users have the correct settings from day one.
+
+#### Performance & Stability
+
+**What's new**:
+- **Background Monitoring**: System health checks now run in the background to prevent screen freezes.
+- **Smoother Experience**: The application remains responsive even while gathering performance data.
+
+**Why this helps**:
+- **No Interruptions**: Check system status without slowing down your work.
+
+---
+
+## Previous Update - December 14, 2025 (Version 6.6.0)
 
 **What Changed**: We've completely overhauled the **Developer Tools** into a unified dashboard, added a new **System Health Monitor** for all users, and modernized the core **Error Handling and Logging** systems for better reliability.
 **Do I Need To Do Anything?**: No, but you can now check "System Health" in the View menu to see your feedback status and system stability.
