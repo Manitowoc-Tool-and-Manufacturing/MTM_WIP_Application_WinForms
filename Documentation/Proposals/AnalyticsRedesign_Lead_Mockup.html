@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Analytics - Lead Mockup (Print)</title>
+    <style>
+        @page { size: Letter; margin: 0.5in; }
+        body { font-family: "Segoe UI", Tahoma, sans-serif; margin: 0; color: #111; }
+        .page { width: 8.5in; height: 11in; box-sizing: border-box; padding: 0.4in; }
+        h1 { font-size: 18px; margin: 0 0 8px 0; }
+        .toolbar { display: flex; gap: 12px; font-size: 12px; align-items: center; margin-bottom: 10px; }
+        .toolbar .spacer { margin-left: auto; }
+        .section { border: 1px solid #bbb; padding: 8px; margin-bottom: 10px; }
+        .section-title { font-weight: 700; font-size: 12px; margin-bottom: 6px; }
+        .cards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+        .card { border: 1px solid #ccc; padding: 6px; text-align: center; }
+        .card .value { font-size: 16px; font-weight: 700; margin-top: 4px; }
+        .chart { border: 1px dashed #888; height: 180px; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #555; }
+        table { width: 100%; border-collapse: collapse; font-size: 11px; }
+        th, td { border-bottom: 1px solid #ddd; padding: 4px; text-align: left; }
+        .note { font-size: 11px; color: #444; }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <h1>Team Analytics</h1>
+        <div class="toolbar">
+            <div>Date: 01/01/2026 - 01/31/2026</div>
+            <div>Scope: Team</div>
+            <div>User: All / Selected</div>
+            <div class="spacer"></div>
+            <div>Refresh</div>
+            <div>Export</div>
+            <div>Print</div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Team Summary</div>
+            <div class="cards">
+                <div class="card">
+                    <div>Total Tx</div>
+                    <div class="value">9,876</div>
+                </div>
+                <div class="card">
+                    <div>Total Qty</div>
+                    <div class="value">654,321</div>
+                </div>
+                <div class="card">
+                    <div>Unique Parts</div>
+                    <div class="value">1,234</div>
+                </div>
+                <div class="card">
+                    <div>Active Days</div>
+                    <div class="value">22</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Team Trends (Daily / Weekly)</div>
+            <div class="chart">LINE CHART AREA (Txn Count or Quantity)</div>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Users (sortable list)</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Total Tx</th>
+                        <th>Total Qty</th>
+                        <th>Unique Parts</th>
+                        <th>Active Days</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>JDOE</td><td>1,234</td><td>98,765</td><td>342</td><td>17</td></tr>
+                    <tr><td>ASMITH</td><td>1,050</td><td>87,111</td><td>298</td><td>16</td></tr>
+                    <tr><td colspan="5" class="note">… (condensed list)</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <div class="section-title">Selected User (summary + recent activity)</div>
+            <div class="cards" style="margin-bottom:6px;">
+                <div class="card"><div>Total Tx</div><div class="value">1,234</div></div>
+                <div class="card"><div>Total Qty</div><div class="value">98,765</div></div>
+                <div class="card"><div>Unique Parts</div><div class="value">342</div></div>
+                <div class="card"><div>Active Days</div><div class="value">17</div></div>
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date/Time</th>
+                        <th>Type</th>
+                        <th>Part</th>
+                        <th>Qty</th>
+                        <th>From</th>
+                        <th>To</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>01/20 07:32</td><td>IN</td><td>ABC123</td><td>10</td><td>—</td><td>A01</td></tr>
+                    <tr><td>01/20 08:14</td><td>OUT</td><td>XYZ555</td><td>4</td><td>B12</td><td>—</td></tr>
+                    <tr><td colspan="6" class="note">… (condensed list)</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
