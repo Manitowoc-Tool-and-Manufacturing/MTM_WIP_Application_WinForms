@@ -16,6 +16,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
     {
         #region Fields
         private readonly IService_VisualDatabase? _visualService;
+        private readonly Enum_VisualDashboardCategory _initialCategory;
         private Control_DieToolDiscovery? _controlDieToolDiscovery;
         private Control_ReceivingAnalytics? _controlReceivingAnalytics;
         private Control_VisualInventory? _controlVisualInventory;
@@ -31,17 +32,20 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
         /// <summary>
         /// Initializes a new instance of the <see cref="Form_InforVisualDashboard"/> class.
         /// </summary>
-        public Form_InforVisualDashboard()
+        /// <param name="initialCategory">The category to load on startup.</param>
+        public Form_InforVisualDashboard(Enum_VisualDashboardCategory initialCategory = Enum_VisualDashboardCategory.Inventory)
         {
+            _initialCategory = initialCategory;
+
             InitializeComponent();
             InitializeHelpButton();
-            
+
             // Prevent accessing DI container at design time
             if (!DesignMode && System.ComponentModel.LicenseManager.UsageMode != System.ComponentModel.LicenseUsageMode.Designtime)
             {
                 _visualService = Program.ServiceProvider?.GetService<IService_VisualDatabase>();
             }
-            
+
             WireUpEvents();
         }
         #endregion
@@ -232,8 +236,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
                 else
                 {
                     ApplyPrivileges();
-                    // Load default category
-                    await LoadCategoryDataAsync(Enum_VisualDashboardCategory.Inventory);
+                    await LoadCategoryDataAsync(_initialCategory);
                 }
             }
             catch (Exception ex)

@@ -438,9 +438,8 @@ using MTM_WIP_Application_Winforms.Services.ErrorHandling;
                 }
 #endif
 
-                var visualForm = new Forms.Visual.Form_InforVisualDashboard();
+                var visualForm = new Forms.Visual.Form_InforVisualDashboard(category);
                 visualForm.Show();
-                _ = visualForm.SelectCategoryAsync(category);
             }
             catch (Exception ex)
             {

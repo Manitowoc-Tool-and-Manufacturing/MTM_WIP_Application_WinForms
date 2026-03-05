@@ -77,6 +77,9 @@ namespace MTM_WIP_Application_Winforms.Forms.Shared
             });
             Form_QuickUserCreation_ComboBox_Shift.SelectedIndex = 0;
 
+            // Pre-fill username with current Windows user in uppercase
+            Form_QuickUserCreation_TextBox_UserName.Text = Model_Application_Variables.User.ToUpper();
+
             // Set focus to first name
             Form_QuickUserCreation_TextBox_FirstName.Focus();
 
