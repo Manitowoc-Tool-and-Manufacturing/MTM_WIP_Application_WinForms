@@ -1,416 +1,328 @@
 using System.Data;
-using MTM_WIP_Application_Winforms.Data;
-using MTM_WIP_Application_Winforms.Models;
-using MTM_WIP_Application_Winforms.Services.Logging;
-using Newtonsoft.Json;
 using MTM_WIP_Application_Winforms.Helpers;
+using MTM_WIP_Application_Winforms.Models;
+using MTM_WIP_Application_Winforms.Models.Analytics;
 
 namespace MTM_WIP_Application_Winforms.Services.Analytics
 {
     /// <summary>
-    /// Provides analytics and performance aggregation for transaction history.
+    /// Builds role-aware analytics data from WIP transaction history.
     /// </summary>
     public class Service_Analytics
     {
         #region Fields
-        private const string SqlTransactionsByRange = @"
-            SELECT ID, TransactionType, BatchNumber, PartID, FromLocation, ToLocation,
-                   Operation, Quantity, Notes, User, ItemType, ReceiveDate
-            FROM inv_transaction
-            WHERE ReceiveDate >= @Start AND ReceiveDate <= @End";
-
-        private const string SqlUsers = "SELECT User, `Full Name`, Shift FROM usr_users";
-
-        private const string SqlUserHistory = @"
-            SELECT ID, TransactionType, BatchNumber, PartID, FromLocation, ToLocation,
-                   Operation, Quantity, Notes, User, ItemType, ReceiveDate
-            FROM inv_transaction
-            WHERE User = @User AND ReceiveDate >= @Start AND ReceiveDate <= @End
-            ORDER BY ReceiveDate DESC";
-
-        private const string SqlAllUsers = "SELECT User FROM usr_users ORDER BY User";
-        
-        private readonly Dao_VisualAnalytics _visualDao = new Dao_VisualAnalytics();
+        private const int DATA_WINDOW_DAYS = 365;
+        private const int DEFAULT_RANGE_DAYS = 30;
         #endregion
 
+        #region Properties
+        // Intentionally left blank.
+        #endregion
+
+        #region Constructors
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Service_Analytics"/> class.
+        /// </summary>
+        public Service_Analytics()
+        {
+        }
+        #endregion
 
         #region Methods
         /// <summary>
-        /// Builds team performance statistics for the specified date range.
+        /// Gets the analytics snapshot used by the HTML viewer.
         /// </summary>
-        /// <param name="start">Inclusive start date.</param>
-        /// <param name="end">Inclusive end date.</param>
+        /// <param name="cancellationToken">Cancellation token for the request.</param>
         /// <returns>
-        /// Model_Dao_Result containing a list of <see cref="Model_User_Performance"/>.
+        /// Role-aware analytics snapshot.
         /// Check IsSuccess before accessing Data.
         /// </returns>
-        public async Task<Model_Dao_Result<List<Model_User_Performance>>> GetTeamPerformanceAsync(DateTime start, DateTime end)
+        public async Task<Model_Dao_Result<Model_AnalyticsSnapshot>> GetAnalyticsSnapshotAsync(
+            CancellationToken cancellationToken = default
+        )
         {
-            if (start > end)
-            {
-                return Model_Dao_Result<List<Model_User_Performance>>.Failure("Start date must be earlier than or equal to the end date.");
-            }
-
             try
             {
-                var transactions = new List<Model_Transactions_Core>();
-                var usersTable = new DataTable();
+                cancellationToken.ThrowIfCancellationRequested();
 
-                var parameters = new Dictionary<string, object>
-                {
-                    { "StartDate", start },
-                    { "EndDate", end }
-                };
+                DateTime dataWindowEnd = DateTime.Today;
+                DateTime dataWindowStart = DateTime.Today.AddDays(-(DATA_WINDOW_DAYS - 1));
+                DateTime defaultStartDate = DateTime.Today.AddDays(-(DEFAULT_RANGE_DAYS - 1));
 
-                var transactionsResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
-                    Model_Application_Variables.ConnectionString,
-                    "md_analytics_GetTransactionsByRange", parameters);
-
+                var transactionsResult = await LoadTransactionsAsync(dataWindowStart, dataWindowEnd);
                 if (!transactionsResult.IsSuccess || transactionsResult.Data == null)
                 {
-                    return Model_Dao_Result<List<Model_User_Performance>>.Failure(transactionsResult.ErrorMessage);
+                    return Model_Dao_Result<Model_AnalyticsSnapshot>.Failure(transactionsResult.ErrorMessage);
                 }
 
-                foreach (DataRow row in transactionsResult.Data.Rows)
-                {
-                    transactions.Add(new Model_Transactions_Core
-                    {
-                        ID = Convert.ToInt32(row["ID"]),
-                        TransactionType = Enum.TryParse(row["TransactionType"]?.ToString(), out TransactionType txType) ? txType : TransactionType.IN,
-                        BatchNumber = row["BatchNumber"]?.ToString(),
-                        PartID = row["PartID"]?.ToString(),
-                        FromLocation = row["FromLocation"]?.ToString(),
-                        ToLocation = row["ToLocation"]?.ToString(),
-                        Operation = row["Operation"]?.ToString(),
-                        Quantity = Convert.ToInt32(row["Quantity"]),
-                        Notes = row["Notes"]?.ToString(),
-                        User = row["User"]?.ToString(),
-                        ItemType = row["ItemType"]?.ToString(),
-                        DateTime = Convert.ToDateTime(row["ReceiveDate"])
-                    });
-                }
+                cancellationToken.ThrowIfCancellationRequested();
 
-                var usersResult = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
-                    Model_Application_Variables.ConnectionString,
-                    "md_analytics_GetUsers", null);
-
+                var usersResult = await LoadUsersAsync();
                 if (!usersResult.IsSuccess)
                 {
-                    return Model_Dao_Result<List<Model_User_Performance>>.Failure(usersResult.ErrorMessage);
+                    return Model_Dao_Result<Model_AnalyticsSnapshot>.Failure(usersResult.ErrorMessage);
                 }
 
-                usersTable = usersResult.Data;
+                bool canViewTeam = Model_Application_Variables.UserTypeAdmin
+                    || Model_Application_Variables.UserTypeDeveloper;
 
-                // Fetch Visual Data for Shift Mapping
-                var visualDataResult = await _visualDao.GetSysVisualDataAsync();
-                Dictionary<string, int> visualShifts = new Dictionary<string, int>();
-                if (visualDataResult.IsSuccess && !string.IsNullOrEmpty(visualDataResult.Data?.JsonShiftData))
-                {
-                    try 
-                    {
-                        visualShifts = JsonConvert.DeserializeObject<Dictionary<string, int>>(visualDataResult.Data.JsonShiftData) 
-                                       ?? new Dictionary<string, int>();
-                    }
-                    catch (Exception ex)
-                    {
-                        LoggingUtility.LogApplicationError(ex);
-                    }
-                }
+                string currentUserId = NormalizeUserId(Model_Application_Variables.User);
+                Dictionary<string, string> displayNames = BuildDisplayNames(usersResult.Data);
 
-                var performanceList = new List<Model_User_Performance>();
-                foreach (var group in transactions.Where(t => !string.IsNullOrWhiteSpace(t.User))
-                                                  .GroupBy(t => t.User))
-                {
-                    string userKey = group.Key ?? "Unknown";
-                    DataRow? userRow = usersTable != null ? FindUserRow(usersTable, userKey) : null;
-                    
-                    // Determine Shift from Visual first, then fallback to WIP DB
-                    string shift = "Unknown";
-                    foreach (var visualUser in visualShifts.Keys)
+                var filteredTransactions = transactionsResult.Data
+                    .Where(transaction =>
+                        canViewTeam
+                        || string.Equals(
+                            NormalizeUserId(transaction.User),
+                            currentUserId,
+                            StringComparison.OrdinalIgnoreCase
+                        )
+                    )
+                    .OrderByDescending(transaction => transaction.DateTime)
+                    .ToList();
+
+                var users = filteredTransactions
+                    .Select(transaction => NormalizeUserId(transaction.User))
+                    .Where(userId => !string.IsNullOrWhiteSpace(userId))
+                    .Distinct(StringComparer.OrdinalIgnoreCase)
+                    .Select(userId => new Model_AnalyticsUser
                     {
-                        if (IsUserMatch(visualUser, userKey))
+                        UserId = userId,
+                        DisplayName = ResolveDisplayName(userId, displayNames),
+                    })
+                    .OrderBy(user => user.DisplayName, StringComparer.OrdinalIgnoreCase)
+                    .ToList();
+
+                if (!users.Any(user => string.Equals(user.UserId, currentUserId, StringComparison.OrdinalIgnoreCase)))
+                {
+                    users.Insert(
+                        0,
+                        new Model_AnalyticsUser
                         {
-                            shift = ConvertShiftCodeToString(visualShifts[visualUser]);
-                            break;
+                            UserId = currentUserId,
+                            DisplayName = ResolveDisplayName(currentUserId, displayNames),
                         }
-                    }
-                    
-                    if (shift == "Unknown")
-                    {
-                        shift = userRow?["Shift"]?.ToString() ?? "Unknown";
-                    }
-
-                    string fullName = userRow?["Full Name"]?.ToString() ?? userKey;
-
-                    var stats = AnalyzeUserTransactions(group.ToList(), shift);
-                    stats.UserName = userKey;
-                    stats.FullName = fullName;
-                    stats.Shift = shift;
-
-                    performanceList.Add(stats);
+                    );
                 }
 
-                return Model_Dao_Result<List<Model_User_Performance>>.Success(
-                    performanceList.OrderByDescending(x => x.TotalTransactions).ToList());
-            }
-            catch (Exception ex)
-            {
-                LoggingUtility.LogApplicationError(ex);
-                return Model_Dao_Result<List<Model_User_Performance>>.Failure(ex.Message);
-            }
-        }
-
-        /// <summary>
-        /// Retrieves transaction history for a single user.
-        /// </summary>
-        /// <param name="user">The user identifier to filter by.</param>
-        /// <param name="start">Inclusive start date.</param>
-        /// <param name="end">Inclusive end date.</param>
-        /// <returns>
-        /// Model_Dao_Result containing the user’s transactions.
-        /// Check IsSuccess before accessing Data.
-        /// </returns>
-        public async Task<Model_Dao_Result<List<Model_Transactions_Core>>> GetUserHistoryAsync(string user, DateTime start, DateTime end)
-        {
-            ArgumentException.ThrowIfNullOrWhiteSpace(user);
-
-            try
-            {
-                var transactions = new List<Model_Transactions_Core>();
-                var parameters = new Dictionary<string, object>
+                var snapshot = new Model_AnalyticsSnapshot
                 {
-                    { "User", user },
-                    { "StartDate", start },
-                    { "EndDate", end }
+                    Title = canViewTeam ? "Analytics" : "My Analytics",
+                    CurrentUserId = currentUserId,
+                    CurrentUserDisplayName = ResolveDisplayName(currentUserId, displayNames),
+                    CanViewTeam = canViewTeam,
+                    GeneratedAt = DateTime.Now,
+                    DataWindowStart = dataWindowStart,
+                    DataWindowEnd = dataWindowEnd,
+                    DefaultStartDate = defaultStartDate,
+                    DefaultEndDate = dataWindowEnd,
+                    Users = users,
+                    Transactions = filteredTransactions
+                        .Select(transaction => MapTransaction(transaction, displayNames))
+                        .ToList(),
+                    Glossary = BuildGlossary(),
                 };
 
-                var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
-                    Model_Application_Variables.ConnectionString,
-                    "md_analytics_GetUserHistory", parameters);
-
-                if (!result.IsSuccess)
-                {
-                    return Model_Dao_Result<List<Model_Transactions_Core>>.Failure(result.ErrorMessage);
-                }
-
-                if (result.Data == null)
-                {
-                    return Model_Dao_Result<List<Model_Transactions_Core>>.Failure("No data returned from database.");
-                }
-
-                foreach (DataRow row in result.Data.Rows)
-                {
-                    string txTypeStr = row["TransactionType"]?.ToString() ?? nameof(TransactionType.IN);
-                    _ = Enum.TryParse(txTypeStr, out TransactionType txType);
-
-                    transactions.Add(new Model_Transactions_Core
-                    {
-                        ID = Convert.ToInt32(row["ID"]),
-                        TransactionType = txType,
-                        BatchNumber = row["BatchNumber"]?.ToString(),
-                        PartID = row["PartID"]?.ToString(),
-                        FromLocation = row["FromLocation"]?.ToString(),
-                        ToLocation = row["ToLocation"]?.ToString(),
-                        Operation = row["Operation"]?.ToString(),
-                        Quantity = Convert.ToInt32(row["Quantity"]),
-                        Notes = row["Notes"]?.ToString(),
-                        User = row["User"]?.ToString(),
-                        ItemType = row["ItemType"]?.ToString(),
-                        DateTime = Convert.ToDateTime(row["ReceiveDate"])
-                    });
-                }
-
-                return Model_Dao_Result<List<Model_Transactions_Core>>.Success(transactions);
+                return Model_Dao_Result<Model_AnalyticsSnapshot>.Success(snapshot);
+            }
+            catch (OperationCanceledException)
+            {
+                throw;
             }
             catch (Exception ex)
             {
-                LoggingUtility.LogApplicationError(ex);
-                return Model_Dao_Result<List<Model_Transactions_Core>>.Failure(ex.Message);
+                return Model_Dao_Result<Model_AnalyticsSnapshot>.Failure(
+                    $"Failed to build analytics snapshot. {ex.Message}",
+                    ex
+                );
             }
         }
+        #endregion
 
-        /// <summary>
-        /// Retrieves all user names for selection lists.
-        /// </summary>
-        /// <returns>
-        /// Model_Dao_Result containing user names.
-        /// Check IsSuccess before accessing Data.
-        /// </returns>
-        public async Task<Model_Dao_Result<List<string>>> GetAllUserNamesAsync()
-        {
-            try
-            {
-                var users = new List<string>();
-                var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
-                    Model_Application_Variables.ConnectionString,
-                    "md_analytics_GetAllUsers", null);
-
-                if (!result.IsSuccess || result.Data == null)
-                {
-                    return Model_Dao_Result<List<string>>.Failure(result.ErrorMessage);
-                }
-
-                foreach (DataRow row in result.Data.Rows)
-                {
-                    var value = row["User"]?.ToString();
-                    if (!string.IsNullOrWhiteSpace(value))
-                    {
-                        users.Add(value);
-                    }
-                }
-
-                return Model_Dao_Result<List<string>>.Success(users);
-            }
-            catch (Exception ex)
-            {
-                LoggingUtility.LogApplicationError(ex);
-                return Model_Dao_Result<List<string>>.Failure(ex.Message);
-            }
-        }
+        #region Events
+        // Intentionally left blank.
         #endregion
 
         #region Helpers
-        private static DataRow? FindUserRow(DataTable usersTable, string userName)
+        private static List<Model_AnalyticsGlossaryItem> BuildGlossary()
         {
+            return new List<Model_AnalyticsGlossaryItem>
+            {
+                new()
+                {
+                    Key = "Total Transactions",
+                    Definition = "Every recorded inventory movement in the selected date range.",
+                },
+                new()
+                {
+                    Key = "Total Quantity Moved",
+                    Definition = "The sum of quantities moved across the selected transactions.",
+                },
+                new()
+                {
+                    Key = "Unique Parts Handled",
+                    Definition = "Distinct part numbers touched during the selected range.",
+                },
+                new()
+                {
+                    Key = "Active Days",
+                    Definition = "Calendar days with at least one recorded transaction.",
+                },
+            };
+        }
+
+        private static Dictionary<string, string> BuildDisplayNames(DataTable? usersTable)
+        {
+            var displayNames = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
+            if (usersTable == null)
+            {
+                return displayNames;
+            }
+
             foreach (DataRow row in usersTable.Rows)
             {
-                if (row["User"]?.ToString()?.Equals(userName, StringComparison.OrdinalIgnoreCase) == true)
+                string userId = NormalizeUserId(row["User"]?.ToString());
+                if (string.IsNullOrWhiteSpace(userId))
                 {
-                    return row;
+                    continue;
                 }
+
+                string fullName = row["Full Name"]?.ToString()?.Trim() ?? string.Empty;
+                displayNames[userId] = string.IsNullOrWhiteSpace(fullName)
+                    ? userId
+                    : $"{fullName} ({userId})";
             }
 
-            return null;
+            return displayNames;
         }
 
-        private bool IsUserMatch(string visualUser, string wipUser)
+        private static string GetActivityLabel(Model_Transactions_Core transaction)
         {
-            if (string.IsNullOrEmpty(visualUser) || visualUser.Length < 5) return false;
-            
-            char firstInitial = visualUser[0];
-            string lastPart = visualUser.Substring(1); // First 4 of last name (assuming 5 chars total)
-            
-            // Check if WIP User starts with First Initial AND contains Last Part
-            // Example: MSAMZ (Visual) vs MIKESAMZ (WIP)
-            // M matches M
-            // SAMZ is in MIKESAMZ
-            
-            return wipUser.StartsWith(firstInitial.ToString(), StringComparison.OrdinalIgnoreCase) &&
-                   wipUser.IndexOf(lastPart, StringComparison.OrdinalIgnoreCase) >= 0;
-        }
-
-        private string ConvertShiftCodeToString(int shiftCode)
-        {
-            return shiftCode switch
+            if (!string.IsNullOrWhiteSpace(transaction.Notes)
+                && transaction.Notes.Contains("Excel Import", StringComparison.OrdinalIgnoreCase))
             {
-                1 => "First",
-                2 => "Second",
-                3 => "Third",
-                4 => "Weekend",
-                _ => "Unknown"
+                return "Advanced Inventory";
+            }
+
+            if (string.Equals(transaction.Operation, "AdvancedSearch", StringComparison.OrdinalIgnoreCase)
+                || (!string.IsNullOrWhiteSpace(transaction.Notes)
+                    && transaction.Notes.Contains("Advanced Remove", StringComparison.OrdinalIgnoreCase)))
+            {
+                return "Advanced Remove";
+            }
+
+            return transaction.TransactionType switch
+            {
+                TransactionType.IN => "Inventory",
+                TransactionType.OUT => "Remove",
+                TransactionType.TRANSFER => "Transfer",
+                _ => transaction.TransactionType.ToString(),
             };
         }
 
-        /// <summary>
-        /// Analyzes transaction activity for a single user and shift.
-        /// </summary>
-        private Model_User_Performance AnalyzeUserTransactions(List<Model_Transactions_Core> transactions, string shift)
+        private async Task<Model_Dao_Result<List<Model_Transactions_Core>>> LoadTransactionsAsync(
+            DateTime startDate,
+            DateTime endDate
+        )
         {
-            var stats = new Model_User_Performance
+            var parameters = new Dictionary<string, object>
             {
-                TotalTransactions = transactions.Count,
-                UniqueParts = transactions.Select(t => t.PartID).Distinct().Count(),
-                TotalQuantity = transactions.Sum(t => t.Quantity)
+                ["StartDate"] = startDate,
+                ["EndDate"] = endDate.AddDays(1).AddTicks(-1),
             };
 
-            // Sort by time for sequence analysis
-            var sorted = transactions.OrderBy(t => t.DateTime).ToList();
+            var result = await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
+                Model_Application_Variables.ConnectionString,
+                "md_analytics_GetTransactionsByRange",
+                parameters
+            );
 
-            // 1. Rapid Fire (Potential blind entry or rushing)
-            // Threshold: < 10 seconds between transactions AND Same Part
-            // EXCLUDE: < 2 seconds (System generated bulk operations like Advanced Inventory or Bulk Remove)
-            //          Also excludes "Lag Spike Bursts" where a user's buffered keystrokes (due to RDP/Cloud lag) 
-            //          arrive at the server all at once, resulting in near-instantaneous DB timestamps.
-            for (int i = 1; i < sorted.Count; i++)
+            if (!result.IsSuccess || result.Data == null)
             {
-                var diff = sorted[i].DateTime - sorted[i - 1].DateTime;
-                // Must be at least 2 seconds apart (human typing speed) but less than 10 seconds (rushing)
-                if (diff.TotalSeconds >= 2.0 && diff.TotalSeconds < 10.0 && sorted[i].PartID == sorted[i - 1].PartID)
-                {
-                    stats.RapidFireCount++;
-                }
+                return Model_Dao_Result<List<Model_Transactions_Core>>.Failure(result.ErrorMessage);
             }
 
-            // 2. Ping Pong (Moving A->B, then B->A shortly after)
-            // Threshold: Same Part, Reverse Locations, within 20 mins
-            for (int i = 0; i < sorted.Count; i++)
+            var transactions = new List<Model_Transactions_Core>();
+            foreach (DataRow row in result.Data.Rows)
             {
-                var t1 = sorted[i];
-                // Look ahead
-                for (int j = i + 1; j < sorted.Count; j++)
-                {
-                    var t2 = sorted[j];
-                    if ((t2.DateTime - t1.DateTime).TotalMinutes > 20) break; // Stop looking if too far apart
+                _ = Enum.TryParse(row["TransactionType"]?.ToString(), out TransactionType transactionType);
 
-                    if (t1.PartID == t2.PartID && 
-                        t1.ToLocation == t2.FromLocation && 
-                        t1.FromLocation == t2.ToLocation)
+                transactions.Add(
+                    new Model_Transactions_Core
                     {
-                        stats.PingPongCount++;
-                        // Skip to avoid double counting pairs
-                        break; 
+                        ID = Convert.ToInt32(row["ID"]),
+                        TransactionType = transactionType,
+                        BatchNumber = row["BatchNumber"]?.ToString(),
+                        PartID = row["PartID"]?.ToString(),
+                        FromLocation = row["FromLocation"]?.ToString(),
+                        ToLocation = row["ToLocation"]?.ToString(),
+                        Operation = row["Operation"]?.ToString(),
+                        Quantity = row["Quantity"] == DBNull.Value ? 0 : Convert.ToInt32(row["Quantity"]),
+                        Notes = row["Notes"]?.ToString(),
+                        User = row["User"]?.ToString(),
+                        ItemType = row["ItemType"]?.ToString(),
+                        DateTime = Convert.ToDateTime(row["ReceiveDate"]),
                     }
-                }
+                );
             }
 
-            // 3. Shift Adherence (Transactions outside shift hours)
-            // First: 6am-2pm, Second: 2pm-10pm, Third: 10pm-6am
-            // Weekend: 6am-6pm (Fri-Mon)
-            foreach (var t in sorted)
+            return Model_Dao_Result<List<Model_Transactions_Core>>.Success(transactions);
+        }
+
+        private async Task<Model_Dao_Result<DataTable>> LoadUsersAsync()
+        {
+            return await Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync(
+                Model_Application_Variables.ConnectionString,
+                "md_analytics_GetUsers",
+                null
+            );
+        }
+
+        private static Model_AnalyticsTransaction MapTransaction(
+            Model_Transactions_Core transaction,
+            IReadOnlyDictionary<string, string> displayNames
+        )
+        {
+            string userId = NormalizeUserId(transaction.User);
+
+            return new Model_AnalyticsTransaction
             {
-                int hour = t.DateTime.Hour;
-                DayOfWeek day = t.DateTime.DayOfWeek;
-                bool isOutside = false;
-                
-                // Allow 1 hour buffer before/after shift
-                switch (shift.ToLower())
-                {
-                    case "first":
-                        // 06:00 - 14:00 (Buffer 05:00 - 15:00)
-                        if (hour < 5 || hour >= 15) isOutside = true;
-                        break;
-                    case "second":
-                        // 14:00 - 22:00 (Buffer 13:00 - 23:00)
-                        if (hour < 13 || hour >= 23) isOutside = true;
-                        break;
-                    case "third":
-                        // 22:00 - 06:00 (Buffer 21:00 - 07:00)
-                        // Crosses midnight: Valid if hour >= 21 OR hour < 7
-                        if (!(hour >= 21 || hour < 7)) isOutside = true;
-                        break;
-                    case "weekend":
-                        // 06:00 - 18:00 (Buffer 05:00 - 19:00)
-                        // Days: Fri, Sat, Sun, Mon
-                        bool isWeekendDay = day == DayOfWeek.Friday || day == DayOfWeek.Saturday || 
-                                          day == DayOfWeek.Sunday || day == DayOfWeek.Monday;
-                        
-                        if (!isWeekendDay) 
-                        {
-                            isOutside = true;
-                        }
-                        else
-                        {
-                            if (hour < 5 || hour >= 19) isOutside = true;
-                        }
-                        break;
-                }
-                if (isOutside) stats.OutsideShiftCount++;
-            }
+                TransactionId = transaction.ID,
+                UserId = userId,
+                UserDisplayName = ResolveDisplayName(userId, displayNames),
+                ActivityType = GetActivityLabel(transaction),
+                TransactionType = transaction.TransactionType.ToString(),
+                PartId = transaction.PartID ?? string.Empty,
+                Quantity = Math.Abs(transaction.Quantity),
+                FromLocation = transaction.FromLocation,
+                ToLocation = transaction.ToLocation,
+                Operation = transaction.Operation,
+                Notes = transaction.Notes,
+                ItemType = transaction.ItemType,
+                BatchNumber = transaction.BatchNumber,
+                OccurredAt = transaction.DateTime,
+            };
+        }
 
-            return stats;
+        private static string NormalizeUserId(string? userId)
+        {
+            return (userId ?? string.Empty).Trim().ToUpperInvariant();
+        }
+
+        private static string ResolveDisplayName(
+            string userId,
+            IReadOnlyDictionary<string, string> displayNames
+        )
+        {
+            return displayNames.TryGetValue(userId, out string? displayName)
+                ? displayName
+                : userId;
         }
         #endregion
 
+        #region Cleanup / Dispose
+        // Intentionally left blank.
+        #endregion
     }
-
 }

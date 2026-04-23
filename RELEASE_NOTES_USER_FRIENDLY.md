@@ -6,40 +6,40 @@
 
 ## Quick Summary
 
-| Date | Version | Summary | What to do |
-| --- | --- | --- | --- |
-| [Dec 15, 2025](#latest-update---december-15-2025-version-670) | [6.7.0](#latest-update---december-15-2025-version-670) | New Quick User Creation wizard and performance improvements. | Check out the new User Onboarding tool in Settings! |
-| [Dec 14, 2025](#previous-update---december-14-2025-version-660) | [6.6.0](#previous-update---december-14-2025-version-660) | New Developer Tools Dashboard, System Health Monitor, and Core Performance Improvements. | Check out the new System Health view in the View menu! |
-| [Dec 13, 2025](#previous-update---december-13-2025-version-650) | [6.5.0](#previous-update---december-13-2025-version-650) | Help System with Feedback, Connection Stability, and Performance Improvements. | Check out the new Help menu and enjoy faster startup! |
-| [Dec 08, 2025](#previous-update---december-08-2025-version-641) | [6.4.1](#previous-update---december-08-2025-version-641) | Print Preview sorting and reliability improvements. | Try the new "Sort By" dropdown in Print Preview! |
-| [Dec 06, 2025](#previous-update---december-06-2025-version-640) | [6.4.0](#previous-update---december-06-2025-version-640) | New Infor Visual Dashboard with Receiving Analytics, Inventory Audit, and Die Tool Discovery. | Check out the new Dashboard tab! |
-| [Nov 23, 2025](#previous-update---november-23-2025-version-635) | [6.3.5](#previous-update---november-23-2025-version-635) | QuickButtons visual improvements and theme system refinements. | Nothing—enjoy the clearer buttons! |
-| [Nov 23, 2025](#previous-update---november-23-2025-version-634) | [6.3.4](#previous-update---november-23-2025-version-634) | Startup architecture modernization and service refactoring. | Nothing—internal improvements. |
-| [Nov 23, 2025](#previous-update---november-23-2025-version-633) | [6.3.3](#previous-update---november-23-2025-version-633) | System reliability improvements and error report management tools. | Nothing—automatic improvement. |
-| [Nov 22, 2025](#previous-update---november-22-2025-version-632) | [6.3.2](#previous-update---november-22-2025-version-632) | Print dialog improvements: Notes column, collapsible sidebars, and better printer reliability. | Try the new "Add Notes Column" option when printing! |
-| [Nov 20, 2025](#previous-update---november-20-2025-version-631) | [6.3.1](#previous-update---november-20-2025-version-631) | User Management screen updated to match new card interface style. | Nothing—enjoy the consistent look! |
-| [Nov 20, 2025](#previous-update---november-20-2025-version-630) | [6.3.0](#previous-update---november-20-2025-version-630) | Complete redesign of Settings management screens with modern card interface. (User Managment Screens are still the same.) | Check out the new look in Settings! |
-| [Nov 15, 2025](#previous-update---november-15-2025-version-623) | [6.2.3](#previous-update---november-15-2025-version-623) | Search buttons added to all main entry tabs for quick access to full lists. | Nothing—just click 🔎 buttons to access dropdown lists! |
-| [Nov 15, 2025](#previous-update---november-15-2025-version-622) | [6.2.2](#previous-update---november-15-2025-version-622) | Advanced Inventory Entry modernized with smart suggestions and Excel auto-template. | Nothing—faster data entry is ready to use! |
-| [Nov 13, 2025](#previous-update---november-13-2025-version-620) | [6.2.0](#previous-update---november-13-2025-version-620) | Universal suggestions replaced old dropdowns with type-to-search. | Nothing—feature is automatically available. |
-| [Nov 13, 2025](#previous-update---november-13-2025-version-620) | [6.2.0](#previous-update---november-13-2025-version-620) | Smart confirmations now summarize deletions and transfers before you commit. | Review the summary and click Yes to proceed. |
-| [Nov 13, 2025](#previous-update---november-13-2025-version-620) | [6.2.0](#previous-update---november-13-2025-version-620) | Focus highlighting improvements across all tabs. | Notice clearer visual feedback when typing. |
-| [Nov 13, 2025](#previous-update---november-13-2025-version-620) | [6.2.0](#previous-update---november-13-2025-version-620) | Data validation for exact matches when you type and tab. | Type exact codes and tab through—no need to wait for suggestions. |
-| [Nov 12, 2025](#previous-update---november-12-2025-version-610) | [6.1.0](#previous-update---november-12-2025-version-610) | Themes update instantly and reliably across all forms. | Try different themes in Settings before saving. |
-| [Nov 8, 2025](#previous-update---november-8-2025-version-602) | [6.0.2](#previous-update---november-8-2025-version-602) | Theme selection now saves correctly and remembers your choice. | Choose a theme and click Save so it sticks. |
-| [Nov 8, 2025](#previous-update---november-8-2025-version-602) | [6.0.2](#previous-update---november-8-2025-version-602) | QuickButtons list behaves reliably without duplicates. | Right-click to edit or reorder buttons. |
-| [Nov 8, 2025](#previous-update---november-8-2025-version-601) | [6.0.1](#previous-update---november-8-2025-version-601) | QuickButtons now use smart selection controls. | Right-click a QuickButton to edit with confidence. |
-| [Nov 8, 2025](#previous-update---november-8-2025-version-601) | [6.0.1](#previous-update---november-8-2025-version-601) | Duplicates no longer appear in QuickButtons list. | Cleaned up automatically on next restart. |
-| [Nov 8, 2025](#previous-update---november-8-2025-version-600) | [6.0.0](#previous-update---november-8-2025-version-600) | Transaction history got a full redesign with modern layout. | Use the new search filters to find what you need. |
-| [Nov 8, 2025](#previous-update---november-8-2025-version-600) | [6.0.0](#previous-update---november-8-2025-version-600) | Faster searches and analytics cards show real-time statistics. | Check the summary cards above search results. |
-| [Nov 2, 2025](#previous-update---november-2-2025-version-590) | [5.9.0](#previous-update---november-2-2025-version-590) | Settings form now works without crashes. | Open Settings to manage users or parts with confidence. |
-| [Nov 2, 2025](#previous-update---november-2-2025-version-590) | [5.9.0](#previous-update---november-2-2025-version-590) | User and part number management improvements. | Add parts with just Part Number and Item Type. |
-| [Oct 26, 2025](#update---october-26-2025-version-540) | [5.4.0](#update---october-26-2025-version-540) | New error report management system for IT and developers. | IT/Developers: use Development menu to browse reports. |
-| [Oct 26, 2025](#update---october-26-2025-version-530) | [5.3.0](#update---october-26-2025-version-530) | New "Report Issue" button in error messages. | Click "Report Issue" when you see an error to help us fix it faster. |
-| [Oct 25, 2025](#update---october-25-2025-version-532) | [5.3.2](#update---october-25-2025-version-532) | Automatic computer name tracking added to error reports. | Nothing—automatic improvement. |
-| [Oct 25, 2025](#update---october-25-2025-version-531) | [5.3.1](#update---october-25-2025-version-531) | Better display on different monitors and screen scaling. | Click "Restart" when prompted if you move between monitors. |
-| [Oct 25, 2025](#update---october-25-2025-version-531) | [5.3.1](#update---october-25-2025-version-531) | Error dialogs sized correctly on all screens. | Error messages now fit nicely on your screen. |
-| [Oct 17-21, 2025](#update---october-17-21-2025-version-510) | [5.1.0](#update---october-17-21-2025-version-510) | Database layer modernization with improved error handling. | Nothing—internal improvements only. |
+| Date                                                            | Version                                                  | Summary                                                                                                                   | What to do                                                           |
+| --------------------------------------------------------------- | -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
+| [Dec 15, 2025](#latest-update---december-15-2025-version-670)   | [6.7.0](#latest-update---december-15-2025-version-670)   | New Quick User Creation wizard and performance improvements.                                                              | Check out the new User Onboarding tool in Settings!                  |
+| [Dec 14, 2025](#previous-update---december-14-2025-version-660) | [6.6.0](#previous-update---december-14-2025-version-660) | New Developer Tools Dashboard, System Health Monitor, and Core Performance Improvements.                                  | Check out the new System Health view in the View menu!               |
+| [Dec 13, 2025](#previous-update---december-13-2025-version-650) | [6.5.0](#previous-update---december-13-2025-version-650) | Help System with Feedback, Connection Stability, and Performance Improvements.                                            | Check out the new Help menu and enjoy faster startup!                |
+| [Dec 08, 2025](#previous-update---december-08-2025-version-641) | [6.4.1](#previous-update---december-08-2025-version-641) | Print Preview sorting and reliability improvements.                                                                       | Try the new "Sort By" dropdown in Print Preview!                     |
+| [Dec 06, 2025](#previous-update---december-06-2025-version-640) | [6.4.0](#previous-update---december-06-2025-version-640) | New Infor Visual Dashboard with Receiving Analytics, Inventory Audit, and Die Tool Discovery.                             | Check out the new Dashboard tab!                                     |
+| [Nov 23, 2025](#previous-update---november-23-2025-version-635) | [6.3.5](#previous-update---november-23-2025-version-635) | QuickButtons visual improvements and theme system refinements.                                                            | Nothing—enjoy the clearer buttons!                                   |
+| [Nov 23, 2025](#previous-update---november-23-2025-version-634) | [6.3.4](#previous-update---november-23-2025-version-634) | Startup architecture modernization and service refactoring.                                                               | Nothing—internal improvements.                                       |
+| [Nov 23, 2025](#previous-update---november-23-2025-version-633) | [6.3.3](#previous-update---november-23-2025-version-633) | System reliability improvements and error report management tools.                                                        | Nothing—automatic improvement.                                       |
+| [Nov 22, 2025](#previous-update---november-22-2025-version-632) | [6.3.2](#previous-update---november-22-2025-version-632) | Print dialog improvements: Notes column, collapsible sidebars, and better printer reliability.                            | Try the new "Add Notes Column" option when printing!                 |
+| [Nov 20, 2025](#previous-update---november-20-2025-version-631) | [6.3.1](#previous-update---november-20-2025-version-631) | User Management screen updated to match new card interface style.                                                         | Nothing—enjoy the consistent look!                                   |
+| [Nov 20, 2025](#previous-update---november-20-2025-version-630) | [6.3.0](#previous-update---november-20-2025-version-630) | Complete redesign of Settings management screens with modern card interface. (User Managment Screens are still the same.) | Check out the new look in Settings!                                  |
+| [Nov 15, 2025](#previous-update---november-15-2025-version-623) | [6.2.3](#previous-update---november-15-2025-version-623) | Search buttons added to all main entry tabs for quick access to full lists.                                               | Nothing—just click 🔎 buttons to access dropdown lists!              |
+| [Nov 15, 2025](#previous-update---november-15-2025-version-622) | [6.2.2](#previous-update---november-15-2025-version-622) | Advanced Inventory Entry modernized with smart suggestions and Excel auto-template.                                       | Nothing—faster data entry is ready to use!                           |
+| [Nov 13, 2025](#previous-update---november-13-2025-version-620) | [6.2.0](#previous-update---november-13-2025-version-620) | Universal suggestions replaced old dropdowns with type-to-search.                                                         | Nothing—feature is automatically available.                          |
+| [Nov 13, 2025](#previous-update---november-13-2025-version-620) | [6.2.0](#previous-update---november-13-2025-version-620) | Smart confirmations now summarize deletions and transfers before you commit.                                              | Review the summary and click Yes to proceed.                         |
+| [Nov 13, 2025](#previous-update---november-13-2025-version-620) | [6.2.0](#previous-update---november-13-2025-version-620) | Focus highlighting improvements across all tabs.                                                                          | Notice clearer visual feedback when typing.                          |
+| [Nov 13, 2025](#previous-update---november-13-2025-version-620) | [6.2.0](#previous-update---november-13-2025-version-620) | Data validation for exact matches when you type and tab.                                                                  | Type exact codes and tab through—no need to wait for suggestions.    |
+| [Nov 12, 2025](#previous-update---november-12-2025-version-610) | [6.1.0](#previous-update---november-12-2025-version-610) | Themes update instantly and reliably across all forms.                                                                    | Try different themes in Settings before saving.                      |
+| [Nov 8, 2025](#previous-update---november-8-2025-version-602)   | [6.0.2](#previous-update---november-8-2025-version-602)  | Theme selection now saves correctly and remembers your choice.                                                            | Choose a theme and click Save so it sticks.                          |
+| [Nov 8, 2025](#previous-update---november-8-2025-version-602)   | [6.0.2](#previous-update---november-8-2025-version-602)  | QuickButtons list behaves reliably without duplicates.                                                                    | Right-click to edit or reorder buttons.                              |
+| [Nov 8, 2025](#previous-update---november-8-2025-version-601)   | [6.0.1](#previous-update---november-8-2025-version-601)  | QuickButtons now use smart selection controls.                                                                            | Right-click a QuickButton to edit with confidence.                   |
+| [Nov 8, 2025](#previous-update---november-8-2025-version-601)   | [6.0.1](#previous-update---november-8-2025-version-601)  | Duplicates no longer appear in QuickButtons list.                                                                         | Cleaned up automatically on next restart.                            |
+| [Nov 8, 2025](#previous-update---november-8-2025-version-600)   | [6.0.0](#previous-update---november-8-2025-version-600)  | Transaction history got a full redesign with modern layout.                                                               | Use the new search filters to find what you need.                    |
+| [Nov 8, 2025](#previous-update---november-8-2025-version-600)   | [6.0.0](#previous-update---november-8-2025-version-600)  | Faster searches and analytics cards show real-time statistics.                                                            | Check the summary cards above search results.                        |
+| [Nov 2, 2025](#previous-update---november-2-2025-version-590)   | [5.9.0](#previous-update---november-2-2025-version-590)  | Settings form now works without crashes.                                                                                  | Open Settings to manage users or parts with confidence.              |
+| [Nov 2, 2025](#previous-update---november-2-2025-version-590)   | [5.9.0](#previous-update---november-2-2025-version-590)  | User and part number management improvements.                                                                             | Add parts with just Part Number and Item Type.                       |
+| [Oct 26, 2025](#update---october-26-2025-version-540)           | [5.4.0](#update---october-26-2025-version-540)           | New error report management system for IT and developers.                                                                 | IT/Developers: use Development menu to browse reports.               |
+| [Oct 26, 2025](#update---october-26-2025-version-530)           | [5.3.0](#update---october-26-2025-version-530)           | New "Report Issue" button in error messages.                                                                              | Click "Report Issue" when you see an error to help us fix it faster. |
+| [Oct 25, 2025](#update---october-25-2025-version-532)           | [5.3.2](#update---october-25-2025-version-532)           | Automatic computer name tracking added to error reports.                                                                  | Nothing—automatic improvement.                                       |
+| [Oct 25, 2025](#update---october-25-2025-version-531)           | [5.3.1](#update---october-25-2025-version-531)           | Better display on different monitors and screen scaling.                                                                  | Click "Restart" when prompted if you move between monitors.          |
+| [Oct 25, 2025](#update---october-25-2025-version-531)           | [5.3.1](#update---october-25-2025-version-531)           | Error dialogs sized correctly on all screens.                                                                             | Error messages now fit nicely on your screen.                        |
+| [Oct 17-21, 2025](#update---october-17-21-2025-version-510)     | [5.1.0](#update---october-17-21-2025-version-510)        | Database layer modernization with improved error handling.                                                                | Nothing—internal improvements only.                                  |
 
 ---
 
@@ -55,21 +55,25 @@
 #### Quick User Creation
 
 **What's new**:
+
 - **Streamlined Wizard**: A new, easy-to-use form for adding new users to the system.
 - **Smart Defaults**: Automatically sets up standard permissions and settings based on user role.
 - **Instant Access**: New users can start working immediately with correct configurations.
 
 **Why this helps**:
+
 - **Faster Onboarding**: Get new employees up and running in seconds, not minutes.
 - **Consistency**: Ensures all users have the correct settings from day one.
 
 #### Performance & Stability
 
 **What's new**:
+
 - **Background Monitoring**: System health checks now run in the background to prevent screen freezes.
 - **Smoother Experience**: The application remains responsive even while gathering performance data.
 
 **Why this helps**:
+
 - **No Interruptions**: Check system status without slowing down your work.
 
 ---
@@ -86,32 +90,38 @@
 #### System Health Monitor
 
 **What's new**:
+
 - **Health at a Glance**: See if the system is operating normally or experiencing issues with a simple traffic light indicator.
 - **My Feedback**: View the status of all feedback and bug reports you've submitted in one place.
 - **Quick Actions**: Easily submit new feedback or contact IT support directly from the health screen.
 
 **Why this helps**:
+
 - **Transparency**: Know immediately if system slowness is a known issue.
 - **Track Your Requests**: See when your feature requests are "In Progress" or "Resolved" without asking IT.
 
 #### Developer Tools Dashboard (For Admins/Devs)
 
 **What's new**:
+
 - **Unified Hub**: Logs, Feedback, System Info, and Statistics all in one multi-tab interface.
 - **Advanced Log Viewer**: Search, filter, and group logs with powerful new tools.
 - **Real-time Stats**: Monitor error rates and system performance in real-time.
 
 **Why this helps**:
+
 - **Faster Troubleshooting**: Developers can diagnose issues much faster with better tools.
 - **Proactive Maintenance**: We can spot trends and fix problems before they affect you.
 
 #### Core Reliability Improvements
 
 **What's new**:
+
 - **Modern Architecture**: The application's "nervous system" (logging and error handling) has been upgraded to modern standards.
 - **Better Stability**: Reduced chance of crashes and better handling of database hiccups.
 
 **Why this helps**:
+
 - **Smoother Experience**: Fewer interruptions and more reliable daily operation.
 
 ---
@@ -128,12 +138,14 @@
 #### Help System with User Feedback
 
 **What's new**:
+
 - **Built-in Documentation**: Access comprehensive help directly within the application through the Help menu.
 - **Submit Feedback**: Easily submit bug reports, feature suggestions, questions, and inconsistency reports.
 - **Modern Interface**: Clean, searchable help system with categories for all major features.
 - **Quick Support**: Get help without leaving your workflow or opening external documents.
 
 **Why this helps**:
+
 - **Faster Problem Resolution**: Submit issues directly from the application with automatic context included.
 - **Better Training**: New users can learn features without separate training materials.
 - **Your Voice Matters**: Your feedback and suggestions are captured and tracked for future improvements.
@@ -141,23 +153,27 @@
 #### Startup Performance Boost
 
 **What's new**:
+
 - **5.6 Seconds Faster**: Application now starts approximately 5.6 seconds faster than before.
 - **Smoother Animation**: Splash screen to main window transition reduced from 500ms to 50ms.
 - **Instant QuickButtons**: QuickButtons load without visible delay or placeholder flicker.
 
 **Why this helps**:
+
 - **Get to Work Faster**: Less time waiting, more time being productive.
 - **Professional Feel**: Application feels snappy and responsive from the moment you launch it.
 
 #### Connection Stability Improvements
 
 **What's new**:
+
 - **No More "Max Users Reached"**: Comprehensive system prevents database connection exhaustion.
 - **Automatic Monitoring**: Connection statistics tracked every 5 minutes to ensure stability.
 - **50% Faster Transactions**: Optimized database operations for improved speed.
 - **30-Minute Timeout**: Idle connections automatically close to reduce server load.
 
 **Why this helps**:
+
 - **All-Day Reliability**: Run the application for extended periods without connection errors.
 - **Faster Operations**: Inventory transactions process more quickly.
 - **Peak Performance**: Better stability during busy periods when many users are active.
@@ -165,11 +181,13 @@
 #### Enhanced Application Launch
 
 **What's new**:
+
 - **Smart Instance Management**: Only one copy of the application can run at a time.
 - **Window Activation**: Double-clicking the icon brings existing window to front instead of showing error.
 - **Reliable Restarts**: Restarting from Settings now works smoothly without "already running" errors.
 
 **Why this helps**:
+
 - **No Confusion**: Easy to find and return to your open application window.
 - **Data Safety**: Prevents accidental data conflicts from multiple instances.
 - **Smooth Settings Changes**: Apply new settings with reliable restart functionality.
@@ -177,18 +195,21 @@
 #### Visual and UI Improvements
 
 **What's new**:
+
 - **Cleaner Startup**: QuickButtons remain hidden until fully loaded (no flickering).
 - **Better Settings Navigation**: Enhanced layout in Settings form for easier management.
 - **Improved Dashboards**: Visual Dashboard components resize properly on all screen sizes.
 - **Access Indicators**: Clear indication of permission levels when opening restricted forms.
 
 **Why this helps**:
+
 - **Professional Appearance**: Polished, consistent experience throughout the application.
 - **Better Usability**: Easier to navigate and understand what features are available.
 
 #### Bug Fixes
 
 **What's fixed**:
+
 - **QuickButtons Startup Issue**: Fixed buttons disappearing briefly during application startup.
 - **Restart Error**: Fixed "Application Already Running" error when restarting from Settings.
 - **Zombie Process**: Fixed rare issue where application appeared closed but was still running.
@@ -208,6 +229,7 @@
 #### Print Preview Sorting
 
 **What's new**:
+
 - **Sort By Dropdown**: A new dropdown menu in the Print Preview sidebar allows you to sort the report by any visible column.
 - **Smart Sorting**: Sorting applies to the entire report, not just the current page, so your data is always organized exactly how you want it.
 - **Color Preservation**: Row colors (like error highlighting) stay with the correct rows even after sorting.
@@ -215,6 +237,7 @@
 #### Reliability Improvements
 
 **What's fixed**:
+
 - **Large Reports**: Fixed an issue where generating previews for very large reports could cause the application to time out or crash.
 - **Smoother Experience**: The print preview generation is now more robust and handles delays gracefully.
 
@@ -232,6 +255,7 @@
 #### Infor Visual Dashboard
 
 **What's new**:
+
 - **Centralized Hub**: Access all your visual tools and analytics from a single dashboard.
 - **Receiving Analytics**: Track receiving performance, view Purchase Order details, and analyze trends with interactive charts.
 - **Inventory Audit**: Easily audit inventory, search transactions, and export data for reporting.
@@ -239,6 +263,7 @@
 - **User Analytics**: Track material handler performance and quality metrics to improve efficiency.
 
 **Why this helps**:
+
 - **Better Visibility**: Get a clear view of your operations with visual data and analytics.
 - **Faster Access**: Find the tools you need quickly without navigating through multiple menus.
 - **Data-Driven Decisions**: Use the new analytics to make informed decisions about inventory and staffing.
@@ -257,6 +282,7 @@
 #### Clearer QuickButtons
 
 **What's new**:
+
 - **Better Shortcut Display**: Complex hotkeys like "Shift+Alt+F1" now display on multiple lines so they're easier to read.
 - **Detailed Tooltips**: Hover over any QuickButton to see the full Part Number, Operation, Quantity, and Hotkey.
 - **Visual Fixes**: Buttons now look correct regardless of which theme you're using.
@@ -275,6 +301,7 @@
 #### Startup Reliability
 
 **What's new**:
+
 - **Robust Startup Sequence**: The application now checks for database connectivity, user permissions, and system requirements in a strict order before showing the main window.
 - **Better Error Handling**: If something goes wrong during startup, you'll get a clear, helpful error message instead of a crash.
 - **Service Organization**: Internal code has been reorganized for better performance and maintainability.
@@ -293,6 +320,7 @@
 #### System Reliability & Support Tools
 
 **What's new**:
+
 - **Automatic Error Reporting**: When an error occurs, the system now automatically sends a report to IT in the background. You don't need to do anything.
 - **Report Management (For IT)**: The Error Report Viewer now supports deleting reports, making it easier to keep the list clean.
 - **Keyboard Shortcuts**: You can now use the **Delete** key to remove reports in the viewer.
@@ -311,12 +339,14 @@
 #### Better Printing Experience
 
 **What's new**:
+
 - **Add Notes Column**: You can now add a blank "Notes" column to your printouts. This is perfect for writing down corrections or counts while walking the floor.
 - **Collapsible Sidebars**: Need to see more of the preview? You can now collapse the left and right settings panels to maximize the view.
 - **Improved Reliability**: The print dialog no longer freezes if your selected printer is offline. It handles connection issues gracefully.
 - **Smarter Defaults**: If you add a Notes column, the system suggests switching to Landscape mode for better fit.
 
 **Why this helps**:
+
 - **Paper Workflow**: The new Notes column bridges the gap between digital data and physical inventory checks.
 - **Better Visibility**: See your document clearly without settings panels taking up space.
 - **Less Frustration**: No more application freezes when a printer is acting up.
@@ -335,11 +365,13 @@
 #### Consistent User Management
 
 **What's new**:
+
 - **Unified "Manage Users" Link**: The Settings Home page now has a single "Manage Users" link, just like Parts and Locations.
 - **Improved Navigation**: Added a "Home" button to the User Management screen to quickly return to the main Settings menu.
 - **Consistent Behavior**: User Management now works exactly like the other new management screens (Parts, Locations, Operations).
 
 **Why this helps**:
+
 - **Less Confusion**: All settings screens now look and behave the same way.
 - **Easier Navigation**: Move between screens and back to home with fewer clicks.
 
@@ -357,18 +389,21 @@
 #### Modern Settings Management
 
 **What's new**:
+
 - **Unified Management Screens**: We've combined the separate "Add", "Edit", and "Remove" tabs into single, easy-to-use management hubs.
 - **Card-Based Navigation**: Large, clear tiles help you choose exactly what you want to do (Add 🏢, Edit ✏️, or Remove 🗑️).
 - **Consistent Experience**: Managing Parts, Locations, Operations, and Item Types now works exactly the same way.
 - **Smart "Back" Navigation**: Easily return to the main selection screen without losing your place.
 
 **Where to see it**:
+
 - **Settings → Part Numbers**
 - **Settings → Locations**
 - **Settings → Operations**
 - **Settings → Item Types**
 
 **Why this helps**:
+
 - **Less Clutter**: The Settings tree menu is much cleaner (no more long lists of "Add/Edit/Remove" sub-items).
 - **Faster Workflow**: Get in, make your change, and get out with fewer clicks.
 - **Better Feedback**: Improved validation and status messages keep you informed.
@@ -388,26 +423,31 @@
 #### Quick Access Search Buttons on All Tabs
 
 **What's new**:
+
 - **🔎 Search buttons** added next to key fields on Inventory, Transfer, and Remove tabs
 - **Smart behavior**: Buttons adapt based on whether the field has text
 - **Mouse-friendly alternative** to pressing F4 on the keyboard
 - **Consistent across all tabs** - same helpful buttons everywhere
 
 **Where they appear**:
+
 - **Inventory Tab**: Part Number, Operation, Location, Color Code (4 buttons)
 - **Transfer Tab**: Part Number, Operation, To Location (3 buttons)
 - **Remove Tab**: Part Number, Operation (2 buttons)
 
 **How to use them**:
+
 1. **When field is empty**: Click 🔎 button → Opens full dropdown list (same as pressing F4)
 2. **When field has text**: Click 🔎 button → Moves to next field (same as pressing Enter)
 
 **Example workflow**:
+
 1. Need to find a part? Click 🔎 next to Part Number → See all parts in a dropdown
 2. Already know the part? Type it and click 🔎 → Jumps straight to Operation field
 3. Want to browse operations? Click 🔎 next to Operation → See all available operations
 
 **Why this helps**:
+
 - **Less keyboard needed** - mouse users can access dropdowns without touching F4 key
 - **Faster navigation** - one click moves you forward when you're done
 - **Clearer interface** - easy to see where you can get help finding values
@@ -429,6 +469,7 @@
 #### Advanced Inventory Entry Gets Smart Suggestions (Both Tabs)
 
 **What's new**:
+
 - **Type-to-search** now works in Advanced Inventory Entry (both "Single Item" and "Multiple Locations" tabs)
 - **Smart Part/Operation/Location fields** replace the old dropdown menus
 - **🔎 Search buttons** next to each field for quick access to full lists
@@ -436,11 +477,13 @@
 - **Row deletion with confirmation**: Select a preview row and press Delete key to remove it (asks for confirmation first)
 
 **Where it works**:
+
 - **Advanced Inventory Entry → Single Item tab**: Part Number, Operation, Location fields
 - **Advanced Inventory Entry → Multiple Locations tab**: Part Number, Operation, Location fields
 - **Excel Import tab**: Validation against smart suggestion lists
 
 **How to use it**:
+
 1. Click in **Part Number**, **Operation**, or **Location** field
 2. **Start typing** to see matching suggestions instantly
 3. **Or click the 🔎 button** next to any field to see all available options
@@ -449,12 +492,14 @@
 6. **If the field has text**: Clicking 🔎 or F4 moves to the next field (smart behavior!)
 
 **Preview list improvements**:
+
 - **New column layout**: Location (30%) | Part ID with Op (40%) | Quantity (30%)
 - **Operation shown with Part**: Displays as "Part-123 (Op: 90)" for clarity
 - **Delete rows easily**: Click a row and press Delete key (asks "Are you sure?" first)
 - **Columns resize automatically**: Adjust to window size for better readability
 
 **Why this helps**:
+
 - **3-5x faster data entry** - no more scrolling through long dropdown lists
 - **Fewer mistakes** - only valid Parts/Operations/Locations can be selected
 - **Less clicking** - type a few letters instead of hunting through lists
@@ -465,21 +510,25 @@
 #### Excel Import Template Auto-Creation
 
 **What's new**:
+
 - **Excel template created automatically** when you open Advanced Inventory Entry
 - **No more "file not found" errors** when trying to import
 - **Ready-to-use structure** with proper column headers (Part, Operation, Location, Quantity, Notes)
 - **Professional formatting** - header row is bold with gray background
 
 **Where it works**:
+
 - **Advanced Inventory Entry → Import from Excel tab**
 
 **How to use it**:
+
 1. Open Advanced Inventory Entry (nothing to do - file is created automatically!)
 2. Click "Open Excel" to edit your import file
 3. File is located in your user folder under WIP App Excel Files
 4. Add your data and click "Import Excel"
 
 **Why this helps**:
+
 - **No setup required** - template is ready the first time you use it
 - **Consistent format** - everyone uses the same column structure
 - **Fewer errors** - proper headers prevent import mistakes
@@ -489,12 +538,11 @@
 #### Better Error Messages
 
 **What's fixed**:
+
 - **"No data found in Excel"** now shows a simple message box instead of error report
 - **Excel import validation** updated to work with smart suggestion lists (no more crashes)
 
 ---
-
-
 
 ## Previous Update - November 13, 2025 (Version 6.2.0)
 
@@ -504,6 +552,7 @@
 #### Intelligent Part Number, Operation, and Location Entry
 
 **What's new**:
+
 - **Type to find**: Start typing in Part Number, Operation, or Location and matching options appear instantly
 - **Works the way you type**: Partial matches are supported; keep typing to narrow the list
 - **Keyboard friendly**: Use the arrow keys to move, Enter to select, Escape to cancel
@@ -512,23 +561,26 @@
 - **Consistent formatting**: Entries are cleaned up for a uniform look
 
 **Where it works**:
+
 - **Inventory Tab**: Part Number, Operation, Location fields
-- **Transfer Tab**: Part Number, Operation, To Location fields  
+- **Transfer Tab**: Part Number, Operation, To Location fields
 - **Remove Tab**: Part Number, Operation fields
 - **Quick Button Edit Dialog**: Part Number, Operation fields
 
 **How to use it**:
+
 1. **Start typing** in any field (Part, Operation, or Location)
 2. **Suggestion overlay appears** automatically when you press Tab or leave the field
 3. **Navigate suggestions**:
-   - **Arrow keys**: Move up/down through list
-   - **Home/End**: Jump to first/last suggestion
-   - **Enter**: Select highlighted suggestion
-   - **Escape**: Cancel and keep what you typed
-   - **Double-click**: Select with mouse
+    - **Arrow keys**: Move up/down through list
+    - **Home/End**: Jump to first/last suggestion
+    - **Enter**: Select highlighted suggestion
+    - **Escape**: Cancel and keep what you typed
+    - **Double-click**: Select with mouse
 4. **Refine as you go**: Keep typing to narrow the list until the right choice is highlighted, then press Enter
 
 **What's better now**:
+
 - **3x faster data entry**: No scrolling through 500+ parts to find what you need
 - **Zero typos**: Can't save invalid Part IDs, Operations, or Locations
 - **Consistent formatting**: Everything uppercase automatically
@@ -537,12 +589,14 @@
 - **Exact match handling**: If you type a complete exact match and tab away, it's automatically accepted
 
 **Examples**:
+
 - **Inventory Tab - Part field**: Type "R-" → Shows all R- parts → Arrow down 3 times → Enter → Part selected
 - **Transfer Tab - Location**: Type "DD" → Shows DD-A1-01, DD-A1-02, DD-B2-05 → Click DD-B2-05
 - **Remove Tab - Operation**: Type "10" → Shows 10, 100, 101, 1000 → Down arrow → Enter → "100" selected
 - **Wildcard search**: Type "%-A1-%" → Shows all locations containing "-A1-" (DD-A1-01, DD-A1-02, EX-A1-01)
 
 **Why this helps**:
+
 - **Save time**: Find parts in seconds instead of minutes
 - **Reduce errors**: System validates entries against master data
 - **Better ergonomics**: Full keyboard control for power users
@@ -554,6 +608,7 @@
 #### Smart Deletion and Transfer Confirmation
 
 **What's new**:
+
 - **Confirmation before any deletion or transfer**: System asks for confirmation before making changes to inventory
 - **Smart grouping for multiple items**: When deleting or transferring 10+ items, system groups by Part ID to prevent message flooding
 - **Clear summary**: See exactly what will be deleted or transferred before it happens
@@ -562,6 +617,7 @@
 **Deletion Confirmations (Remove Tab & Advanced Remove)**:
 
 **Single item deletion**:
+
 ```
 Are you sure you want to delete this item?
 
@@ -571,17 +627,19 @@ Quantity: 16
 ```
 
 **Multiple items deletion** (prevents spam):
+
 ```
 Are you sure you want to delete 15 items?
 
 PartID: 0K2142, Location(s): 5, Quantity: 80
-PartID: R-123-01, Location(s): 3, Quantity: 45  
+PartID: R-123-01, Location(s): 3, Quantity: 45
 PartID: X-456-02, Location(s): 7, Quantity: 120
 ```
 
 **Transfer Confirmations (Transfer Tab)**:
 
 **Single item transfer**:
+
 ```
 Are you sure you want to transfer this item?
 
@@ -593,6 +651,7 @@ Quantity: 16
 ```
 
 **Multiple items transfer** (grouped summary):
+
 ```
 Are you sure you want to transfer 8 items to DD-B2-05?
 
@@ -602,6 +661,7 @@ PartID: X-456-02, 3 locations, 1 operation, Quantity: 48
 ```
 
 **What's better**:
+
 - **Prevents accidents**: Can't accidentally delete or transfer without confirmation
 - **Clear feedback**: See exactly what's about to happen before it happens
 - **No message spam**: Groups items intelligently when selecting many rows
@@ -609,6 +669,7 @@ PartID: X-456-02, 3 locations, 1 operation, Quantity: 48
 - **Operation awareness**: Transfer confirmations show when multiple operations are involved
 
 **Why this helps**:
+
 - **Safety**: Prevents accidental deletion of large batches
 - **Clarity**: Know exactly what you're about to do before doing it
 - **Less frustration**: No more "oops, I didn't mean to delete that"
@@ -620,11 +681,13 @@ PartID: X-456-02, 3 locations, 1 operation, Quantity: 48
 #### Focus Highlighting Improvements
 
 **What's fixed**:
+
 - **Transfer Tab Location field**: Focus highlighting now works on the To Location field (was skipped because field started disabled)
 - **Consistent highlighting**: All text input fields now highlight properly when focused across all tabs
 - **Automatic re-application**: Focus highlighting applies after privilege changes (when fields are enabled/disabled)
 
 **Why this matters**:
+
 - **Better visual feedback**: Always clear which field has focus
 - **Improved accessibility**: Easier to see where you're typing, especially for keyboard-only users
 - **Consistent experience**: All tabs behave the same way
@@ -634,16 +697,19 @@ PartID: X-456-02, 3 locations, 1 operation, Quantity: 48
 #### Data Validation for Exact Matches
 
 **What's fixed**:
+
 - **Exact match validation**: When you type an exact Part ID, Operation, or Location and press Tab, the system validates it against master data
 - **Save button activation**: Save button now enables correctly when all fields have valid exact matches (no need to use suggestion overlay)
 - **Helper data loading**: Validation data loads automatically on tab initialization for instant validation
 
 **What's better**:
+
 - **Faster for power users**: If you know the exact code, just type it and tab through - no need to wait for suggestions
 - **Still validates**: Even exact typed values are checked against master data
 - **Save button responds**: Button enables as soon as all required fields have valid data
 
 **Why this helps**:
+
 - **Power user workflow**: Type exact codes without interruption
 - **Error prevention**: System still validates typed entries
 - **Faster data entry**: No forced interaction with suggestion overlay if you don't need it
@@ -662,6 +728,7 @@ PartID: X-456-02, 3 locations, 1 operation, Quantity: 48
 #### Lightning-Fast Theme Changes
 
 **What's new**:
+
 - **Instant theme updates**: Theme changes now apply in under 100 milliseconds (was 300-500ms) - you'll barely see a flicker
 - **Automatic updates everywhere**: When you change your theme, ALL open windows update automatically - no need to close and reopen forms
 - **Live preview**: In Settings → Theme tab, see your theme change in real-time as you select it - no need to click Save to preview
@@ -669,6 +736,7 @@ PartID: X-456-02, 3 locations, 1 operation, Quantity: 48
 - **100% coverage**: Every single control type now themes correctly - buttons, dropdowns, grids, menus, status bars, everything
 
 **What's better now**:
+
 - **No more manual refresh**: Old system required closing and reopening forms to see theme changes - now everything updates instantly
 - **Memory efficient**: New system uses 10% less memory and prevents memory leaks from theme subscriptions
 - **Performance optimized**: Theme application is 3x faster with intelligent control traversal and caching
@@ -678,6 +746,7 @@ PartID: X-456-02, 3 locations, 1 operation, Quantity: 48
 Under the hood, we also made reliability and performance improvements so theme changes stay smooth and responsive.
 
 **What you'll notice**:
+
 - **Change theme once, updates everywhere**: Set your theme in Settings and watch every open window update simultaneously
 - **Preview before saving**: Click through different themes to see how they look before committing
 - **Smoother experience**: No more screen flashing or controls redrawing one at a time
@@ -685,6 +754,7 @@ Under the hood, we also made reliability and performance improvements so theme c
 - **Works first time**: Theme loads correctly when you start the app - no "loading default theme" delays
 
 **How to try it**:
+
 1. Open **Settings** → **Theme** tab
 2. Keep Settings open and also open another form (like Transaction Viewer or Inventory)
 3. Click through different themes in the dropdown
@@ -692,6 +762,7 @@ Under the hood, we also made reliability and performance improvements so theme c
 5. When you find one you like, click **Save** to make it permanent
 
 **Why this helps**:
+
 - **Personalize faster**: Try multiple themes quickly to find what works best for your eyes
 - **Less disruption**: No need to close your work to see theme changes - everything updates live
 - **Better ergonomics**: Instantly switch between high-contrast and low-contrast themes depending on lighting conditions
@@ -700,6 +771,7 @@ Under the hood, we also made reliability and performance improvements so theme c
 #### New Form Base Classes (For Developers)
 
 **Behind the scenes improvements**:
+
 - **ThemedForm base class**: All forms now inherit from this instead of standard Form
 - **ThemedUserControl base class**: All custom controls inherit from this instead of standard UserControl
 - **Automatic subscription**: Forms automatically subscribe to theme changes when created
@@ -707,6 +779,7 @@ Under the hood, we also made reliability and performance improvements so theme c
 - **Designer compatible**: Still works perfectly with Visual Studio Form Designer
 
 **What this means for you**:
+
 - More reliable theme system that "just works"
 - Future theme features will automatically work in all forms
 - Developers can add new forms without worrying about theme integration
@@ -725,22 +798,26 @@ Under the hood, we also made reliability and performance improvements so theme c
 #### Theme Selection Now Saves Properly
 
 **What's fixed**:
+
 - **Your theme choice is remembered**: When you change your theme in Settings, it now saves correctly and persists across application restarts
 - **No more reverting to default**: Fixed issue where theme selection would reset to "Lavender" on next login even after saving a different theme
 - **Settings stored correctly**: Theme choices now save in the right place
 
 **Why this was broken**:
+
 1. The app was saving the choice to the wrong place
 2. The save step wasn’t hooked up correctly in one path
 3. We also improved how the selection is read to prevent rare mix‑ups
 
 **What's better now**:
+
 - **Pick your theme and keep it**: Choose any of the 9 available themes (Arctic, Default, Fire Storm, Glacier, Ice, Lavender, Midnight, Neon, Sunset, Wood) and your choice is saved
 - **Instant application**: Theme applies immediately when you click Save
 - **Works after restart**: Your selected theme loads automatically when you open the app
 - **Error recovery**: If theme settings can't be loaded, the app uses a safe default instead of crashing
 
 **How to change your theme**:
+
 1. Click **Settings** (gear icon in top menu)
 2. Select **Theme** tab
 3. Pick a theme from the dropdown
@@ -748,6 +825,7 @@ Under the hood, we also made reliability and performance improvements so theme c
 5. Your theme applies immediately and is remembered next time you log in
 
 **Available themes**:
+
 - **Arctic** - Cool blue tones
 - **Default** - Standard gray/blue professional look
 - **Fire Storm** - Warm orange/red tones
@@ -775,6 +853,7 @@ Under the hood, we also made reliability and performance improvements so theme c
 #### QuickButtons Are Now 100% Reliable
 
 **What's fixed**:
+
 - **No more duplicate buttons**: Fixed issue where the same part/operation would appear multiple times in your QuickButtons list
 - **Proper display when clicking buttons**: QuickButtons now fill in Part Number and Operation fields correctly with full descriptions (was showing raw codes like "21-28841-006" instead of formatted "21-28841-006 | Customer Name | Description")
 - **Edit dialog with smart dropdowns**: Right‑click Edit now shows dropdowns with type‑to‑search for Part Number and Operation — the same, familiar experience as on the main screen
@@ -783,6 +862,7 @@ Under the hood, we also made reliability and performance improvements so theme c
 - **Better validation**: Edit dialog only accepts valid Part IDs and Operations from your database - prevents typos and invalid data
 
 **Why these were broken**:
+
 1. **Duplicates**: Database cleanup was deleting buttons one-by-one, causing position shifts that let some duplicates survive
 2. **Display issues**: QuickButtons were using old search-by-text method instead of proper value selection for multi-column dropdowns
 3. **Edit not working**: The Edit menu item wasn't connected to its click handler
@@ -790,6 +870,7 @@ Under the hood, we also made reliability and performance improvements so theme c
 5. **No validation**: Old edit dialog used free-text fields allowing invalid Part IDs and Operations
 
 **What's better now**:
+
 - **Clean list**: All duplicates removed automatically on next app restart
 - **Correct data entry**: Clicking a QuickButton fills all fields properly formatted
 - **Professional edit dialog**: ComboBoxes with autocomplete, data validation, and loading status feedback
@@ -798,6 +879,7 @@ Under the hood, we also made reliability and performance improvements so theme c
 - **Error prevention**: Can't enter invalid Part IDs or Operations - system validates your choices
 
 **How to edit QuickButtons**:
+
 1. Right-click any QuickButton
 2. Select "Edit" from menu
 3. **Part ID**: Type to search or select from dropdown (autocomplete enabled)
@@ -805,7 +887,8 @@ Under the hood, we also made reliability and performance improvements so theme c
 5. **Quantity**: Adjust using up/down arrows or type directly
 6. Click OK to save (Cancel to discard changes)
 
-**How this helps**: 
+**How this helps**:
+
 - **No more confusion**: Your QuickButtons list shows unique buttons only, no duplicates
 - **Faster data entry**: Fields populate correctly on first click, no manual fixing needed
 - **Easy maintenance**: Edit buttons with same controls as main Inventory tab
@@ -826,6 +909,7 @@ Under the hood, we also made reliability and performance improvements so theme c
 #### Settings Form Now Works for All Users - Was broken during implementation of Stored Procedure fix, finally getting to it now.
 
 **What's fixed**:
+
 - **Settings form no longer crashes when opening**: Opening Settings → Database, Theme, or other settings now works reliably for all users in all environments
 - **Fixed database connection switching issue**: The application no longer tries to switch to unreachable servers when loading saved settings (was causing "Unable to connect to MySQL host" errors)
 - **Environment-aware server selection**: In development/test mode, the app stays connected to 172.16.1.104 even if saved settings mention a production server
@@ -833,12 +917,14 @@ Under the hood, we also made reliability and performance improvements so theme c
 - **Better error recovery**: If settings can't be loaded, the form displays default values instead of crashing
 
 **Why this broke before**:
+
 - When opening Settings form, it loaded saved database connection preferences
 - If those preferences contained a production server address (172.16.1.104), the app tried to switch to it
 - In test/development environments running on 172.16.1.104, this caused connection failures and error spam
 - Multiple stored procedures failed trying to reach the unreachable production server
 
 **What's better now**:
+
 - Test/development environments stay connected to 172.16.1.104 regardless of saved settings
 - Production environments still work normally with saved server preferences
 - Server address changes are validated before being applied
@@ -846,7 +932,8 @@ Under the hood, we also made reliability and performance improvements so theme c
 - Settings form loads instantly even with no saved preferences
 - Makes testing and new installations smoother
 
-**How this helps**: 
+**How this helps**:
+
 - Developers and testers can open Settings form without triggering connection errors
 - New employees, test environments, and fresh database setups work without manual database setup
 - Production users are unaffected - their saved settings work as expected
@@ -857,6 +944,7 @@ Under the hood, we also made reliability and performance improvements so theme c
 #### Easier User Management (For Administrators)
 
 **What's fixed**:
+
 - **Faster user deletion**: Removing users from the system now completes in 2-3 seconds (was freezing at 10%)
 - **Cleaner process**: No more "Customer is required" errors when adding users
 - **Simplified workflow**: System handles all cleanup automatically (user roles, settings, database records)
@@ -866,28 +954,33 @@ Under the hood, we also made reliability and performance improvements so theme c
 #### Simplified Part Number Management
 
 **What's fixed**:
+
 - **Only 2 required fields**: When adding new parts, you only need to enter **Part Number** and **Item Type** (was requiring Customer and Description unnecessarily)
 - **Item Type defaults to "WIP"**: The most common choice is pre-selected for you
 - **Optional fields work properly**: Customer, Description, and other fields can be left blank if not needed
 
 **What's better**:
+
 - **Faster part entry**: Enter new parts in seconds without filling unnecessary fields
 - **Less frustration**: No more "Customer is required" or "Description is required" error messages
 - **Matches your workflow**: Most parts don't need customer or detailed descriptions right away
 
 **How to use**:
+
 1. Click **Settings** → **Part Numbers** → **Add Part Number**
 2. Enter the **Part Number** (e.g., "12345-A")
 3. Select **Item Type** from dropdown (defaults to "WIP" - most common choice)
 4. Click **Save** - That's it!
-5. *Optional*: Fill in Customer, Description if you want to add more details
+5. _Optional_: Fill in Customer, Description if you want to add more details
 
 **Example workflow**:
+
 - Adding a new WIP part: Just type part number and click Save (Item Type already set to WIP)
 - Adding a finished goods part: Type part number, change Item Type to "FG", click Save
 - Adding a purchased part with details: Type part number, select Item Type, fill in Customer and Description, click Save
 
 **Why this helps**:
+
 - **3x faster data entry** - most parts are WIP and don't need extra details
 - **Fewer mistakes** - less typing means fewer typos
 - **Matches how you work** - add basic info fast, update details later if needed
@@ -906,6 +999,7 @@ Under the hood, we also made reliability and performance improvements so theme c
 #### Settings Form Now Works for All Users - Was broken during implementation of Stored Procedure fix, finally getting to it now.
 
 **What's New**:
+
 - **Modern 3-panel layout**: Search filters at top, results grid on left, transaction details on right - see everything at once
 - **Lightning fast searches**: Find transactions in under 2 seconds, even when searching 90 days of history with thousands of records
 - **Advanced filtering**: Search by Part Number, User, From Location, To Location, Operation, Date Range, Transaction Type (IN/OUT/TRANSFER), and Notes keywords
@@ -915,38 +1009,41 @@ Under the hood, we also made reliability and performance improvements so theme c
 - **Configurable page size**: Default 50 transactions per page (adjustable in settings)
 
 **How to use**:
+
 1. Click **Transactions** tab from main menu (same location as before)
 2. **Fill in search filters** at the top (all filters are optional - use what you need):
-   - **Part Number**: Dropdown with autocomplete (type to search your parts)
-   - **User**: Select any user (admins see all users, regular users see only themselves)
-   - **From Location**: Where the inventory came from
-   - **To Location**: Where the inventory went to
-   - **Operation**: Manufacturing step (90, 100, 110, 120, 130, etc.)
-   - **Transaction Type**: Check IN, OUT, or TRANSFER (or all three)
-   - **Date Range**: Quick buttons (Today/This Week/This Month) or custom From/To dates
-   - **Notes**: Search for keywords in transaction notes
+    - **Part Number**: Dropdown with autocomplete (type to search your parts)
+    - **User**: Select any user (admins see all users, regular users see only themselves)
+    - **From Location**: Where the inventory came from
+    - **To Location**: Where the inventory went to
+    - **Operation**: Manufacturing step (90, 100, 110, 120, 130, etc.)
+    - **Transaction Type**: Check IN, OUT, or TRANSFER (or all three)
+    - **Date Range**: Quick buttons (Today/This Week/This Month) or custom From/To dates
+    - **Notes**: Search for keywords in transaction notes
 3. Click **Search** button (or press Enter)
 4. **View results** in the grid on left:
-   - Shows: ID, Type, Part Number, Quantity, From→To locations, User, Date/Time
-   - Sort by any column (click column header)
-   - 50 transactions per page
+    - Shows: ID, Type, Part Number, Quantity, From→To locations, User, Date/Time
+    - Sort by any column (click column header)
+    - 50 transactions per page
 5. **Click any row** to see full details on the right:
-   - Complete transaction information
-   - All dates and timestamps
-   - Full notes text
-   - Related batch information
+    - Complete transaction information
+    - All dates and timestamps
+    - Full notes text
+    - Related batch information
 6. **Navigate pages**:
-   - Use **Previous/Next** buttons
-   - Type page number and click **Go** to jump directly
-   - See total record count ("Showing 50 of 1,247 transactions")
+    - Use **Previous/Next** buttons
+    - Type page number and click **Go** to jump directly
+    - See total record count ("Showing 50 of 1,247 transactions")
 
 **Performance Improvements**:
+
 - **3x faster search**: Old interface took 5-8 seconds for large searches, new one completes in under 2 seconds
 - **Instant page navigation**: Switching between pages happens immediately (was 1-2 second delay)
 - **Handles huge datasets**: Search 100,000+ transactions without freezing or slowing down
 - **Responsive grid**: Scrolling and sorting work smoothly even with complex filters
 
 **Why this helps**:
+
 - **Save time**: Find specific transactions in seconds instead of minutes
 - **Less clicking**: Everything visible on one screen - no jumping between windows
 - **Better troubleshooting**: More filter combinations help pinpoint exactly what you're looking for
@@ -956,22 +1053,25 @@ Under the hood, we also made reliability and performance improvements so theme c
 #### Transaction Analytics Summary (NEW!)
 
 **What's New**:
+
 - **Real-time statistics** displayed above the search results
 - **Summary cards** show totals for current date range:
-  - Total Transactions (all types combined)
-  - Total IN transactions (receiving inventory)
-  - Total OUT transactions (removing inventory)
-  - Total TRANSFER transactions (moving between locations)
+    - Total Transactions (all types combined)
+    - Total IN transactions (receiving inventory)
+    - Total OUT transactions (removing inventory)
+    - Total TRANSFER transactions (moving between locations)
 - **Date range indicator**: Shows which period the analytics cover
 - **Updates automatically**: Statistics refresh when you change date filters
 
 **How to use**:
+
 1. Set your date range filters (Today/This Week/This Month/Custom)
 2. Analytics cards update automatically above the search results
 3. See at-a-glance how many transactions of each type occurred
 4. Use to quickly validate daily/weekly activity levels
 
 **Why this helps**:
+
 - **Quick daily review**: See total transactions at a glance each morning
 - **Activity monitoring**: Spot unusually high or low transaction counts
 - **Shift reporting**: Quick summary of what happened during your shift
@@ -980,6 +1080,7 @@ Under the hood, we also made reliability and performance improvements so theme c
 #### Improved Data Display
 
 **What's Better**:
+
 - **Readable column widths**: Part numbers, locations, and dates no longer cut off
 - **Better date formatting**: MM/dd/yy HH:mm format (example: 11/08/25 14:30)
 - **Right-aligned numbers**: Quantities line up properly for easy reading
@@ -988,6 +1089,7 @@ Under the hood, we also made reliability and performance improvements so theme c
 - **Responsive layout**: Works correctly at 100%, 125%, 150%, and 200% screen scaling
 
 **Keyboard Shortcuts** (NEW!):
+
 - **F5**: Refresh/re-run current search
 - **Ctrl+R**: Reset all filters to defaults
 - **Escape**: Clear row selection
@@ -999,6 +1101,7 @@ Under the hood, we also made reliability and performance improvements so theme c
 ### ✨ Coming Soon (Next Release - Week of November 11th)
 
 **Transaction Lifecycle Viewer**:
+
 - See the complete history of a batch from receiving to current location
 - Visual tree showing how inventory splits between locations
 - Track partial transfers (500 units → 250 here + 250 there)
@@ -1006,6 +1109,7 @@ Under the hood, we also made reliability and performance improvements so theme c
 - Click "View Lifecycle" button in detail panel
 
 **Export & Print**:
+
 - Export search results to Excel for offline analysis
 - Print formatted transaction reports
 - PDF export option
@@ -1027,6 +1131,7 @@ Under the hood, we also made reliability and performance improvements so theme c
 #### For IT Support and Developers: Manage User-Reported Issues
 
 **New "View Error Reports" feature** (accessible from Development menu):
+
 - **Browse all error reports** submitted by users in one place
 - **Search and filter** by date, user, machine, or error type
 - **View complete details** including what the user was doing, technical information, and error stack traces
@@ -1034,17 +1139,20 @@ Under the hood, we also made reliability and performance improvements so theme c
 - **Add developer notes** to document your findings and solutions
 
 **Why this helps**:
+
 - **Faster problem resolution**: See all error reports in one organized view instead of checking emails or logs
 - **Better prioritization**: Color-coded status (Red=New, Yellow=In Review, Green=Resolved) helps you focus on urgent issues
 - **Team coordination**: Developer notes prevent duplicate investigation efforts
 - **Pattern detection**: Filter and export tools help identify recurring issues
 
 **How to access**:
+
 1. Click **Development** menu in the main application
 2. Select **View Error Reports**
 3. Use filters to find specific reports or browse the full list
 
 **Status workflow**:
+
 - **New** (Red) → User just submitted, needs investigation
 - **Reviewed** (Yellow) → Developer is investigating or needs more info
 - **Resolved** (Green) → Issue fixed or documented
@@ -1065,6 +1173,7 @@ Under the hood, we also made reliability and performance improvements so theme c
 #### Help Us Fix Problems Faster
 
 **New "Report Issue" button** in error messages:
+
 - When something goes wrong, you'll see a **"Report Issue"** button
 - Click it to tell us what you were doing when the error happened
 - Just type a quick note like "I was trying to transfer part #12345 to location B"
@@ -1075,6 +1184,7 @@ Under the hood, we also made reliability and performance improvements so theme c
 #### Works Even When Network is Down
 
 **Don't worry about losing reports**:
+
 - If the network is down, your report is saved locally
 - When the network comes back, reports are sent automatically
 - You'll never lose a report due to network issues
@@ -1097,16 +1207,19 @@ Under the hood, we also made reliability and performance improvements so theme c
 #### Automatic Computer Name Tracking
 
 **What's new** (added October 25, 2025):
+
 - When you submit an error report, the system now automatically records which computer you're using
 - Shows the actual computer name (like "SHOP-PC-01" or "OFFICE-LAPTOP-05")
 - This happens automatically in the background - you don't need to do anything
 
 **Why this helps**:
+
 - **IT can troubleshoot faster**: If your computer is having issues, IT can see your computer name in the error report
 - **Identify problem machines**: If one computer has repeated issues, IT can swap it out or investigate hardware problems
 - **Better support**: When you call IT for help, they can pull up all error reports from your specific computer
 
 **What you'll see**:
+
 - Nothing different when submitting reports - it still works exactly the same way
 - If IT asks you about an error, they might now say "I see you had this error on SHOP-PC-01" instead of just asking "which computer were you on?"
 
@@ -1126,14 +1239,16 @@ Under the hood, we also made reliability and performance improvements so theme c
 #### Better Display on Different Monitors and Screen Scaling
 
 **If you use multiple monitors**, move your laptop between different displays, **or change your Windows screen scale** (100%, 125%, 150%, 175%, 200%):
+
 - The application now **asks before automatically resizing** when display scaling changes
 - You'll see a clear message like: "Display changed from 100% to 150%"
 - You can choose what happens:
-  - **Restart Now** (recommended) - Cleanest, fastest option - everything looks perfect
-  - **Auto-Resize** - Immediate but windows may look weird temporarily
-  - **Cancel** - Keep using as-is
+    - **Restart Now** (recommended) - Cleanest, fastest option - everything looks perfect
+    - **Auto-Resize** - Immediate but windows may look weird temporarily
+    - **Cancel** - Keep using as-is
 
 **When does this happen?**
+
 - Moving windows between monitors with different scaling settings
 - Docking/undocking your laptop
 - Changing Windows Display Settings → Scale (System > Display > Scale in Windows Settings)
@@ -1155,6 +1270,7 @@ Under the hood, we also made reliability and performance improvements so theme c
 ## ✅ Do I Need To Update?
 
 **Version 6.1.0 (Theme System Overhaul - RELEASED November 12, 2025)**:
+
 - **All users**: Recommended - themes are now faster, smoother, and more reliable
 - **If you frequently change themes**: YES - you'll love the instant live preview and automatic updates
 - **If you use multiple windows/forms**: YES - all windows now update simultaneously when you change themes
@@ -1163,12 +1279,14 @@ Under the hood, we also made reliability and performance improvements so theme c
 - **Office Staff**: Recommended - professional polish and live preview make theme selection much easier
 
 **Version 6.0.2 (Theme Selection Fix - RELEASED)**:
+
 - **All users**: Update when convenient - if you want to change your theme and have it stick, you need this update
 - **If your theme keeps resetting**: YES - this fixes that issue
 - **If you're happy with Lavender theme**: No urgent need - update at your convenience
 - **First-time users**: Recommended - ensures theme selection works from day one
 
 **Version 6.0.1 (QuickButtons Fixes - RELEASED)**:
+
 - **All users who use QuickButtons**: YES - this fixes several annoying bugs that affect daily use
 - **Shop Floor Users**: Strongly recommended - QuickButtons are more reliable and easier to use
 - **If you see duplicate QuickButtons**: YES - this update cleans them up automatically
@@ -1176,25 +1294,30 @@ Under the hood, we also made reliability and performance improvements so theme c
 - **Office Staff**: Update when convenient - QuickButtons improvements make data entry faster
 
 **Version 6.0.0 (Transaction Viewer Redesign - RELEASED)**:
+
 - **All users**: YES - this is a major improvement to one of the most-used features
 - **Shop Floor Users**: Strongly recommended - much faster transaction searches, easier to find what you need
 - **Office Staff**: Strongly recommended - analytics summaries and better filtering make reporting easier
 - **Administrators**: Recommended - can now view all users' transactions with better filtering
 
 **Version 5.9.0 (Settings & User Management Fixes)**:
+
 - **All users**: Update when convenient - fixes Settings form crashes in development environments
 - **Administrators**: Yes - faster user deletion and simplified part number management
 - **Shop Floor Users**: No urgent need unless you access Settings frequently
 
 **Version 5.4.0 (View Error Reports)**:
+
 - **IT Support & Developers**: Yes - this new feature helps you manage and investigate user-reported issues more efficiently
 - **Shop Floor Users**: No - this doesn't change anything you interact with daily
 
 **Version 5.3.1 (Display Fix)**:
+
 - **Most users**: No urgent need - update when convenient
 - **If you use multiple monitors or 4K displays**: Yes - this fixes annoying display issues
 
 **Version 5.3.3 (Error Reporting)**:
+
 - **All users**: Update when convenient - this is a helpful new feature, not a critical fix
 
 ---
@@ -1215,45 +1338,51 @@ Under the hood, we also made reliability and performance improvements so theme c
 #### Modernized Database Architecture
 
 **Major behind-the-scenes overhaul completed**:
+
 - **60+ stored procedures standardized** with consistent error handling
 - **12 Data Access Objects (DAOs) refactored** for reliability
 - **220+ database call sites updated** to modern async patterns
 - **Transaction management improved** for data integrity
 
 **What this prevents**:
+
 - MySQL parameter errors that caused confusing error messages
 - Data corruption from incomplete multi-step operations
 - Application crashes during database connectivity issues
 - Inconsistent behavior across different features
 
 **Improved error handling**:
+
 - **Graceful connection failures**: If database becomes unavailable, you'll see "Connection lost. Retry?" instead of crashes
 - **Better error messages**: Clear, actionable messages instead of cryptic MySQL errors
 - **Automatic retries**: Transient network issues handled automatically
 - **Data protection**: All multi-step operations (transfers, adjustments) now use transactions - either all steps succeed or all rollback
 
 **For IT Support and Developers**:
+
 - **Developer Tools Suite** added to Settings menu
-  - Debug Dashboard for real-time application monitoring
-  - Parameter Prefix Maintenance for stored procedure management
-  - Schema Inspector for database structure review
-  - Code Generator for DAO method creation
-  - Procedure Call Hierarchy visualization
+    - Debug Dashboard for real-time application monitoring
+    - Parameter Prefix Maintenance for stored procedure management
+    - Schema Inspector for database structure review
+    - Code Generator for DAO method creation
+    - Procedure Call Hierarchy visualization
 - **Developer Role** introduced (requires Admin + Developer privileges)
 - **Comprehensive logging** with method names, parameters, and call stacks
 - **Performance monitoring** with configurable slow query thresholds:
-  - Queries: 500ms
-  - Modifications: 1000ms
-  - Reports: 2000ms
-  - Batch operations: 5000ms
+    - Queries: 500ms
+    - Modifications: 1000ms
+    - Reports: 2000ms
+    - Batch operations: 5000ms
 
 **Infrastructure improvements**:
+
 - **Test database**: `mtm_wip_application_winform_test` for isolated integration testing
 - **Transaction support**: All DAO methods now support external transactions
 - **Connection pooling**: Configured for 5-100 connections for optimal performance
 - **Parameter detection**: Automatic INFORMATION_SCHEMA queries at startup for accurate parameter mapping
 
 **Why you won't notice much**:
+
 - This was all internal plumbing work
 - Operations work the same way they always have
 - But now they're more reliable, faster to fix, and better documented
@@ -1265,11 +1394,11 @@ Under the hood, we also made reliability and performance improvements so theme c
 
 ## 🆘 Need Help?
 
-**Questions about the update**: Contact John Koll at (ext. 323) or jkoll@mantoolmfg.com / Dan Smith at (ext. 311) or dsmith@mantoolmfg.com / Ka Lee at (ext. ___ ) or klee@mantoolmfg.com
+**Questions about the update**: Contact John Koll at (ext. 323) or jkoll@mantoolmfg.com / Dan Smith at (ext. 311) or dsmith@mantoolmfg.com / Ka Lee at (ext. \_\_\_ ) or klee@mantoolmfg.com
 
 **Found a problem**: Use the new **"Report Issue"** button in error messages (that's what it's for!)
 
-**Can't login after update**: Contact John Koll at (ext. 323) or jkoll@mantoolmfg.com / Dan Smith at (ext. 311) or dsmith@mantoolmfg.com / Ka Lee at (ext. ___ ) or klee@mantoolmfg.com
+**Can't login after update**: Contact John Koll at (ext. 323) or jkoll@mantoolmfg.com / Dan Smith at (ext. 311) or dsmith@mantoolmfg.com / Ka Lee at (ext. \_\_\_ ) or klee@mantoolmfg.com
 
 ---
 
@@ -1363,11 +1492,10 @@ A: No, it's optional - but it helps us fix problems faster if you do
 A: Your username, what you were doing (if you tell us), the error details, and the date/time. No personal information or production data is sent.
 
 **Q: Can I see my submitted reports?**  
-A: Yes - Contact JDecember 06t (ext. 323) or jkoll@mantoolmfg.com / Dan Smith at (ext. 311) or dsmith@mantoolmfg.com / Ka Lee at (ext. ___ ) or klee@mantoolmfg.com and provide your Report ID number
+A: Yes - Contact JDecember 06t (ext. 323) or jkoll@mantoolmfg.com / Dan Smith at (ext. 311) or dsmith@mantoolmfg.com / Ka Lee at (ext. \_\_\_ ) or klee@mantoolmfg.com and provide your Report ID number
 
 **Q: What if I submit a report by accident?**  
-A: No problem - Contact John Koll at (ext. 323) or jkoll@mantoolmfg.com / Dan Smith at (ext. 311) or dsmith@mantoolmfg.com / Ka Lee at (ext. ___ ) or klee@mantoolmfg.com
-
+A: No problem - Contact John Koll at (ext. 323) or jkoll@mantoolmfg.com / Dan Smith at (ext. 311) or dsmith@mantoolmfg.com / Ka Lee at (ext. \_\_\_ ) or klee@mantoolmfg.com
 
 <div style="page-break-after: always;"></div>
 
@@ -1378,6 +1506,7 @@ A: No problem - Contact John Koll at (ext. 323) or jkoll@mantoolmfg.com / Dan Sm
 We're working on even more improvements:
 
 **Next Updates (Planned)**:
+
 - **Transaction Lifecycle Viewer** (Week of November 11th) - See complete batch history with visual tree showing splits and movements
 - **Print & Export** (Week of November 11th) - Export to Excel, print formatted reports, PDF generation
 - **Enhanced Print Dialog** - Modern print preview with compact sidebar, column management, page range selection
@@ -1389,4 +1518,4 @@ We're working on even more improvements:
 ---
 
 **Last Updated**: November 8, 2025  
-**Questions?** Contact John Koll at (ext. 323) or jkoll@mantoolmfg.com / Dan Smith at (ext. 311) or dsmith@mantoolmfg.com / Ka Lee at (ext. ___ ) or klee@mantoolmfg.com
+**Questions?** Contact John Koll at (ext. 323) or jkoll@mantoolmfg.com / Dan Smith at (ext. 311) or dsmith@mantoolmfg.com / Ka Lee at (ext. \_\_\_ ) or klee@mantoolmfg.com

@@ -17,6 +17,7 @@ When generating code for this repository:
 ## Technology Stack (EXACT VERSIONS - DO NOT EXCEED)
 
 ### Core Platform
+
 - **.NET**: 8.0-windows (`<TargetFramework>net8.0-windows</TargetFramework>`)
 - **C# Language**: 12.0 (implicit with .NET 8.0)
 - **WinForms**: .NET 8.0 Windows Forms
@@ -24,6 +25,7 @@ When generating code for this repository:
 - **Implicit Usings**: Enabled (`<ImplicitUsings>enable</ImplicitUsings>`)
 
 ### Key Dependencies
+
 - **MySQL.Data**: 9.4.0 → MySQL Server 5.7.24 (LEGACY - NO 8.0 features!)
 - **Microsoft.Extensions.DependencyInjection**: 8.0.0
 - **Microsoft.Extensions.Logging**: 8.0.0
@@ -31,9 +33,11 @@ When generating code for this repository:
 - **Microsoft.Web.WebView2**: 1.0.2792.45
 
 ### Critical MySQL Constraint
+
 **MySQL Server**: 5.7.24 (LEGACY VERSION)
 
 **Forbidden MySQL 8.0+ Features:**
+
 - ❌ JSON functions
 - ❌ Common Table Expressions (CTEs)
 - ❌ Window functions
@@ -71,15 +75,17 @@ MTM_WIP_Application_WinForms/
 ## Dependency Injection Strategy (Hybrid Approach)
 
 **Policy**:
+
 - **Legacy DAOs**: Keep as `static` classes (non-injected). Do NOT refactor existing static DAOs to DI unless explicitly requested.
 - **New Components**: All NEW Services, DAOs, and Forms MUST be designed for Dependency Injection.
-  - Use Interfaces (`IUserService`, `IInventoryDao`).
-  - Register in `Program.cs` or `Startup.cs`.
-  - Inject via constructor.
+    - Use Interfaces (`IUserService`, `IInventoryDao`).
+    - Register in `Program.cs` or `Startup.cs`.
+    - Inject via constructor.
 
 ## Naming Conventions
 
 ### Classes
+
 - Forms: `{Feature}Form` → `SettingsForm`, `PrintForm`
 - Controls: `Control_{Feature}_{Purpose}` → `Control_QuickButtons`
 - DAOs: `Dao_{Entity}` → `Dao_Inventory`, `Dao_QuickButtons`
@@ -89,14 +95,18 @@ MTM_WIP_Application_WinForms/
 - Enums: `Enum_{Name}` → `Enum_ErrorSeverity`
 
 ### Form Controls
+
 `{FormName}_{ControlType}_{Name}_{Number?}`
+
 - Example: `MainForm_MenuStrip_File`, `SettingsForm_Button_Save_1`
 
 ### Methods
+
 - Async methods: `{Action}Async` → `LoadThemesAsync`, `SaveSettingsAsync`
 - DAO methods: Descriptive verbs → `GetAllQuickButtonsAsync`, `InsertErrorReportAsync`
 
 ### Variables
+
 - Private fields: `_camelCase` → `_logger`, `_themeProvider`
 - Parameters: `camelCase` → `userId`, `themeName`
 - Constants: `SCREAMING_SNAKE_CASE` or `PascalCase` for public
@@ -163,7 +173,7 @@ public class Dao_Entity : IDao_Entity
                 "md_entity_GetAll",  // Stored procedure name
                 null);                // No parameters
     }
-    
+
     /// <summary>
     /// Inserts a new entity.
     /// </summary>
@@ -175,7 +185,7 @@ public class Dao_Entity : IDao_Entity
         {
             { "Name", name }  // NO p_ prefix in C# (only in SQL)
         };
-        
+
         return await Helper_Database_StoredProcedure
             .ExecuteNonQueryWithStatusAsync(
                 "md_entity_Insert",
@@ -278,6 +288,7 @@ public partial class MyControl : ThemedUserControl
 ```
 
 **Required Tags:**
+
 - `<summary>`: ALWAYS for public members
 - `<param>`: For each parameter
 - `<returns>`: If method returns a value
@@ -285,6 +296,7 @@ public partial class MyControl : ThemedUserControl
 - `<remarks>`: Optional for complex scenarios
 
 **NO inline comments** (`//` or `/* */`) except for:
+
 - Non-obvious business logic
 - Workarounds for known issues
 - Complex algorithms
@@ -302,10 +314,10 @@ public class Dao_EntityTests : BaseIntegrationTest
         // Arrange
         var dao = new Dao_Entity();
         var input = "test";
-        
+
         // Act
         var result = await dao.MethodAsync(input);
-        
+
         // Assert
         Assert.True(result.IsSuccess);
         Assert.NotNull(result.Data);
@@ -319,6 +331,7 @@ public class Dao_EntityTests : BaseIntegrationTest
 ### MySQL Database Access
 
 **MAMP MySQL Server Configuration:**
+
 - **Host**: 172.16.1.104
 - **Port**: 3306
 - **Username**: root
@@ -326,10 +339,12 @@ public class Dao_EntityTests : BaseIntegrationTest
 - **MySQL Binary**: `C:\MAMP\bin\mysql\bin\mysql.exe`
 
 **Database Names:**
+
 - **Production**: `mtm_wip_application_winforms` (24 tables)
 - **Testing**: `mtm_wip_application_winforms_test` (20 tables)
 
 **Quick Access Commands:**
+
 ```powershell
 # Connect to production database
 & "C:\MAMP\bin\mysql\bin\mysql.exe" -h 172.16.1.104 -P 3306 -u root -proot mtm_wip_application_winforms
@@ -362,7 +377,7 @@ This project follows the "MTM WIP Application Constitution" (.specify/memory/con
 
 1. Search for similar code in the codebase
 2. Check .github/instructions/ for specific guidance
-3. Review specs/*/tasks.md for implementation examples
+3. Review specs/\*/tasks.md for implementation examples
 4. Prioritize consistency over external best practices
 5. Follow the constitution - it's non-negotiable
 
@@ -389,6 +404,7 @@ Task involves code navigation/editing?
 ### When to Use Serena (MTM Context)
 
 #### ✅ ALWAYS Use Serena For:
+
 1. **Multi-DAO exploration** - Understanding 20+ DAO files
 2. **Architectural validation** - Finding `MessageBox.Show`, direct `MySqlConnection`, missing XML docs
 3. **Pre-refactoring analysis** - Finding all usages of a method before changing signature
@@ -399,6 +415,7 @@ Task involves code navigation/editing?
 8. **Token efficiency** - When context window is limited (>80% savings)
 
 #### ❌ Don't Use Serena For:
+
 1. **Single-line edits** - Changing one variable name in known location
 2. **New file creation** - Creating Forms, Controls, Models from scratch
 3. **Non-code files** - Editing XML, JSON, config files
@@ -407,6 +424,7 @@ Task involves code navigation/editing?
 ### Core Serena Tools for MTM
 
 #### Symbol Navigation
+
 ```csharp
 // 1. Get file structure (ALWAYS first step)
 get_symbols_overview("Data/Dao_Inventory.cs", depth=1)
@@ -425,6 +443,7 @@ find_referencing_symbols("GetAllAsync", "Data/Dao_Inventory.cs")
 ```
 
 #### Symbol Editing
+
 ```csharp
 // 1. Replace entire method
 replace_symbol_body(
@@ -450,6 +469,7 @@ rename_symbol(
 ```
 
 #### Architectural Validation
+
 ```csharp
 // Find anti-patterns
 search_for_pattern(
@@ -505,7 +525,7 @@ Workflow:
 2. For each violation:
    a. Read method context:
       find_symbol("ClassName/MethodName", include_body=true)
-   
+
    b. Replace with correct pattern:
       replace_symbol_body(
           name_path="ClassName/MethodName",
@@ -570,7 +590,7 @@ Workflow:
 3. For each violation:
    get_symbols_overview("Forms/.../ViolatingForm.cs", depth=0)
    → Understand form structure
-   
+
    replace_symbol_body(
        name_path="ViolatingForm",
        relative_path="Forms/.../ViolatingForm.cs",
@@ -589,6 +609,7 @@ Workflow:
 **Gemini Advantage:** 2M token context window (vs 200K for GPT-4)
 
 **Strategy:**
+
 1. **Use Serena for exploration phase** (reduce tokens 80-90%)
 2. **Keep full context for editing phase** (Gemini can handle it)
 3. **Use memories for recurring patterns** (load once per session)
@@ -649,6 +670,7 @@ think_about_whether_you_are_done()
 ### Tool Chaining Examples
 
 #### Chain 1: Explore → Validate → Fix
+
 ```
 Step 1 (Explore):
 get_symbols_overview("Data/Dao_Inventory.cs", depth=1)
@@ -671,6 +693,7 @@ replace_symbol_body(
 ```
 
 #### Chain 2: Find Usages → Modify → Update Callers
+
 ```
 Step 1 (Impact Analysis):
 find_referencing_symbols("MethodName", "Data/Dao_Entity.cs")
@@ -696,6 +719,7 @@ execute_shell_command("dotnet build")
 ```
 
 #### Chain 3: Memory-Driven Development
+
 ```
 Step 1 (Load Context):
 activate_project("MTM_WIP_Application")
@@ -719,6 +743,7 @@ write_memory(
 ### Token Efficiency Examples
 
 **Example 1: DAO Exploration**
+
 ```
 ❌ Without Serena (reading full files):
 read_file("Data/Dao_Inventory.cs", 1, 500)     # 5,000 tokens
@@ -738,6 +763,7 @@ Savings: 93%
 ```
 
 **Example 2: Refactoring Impact Analysis**
+
 ```
 ❌ Without Serena (grep + read):
 grep_search("GetAllAsync")                      # 2,000 tokens
@@ -756,14 +782,14 @@ Savings: 97%
 
 ### Quick Reference: Most-Used Serena Tools
 
-| Tool | Use Case | Token Savings |
-|------|----------|---------------|
-| `get_symbols_overview` | Explore file structure | 95% |
-| `find_symbol` | Read specific method | 90% |
-| `find_referencing_symbols` | Find usages before refactoring | 90% |
-| `replace_symbol_body` | Update method precisely | N/A |
-| `search_for_pattern` | Find architectural violations | Variable |
-| `read_memory` | Load project knowledge | 100% |
+| Tool                       | Use Case                       | Token Savings |
+| -------------------------- | ------------------------------ | ------------- |
+| `get_symbols_overview`     | Explore file structure         | 95%           |
+| `find_symbol`              | Read specific method           | 90%           |
+| `find_referencing_symbols` | Find usages before refactoring | 90%           |
+| `replace_symbol_body`      | Update method precisely        | N/A           |
+| `search_for_pattern`       | Find architectural violations  | Variable      |
+| `read_memory`              | Load project knowledge         | 100%          |
 
 **Full Documentation**: `.github/instructions/serena-semantic-tools.instructions.md`  
 **Serena Official Docs**: https://oraios.github.io/serena/

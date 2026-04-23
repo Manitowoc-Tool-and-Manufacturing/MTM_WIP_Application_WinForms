@@ -1,11 +1,11 @@
-using MTM_WIP_Application_Winforms.Forms.Shared;
-using MTM_WIP_Application_Winforms.Services.Visual;
-using MTM_WIP_Application_Winforms.Models;
-using MTM_WIP_Application_Winforms.Services;
 using Microsoft.Extensions.DependencyInjection;
-using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Controls.Visual;
 using MTM_WIP_Application_Winforms.Forms.Help;
+using MTM_WIP_Application_Winforms.Forms.Shared;
+using MTM_WIP_Application_Winforms.Models;
+using MTM_WIP_Application_Winforms.Services;
+using MTM_WIP_Application_Winforms.Services.Logging;
+using MTM_WIP_Application_Winforms.Services.Visual;
 
 namespace MTM_WIP_Application_Winforms.Forms.Visual
 {
@@ -17,6 +17,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
         #region Fields
         private readonly IService_VisualDatabase? _visualService;
         private readonly Enum_VisualDashboardCategory _initialCategory;
+        private CancellationTokenSource? _dashboardRequestCancellationTokenSource;
         private Control_DieToolDiscovery? _controlDieToolDiscovery;
         private Control_ReceivingAnalytics? _controlReceivingAnalytics;
         private Control_VisualInventory? _controlVisualInventory;
@@ -33,7 +34,9 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
         /// Initializes a new instance of the <see cref="Form_InforVisualDashboard"/> class.
         /// </summary>
         /// <param name="initialCategory">The category to load on startup.</param>
-        public Form_InforVisualDashboard(Enum_VisualDashboardCategory initialCategory = Enum_VisualDashboardCategory.Inventory)
+        public Form_InforVisualDashboard(
+            Enum_VisualDashboardCategory initialCategory = Enum_VisualDashboardCategory.Inventory
+        )
         {
             _initialCategory = initialCategory;
 
@@ -41,7 +44,11 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             InitializeHelpButton();
 
             // Prevent accessing DI container at design time
-            if (!DesignMode && System.ComponentModel.LicenseManager.UsageMode != System.ComponentModel.LicenseUsageMode.Designtime)
+            if (
+                !DesignMode
+                && System.ComponentModel.LicenseManager.UsageMode
+                    != System.ComponentModel.LicenseUsageMode.Designtime
+            )
             {
                 _visualService = Program.ServiceProvider?.GetService<IService_VisualDatabase>();
             }
@@ -54,7 +61,8 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
         private void WireUpEvents()
         {
             Load += InforVisualDashboard_Load;
-            
+            FormClosed += (_, _) => CancelPendingDashboardRequest();
+
             // Wire up category buttons
             InforVisualDashboard_Button_Inventory.Click += CategoryButton_Click;
             InforVisualDashboard_Button_Receiving.Click += CategoryButton_Click;
@@ -78,6 +86,8 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
                 return;
             }
 
+            CancelPendingDashboardRequest();
+
             if (category == Enum_VisualDashboardCategory.DieToolDiscovery)
             {
                 try
@@ -86,7 +96,12 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
                 }
                 catch (Exception ex)
                 {
-                    Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: nameof(LoadCategoryDataAsync), controlName: Name);
+                    Service_ErrorHandler.HandleException(
+                        ex,
+                        Enum_ErrorSeverity.Medium,
+                        callerName: nameof(LoadCategoryDataAsync),
+                        controlName: Name
+                    );
                 }
                 return;
             }
@@ -99,7 +114,12 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
                 }
                 catch (Exception ex)
                 {
-                    Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: nameof(LoadCategoryDataAsync), controlName: Name);
+                    Service_ErrorHandler.HandleException(
+                        ex,
+                        Enum_ErrorSeverity.Medium,
+                        callerName: nameof(LoadCategoryDataAsync),
+                        controlName: Name
+                    );
                 }
                 return;
             }
@@ -112,7 +132,12 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
                 }
                 catch (Exception ex)
                 {
-                    Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: nameof(LoadCategoryDataAsync), controlName: Name);
+                    Service_ErrorHandler.HandleException(
+                        ex,
+                        Enum_ErrorSeverity.Medium,
+                        callerName: nameof(LoadCategoryDataAsync),
+                        controlName: Name
+                    );
                 }
                 return;
             }
@@ -125,7 +150,12 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
                 }
                 catch (Exception ex)
                 {
-                    Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: nameof(LoadCategoryDataAsync), controlName: Name);
+                    Service_ErrorHandler.HandleException(
+                        ex,
+                        Enum_ErrorSeverity.Medium,
+                        callerName: nameof(LoadCategoryDataAsync),
+                        controlName: Name
+                    );
                 }
                 return;
             }
@@ -136,12 +166,16 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
                 return;
             }
 
-            if (category == Enum_VisualDashboardCategory.MaterialHandlerAnalytics_General ||
-                category == Enum_VisualDashboardCategory.MaterialHandlerAnalytics_Team)
+            if (
+                category == Enum_VisualDashboardCategory.MaterialHandlerAnalytics_General
+                || category == Enum_VisualDashboardCategory.MaterialHandlerAnalytics_Team
+            )
             {
                 if (!Model_Application_Variables.UserTypeAdmin)
                 {
-                    Service_ErrorHandler.ShowUserError("Access denied. You do not have permission to view this page.");
+                    Service_ErrorHandler.ShowUserError(
+                        "Access denied. You do not have permission to view this page."
+                    );
                     return;
                 }
 
@@ -151,7 +185,12 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
                 }
                 catch (Exception ex)
                 {
-                    Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: nameof(LoadCategoryDataAsync), controlName: Name);
+                    Service_ErrorHandler.HandleException(
+                        ex,
+                        Enum_ErrorSeverity.Medium,
+                        callerName: nameof(LoadCategoryDataAsync),
+                        controlName: Name
+                    );
                 }
                 return;
             }
@@ -160,30 +199,43 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
 
             try
             {
+                var requestCancellationTokenSource = BeginDashboardRequest();
                 SetLoadingState(true);
                 InforVisualDashboard_Control_EmptyState.Visible = false;
 
-                var result = await _visualService.GetDashboardDataAsync(category);
+                var result = await _visualService.GetDashboardDataAsync(
+                    category,
+                    requestCancellationTokenSource.Token
+                );
+                if (requestCancellationTokenSource.IsCancellationRequested)
+                {
+                    return;
+                }
+
                 if (result.IsSuccess && result.Data != null)
                 {
                     InforVisualDashboard_Control_EmptyState.Message = string.Empty;
 
-                    if (result.Data.Rows.Count > 0)
-                    {
-
-                    }
+                    if (result.Data.Rows.Count > 0) { }
                     else
                     {
                         InforVisualDashboard_Control_EmptyState.Visible = true;
-                        InforVisualDashboard_Control_EmptyState.Message = "No records found for this category.";
+                        InforVisualDashboard_Control_EmptyState.Message =
+                            "No records found for this category.";
                     }
                 }
                 else
                 {
-                    Service_ErrorHandler.ShowUserError($"Failed to load data: {result.ErrorMessage}");
+                    Service_ErrorHandler.ShowUserError(
+                        $"Failed to load data: {result.ErrorMessage}"
+                    );
                     InforVisualDashboard_Control_EmptyState.Visible = true;
                     InforVisualDashboard_Control_EmptyState.Message = "Error loading data.";
                 }
+            }
+            catch (OperationCanceledException)
+            {
+                LoggingUtility.Log("[Form_InforVisualDashboard] Dashboard request canceled");
             }
             catch (Exception ex)
             {
@@ -192,10 +244,11 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
                     Enum_ErrorSeverity.Medium,
                     contextData: new Dictionary<string, object>
                     {
-                        ["Category"] = category.ToString()
+                        ["Category"] = category.ToString(),
                     },
                     callerName: nameof(LoadCategoryDataAsync),
-                    controlName: Name);
+                    controlName: Name
+                );
 
                 InforVisualDashboard_Control_EmptyState.Visible = true;
                 InforVisualDashboard_Control_EmptyState.Message = "An unexpected error occurred.";
@@ -228,10 +281,20 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
 
             try
             {
-                var result = await _visualService.TestConnectionAsync();
+                var requestCancellationTokenSource = BeginDashboardRequest();
+                var result = await _visualService.TestConnectionAsync(
+                    requestCancellationTokenSource.Token
+                );
+                if (requestCancellationTokenSource.IsCancellationRequested)
+                {
+                    return;
+                }
+
                 if (!result.IsSuccess)
                 {
-                    Service_ErrorHandler.ShowUserError($"Connection to Visual ERP failed: {result.ErrorMessage}");
+                    Service_ErrorHandler.ShowUserError(
+                        $"Connection to Visual ERP failed: {result.ErrorMessage}"
+                    );
                 }
                 else
                 {
@@ -239,17 +302,19 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
                     await LoadCategoryDataAsync(_initialCategory);
                 }
             }
+            catch (OperationCanceledException)
+            {
+                LoggingUtility.Log("[Form_InforVisualDashboard] Initial Visual load canceled");
+            }
             catch (Exception ex)
             {
                 Service_ErrorHandler.HandleException(
                     ex,
                     Enum_ErrorSeverity.Medium,
-                    contextData: new Dictionary<string, object>
-                    {
-                        ["Stage"] = "TestConnection"
-                    },
+                    contextData: new Dictionary<string, object> { ["Stage"] = "TestConnection" },
                     callerName: nameof(InforVisualDashboard_Load),
-                    controlName: Name);
+                    controlName: Name
+                );
             }
         }
 
@@ -258,7 +323,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             if (sender is Button btn)
             {
                 LoggingUtility.Log($"Category button clicked: {btn.Name}, Tag: {btn.Tag}");
-                
+
                 Enum_VisualDashboardCategory category;
                 if (btn.Tag is Enum_VisualDashboardCategory cat)
                 {
@@ -267,19 +332,28 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
                 else
                 {
                     // Fallback based on name
-                    if (btn.Name == "InforVisualDashboard_Button_Receiving") category = Enum_VisualDashboardCategory.Receiving;
-                    else if (btn.Name == "InforVisualDashboard_Button_Inventory") category = Enum_VisualDashboardCategory.Inventory;
-                    else if (btn.Name == "InforVisualDashboard_Button_Shipping") category = Enum_VisualDashboardCategory.Shipping;
-                    else if (btn.Name == "InforVisualDashboard_Button_InventoryAuditing") category = Enum_VisualDashboardCategory.InventoryAuditing;
-                    else if (btn.Name == "InforVisualDashboard_Button_DieToolDiscovery") category = Enum_VisualDashboardCategory.DieToolDiscovery;
-                    else if (btn.Name == "InforVisualDashboard_Button_MaterialHandlerGeneral") category = Enum_VisualDashboardCategory.MaterialHandlerAnalytics_General;
-                    else if (btn.Name == "InforVisualDashboard_Button_MaterialHandlerTeam") category = Enum_VisualDashboardCategory.MaterialHandlerAnalytics_Team;
+                    if (btn.Name == "InforVisualDashboard_Button_Receiving")
+                        category = Enum_VisualDashboardCategory.Receiving;
+                    else if (btn.Name == "InforVisualDashboard_Button_Inventory")
+                        category = Enum_VisualDashboardCategory.Inventory;
+                    else if (btn.Name == "InforVisualDashboard_Button_Shipping")
+                        category = Enum_VisualDashboardCategory.Shipping;
+                    else if (btn.Name == "InforVisualDashboard_Button_InventoryAuditing")
+                        category = Enum_VisualDashboardCategory.InventoryAuditing;
+                    else if (btn.Name == "InforVisualDashboard_Button_DieToolDiscovery")
+                        category = Enum_VisualDashboardCategory.DieToolDiscovery;
+                    else if (btn.Name == "InforVisualDashboard_Button_MaterialHandlerGeneral")
+                        category = Enum_VisualDashboardCategory.MaterialHandlerAnalytics_General;
+                    else if (btn.Name == "InforVisualDashboard_Button_MaterialHandlerTeam")
+                        category = Enum_VisualDashboardCategory.MaterialHandlerAnalytics_Team;
                     else
                     {
-                        Service_ErrorHandler.ShowUserError($"Invalid category configuration for button: {btn.Name}. Tag is {btn.Tag?.GetType().Name ?? "null"}");
+                        Service_ErrorHandler.ShowUserError(
+                            $"Invalid category configuration for button: {btn.Name}. Tag is {btn.Tag?.GetType().Name ?? "null"}"
+                        );
                         return;
                     }
-                    
+
                     // Fix the tag for next time
                     btn.Tag = category;
                 }
@@ -290,6 +364,20 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
         #endregion
 
         #region Helpers
+        private CancellationTokenSource BeginDashboardRequest()
+        {
+            CancelPendingDashboardRequest();
+            _dashboardRequestCancellationTokenSource = new CancellationTokenSource();
+            return _dashboardRequestCancellationTokenSource;
+        }
+
+        private void CancelPendingDashboardRequest()
+        {
+            _dashboardRequestCancellationTokenSource?.Cancel();
+            _dashboardRequestCancellationTokenSource?.Dispose();
+            _dashboardRequestCancellationTokenSource = null;
+        }
+
         private void ShowDieToolDiscoveryControl()
         {
             HideGenericControls();
@@ -401,10 +489,10 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
                 return;
             }
 
-            _controlDieToolDiscovery = new Control_DieToolDiscovery 
-            { 
+            _controlDieToolDiscovery = new Control_DieToolDiscovery
+            {
                 Dock = DockStyle.Fill,
-                AutoSize = false
+                AutoSize = false,
             };
             InforVisualDashboard_Panel_Content.Controls.Add(_controlDieToolDiscovery);
             _controlDieToolDiscovery.BringToFront();
@@ -417,10 +505,10 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
                 return;
             }
 
-            _controlReceivingAnalytics = new Control_ReceivingAnalytics 
-            { 
+            _controlReceivingAnalytics = new Control_ReceivingAnalytics
+            {
                 Dock = DockStyle.Fill,
-                AutoSize = false
+                AutoSize = false,
             };
             InforVisualDashboard_Panel_Content.Controls.Add(_controlReceivingAnalytics);
             _controlReceivingAnalytics.BringToFront();
@@ -433,10 +521,10 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
                 return;
             }
 
-            _controlVisualInventory = new Control_VisualInventory 
-            { 
+            _controlVisualInventory = new Control_VisualInventory
+            {
                 Dock = DockStyle.Fill,
-                AutoSize = false
+                AutoSize = false,
             };
             InforVisualDashboard_Panel_Content.Controls.Add(_controlVisualInventory);
             _controlVisualInventory.BringToFront();
@@ -449,10 +537,10 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
                 return;
             }
 
-            _controlInventoryAudit = new Control_InventoryAudit 
-            { 
+            _controlInventoryAudit = new Control_InventoryAudit
+            {
                 Dock = DockStyle.Fill,
-                AutoSize = false
+                AutoSize = false,
             };
             InforVisualDashboard_Panel_Content.Controls.Add(_controlInventoryAudit);
             _controlInventoryAudit.BringToFront();
@@ -465,10 +553,10 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
                 return;
             }
 
-            _controlVisualUserAnalytics = new Control_VisualUserAnalytics 
-            { 
+            _controlVisualUserAnalytics = new Control_VisualUserAnalytics
+            {
                 Dock = DockStyle.Fill,
-                AutoSize = false
+                AutoSize = false,
             };
             InforVisualDashboard_Panel_Content.Controls.Add(_controlVisualUserAnalytics);
             _controlVisualUserAnalytics.BringToFront();
@@ -506,39 +594,43 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
                 this.Invoke(new Action(CenterFormOnScreen));
                 return;
             }
-            
+
             this.StartPosition = FormStartPosition.CenterScreen;
             this.CenterToScreen();
         }
         #endregion
 
         #region Cleanup / Dispose
-        // Note: Controls added to the Controls collection (like _controlDieToolDiscovery) 
+        // Note: Controls added to the Controls collection (like _controlDieToolDiscovery)
         // are automatically disposed when the Form is disposed.
         // Manual disposal is only needed for resources NOT added to the UI tree.
         #endregion
-    #region Helpers
+        #region Helpers
 
-    private Button? Form_InforVisualDashboard_Button_Help;
+        private Button? Form_InforVisualDashboard_Button_Help;
 
-    private void InitializeHelpButton()
-    {
-        Form_InforVisualDashboard_Button_Help = new Button();
-        Form_InforVisualDashboard_Button_Help.Name = "Form_InforVisualDashboard_Button_Help";
-        Form_InforVisualDashboard_Button_Help.Text = "?";
-        Form_InforVisualDashboard_Button_Help.Size = new Size(24, 24);
-        Form_InforVisualDashboard_Button_Help.Location = new Point(this.Width - 40, 5); 
-        Form_InforVisualDashboard_Button_Help.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-        Form_InforVisualDashboard_Button_Help.Click += (s, e) => 
+        private void InitializeHelpButton()
         {
-            HelpViewerForm.GetInstance().BringToFrontAndNavigate("infor-visual-integration", "visual-dashboard-overview");
-        };
-        
-        this.Controls.Add(Form_InforVisualDashboard_Button_Help);
-        Form_InforVisualDashboard_Button_Help.BringToFront();
-    }
+            Form_InforVisualDashboard_Button_Help = new Button();
+            Form_InforVisualDashboard_Button_Help.Name = "Form_InforVisualDashboard_Button_Help";
+            Form_InforVisualDashboard_Button_Help.Text = "?";
+            Form_InforVisualDashboard_Button_Help.Size = new Size(24, 24);
+            Form_InforVisualDashboard_Button_Help.Location = new Point(this.Width - 40, 5);
+            Form_InforVisualDashboard_Button_Help.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            Form_InforVisualDashboard_Button_Help.Click += (s, e) =>
+            {
+                HelpViewerForm
+                    .GetInstance()
+                    .BringToFrontAndNavigate(
+                        "infor-visual-integration",
+                        "visual-dashboard-overview"
+                    );
+            };
 
-    #endregion
+            this.Controls.Add(Form_InforVisualDashboard_Button_Help);
+            Form_InforVisualDashboard_Button_Help.BringToFront();
+        }
 
+        #endregion
     }
 }

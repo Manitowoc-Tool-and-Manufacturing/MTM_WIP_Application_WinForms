@@ -1,1 +1,0 @@
-SELECT 'Material Handler Analytics Team Placeholder' AS Status

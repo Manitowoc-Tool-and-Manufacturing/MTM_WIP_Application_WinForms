@@ -20,29 +20,36 @@ Add color code and work order tracking to the MTM WIP Application's inventory ma
 
 ## Constitution Check
 
-*GATE: All checks PASSED ✅ - Proceed to Phase 0 Research*
+_GATE: All checks PASSED ✅ - Proceed to Phase 0 Research_
 
 ### ✅ I. Centralized Error Handling
+
 All error handling uses `Service_ErrorHandler` methods. Work order validation errors use `HandleValidationError()`. Database operations wrapped with `HandleDatabaseError()`. No direct `MessageBox.Show()` except via `Service_ErrorHandler.ShowConfirmation()`.
 
 ### ✅ II. Structured Logging
+
 All logging uses `LoggingUtility` methods. Feature logs: inventory events, validation errors, custom color additions, cache refreshes. Thread-safe CSV format with recursion prevention.
 
 ### ✅ III. Model_Dao_Result Pattern
+
 All DAO methods return `Model_Dao_Result<T>`. New: `Dao_ColorCode.GetAllAsync()`, `Dao_Part.GetAllColorCodeFlaggedAsync()`. Modified: `Dao_Inventory.AddAsync()` with ColorCode/WorkOrder params.
 
 ### ✅ IV. Async-First Operations
+
 All database operations use async/await. No `.Result` or `.Wait()` blocking calls. UI event handlers use `async void` with proper error handling.
 
 ### ✅ V. WinForms Best Practices
+
 Forms inherit from `ThemedForm`, controls from `ThemedUserControl`. Proper disposal. `InvokeRequired` checks for cross-thread UI updates. SuggestionTextBox for consistency.
 
 ### ✅ VI. Stored Procedure Conventions
+
 DAO methods pass parameters WITHOUT `p_` prefix. `Helper_Database_StoredProcedure` auto-detects prefixes. Standard output params: `p_Status INT`, `p_ErrorMsg VARCHAR(500)`.
 
 ## Project Structure
 
 ### Documentation
+
 ```
 specs/001-color-code-work-order-tracking/
 ├── plan.md          # This file
@@ -54,6 +61,7 @@ specs/001-color-code-work-order-tracking/
 ```
 
 ### Source Code
+
 ```
 MTM_WIP_Application_Winforms/
 ├── Data/
@@ -92,6 +100,7 @@ MTM_WIP_Application_Winforms/
 ## Implementation Checklist
 
 ### Database Foundation
+
 - [ ] Create md_color_codes table with predefined colors
 - [ ] Add RequiresColorCode column to md_part_ids
 - [ ] Add ColorCode/WorkOrder columns to inv_inventory and inv_transaction
@@ -99,6 +108,7 @@ MTM_WIP_Application_Winforms/
 - [ ] Test schema in test database
 
 ### Stored Procedures (8 total)
+
 - [ ] md_color_codes_GetAll (new)
 - [ ] md_color_codes_Add (new)
 - [ ] md_part_ids_GetAllColorCodeFlagged (new)
@@ -109,6 +119,7 @@ MTM_WIP_Application_Winforms/
 - [ ] inv_transactions_Search (modified)
 
 ### DAO Layer
+
 - [ ] Create Dao_ColorCode class
 - [ ] Update Dao_Part with color-flagged methods
 - [ ] Update Dao_Inventory Add/Search methods
@@ -116,12 +127,14 @@ MTM_WIP_Application_Winforms/
 - [ ] Add XML documentation
 
 ### Services & Caching
+
 - [ ] Create Service_ColorCodeValidator
 - [ ] Update Helper_UI_ComboBoxes color cache
 - [ ] Update Model_Application_Variables cache
 - [ ] Implement Shift+Click refresh
 
 ### UI - Inventory Tab
+
 - [ ] Add SuggestionTextBox for Color Code
 - [ ] Add TextBox for Work Order
 - [ ] Implement dynamic visibility
@@ -130,6 +143,7 @@ MTM_WIP_Application_Winforms/
 - [ ] Add title-case formatting
 
 ### UI - Remove/Transfer/Advanced
+
 - [ ] Add Color/Work Order columns
 - [ ] Implement dynamic column visibility
 - [ ] Add auto-sort by color then location
@@ -138,11 +152,13 @@ MTM_WIP_Application_Winforms/
 - [ ] Add >1000 record warning
 
 ### UI - Settings
+
 - [ ] Add checkbox to Control_Add_PartID
 - [ ] Add checkbox to Control_Edit_PartID
 - [ ] Implement restart prompt
 
 ### Testing & Documentation
+
 - [ ] Manual test scenarios for all components
 - [ ] Update AGENTS.md
 - [ ] Create migration guide

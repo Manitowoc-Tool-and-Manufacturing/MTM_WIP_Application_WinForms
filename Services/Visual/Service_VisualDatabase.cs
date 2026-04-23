@@ -13,6 +13,9 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
     public class Service_VisualDatabase : IService_VisualDatabase
     {
         #region Fields
+        private const int REFERENCE_LOOKUP_LIMIT = 500;
+        private const int TRANSACTION_LOOKUP_LIMIT = 250;
+        private const int TRANSACTION_LOOKUP_WINDOW_DAYS = 180;
         private bool _useSampleData = false;
         #endregion
 
@@ -35,7 +38,9 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
         /// Model_Dao_Result containing true when the connection succeeds.
         /// Check IsSuccess before accessing Data.
         /// </returns>
-        public async Task<Model_Dao_Result<bool>> TestConnectionAsync()
+        public async Task<Model_Dao_Result<bool>> TestConnectionAsync(
+            CancellationToken cancellationToken = default
+        )
         {
 #if DEBUG
             // In DEBUG mode, if credentials are missing, force fallback to sample data immediately
@@ -59,7 +64,7 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
             {
                 using (var connection = new SqlConnection(GetConnectionString()))
                 {
-                    await connection.OpenAsync();
+                    await connection.OpenAsync(cancellationToken);
                     _useSampleData = false;
                     return new Model_Dao_Result<bool> { IsSuccess = true, Data = true };
                 }
@@ -88,7 +93,10 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
         /// </summary>
         /// <param name="category">The dashboard category to load query for.</param>
         /// <returns>DataTable containing the results.</returns>
-        public async Task<Model_Dao_Result<DataTable>> GetDashboardDataAsync(Enum_VisualDashboardCategory category)
+        public async Task<Model_Dao_Result<DataTable>> GetDashboardDataAsync(
+            Enum_VisualDashboardCategory category,
+            CancellationToken cancellationToken = default
+        )
         {
             if (string.IsNullOrEmpty(_userName) || string.IsNullOrEmpty(_password))
             {
@@ -113,10 +121,10 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
             {
                 using (var connection = new SqlConnection(GetConnectionString()))
                 {
-                    await connection.OpenAsync();
+                    await connection.OpenAsync(cancellationToken);
                     using (var command = new SqlCommand(sql, connection))
                     {
-                        using (var reader = await command.ExecuteReaderAsync())
+                        using (var reader = await command.ExecuteReaderAsync(cancellationToken))
                         {
                             var dataTable = new DataTable();
                             dataTable.Load(reader);
@@ -135,19 +143,32 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 return new Model_Dao_Result<DataTable>
                 {
                     IsSuccess = false,
-                    ErrorMessage = $"Error retrieving data: {GetFriendlyErrorMessage(ex)}"
+                    ErrorMessage = $"Error loading dashboard data: {ex.Message}"
                 };
             }
         }
 
         /// <summary>
-        /// Searches for dies based on part number or die number.
+        /// Searches for dies by part number or die number.
         /// </summary>
-        /// <param name="searchTerm">The term to search for.</param>
-        /// <param name="searchByPart">True to search by Part Number, False to search by Die Number.</param>
-        /// <returns>DataTable containing search results.</returns>
-        public async Task<Model_Dao_Result<DataTable>> SearchDiesAsync(string searchTerm, bool searchByPart)
+        /// <param name="searchTerm">The part number or die number to search for.</param>
+        /// <param name="searchByPart">True to search by part number, false to search by die number.</param>
+        /// <returns>DataTable containing matching records.</returns>
+        public async Task<Model_Dao_Result<DataTable>> SearchDiesAsync(
+            string searchTerm,
+            bool searchByPart,
+            CancellationToken cancellationToken = default
+        )
         {
+            if (string.IsNullOrWhiteSpace(searchTerm))
+            {
+                return new Model_Dao_Result<DataTable>
+                {
+                    IsSuccess = false,
+                    ErrorMessage = "Search term cannot be empty."
+                };
+            }
+
             if (string.IsNullOrEmpty(_userName) || string.IsNullOrEmpty(_password))
             {
                 return new Model_Dao_Result<DataTable>
@@ -162,34 +183,29 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
             {
                 // Search by Part Number -> Find Die
                 // Updated to use both Legacy (USER_5) and Engineering Master (BOM) links
-                // This handles cases where dies are linked via the Engineering Master (Subordinate parts)
-                sql = @"
+                sql =
+                    @"
                     SELECT DISTINCT
                         P.ID as [Part Number],
                         P.DESCRIPTION as [Description],
                         D.ID as [Die Number],
                         D.USER_2 as [Die Location],
-                        P.USER_7 as [Customer],
-                        P.USER_9 as [Coil]
+                        D.USER_9 as [Coil]
                     FROM PART P
                     LEFT JOIN PART D ON (
-                        D.ID LIKE 'FGT%-01' 
-                        AND D.ID <> 'FGT0001-01'
-                        AND (
-                            -- Link 1: Legacy USER_5 (Die points to Part)
-                            (D.USER_5 = P.ID)
-                            OR
-                            -- Link 2: Engineering Master BOM (Part has Die as component)
-                            EXISTS (
-                                SELECT 1 FROM WORK_ORDER WO
-                                JOIN REQUIREMENT R ON R.WORKORDER_BASE_ID = WO.BASE_ID 
-                                                   AND R.WORKORDER_LOT_ID = WO.LOT_ID 
-                                                   AND R.WORKORDER_SPLIT_ID = WO.SPLIT_ID 
-                                                   AND R.WORKORDER_SUB_ID = WO.SUB_ID
-                                WHERE WO.PART_ID = P.ID 
-                                AND WO.TYPE = 'M' -- Engineering Master
-                                AND R.PART_ID = D.ID
-                            )
+                        -- Link 1: Legacy USER_5 (Die points to Part)
+                        (D.USER_5 = P.ID)
+                        OR
+                        -- Link 2: Engineering Master BOM (Part has Die as component)
+                        EXISTS (
+                            SELECT 1 FROM WORK_ORDER WO
+                            JOIN REQUIREMENT R ON R.WORKORDER_BASE_ID = WO.BASE_ID 
+                                               AND R.WORKORDER_LOT_ID = WO.LOT_ID 
+                                               AND R.WORKORDER_SPLIT_ID = WO.SPLIT_ID 
+                                               AND R.WORKORDER_SUB_ID = WO.SUB_ID
+                            WHERE WO.PART_ID = P.ID 
+                            AND WO.TYPE = 'M' -- Engineering Master
+                            AND R.PART_ID = D.ID
                         )
                     )
                     WHERE P.ID LIKE @SearchTerm";
@@ -198,7 +214,8 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
             {
                 // Search by Die Number (FGT) -> Find Part
                 // Updated to use both Legacy (USER_5) and Engineering Master (BOM) links
-                sql = @"
+                sql =
+                    @"
                     SELECT DISTINCT
                         D.ID as [Die Number],
                         D.DESCRIPTION as [Description],
@@ -231,19 +248,19 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
             {
                 using (var connection = new SqlConnection(GetConnectionString()))
                 {
-                    await connection.OpenAsync();
+                    await connection.OpenAsync(cancellationToken);
                     using (var command = new SqlCommand(sql, connection))
                     {
                         command.Parameters.AddWithValue("@SearchTerm", "%" + searchTerm + "%");
 
-                        using (var reader = await command.ExecuteReaderAsync())
+                        using (var reader = await command.ExecuteReaderAsync(cancellationToken))
                         {
                             var dataTable = new DataTable();
                             dataTable.Load(reader);
                             return new Model_Dao_Result<DataTable>
                             {
                                 IsSuccess = true,
-                                Data = dataTable
+                                Data = dataTable,
                             };
                         }
                     }
@@ -255,7 +272,7 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 return new Model_Dao_Result<DataTable>
                 {
                     IsSuccess = false,
-                    ErrorMessage = $"Error searching dies: {ex.Message}"
+                    ErrorMessage = $"Error searching dies: {ex.Message}",
                 };
             }
         }
@@ -267,18 +284,22 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
         /// <returns>
         /// Model_Dao_Result containing the coil/flatstock details.
         /// </returns>
-        public async Task<Model_Dao_Result<Model_Visual_CoilFlatstock>> GetCoilFlatstockInfoAsync(string partNumber)
+        public async Task<Model_Dao_Result<Model_Visual_CoilFlatstock>> GetCoilFlatstockInfoAsync(
+            string partNumber,
+            CancellationToken cancellationToken = default
+        )
         {
             if (string.IsNullOrEmpty(_userName) || string.IsNullOrEmpty(_password))
             {
                 return new Model_Dao_Result<Model_Visual_CoilFlatstock>
                 {
                     IsSuccess = false,
-                    ErrorMessage = "Visual ERP credentials are not configured."
+                    ErrorMessage = "Visual ERP credentials are not configured.",
                 };
             }
 
-            string sql = @"
+            string sql =
+                @"
                 SELECT 
                     P.ID, 
                     P.DESCRIPTION, 
@@ -301,14 +322,14 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
             {
                 using (var connection = new SqlConnection(GetConnectionString()))
                 {
-                    await connection.OpenAsync();
+                    await connection.OpenAsync(cancellationToken);
                     using (var command = new SqlCommand(sql, connection))
                     {
                         command.Parameters.AddWithValue("@PartNumber", partNumber);
 
-                        using (var reader = await command.ExecuteReaderAsync())
+                        using (var reader = await command.ExecuteReaderAsync(cancellationToken))
                         {
-                            if (await reader.ReadAsync())
+                            if (await reader.ReadAsync(cancellationToken))
                             {
                                 var model = new Model_Visual_CoilFlatstock
                                 {
@@ -324,14 +345,17 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                                     ScrapLocation = reader["USER_8"]?.ToString() ?? string.Empty,
                                     GenericType = reader["USER_9"]?.ToString() ?? string.Empty,
                                     DetailedType = reader["USER_10"]?.ToString() ?? string.Empty,
-                                    AutoIssueLocation = reader["BACKFLUSH_LOC_ID"]?.ToString() ?? string.Empty
+                                    AutoIssueLocation =
+                                        reader["BACKFLUSH_LOC_ID"]?.ToString() ?? string.Empty,
                                 };
 
                                 return Model_Dao_Result<Model_Visual_CoilFlatstock>.Success(model);
                             }
                             else
                             {
-                                return Model_Dao_Result<Model_Visual_CoilFlatstock>.Failure("Part not found.");
+                                return Model_Dao_Result<Model_Visual_CoilFlatstock>.Failure(
+                                    "Part not found."
+                                );
                             }
                         }
                     }
@@ -340,7 +364,9 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
             catch (Exception ex)
             {
                 LoggingUtility.LogApplicationError(ex);
-                return Model_Dao_Result<Model_Visual_CoilFlatstock>.Failure($"Error retrieving coil info: {ex.Message}");
+                return Model_Dao_Result<Model_Visual_CoilFlatstock>.Failure(
+                    $"Error retrieving coil info: {ex.Message}"
+                );
             }
         }
 
@@ -349,18 +375,22 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
         /// </summary>
         /// <param name="partId">The component part ID.</param>
         /// <returns>DataTable containing parent part details.</returns>
-        public async Task<Model_Dao_Result<DataTable>> GetWhereUsedAsync(string partId)
+        public async Task<Model_Dao_Result<DataTable>> GetWhereUsedAsync(
+            string partId,
+            CancellationToken cancellationToken = default
+        )
         {
             if (string.IsNullOrEmpty(_userName) || string.IsNullOrEmpty(_password))
             {
                 return new Model_Dao_Result<DataTable>
                 {
                     IsSuccess = false,
-                    ErrorMessage = "Visual ERP credentials are not configured."
+                    ErrorMessage = "Visual ERP credentials are not configured.",
                 };
             }
 
-            string sql = @"
+            string sql =
+                @"
                 SELECT DISTINCT
                     WO.PART_ID as [Parent Part],
                     P.DESCRIPTION as [Description],
@@ -379,19 +409,19 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
             {
                 using (var connection = new SqlConnection(GetConnectionString()))
                 {
-                    await connection.OpenAsync();
+                    await connection.OpenAsync(cancellationToken);
                     using (var command = new SqlCommand(sql, connection))
                     {
                         command.Parameters.AddWithValue("@PartId", partId);
 
-                        using (var reader = await command.ExecuteReaderAsync())
+                        using (var reader = await command.ExecuteReaderAsync(cancellationToken))
                         {
                             var dataTable = new DataTable();
                             dataTable.Load(reader);
                             return new Model_Dao_Result<DataTable>
                             {
                                 IsSuccess = true,
-                                Data = dataTable
+                                Data = dataTable,
                             };
                         }
                     }
@@ -403,7 +433,7 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 return new Model_Dao_Result<DataTable>
                 {
                     IsSuccess = false,
-                    ErrorMessage = $"Error retrieving Where Used data: {ex.Message}"
+                    ErrorMessage = $"Error retrieving Where Used data: {ex.Message}",
                 };
             }
         }
@@ -432,7 +462,9 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
             bool includeService,
             string vendorFilter = "",
             string poFilter = "",
-            bool mustHavePartNumber = false)
+            bool mustHavePartNumber = false,
+            CancellationToken cancellationToken = default
+        )
         {
             if (_useSampleData)
             {
@@ -448,13 +480,14 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 return new Model_Dao_Result<DataTable>
                 {
                     IsSuccess = false,
-                    ErrorMessage = "Visual ERP credentials are not configured."
+                    ErrorMessage = "Visual ERP credentials are not configured.",
                 };
 #endif
             }
 
             // Base Query
-            string sql = @"
+            string sql =
+                @"
                 SELECT
                     PO.ID as [PO Number],
                     V.NAME as [Vendor],
@@ -504,7 +537,8 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                     break;
                 case "ALL OF THE ABOVE":
                 default:
-                    dateCondition = @" AND (
+                    dateCondition =
+                        @" AND (
                         (PO.DESIRED_RECV_DATE IS NULL OR PO.DESIRED_RECV_DATE BETWEEN @StartDate AND @EndDate) AND
                         (PO.PROMISE_DATE IS NULL OR PO.PROMISE_DATE BETWEEN @StartDate AND @EndDate) AND
                         (POL.DESIRED_RECV_DATE IS NULL OR POL.DESIRED_RECV_DATE BETWEEN @StartDate AND @EndDate) AND
@@ -569,15 +603,21 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
             {
                 using (var connection = new SqlConnection(GetConnectionString()))
                 {
-                    await connection.OpenAsync();
+                    await connection.OpenAsync(cancellationToken);
                     using (var command = new SqlCommand(sql, connection))
                     {
                         command.Parameters.AddWithValue("@StartDate", startDate.Date);
-                        command.Parameters.AddWithValue("@EndDate", endDate.Date.AddDays(1).AddSeconds(-1)); // End of day
+                        command.Parameters.AddWithValue(
+                            "@EndDate",
+                            endDate.Date.AddDays(1).AddSeconds(-1)
+                        ); // End of day
 
                         if (!string.IsNullOrWhiteSpace(vendorFilter))
                         {
-                            command.Parameters.AddWithValue("@VendorFilter", "%" + vendorFilter + "%");
+                            command.Parameters.AddWithValue(
+                                "@VendorFilter",
+                                "%" + vendorFilter + "%"
+                            );
                         }
 
                         if (!string.IsNullOrWhiteSpace(poFilter))
@@ -585,14 +625,14 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                             command.Parameters.AddWithValue("@PoFilter", "%" + poFilter + "%");
                         }
 
-                        using (var reader = await command.ExecuteReaderAsync())
+                        using (var reader = await command.ExecuteReaderAsync(cancellationToken))
                         {
                             var dataTable = new DataTable();
                             dataTable.Load(reader);
                             return new Model_Dao_Result<DataTable>
                             {
                                 IsSuccess = true,
-                                Data = dataTable
+                                Data = dataTable,
                             };
                         }
                     }
@@ -601,7 +641,9 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
             catch (Exception ex)
             {
 #if DEBUG
-                LoggingUtility.Log($"[VisualService] GetReceivingScheduleAsync failed in DEBUG. Fallback to sample. Error: {ex.Message}");
+                LoggingUtility.Log(
+                    $"[VisualService] GetReceivingScheduleAsync failed in DEBUG. Fallback to sample. Error: {ex.Message}"
+                );
                 _useSampleData = true;
                 return GetSampleReceivingSchedule();
 #else
@@ -609,7 +651,7 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 return new Model_Dao_Result<DataTable>
                 {
                     IsSuccess = false,
-                    ErrorMessage = $"Error retrieving receiving schedule: {ex.Message}"
+                    ErrorMessage = $"Error retrieving receiving schedule: {ex.Message}",
                 };
 #endif
             }
@@ -620,7 +662,10 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
         /// </summary>
         /// <param name="poNumber">The PO Number to retrieve details for.</param>
         /// <returns>DataTable containing PO details.</returns>
-        public async Task<Model_Dao_Result<DataTable>> GetPODetailsAsync(string poNumber)
+        public async Task<Model_Dao_Result<DataTable>> GetPODetailsAsync(
+            string poNumber,
+            CancellationToken cancellationToken = default
+        )
         {
             if (_useSampleData)
             {
@@ -636,12 +681,13 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 return new Model_Dao_Result<DataTable>
                 {
                     IsSuccess = false,
-                    ErrorMessage = "Visual ERP credentials are not configured."
+                    ErrorMessage = "Visual ERP credentials are not configured.",
                 };
 #endif
             }
 
-            string sql = @"
+            string sql =
+                @"
                 SELECT
                     POL.LINE_NO as [Line #],
                     POL.PART_ID as [Part Number],
@@ -668,19 +714,19 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
             {
                 using (var connection = new SqlConnection(GetConnectionString()))
                 {
-                    await connection.OpenAsync();
+                    await connection.OpenAsync(cancellationToken);
                     using (var command = new SqlCommand(sql, connection))
                     {
                         command.Parameters.AddWithValue("@PoNumber", poNumber);
 
-                        using (var reader = await command.ExecuteReaderAsync())
+                        using (var reader = await command.ExecuteReaderAsync(cancellationToken))
                         {
                             var dataTable = new DataTable();
                             dataTable.Load(reader);
                             return new Model_Dao_Result<DataTable>
                             {
                                 IsSuccess = true,
-                                Data = dataTable
+                                Data = dataTable,
                             };
                         }
                     }
@@ -689,7 +735,9 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
             catch (Exception ex)
             {
 #if DEBUG
-                LoggingUtility.Log($"[VisualService] GetPODetailsAsync failed in DEBUG. Fallback to sample. Error: {ex.Message}");
+                LoggingUtility.Log(
+                    $"[VisualService] GetPODetailsAsync failed in DEBUG. Fallback to sample. Error: {ex.Message}"
+                );
                 _useSampleData = true;
                 return GetSamplePODetails(poNumber);
 #else
@@ -697,7 +745,7 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 return new Model_Dao_Result<DataTable>
                 {
                     IsSuccess = false,
-                    ErrorMessage = $"Error retrieving PO details: {ex.Message}"
+                    ErrorMessage = $"Error retrieving PO details: {ex.Message}",
                 };
 #endif
             }
@@ -706,7 +754,11 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
         /// <summary>
         /// Retrieves analytics data for receiving history and forecast.
         /// </summary>
-        public async Task<Model_Dao_Result<Model_ReceivingAnalytics>> GetReceivingAnalyticsAsync(DateTime? startDate = null, DateTime? endDate = null)
+        public async Task<Model_Dao_Result<Model_ReceivingAnalytics>> GetReceivingAnalyticsAsync(
+            DateTime? startDate = null,
+            DateTime? endDate = null,
+            CancellationToken cancellationToken = default
+        )
         {
             if (_useSampleData)
             {
@@ -722,7 +774,7 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 return new Model_Dao_Result<Model_ReceivingAnalytics>
                 {
                     IsSuccess = false,
-                    ErrorMessage = "Visual ERP credentials are not configured."
+                    ErrorMessage = "Visual ERP credentials are not configured.",
                 };
 #endif
             }
@@ -733,7 +785,8 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
 
             // 1. History Query
             // Get all receipts within the date range, regardless of "Today"
-            string sqlHistory = @"
+            string sqlHistory =
+                @"
                 SELECT [Date], COUNT(*) as [Count], [Type], [PartNumber], [ReceivedBy]
                 FROM (
                     SELECT 
@@ -766,7 +819,8 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
             // Get all open lines due within the date range
             // Logic: Service -> Desired Date, Others -> Promise Date
             // Fallback chain: Line Date -> PO Date -> Alternate Date Type
-            string sqlForecast = @"
+            string sqlForecast =
+                @"
                 SELECT [Date], COUNT(*) as [Count], [Type], [PartNumber], '' as [ReceivedBy]
                 FROM (
                     SELECT 
@@ -808,7 +862,7 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
             {
                 using (var connection = new SqlConnection(GetConnectionString()))
                 {
-                    await connection.OpenAsync();
+                    await connection.OpenAsync(cancellationToken);
 
                     // Execute History
                     using (var command = new SqlCommand(sqlHistory, connection))
@@ -816,23 +870,33 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                         // Broad range: 1 year back to 6 months forward (or user specified)
                         // If user didn't specify, we default to a wide window in the caller or here
                         // The caller (Control_ReceivingAnalytics) is now passing -1 year to +6 months
-                        command.Parameters.AddWithValue("@StartDate", startDate ?? DateTime.Today.AddYears(-1));
-                        command.Parameters.AddWithValue("@EndDate", endDate ?? DateTime.Today.AddMonths(6));
-                        
-                        using (var reader = await command.ExecuteReaderAsync())
+                        command.Parameters.AddWithValue(
+                            "@StartDate",
+                            startDate ?? DateTime.Today.AddYears(-1)
+                        );
+                        command.Parameters.AddWithValue(
+                            "@EndDate",
+                            endDate ?? DateTime.Today.AddMonths(6)
+                        );
+
+                        using (var reader = await command.ExecuteReaderAsync(cancellationToken))
                         {
-                            while (await reader.ReadAsync())
+                            while (await reader.ReadAsync(cancellationToken))
                             {
                                 if (reader["Date"] != DBNull.Value)
                                 {
-                                    analytics.History.Add(new AnalyticsDataPoint
-                                    {
-                                        Date = Convert.ToDateTime(reader["Date"]),
-                                        Count = Convert.ToInt32(reader["Count"]),
-                                        Type = reader["Type"].ToString() ?? "Part",
-                                        PartNumber = reader["PartNumber"]?.ToString() ?? string.Empty,
-                                        ReceivedBy = reader["ReceivedBy"]?.ToString() ?? string.Empty
-                                    });
+                                    analytics.History.Add(
+                                        new AnalyticsDataPoint
+                                        {
+                                            Date = Convert.ToDateTime(reader["Date"]),
+                                            Count = Convert.ToInt32(reader["Count"]),
+                                            Type = reader["Type"].ToString() ?? "Part",
+                                            PartNumber =
+                                                reader["PartNumber"]?.ToString() ?? string.Empty,
+                                            ReceivedBy =
+                                                reader["ReceivedBy"]?.ToString() ?? string.Empty,
+                                        }
+                                    );
                                 }
                             }
                         }
@@ -841,30 +905,44 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                     // Execute Forecast
                     using (var command = new SqlCommand(sqlForecast, connection))
                     {
-                        command.Parameters.AddWithValue("@StartDate", startDate ?? DateTime.Today.AddYears(-1));
-                        command.Parameters.AddWithValue("@EndDate", endDate ?? DateTime.Today.AddMonths(6));
-                        
-                        using (var reader = await command.ExecuteReaderAsync())
+                        command.Parameters.AddWithValue(
+                            "@StartDate",
+                            startDate ?? DateTime.Today.AddYears(-1)
+                        );
+                        command.Parameters.AddWithValue(
+                            "@EndDate",
+                            endDate ?? DateTime.Today.AddMonths(6)
+                        );
+
+                        using (var reader = await command.ExecuteReaderAsync(cancellationToken))
                         {
-                            while (await reader.ReadAsync())
+                            while (await reader.ReadAsync(cancellationToken))
                             {
                                 if (reader["Date"] != DBNull.Value)
                                 {
-                                    analytics.Forecast.Add(new AnalyticsDataPoint
-                                    {
-                                        Date = Convert.ToDateTime(reader["Date"]),
-                                        Count = Convert.ToInt32(reader["Count"]),
-                                        Type = reader["Type"].ToString() ?? "Part",
-                                        PartNumber = reader["PartNumber"]?.ToString() ?? string.Empty,
-                                        ReceivedBy = reader["ReceivedBy"]?.ToString() ?? string.Empty
-                                    });
+                                    analytics.Forecast.Add(
+                                        new AnalyticsDataPoint
+                                        {
+                                            Date = Convert.ToDateTime(reader["Date"]),
+                                            Count = Convert.ToInt32(reader["Count"]),
+                                            Type = reader["Type"].ToString() ?? "Part",
+                                            PartNumber =
+                                                reader["PartNumber"]?.ToString() ?? string.Empty,
+                                            ReceivedBy =
+                                                reader["ReceivedBy"]?.ToString() ?? string.Empty,
+                                        }
+                                    );
                                 }
                             }
                         }
                     }
                 }
 
-                return new Model_Dao_Result<Model_ReceivingAnalytics> { IsSuccess = true, Data = analytics };
+                return new Model_Dao_Result<Model_ReceivingAnalytics>
+                {
+                    IsSuccess = true,
+                    Data = analytics,
+                };
             }
             catch (Exception ex)
             {
@@ -872,7 +950,7 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 return new Model_Dao_Result<Model_ReceivingAnalytics>
                 {
                     IsSuccess = false,
-                    ErrorMessage = $"Error fetching analytics: {ex.Message}"
+                    ErrorMessage = $"Error fetching analytics: {ex.Message}",
                 };
             }
         }
@@ -888,41 +966,55 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
             var startDate = new DateTime(DateTime.Now.Year, 1, 1);
             for (var date = startDate; date <= DateTime.Today; date = date.AddDays(1))
             {
-                if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday) continue;
-                
+                if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday)
+                    continue;
+
                 // Add random data points for each day
                 int points = rnd.Next(1, 4);
                 for (int i = 0; i < points; i++)
                 {
-                    analytics.History.Add(new AnalyticsDataPoint
-                    {
-                        Date = date,
-                        Count = rnd.Next(1, 10),
-                        Type = types[rnd.Next(types.Length)],
-                        ReceivedBy = users[rnd.Next(users.Length)]
-                    });
+                    analytics.History.Add(
+                        new AnalyticsDataPoint
+                        {
+                            Date = date,
+                            Count = rnd.Next(1, 10),
+                            Type = types[rnd.Next(types.Length)],
+                            ReceivedBy = users[rnd.Next(users.Length)],
+                        }
+                    );
                 }
             }
 
             // Generate Forecast (Next 90 days)
-            for (var date = DateTime.Today; date <= DateTime.Today.AddDays(90); date = date.AddDays(1))
+            for (
+                var date = DateTime.Today;
+                date <= DateTime.Today.AddDays(90);
+                date = date.AddDays(1)
+            )
             {
-                if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday) continue;
+                if (date.DayOfWeek == DayOfWeek.Saturday || date.DayOfWeek == DayOfWeek.Sunday)
+                    continue;
 
                 int points = rnd.Next(1, 4);
                 for (int i = 0; i < points; i++)
                 {
-                    analytics.Forecast.Add(new AnalyticsDataPoint
-                    {
-                        Date = date,
-                        Count = rnd.Next(1, 10),
-                        Type = types[rnd.Next(types.Length)],
-                        ReceivedBy = string.Empty
-                    });
+                    analytics.Forecast.Add(
+                        new AnalyticsDataPoint
+                        {
+                            Date = date,
+                            Count = rnd.Next(1, 10),
+                            Type = types[rnd.Next(types.Length)],
+                            ReceivedBy = string.Empty,
+                        }
+                    );
                 }
             }
 
-            return new Model_Dao_Result<Model_ReceivingAnalytics> { IsSuccess = true, Data = analytics };
+            return new Model_Dao_Result<Model_ReceivingAnalytics>
+            {
+                IsSuccess = true,
+                Data = analytics,
+            };
         }
 
         /// <summary>
@@ -936,28 +1028,39 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
         /// Model_Dao_Result containing the inventory DataTable.
         /// Check IsSuccess before accessing Data.
         /// </returns>
-        public async Task<Model_Dao_Result<DataTable>> GetInventoryAsync(string partNumber, string warehouse, string location, bool nonZeroOnly)
+        public async Task<Model_Dao_Result<DataTable>> GetInventoryAsync(
+            string partNumber,
+            string warehouse,
+            string location,
+            bool nonZeroOnly,
+            CancellationToken cancellationToken = default
+        )
         {
             if (_useSampleData)
             {
-                return await Task.FromResult(GetSampleInventoryData(partNumber, warehouse, location, nonZeroOnly));
+                return await Task.FromResult(
+                    GetSampleInventoryData(partNumber, warehouse, location, nonZeroOnly)
+                );
             }
 
             if (string.IsNullOrEmpty(_userName) || string.IsNullOrEmpty(_password))
             {
 #if DEBUG
                 _useSampleData = true;
-                return await Task.FromResult(GetSampleInventoryData(partNumber, warehouse, location, nonZeroOnly));
+                return await Task.FromResult(
+                    GetSampleInventoryData(partNumber, warehouse, location, nonZeroOnly)
+                );
 #else
                 return new Model_Dao_Result<DataTable>
                 {
                     IsSuccess = false,
-                    ErrorMessage = "Visual ERP credentials are not configured."
+                    ErrorMessage = "Visual ERP credentials are not configured.",
                 };
 #endif
             }
 
-            string sql = @"
+            string sql =
+                @"
                 SELECT 
                     P.ID as [Part Number],
                     P.DESCRIPTION as [Description],
@@ -998,19 +1101,19 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
             {
                 using (var connection = new SqlConnection(GetConnectionString()))
                 {
-                    await connection.OpenAsync();
+                    await connection.OpenAsync(cancellationToken);
                     using (var command = new SqlCommand(sql, connection))
                     {
                         if (!string.IsNullOrWhiteSpace(partNumber))
                             command.Parameters.AddWithValue("@PartNumber", "%" + partNumber + "%");
-                        
+
                         if (!string.IsNullOrWhiteSpace(warehouse))
                             command.Parameters.AddWithValue("@Warehouse", "%" + warehouse + "%");
 
                         if (!string.IsNullOrWhiteSpace(location))
                             command.Parameters.AddWithValue("@Location", "%" + location + "%");
 
-                        using (var reader = await command.ExecuteReaderAsync())
+                        using (var reader = await command.ExecuteReaderAsync(cancellationToken))
                         {
                             var dt = new DataTable();
                             dt.Load(reader);
@@ -1025,7 +1128,7 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 return new Model_Dao_Result<DataTable>
                 {
                     IsSuccess = false,
-                    ErrorMessage = $"Error fetching inventory: {ex.Message}"
+                    ErrorMessage = $"Error fetching inventory: {ex.Message}",
                 };
             }
         }
@@ -1038,7 +1141,10 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
         /// Model_Dao_Result containing the transaction DataTable.
         /// Check IsSuccess before accessing Data.
         /// </returns>
-        public async Task<Model_Dao_Result<DataTable>> GetTransactionsAsync(Model_VisualTransactionFilter filter)
+        public async Task<Model_Dao_Result<DataTable>> GetTransactionsAsync(
+            Model_VisualTransactionFilter filter,
+            CancellationToken cancellationToken = default
+        )
         {
             if (_useSampleData)
             {
@@ -1054,13 +1160,14 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 return new Model_Dao_Result<DataTable>
                 {
                     IsSuccess = false,
-                    ErrorMessage = "Visual ERP credentials are not configured."
+                    ErrorMessage = "Visual ERP credentials are not configured.",
                 };
 #endif
             }
 
             // Base Query
-            string sql = @"
+            string sql =
+                @"
                 SELECT TOP (@MaxRecords)
                     TRANSACTION_ID,
                     TRANSACTION_DATE,
@@ -1109,10 +1216,13 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
             {
                 using (var connection = new SqlConnection(GetConnectionString()))
                 {
-                    await connection.OpenAsync();
+                    await connection.OpenAsync(cancellationToken);
                     using (var command = new SqlCommand(sql, connection))
                     {
-                        command.Parameters.AddWithValue("@MaxRecords", filter.MaxRecords > 0 ? filter.MaxRecords : 1000);
+                        command.Parameters.AddWithValue(
+                            "@MaxRecords",
+                            filter.MaxRecords > 0 ? filter.MaxRecords : 1000
+                        );
 
                         if (!string.IsNullOrWhiteSpace(filter.PartId))
                             command.Parameters.AddWithValue("@PartId", "%" + filter.PartId + "%");
@@ -1121,28 +1231,40 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                             command.Parameters.AddWithValue("@UserId", "%" + filter.UserId + "%");
 
                         if (!string.IsNullOrWhiteSpace(filter.WorkOrder))
-                            command.Parameters.AddWithValue("@WorkOrder", "%" + filter.WorkOrder + "%");
+                            command.Parameters.AddWithValue(
+                                "@WorkOrder",
+                                "%" + filter.WorkOrder + "%"
+                            );
 
                         if (!string.IsNullOrWhiteSpace(filter.CustomerOrder))
-                            command.Parameters.AddWithValue("@CustomerOrder", "%" + filter.CustomerOrder + "%");
+                            command.Parameters.AddWithValue(
+                                "@CustomerOrder",
+                                "%" + filter.CustomerOrder + "%"
+                            );
 
                         if (!string.IsNullOrWhiteSpace(filter.PurchaseOrder))
-                            command.Parameters.AddWithValue("@PurchaseOrder", "%" + filter.PurchaseOrder + "%");
+                            command.Parameters.AddWithValue(
+                                "@PurchaseOrder",
+                                "%" + filter.PurchaseOrder + "%"
+                            );
 
                         if (filter.StartDate.HasValue)
-                            command.Parameters.AddWithValue("@StartDate", filter.StartDate.Value.Date);
+                            command.Parameters.AddWithValue(
+                                "@StartDate",
+                                filter.StartDate.Value.Date
+                            );
 
                         if (filter.EndDate.HasValue)
                             command.Parameters.AddWithValue("@EndDate", filter.EndDate.Value.Date);
 
-                        using (var reader = await command.ExecuteReaderAsync())
+                        using (var reader = await command.ExecuteReaderAsync(cancellationToken))
                         {
                             var dataTable = new DataTable();
                             dataTable.Load(reader);
                             return new Model_Dao_Result<DataTable>
                             {
                                 IsSuccess = true,
-                                Data = dataTable
+                                Data = dataTable,
                             };
                         }
                     }
@@ -1154,7 +1276,7 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 return new Model_Dao_Result<DataTable>
                 {
                     IsSuccess = false,
-                    ErrorMessage = $"Error retrieving transactions: {ex.Message}"
+                    ErrorMessage = $"Error retrieving transactions: {ex.Message}",
                 };
             }
         }
@@ -1162,51 +1284,72 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
         /// <summary>
         /// Retrieves a list of all User IDs from the transaction history.
         /// </summary>
-        public async Task<Model_Dao_Result<List<string>>> GetUserIdsAsync()
+        public async Task<Model_Dao_Result<List<string>>> GetUserIdsAsync(
+            CancellationToken cancellationToken = default
+        )
         {
-            return await GetDistinctColumnValuesAsync("USER_ID", "INVENTORY_TRANS");
+            return await GetDistinctTransactionValuesAsync("USER_ID", cancellationToken);
         }
 
         /// <summary>
         /// Retrieves a list of all Work Order IDs from the transaction history.
         /// </summary>
-        public async Task<Model_Dao_Result<List<string>>> GetWorkOrdersAsync()
+        public async Task<Model_Dao_Result<List<string>>> GetWorkOrdersAsync(
+            CancellationToken cancellationToken = default
+        )
         {
-            return await GetDistinctColumnValuesAsync("WORKORDER_BASE_ID", "INVENTORY_TRANS");
+            return await GetDistinctTransactionValuesAsync("WORKORDER_BASE_ID", cancellationToken);
         }
 
         /// <summary>
         /// Retrieves a list of all Purchase Order IDs from the transaction history.
         /// </summary>
-        public async Task<Model_Dao_Result<List<string>>> GetPurchaseOrdersAsync()
+        public async Task<Model_Dao_Result<List<string>>> GetPurchaseOrdersAsync(
+            CancellationToken cancellationToken = default
+        )
         {
-            return await GetDistinctColumnValuesAsync("PURC_ORDER_ID", "INVENTORY_TRANS");
+            return await GetDistinctTransactionValuesAsync("PURC_ORDER_ID", cancellationToken);
         }
 
         /// <summary>
         /// Retrieves a list of all Customer Order IDs from the transaction history.
         /// </summary>
-        public async Task<Model_Dao_Result<List<string>>> GetCustomerOrdersAsync()
+        public async Task<Model_Dao_Result<List<string>>> GetCustomerOrdersAsync(
+            CancellationToken cancellationToken = default
+        )
         {
-            return await GetDistinctColumnValuesAsync("CUST_ORDER_ID", "INVENTORY_TRANS");
+            return await GetDistinctTransactionValuesAsync("CUST_ORDER_ID", cancellationToken);
         }
 
         /// <summary>
         /// Retrieves a list of all Part IDs from the Visual database.
         /// </summary>
-        public async Task<Model_Dao_Result<List<string>>> GetPartIdsAsync()
+        public async Task<Model_Dao_Result<List<string>>> GetPartIdsAsync(
+            CancellationToken cancellationToken = default
+        )
         {
-            return await GetDistinctColumnValuesAsync("ID", "PART");
+            return await GetDistinctReferenceValuesAsync(
+                "ID",
+                "PART",
+                REFERENCE_LOOKUP_LIMIT,
+                cancellationToken
+            );
         }
 
         /// <summary>
         /// Retrieves a list of all Die IDs from the Visual database (FGT%-01).
         /// </summary>
-        public async Task<Model_Dao_Result<List<string>>> GetDieIdsAsync()
+        public async Task<Model_Dao_Result<List<string>>> GetDieIdsAsync(
+            CancellationToken cancellationToken = default
+        )
         {
             if (_useSampleData)
             {
-                return new Model_Dao_Result<List<string>> { IsSuccess = true, Data = new List<string> { "FGT1001-01", "FGT1002-01" } };
+                return new Model_Dao_Result<List<string>>
+                {
+                    IsSuccess = true,
+                    Data = new List<string> { "FGT1001-01", "FGT1002-01" },
+                };
             }
 
             if (string.IsNullOrEmpty(_userName) || string.IsNullOrEmpty(_password))
@@ -1214,30 +1357,41 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 return new Model_Dao_Result<List<string>>
                 {
                     IsSuccess = false,
-                    ErrorMessage = "Visual ERP credentials are not configured."
+                    ErrorMessage = "Visual ERP credentials are not configured.",
                 };
             }
 
-            string sql = "SELECT DISTINCT ID FROM PART WHERE ID LIKE 'FGT%-01' AND ID <> 'FGT0001-01' OR ID LIKE 'MMC%' OR ID LIKE 'MMF%' ORDER BY ID";
+            string sql =
+                @"
+                SELECT TOP (@MaxResults) LookupValue
+                FROM (
+                    SELECT DISTINCT ID AS LookupValue
+                    FROM PART
+                    WHERE ID LIKE 'FGT%-01'
+                      AND ID <> 'FGT0001-01'
+                ) AS DieIds
+                ORDER BY LookupValue";
 
             try
             {
                 using (var connection = new SqlConnection(GetConnectionString()))
                 {
-                    await connection.OpenAsync();
+                    await connection.OpenAsync(cancellationToken);
                     using (var command = new SqlCommand(sql, connection))
                     {
-                        using (var reader = await command.ExecuteReaderAsync())
+                        command.Parameters.AddWithValue("@MaxResults", REFERENCE_LOOKUP_LIMIT);
+
+                        using (var reader = await command.ExecuteReaderAsync(cancellationToken))
                         {
                             var list = new List<string>();
-                            while (await reader.ReadAsync())
+                            while (await reader.ReadAsync(cancellationToken))
                             {
                                 list.Add(reader[0].ToString() ?? "");
                             }
                             return new Model_Dao_Result<List<string>>
                             {
                                 IsSuccess = true,
-                                Data = list
+                                Data = list,
                             };
                         }
                     }
@@ -1249,7 +1403,7 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 return new Model_Dao_Result<List<string>>
                 {
                     IsSuccess = false,
-                    ErrorMessage = $"Error retrieving Die IDs: {ex.Message}"
+                    ErrorMessage = $"Error retrieving Die IDs: {ex.Message}",
                 };
             }
         }
@@ -1257,11 +1411,17 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
         /// <summary>
         /// Retrieves a list of all Coil/Flatstock Part IDs from the Visual database (MMC% or MMF%).
         /// </summary>
-        public async Task<Model_Dao_Result<List<string>>> GetCoilFlatstockPartIdsAsync()
+        public async Task<Model_Dao_Result<List<string>>> GetCoilFlatstockPartIdsAsync(
+            CancellationToken cancellationToken = default
+        )
         {
             if (_useSampleData)
             {
-                return new Model_Dao_Result<List<string>> { IsSuccess = true, Data = new List<string> { "MMC-1001", "MMF-2002" } };
+                return new Model_Dao_Result<List<string>>
+                {
+                    IsSuccess = true,
+                    Data = new List<string> { "MMC-1001", "MMF-2002" },
+                };
             }
 
             if (string.IsNullOrEmpty(_userName) || string.IsNullOrEmpty(_password))
@@ -1269,30 +1429,40 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 return new Model_Dao_Result<List<string>>
                 {
                     IsSuccess = false,
-                    ErrorMessage = "Visual ERP credentials are not configured."
+                    ErrorMessage = "Visual ERP credentials are not configured.",
                 };
             }
 
-            string sql = "SELECT DISTINCT ID FROM PART WHERE ID LIKE 'MMC%' OR ID LIKE 'MMF%' ORDER BY ID";
+            string sql =
+                @"
+                SELECT TOP (@MaxResults) LookupValue
+                FROM (
+                    SELECT DISTINCT ID AS LookupValue
+                    FROM PART
+                    WHERE ID LIKE 'MMC%' OR ID LIKE 'MMF%'
+                ) AS CoilFlatstockIds
+                ORDER BY LookupValue";
 
             try
             {
                 using (var connection = new SqlConnection(GetConnectionString()))
                 {
-                    await connection.OpenAsync();
+                    await connection.OpenAsync(cancellationToken);
                     using (var command = new SqlCommand(sql, connection))
                     {
-                        using (var reader = await command.ExecuteReaderAsync())
+                        command.Parameters.AddWithValue("@MaxResults", REFERENCE_LOOKUP_LIMIT);
+
+                        using (var reader = await command.ExecuteReaderAsync(cancellationToken))
                         {
                             var list = new List<string>();
-                            while (await reader.ReadAsync())
+                            while (await reader.ReadAsync(cancellationToken))
                             {
                                 list.Add(reader[0].ToString() ?? "");
                             }
                             return new Model_Dao_Result<List<string>>
                             {
                                 IsSuccess = true,
-                                Data = list
+                                Data = list,
                             };
                         }
                     }
@@ -1304,7 +1474,7 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 return new Model_Dao_Result<List<string>>
                 {
                     IsSuccess = false,
-                    ErrorMessage = $"Error retrieving Coil/Flatstock IDs: {ex.Message}"
+                    ErrorMessage = $"Error retrieving Coil/Flatstock IDs: {ex.Message}",
                 };
             }
         }
@@ -1312,24 +1482,47 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
         /// <summary>
         /// Retrieves a list of all Location IDs from the Visual database.
         /// </summary>
-        public async Task<Model_Dao_Result<List<string>>> GetLocationIdsAsync()
+        public async Task<Model_Dao_Result<List<string>>> GetLocationIdsAsync(
+            CancellationToken cancellationToken = default
+        )
         {
-            return await GetDistinctColumnValuesAsync("ID", "LOCATION");
+            return await GetDistinctReferenceValuesAsync(
+                "ID",
+                "LOCATION",
+                REFERENCE_LOOKUP_LIMIT,
+                cancellationToken
+            );
         }
 
         /// <summary>
         /// Retrieves a list of all Warehouse IDs from the Visual database.
         /// </summary>
-        public async Task<Model_Dao_Result<List<string>>> GetWarehouseIdsAsync()
+        public async Task<Model_Dao_Result<List<string>>> GetWarehouseIdsAsync(
+            CancellationToken cancellationToken = default
+        )
         {
-            return await GetDistinctColumnValuesAsync("ID", "WAREHOUSE");
+            return await GetDistinctReferenceValuesAsync(
+                "ID",
+                "WAREHOUSE",
+                REFERENCE_LOOKUP_LIMIT,
+                cancellationToken
+            );
         }
 
-        private async Task<Model_Dao_Result<List<string>>> GetDistinctColumnValuesAsync(string columnName, string tableName)
+        private async Task<Model_Dao_Result<List<string>>> GetDistinctReferenceValuesAsync(
+            string columnName,
+            string tableName,
+            int maxResults,
+            CancellationToken cancellationToken
+        )
         {
             if (_useSampleData)
             {
-                return new Model_Dao_Result<List<string>> { IsSuccess = true, Data = new List<string> { "SAMPLE-1", "SAMPLE-2" } };
+                return new Model_Dao_Result<List<string>>
+                {
+                    IsSuccess = true,
+                    Data = new List<string> { "SAMPLE-1", "SAMPLE-2" },
+                };
             }
 
             if (string.IsNullOrEmpty(_userName) || string.IsNullOrEmpty(_password))
@@ -1337,30 +1530,41 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 return new Model_Dao_Result<List<string>>
                 {
                     IsSuccess = false,
-                    ErrorMessage = "Visual ERP credentials are not configured."
+                    ErrorMessage = "Visual ERP credentials are not configured.",
                 };
             }
 
-            string sql = $"SELECT DISTINCT {columnName} FROM {tableName} WHERE {columnName} IS NOT NULL AND {columnName} <> '' ORDER BY {columnName}";
+            string sql =
+                $@"
+                SELECT TOP (@MaxResults) LookupValue
+                FROM (
+                    SELECT DISTINCT {columnName} AS LookupValue
+                    FROM {tableName}
+                    WHERE {columnName} IS NOT NULL
+                      AND {columnName} <> ''
+                ) AS LookupValues
+                ORDER BY LookupValue";
 
             try
             {
                 using (var connection = new SqlConnection(GetConnectionString()))
                 {
-                    await connection.OpenAsync();
+                    await connection.OpenAsync(cancellationToken);
                     using (var command = new SqlCommand(sql, connection))
                     {
-                        using (var reader = await command.ExecuteReaderAsync())
+                        command.Parameters.AddWithValue("@MaxResults", maxResults);
+
+                        using (var reader = await command.ExecuteReaderAsync(cancellationToken))
                         {
                             var list = new List<string>();
-                            while (await reader.ReadAsync())
+                            while (await reader.ReadAsync(cancellationToken))
                             {
                                 list.Add(reader[0].ToString() ?? "");
                             }
                             return new Model_Dao_Result<List<string>>
                             {
                                 IsSuccess = true,
-                                Data = list
+                                Data = list,
                             };
                         }
                     }
@@ -1372,7 +1576,86 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 return new Model_Dao_Result<List<string>>
                 {
                     IsSuccess = false,
-                    ErrorMessage = $"Error retrieving {columnName}: {ex.Message}"
+                    ErrorMessage = $"Error retrieving {columnName}: {ex.Message}",
+                };
+            }
+        }
+
+        private async Task<Model_Dao_Result<List<string>>> GetDistinctTransactionValuesAsync(
+            string columnName,
+            CancellationToken cancellationToken
+        )
+        {
+            if (_useSampleData)
+            {
+                return new Model_Dao_Result<List<string>>
+                {
+                    IsSuccess = true,
+                    Data = new List<string> { "SAMPLE-1", "SAMPLE-2" },
+                };
+            }
+
+            if (string.IsNullOrEmpty(_userName) || string.IsNullOrEmpty(_password))
+            {
+                return new Model_Dao_Result<List<string>>
+                {
+                    IsSuccess = false,
+                    ErrorMessage = "Visual ERP credentials are not configured.",
+                };
+            }
+
+            string sql =
+                $@"
+                SELECT TOP (@MaxResults) LookupValue
+                FROM (
+                    SELECT DISTINCT {columnName} AS LookupValue
+                    FROM INVENTORY_TRANS
+                    WHERE {columnName} IS NOT NULL
+                      AND {columnName} <> ''
+                      AND (
+                          (CREATE_DATE IS NOT NULL AND CREATE_DATE >= @MinDate)
+                          OR (CREATE_DATE IS NULL AND TRANSACTION_DATE >= @MinDate)
+                      )
+                ) AS LookupValues
+                ORDER BY LookupValue";
+
+            try
+            {
+                using (var connection = new SqlConnection(GetConnectionString()))
+                {
+                    await connection.OpenAsync(cancellationToken);
+                    using (var command = new SqlCommand(sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@MaxResults", TRANSACTION_LOOKUP_LIMIT);
+                        command.Parameters.AddWithValue(
+                            "@MinDate",
+                            DateTime.Today.AddDays(-TRANSACTION_LOOKUP_WINDOW_DAYS)
+                        );
+
+                        using (var reader = await command.ExecuteReaderAsync(cancellationToken))
+                        {
+                            var list = new List<string>();
+                            while (await reader.ReadAsync(cancellationToken))
+                            {
+                                list.Add(reader[0].ToString() ?? "");
+                            }
+
+                            return new Model_Dao_Result<List<string>>
+                            {
+                                IsSuccess = true,
+                                Data = list,
+                            };
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                LoggingUtility.LogApplicationError(ex);
+                return new Model_Dao_Result<List<string>>
+                {
+                    IsSuccess = false,
+                    ErrorMessage = $"Error retrieving {columnName}: {ex.Message}",
                 };
             }
         }
@@ -1382,17 +1665,21 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
         #region Helpers
         private string GetFriendlyErrorMessage(Exception ex)
         {
-            if (ex.Message.Contains("network-related") || 
-                ex.Message.Contains("error: 40") || 
-                ex.Message.Contains("error: 26") || 
-                ex.Message.Contains("The server was not found"))
+            if (
+                ex.Message.Contains("network-related")
+                || ex.Message.Contains("error: 40")
+                || ex.Message.Contains("error: 26")
+                || ex.Message.Contains("The server was not found")
+            )
             {
                 return "Unable to connect to the Visual ERP Server. Please verify your network connection.";
             }
             return ex.Message;
         }
 
-        private Model_Dao_Result<DataTable> GetSampleTransactions(Model_VisualTransactionFilter filter)
+        private Model_Dao_Result<DataTable> GetSampleTransactions(
+            Model_VisualTransactionFilter filter
+        )
         {
             var dt = new DataTable();
             dt.Columns.Add("TRANSACTION_ID", typeof(int));
@@ -1458,12 +1745,17 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 ConnectTimeout = 5, // Reduced timeout for faster fallback
                 ApplicationName = "MTM_WIP_App_VisualDashboard",
                 TrustServerCertificate = true, // Required for some SQL Server configurations
-                Pooling = false // Immediate disposal per Constitution Principle V
+                Pooling = true,
             };
             return builder.ConnectionString;
         }
 
-        private Model_Dao_Result<DataTable> GetSampleInventoryData(string partNumber, string warehouse, string location, bool nonZeroOnly)
+        private Model_Dao_Result<DataTable> GetSampleInventoryData(
+            string partNumber,
+            string warehouse,
+            string location,
+            bool nonZeroOnly
+        )
         {
             var dt = new DataTable();
             dt.Columns.Add("Part Number");
@@ -1476,11 +1768,33 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
             dt.Columns.Add("Product Code");
             dt.Columns.Add("Commodity Code");
 
-            dt.Rows.Add("SAMPLE-PART-1", "Sample Description 1", "MAIN", "A-01-01", 100m, 10m, 90m, "FG", "STEEL");
-            dt.Rows.Add("SAMPLE-PART-2", "Sample Description 2", "MAIN", "B-02-02", 50m, 0m, 50m, "RM", "ALUM");
+            dt.Rows.Add(
+                "SAMPLE-PART-1",
+                "Sample Description 1",
+                "MAIN",
+                "A-01-01",
+                100m,
+                10m,
+                90m,
+                "FG",
+                "STEEL"
+            );
+            dt.Rows.Add(
+                "SAMPLE-PART-2",
+                "Sample Description 2",
+                "MAIN",
+                "B-02-02",
+                50m,
+                0m,
+                50m,
+                "RM",
+                "ALUM"
+            );
 
             var filteredRows = dt.AsEnumerable()
-                .Where(row => MatchesInventoryFilters(row, partNumber, warehouse, location, nonZeroOnly))
+                .Where(row =>
+                    MatchesInventoryFilters(row, partNumber, warehouse, location, nonZeroOnly)
+                )
                 .ToList();
 
             if (!filteredRows.Any())
@@ -1497,27 +1811,48 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
             return new Model_Dao_Result<DataTable> { IsSuccess = true, Data = result };
         }
 
-        private static bool MatchesInventoryFilters(DataRow row, string partNumber, string warehouse, string location, bool nonZeroOnly)
+        private static bool MatchesInventoryFilters(
+            DataRow row,
+            string partNumber,
+            string warehouse,
+            string location,
+            bool nonZeroOnly
+        )
         {
             string? partValue = row["Part Number"]?.ToString();
             string? warehouseValue = row["Warehouse"]?.ToString();
             string? locationValue = row["Location"]?.ToString();
             decimal onHand = row.Field<decimal>("On Hand");
 
-            if (!string.IsNullOrWhiteSpace(partNumber) &&
-                (partValue == null || !partValue.Contains(partNumber, StringComparison.OrdinalIgnoreCase)))
+            if (
+                !string.IsNullOrWhiteSpace(partNumber)
+                && (
+                    partValue == null
+                    || !partValue.Contains(partNumber, StringComparison.OrdinalIgnoreCase)
+                )
+            )
             {
                 return false;
             }
 
-            if (!string.IsNullOrWhiteSpace(warehouse) &&
-                (warehouseValue == null || !warehouseValue.Contains(warehouse, StringComparison.OrdinalIgnoreCase)))
+            if (
+                !string.IsNullOrWhiteSpace(warehouse)
+                && (
+                    warehouseValue == null
+                    || !warehouseValue.Contains(warehouse, StringComparison.OrdinalIgnoreCase)
+                )
+            )
             {
                 return false;
             }
 
-            if (!string.IsNullOrWhiteSpace(location) &&
-                (locationValue == null || !locationValue.Contains(location, StringComparison.OrdinalIgnoreCase)))
+            if (
+                !string.IsNullOrWhiteSpace(location)
+                && (
+                    locationValue == null
+                    || !locationValue.Contains(location, StringComparison.OrdinalIgnoreCase)
+                )
+            )
             {
                 return false;
             }
@@ -1532,7 +1867,8 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
 
         private string GetEmbeddedSql(Enum_VisualDashboardCategory category)
         {
-            string resourceName = $"MTM_WIP_Application_Winforms.Resources.Sql.Visual.{category}.sql";
+            string resourceName =
+                $"MTM_WIP_Application_Winforms.Resources.Sql.Visual.{category}.sql";
             var assembly = Assembly.GetExecutingAssembly();
 
             using (var stream = assembly.GetManifestResourceStream(resourceName))
@@ -1572,7 +1908,14 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
             dt.Columns.Add("Received By"); // Added for Received By column
 
             var rnd = new Random();
-            var vendors = new[] { "Acme Corp", "Steel Supply Co", "Fasteners Inc", "Global Logistics", "Local Services" };
+            var vendors = new[]
+            {
+                "Acme Corp",
+                "Steel Supply Co",
+                "Fasteners Inc",
+                "Global Logistics",
+                "Local Services",
+            };
             var carriers = new[] { "UPS", "FedEx", "DHL", "Our Truck", "Customer Pickup" };
             var parts = new[] { "MMC-1001", "MMF-2002", "PART-3003", "SVC-MAINT", "MMC-5005" };
             var users = new[] { "JDOE", "BSMITH", "MJONES", "ADMIN", "RECEIVING" };
@@ -1660,18 +2003,23 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
         /// <param name="start">Start date.</param>
         /// <param name="end">End date.</param>
         /// <returns>List of user IDs.</returns>
-        public async Task<Model_Dao_Result<List<string>>> GetDistinctUsersForAnalyticsAsync(DateTime start, DateTime end)
+        public async Task<Model_Dao_Result<List<string>>> GetDistinctUsersForAnalyticsAsync(
+            DateTime start,
+            DateTime end,
+            CancellationToken cancellationToken = default
+        )
         {
             if (_useSampleData)
             {
                 return new Model_Dao_Result<List<string>>
                 {
                     IsSuccess = true,
-                    Data = new List<string> { "SAMPLE_USER_1", "SAMPLE_USER_2", "SAMPLE_USER_3" }
+                    Data = new List<string> { "SAMPLE_USER_1", "SAMPLE_USER_2", "SAMPLE_USER_3" },
                 };
             }
 
-            string sql = @"
+            string sql =
+                @"
                 SELECT DISTINCT USER_ID 
                 FROM INVENTORY_TRANS 
                 WHERE CAST(COALESCE(CREATE_DATE, TRANSACTION_DATE) AS DATE) >= @Start 
@@ -1683,16 +2031,16 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
             {
                 using (var connection = new SqlConnection(GetConnectionString()))
                 {
-                    await connection.OpenAsync();
+                    await connection.OpenAsync(cancellationToken);
                     using (var command = new SqlCommand(sql, connection))
                     {
                         command.Parameters.AddWithValue("@Start", start.Date);
                         command.Parameters.AddWithValue("@End", end.Date);
 
                         var list = new List<string>();
-                        using (var reader = await command.ExecuteReaderAsync())
+                        using (var reader = await command.ExecuteReaderAsync(cancellationToken))
                         {
-                            while (await reader.ReadAsync())
+                            while (await reader.ReadAsync(cancellationToken))
                             {
                                 if (!reader.IsDBNull(0))
                                     list.Add(reader.GetString(0));
@@ -1708,7 +2056,7 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 return new Model_Dao_Result<List<string>>
                 {
                     IsSuccess = false,
-                    ErrorMessage = $"Error retrieving users: {GetFriendlyErrorMessage(ex)}"
+                    ErrorMessage = $"Error retrieving users: {GetFriendlyErrorMessage(ex)}",
                 };
             }
         }
@@ -1720,7 +2068,12 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
         /// <param name="end">End date.</param>
         /// <param name="userIds">List of user IDs to include.</param>
         /// <returns>DataTable with analytics columns.</returns>
-        public async Task<Model_Dao_Result<DataTable>> GetUserAnalyticsDataAsync(DateTime start, DateTime end, List<string> userIds)
+        public async Task<Model_Dao_Result<DataTable>> GetUserAnalyticsDataAsync(
+            DateTime start,
+            DateTime end,
+            List<string> userIds,
+            CancellationToken cancellationToken = default
+        )
         {
             if (_useSampleData)
             {
@@ -1737,9 +2090,36 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
 
                 foreach (var user in userIds)
                 {
-                    dt.Rows.Add(user, "Work Order", "PART-A", 10, DateTime.Now, "MAIN", null, "WO-123");
-                    dt.Rows.Add(user, "Location Transfer", "PART-B", 5, DateTime.Now, "LOC-A", "LOC-B", null);
-                    dt.Rows.Add(user, "Adjusted In", "PART-C", 2, DateTime.Now, "LOC-C", null, null);
+                    dt.Rows.Add(
+                        user,
+                        "Work Order",
+                        "PART-A",
+                        10,
+                        DateTime.Now,
+                        "MAIN",
+                        null,
+                        "WO-123"
+                    );
+                    dt.Rows.Add(
+                        user,
+                        "Location Transfer",
+                        "PART-B",
+                        5,
+                        DateTime.Now,
+                        "LOC-A",
+                        "LOC-B",
+                        null
+                    );
+                    dt.Rows.Add(
+                        user,
+                        "Adjusted In",
+                        "PART-C",
+                        2,
+                        DateTime.Now,
+                        "LOC-C",
+                        null,
+                        null
+                    );
                 }
                 return new Model_Dao_Result<DataTable> { IsSuccess = true, Data = dt };
             }
@@ -1758,7 +2138,8 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
             string inClause = string.Join(",", userParams);
 
             // Simplified query to fetch raw data
-            string sql = $@"
+            string sql =
+                $@"
                 SELECT 
                     TRANSACTION_ID, 
                     USER_ID, 
@@ -1781,7 +2162,7 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 var rawData = new DataTable();
                 using (var connection = new SqlConnection(GetConnectionString()))
                 {
-                    await connection.OpenAsync();
+                    await connection.OpenAsync(cancellationToken);
                     using (var command = new SqlCommand(sql, connection))
                     {
                         command.CommandTimeout = 60;
@@ -1792,7 +2173,7 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                             command.Parameters.AddWithValue($"@User{i}", userIds[i]);
                         }
 
-                        using (var reader = await command.ExecuteReaderAsync())
+                        using (var reader = await command.ExecuteReaderAsync(cancellationToken))
                         {
                             rawData.Load(reader);
                         }
@@ -1811,7 +2192,8 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 resultDt.Columns.Add("WorkOrder", typeof(string));
 
                 var processedIds = new HashSet<int>();
-                var rows = rawData.AsEnumerable()
+                var rows = rawData
+                    .AsEnumerable()
                     .Select(r => new
                     {
                         Id = r.Field<int>("TRANSACTION_ID"),
@@ -1822,7 +2204,7 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                         CO = r.Field<string>("CUST_ORDER_ID"),
                         Qty = r.Field<decimal>("QTY"),
                         Date = r.Field<DateTime>("CREATE_DATE"),
-                        Loc = r.Field<string>("LOCATION_ID") ?? ""
+                        Loc = r.Field<string>("LOCATION_ID") ?? "",
                     })
                     .ToList();
 
@@ -1830,11 +2212,22 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 for (int i = 0; i < rows.Count; i++)
                 {
                     var t = rows[i];
-                    if (processedIds.Contains(t.Id)) continue;
+                    if (processedIds.Contains(t.Id))
+                        continue;
 
                     if (t.Type == "I" && !string.IsNullOrEmpty(t.WO))
                     {
-                        AddAnalyticsRow(resultDt, t.User, t.Part, "Work Order", t.Qty, t.Date, null, t.Loc, t.WO);
+                        AddAnalyticsRow(
+                            resultDt,
+                            t.User,
+                            t.Part,
+                            "Work Order",
+                            t.Qty,
+                            t.Date,
+                            null,
+                            t.Loc,
+                            t.WO
+                        );
                         processedIds.Add(t.Id);
                     }
                 }
@@ -1843,11 +2236,22 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 for (int i = 0; i < rows.Count; i++)
                 {
                     var t = rows[i];
-                    if (processedIds.Contains(t.Id)) continue;
+                    if (processedIds.Contains(t.Id))
+                        continue;
 
                     if (t.Type == "O" && !string.IsNullOrEmpty(t.CO))
                     {
-                        AddAnalyticsRow(resultDt, t.User, t.Part, "Adjusted Out", t.Qty, t.Date, t.Loc, null, null);
+                        AddAnalyticsRow(
+                            resultDt,
+                            t.User,
+                            t.Part,
+                            "Adjusted Out",
+                            t.Qty,
+                            t.Date,
+                            t.Loc,
+                            null,
+                            null
+                        );
                         processedIds.Add(t.Id);
                     }
                 }
@@ -1856,7 +2260,8 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 for (int i = 0; i < rows.Count; i++)
                 {
                     var tOut = rows[i];
-                    if (processedIds.Contains(tOut.Id)) continue;
+                    if (processedIds.Contains(tOut.Id))
+                        continue;
 
                     if (tOut.Type == "O")
                     {
@@ -1865,13 +2270,16 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
 
                         for (int j = 0; j < rows.Count; j++)
                         {
-                            if (i == j || processedIds.Contains(rows[j].Id)) continue;
+                            if (i == j || processedIds.Contains(rows[j].Id))
+                                continue;
                             var tIn = rows[j];
 
-                            if (tIn.Type == "I" && 
-                                string.IsNullOrEmpty(tIn.WO) && 
-                                tIn.Part == tOut.Part &&
-                                Math.Abs(tIn.Qty) == Math.Abs(tOut.Qty))
+                            if (
+                                tIn.Type == "I"
+                                && string.IsNullOrEmpty(tIn.WO)
+                                && tIn.Part == tOut.Part
+                                && Math.Abs(tIn.Qty) == Math.Abs(tOut.Qty)
+                            )
                             {
                                 var diff = Math.Abs((tIn.Date - tOut.Date).TotalSeconds);
                                 if (diff < 300)
@@ -1888,7 +2296,17 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                         if (bestMatchIndex != -1)
                         {
                             var tIn = rows[bestMatchIndex];
-                            AddAnalyticsRow(resultDt, tOut.User, tOut.Part, "Location Transfer", tOut.Qty, tOut.Date, tOut.Loc, tIn.Loc, null);
+                            AddAnalyticsRow(
+                                resultDt,
+                                tOut.User,
+                                tOut.Part,
+                                "Location Transfer",
+                                tOut.Qty,
+                                tOut.Date,
+                                tOut.Loc,
+                                tIn.Loc,
+                                null
+                            );
                             processedIds.Add(tOut.Id);
                             processedIds.Add(tIn.Id);
                         }
@@ -1899,12 +2317,33 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 for (int i = 0; i < rows.Count; i++)
                 {
                     var t = rows[i];
-                    if (processedIds.Contains(t.Id)) continue;
+                    if (processedIds.Contains(t.Id))
+                        continue;
 
                     if (t.Type == "I")
-                        AddAnalyticsRow(resultDt, t.User, t.Part, "Adjusted In", t.Qty, t.Date, null, t.Loc, null);
+                        AddAnalyticsRow(
+                            resultDt,
+                            t.User,
+                            t.Part,
+                            "Adjusted In",
+                            t.Qty,
+                            t.Date,
+                            null,
+                            t.Loc,
+                            null
+                        );
                     else
-                        AddAnalyticsRow(resultDt, t.User, t.Part, "Adjusted Out", t.Qty, t.Date, t.Loc, null, null);
+                        AddAnalyticsRow(
+                            resultDt,
+                            t.User,
+                            t.Part,
+                            "Adjusted Out",
+                            t.Qty,
+                            t.Date,
+                            t.Loc,
+                            null,
+                            null
+                        );
                 }
 
                 return new Model_Dao_Result<DataTable> { IsSuccess = true, Data = resultDt };
@@ -1915,17 +2354,29 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 return new Model_Dao_Result<DataTable>
                 {
                     IsSuccess = false,
-                    ErrorMessage = $"Error retrieving analytics data: {ex.Message}"
+                    ErrorMessage = $"Error retrieving analytics data: {ex.Message}",
                 };
             }
         }
 
-        private void AddAnalyticsRow(DataTable dt, string user, string partId, string baseCategory, decimal qty, DateTime date, string? fromLoc, string? toLoc, string? wo)
+        private void AddAnalyticsRow(
+            DataTable dt,
+            string user,
+            string partId,
+            string baseCategory,
+            decimal qty,
+            DateTime date,
+            string? fromLoc,
+            string? toLoc,
+            string? wo
+        )
         {
             string category = baseCategory;
-            if (partId.StartsWith("MMF")) category = "Flatstock";
-            else if (partId.StartsWith("MMC")) category = "Coil";
-            
+            if (partId.StartsWith("MMF"))
+                category = "Flatstock";
+            else if (partId.StartsWith("MMC"))
+                category = "Coil";
+
             dt.Rows.Add(user, category, partId, qty, date, fromLoc, toLoc, wo);
         }
 
@@ -1933,7 +2384,9 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
         /// Retrieves transaction history for shift calculation (last 30 days).
         /// </summary>
         /// <returns>DataTable with USER_ID and TRANSACTION_DATE.</returns>
-        public async Task<Model_Dao_Result<DataTable>> GetUserShiftDataAsync()
+        public async Task<Model_Dao_Result<DataTable>> GetUserShiftDataAsync(
+            CancellationToken cancellationToken = default
+        )
         {
             if (_useSampleData)
             {
@@ -1941,7 +2394,7 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 var dt = new DataTable();
                 dt.Columns.Add("USER_ID", typeof(string));
                 dt.Columns.Add("TRANSACTION_DATE", typeof(DateTime));
-                
+
                 var rnd = new Random();
                 var users = new[] { "JDOE", "BSMITH", "MJONES" };
                 for (int i = 0; i < 100; i++)
@@ -1956,11 +2409,12 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 return new Model_Dao_Result<DataTable>
                 {
                     IsSuccess = false,
-                    ErrorMessage = "Visual ERP credentials are not configured."
+                    ErrorMessage = "Visual ERP credentials are not configured.",
                 };
             }
 
-            string sql = @"
+            string sql =
+                @"
                 SELECT USER_ID, TRANSACTION_DATE
                 FROM INVENTORY_TRANS
                 WHERE TRANSACTION_DATE >= DATEADD(day, -30, GETDATE())
@@ -1970,10 +2424,10 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
             {
                 using (var connection = new SqlConnection(GetConnectionString()))
                 {
-                    await connection.OpenAsync();
+                    await connection.OpenAsync(cancellationToken);
                     using (var command = new SqlCommand(sql, connection))
                     {
-                        using (var reader = await command.ExecuteReaderAsync())
+                        using (var reader = await command.ExecuteReaderAsync(cancellationToken))
                         {
                             var dt = new DataTable();
                             dt.Load(reader);
@@ -1988,7 +2442,7 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 return new Model_Dao_Result<DataTable>
                 {
                     IsSuccess = false,
-                    ErrorMessage = $"Error retrieving shift data: {ex.Message}"
+                    ErrorMessage = $"Error retrieving shift data: {ex.Message}",
                 };
             }
         }
@@ -1997,7 +2451,9 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
         /// Retrieves full names for all employees.
         /// </summary>
         /// <returns>DataTable with USER_ID, FIRST_NAME, LAST_NAME.</returns>
-        public async Task<Model_Dao_Result<DataTable>> GetUserFullNamesAsync()
+        public async Task<Model_Dao_Result<DataTable>> GetUserFullNamesAsync(
+            CancellationToken cancellationToken = default
+        )
         {
             if (_useSampleData)
             {
@@ -2016,11 +2472,12 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 return new Model_Dao_Result<DataTable>
                 {
                     IsSuccess = false,
-                    ErrorMessage = "Visual ERP credentials are not configured."
+                    ErrorMessage = "Visual ERP credentials are not configured.",
                 };
             }
 
-            string sql = @"
+            string sql =
+                @"
                 SELECT USER_ID, FIRST_NAME, LAST_NAME 
                 FROM EMPLOYEE
                 WHERE USER_ID IS NOT NULL AND USER_ID <> ''";
@@ -2029,10 +2486,10 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
             {
                 using (var connection = new SqlConnection(GetConnectionString()))
                 {
-                    await connection.OpenAsync();
+                    await connection.OpenAsync(cancellationToken);
                     using (var command = new SqlCommand(sql, connection))
                     {
-                        using (var reader = await command.ExecuteReaderAsync())
+                        using (var reader = await command.ExecuteReaderAsync(cancellationToken))
                         {
                             var dt = new DataTable();
                             dt.Load(reader);
@@ -2047,7 +2504,7 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 return new Model_Dao_Result<DataTable>
                 {
                     IsSuccess = false,
-                    ErrorMessage = $"Error retrieving user names: {ex.Message}"
+                    ErrorMessage = $"Error retrieving user names: {ex.Message}",
                 };
             }
         }
@@ -2055,7 +2512,11 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
         /// <summary>
         /// Retrieves material handler statistics for scoring.
         /// </summary>
-        public async Task<Model_Dao_Result<DataTable>> GetMaterialHandlerStatsAsync(DateTime startDate, DateTime endDate)
+        public async Task<Model_Dao_Result<DataTable>> GetMaterialHandlerStatsAsync(
+            DateTime startDate,
+            DateTime endDate,
+            CancellationToken cancellationToken = default
+        )
         {
             if (_useSampleData)
             {
@@ -2063,11 +2524,11 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 dt.Columns.Add("User", typeof(string));
                 dt.Columns.Add("TransactionType", typeof(string));
                 dt.Columns.Add("TransactionCount", typeof(int));
-                
+
                 dt.Rows.Add("JDOE", "Adjusted In", 50);
                 dt.Rows.Add("JDOE", "Adjusted Out", 30);
                 dt.Rows.Add("BSMITH", "Location Transfer", 80);
-                
+
                 return new Model_Dao_Result<DataTable> { IsSuccess = true, Data = dt };
             }
 
@@ -2076,13 +2537,14 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 return new Model_Dao_Result<DataTable>
                 {
                     IsSuccess = false,
-                    ErrorMessage = "Visual ERP credentials are not configured."
+                    ErrorMessage = "Visual ERP credentials are not configured.",
                 };
             }
 
             // Fetch raw data for processing
             // Added QTY and CUST_ORDER_ID for proper matching logic
-            string sql = @"
+            string sql =
+                @"
                 SELECT 
                     TRANSACTION_ID,
                     USER_ID,
@@ -2101,14 +2563,14 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 var rawData = new DataTable();
                 using (var connection = new SqlConnection(GetConnectionString()))
                 {
-                    await connection.OpenAsync();
+                    await connection.OpenAsync(cancellationToken);
                     using (var command = new SqlCommand(sql, connection))
                     {
                         command.CommandTimeout = 120;
                         command.Parameters.AddWithValue("@StartDate", startDate);
                         command.Parameters.AddWithValue("@EndDate", endDate);
 
-                        using (var reader = await command.ExecuteReaderAsync())
+                        using (var reader = await command.ExecuteReaderAsync(cancellationToken))
                         {
                             rawData.Load(reader);
                         }
@@ -2118,8 +2580,9 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 // Process data in memory using Helper_VisualLifecycle logic
                 var stats = new Dictionary<(string User, string Category), int>();
                 var processedIds = new HashSet<int>();
-                
-                var rows = rawData.AsEnumerable()
+
+                var rows = rawData
+                    .AsEnumerable()
                     .Select(r => new
                     {
                         Id = r.Field<int>("TRANSACTION_ID"),
@@ -2129,7 +2592,7 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                         WO = r.Field<string>("WORKORDER_BASE_ID"),
                         CO = r.Field<string>("CUST_ORDER_ID"),
                         Qty = r.Field<decimal>("QTY"),
-                        Date = r.Field<DateTime>("CREATE_DATE")
+                        Date = r.Field<DateTime>("CREATE_DATE"),
                     })
                     .ToList();
 
@@ -2137,7 +2600,8 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 for (int i = 0; i < rows.Count; i++)
                 {
                     var t = rows[i];
-                    if (processedIds.Contains(t.Id)) continue;
+                    if (processedIds.Contains(t.Id))
+                        continue;
 
                     if (t.Type == "I" && !string.IsNullOrEmpty(t.WO))
                     {
@@ -2150,7 +2614,8 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 for (int i = 0; i < rows.Count; i++)
                 {
                     var t = rows[i];
-                    if (processedIds.Contains(t.Id)) continue;
+                    if (processedIds.Contains(t.Id))
+                        continue;
 
                     if (t.Type == "O" && !string.IsNullOrEmpty(t.CO))
                     {
@@ -2163,7 +2628,8 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 for (int i = 0; i < rows.Count; i++)
                 {
                     var tOut = rows[i];
-                    if (processedIds.Contains(tOut.Id)) continue;
+                    if (processedIds.Contains(tOut.Id))
+                        continue;
 
                     if (tOut.Type == "O")
                     {
@@ -2175,13 +2641,17 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
 
                         for (int j = 0; j < rows.Count; j++)
                         {
-                            if (i == j || processedIds.Contains(rows[j].Id)) continue;
+                            if (i == j || processedIds.Contains(rows[j].Id))
+                                continue;
                             var tIn = rows[j];
 
-                            if (tIn.Type == "I" && 
-                                string.IsNullOrEmpty(tIn.WO) && // Not a WO
-                                tIn.Part == tOut.Part &&
-                                Math.Abs(tIn.Qty) == Math.Abs(tOut.Qty))
+                            if (
+                                tIn.Type == "I"
+                                && string.IsNullOrEmpty(tIn.WO)
+                                && // Not a WO
+                                tIn.Part == tOut.Part
+                                && Math.Abs(tIn.Qty) == Math.Abs(tOut.Qty)
+                            )
                             {
                                 var diff = Math.Abs((tIn.Date - tOut.Date).TotalSeconds);
                                 if (diff < 300) // 5 minutes
@@ -2209,7 +2679,8 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 for (int i = 0; i < rows.Count; i++)
                 {
                     var t = rows[i];
-                    if (processedIds.Contains(t.Id)) continue;
+                    if (processedIds.Contains(t.Id))
+                        continue;
 
                     string category = t.Type == "I" ? "Adjusted In" : "Adjusted Out";
                     AddStat(stats, t.User, t.Part, category);
@@ -2220,7 +2691,7 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 dt.Columns.Add("User", typeof(string));
                 dt.Columns.Add("TransactionType", typeof(string));
                 dt.Columns.Add("TransactionCount", typeof(int));
-                dt.Columns.Add("PartCategory", typeof(string)); 
+                dt.Columns.Add("PartCategory", typeof(string));
                 dt.Columns.Add("HasWorkOrder", typeof(string));
 
                 foreach (var kvp in stats)
@@ -2236,22 +2707,29 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 return new Model_Dao_Result<DataTable>
                 {
                     IsSuccess = false,
-                    ErrorMessage = $"Error retrieving material handler stats: {ex.Message}"
+                    ErrorMessage = $"Error retrieving material handler stats: {ex.Message}",
                 };
             }
         }
 
-        private void AddStat(Dictionary<(string User, string Category), int> stats, string user, string partId, string baseCategory)
+        private void AddStat(
+            Dictionary<(string User, string Category), int> stats,
+            string user,
+            string partId,
+            string baseCategory
+        )
         {
             string category = baseCategory;
-            if (partId.StartsWith("MMF")) category = "Flatstock";
-            else if (partId.StartsWith("MMC")) category = "Coil";
-            
+            if (partId.StartsWith("MMF"))
+                category = "Flatstock";
+            else if (partId.StartsWith("MMC"))
+                category = "Coil";
+
             var key = (user, category);
-            if (!stats.ContainsKey(key)) stats[key] = 0;
+            if (!stats.ContainsKey(key))
+                stats[key] = 0;
             stats[key]++;
         }
         #endregion
-
     }
 }

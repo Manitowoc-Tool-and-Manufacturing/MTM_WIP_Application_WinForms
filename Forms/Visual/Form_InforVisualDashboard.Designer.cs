@@ -182,7 +182,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             InforVisualDashboard_Button_MaterialHandlerGeneral.Size = new Size(143, 45);
             InforVisualDashboard_Button_MaterialHandlerGeneral.TabIndex = 12;
             InforVisualDashboard_Button_MaterialHandlerGeneral.Tag = Models.Enum_VisualDashboardCategory.MaterialHandlerAnalytics_General;
-            InforVisualDashboard_Button_MaterialHandlerGeneral.Text = "Visual User Analytics";
+            InforVisualDashboard_Button_MaterialHandlerGeneral.Text = "User && Team Analytics";
             InforVisualDashboard_Button_MaterialHandlerGeneral.TextAlign = ContentAlignment.MiddleLeft;
             InforVisualDashboard_Button_MaterialHandlerGeneral.UseVisualStyleBackColor = false;
             // 

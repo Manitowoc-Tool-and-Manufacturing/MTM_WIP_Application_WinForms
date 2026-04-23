@@ -14,40 +14,45 @@ New stored procedure to retrieve all transactions for a specific batch number in
 ## Stored Procedure Definition
 
 ### Name
+
 `inv_transactions_GetBatchLifecycle`
 
 ### Purpose
+
 Retrieve all transactions associated with a specific batch number, ordered chronologically for client-side tree building algorithm that detects splits.
 
 ### Parameters
 
 #### Input Parameters
+
 - **`p_BatchNumber`** VARCHAR(300) - The batch number to query (required)
 
 #### Output Parameters
+
 - **`p_Status`** INT - Status code
-  - `0` = Success (records returned)
-  - `1` = Success (no records found for batch)
-  - `-1` = Error (invalid batch number or SQL error)
+    - `0` = Success (records returned)
+    - `1` = Success (no records found for batch)
+    - `-1` = Error (invalid batch number or SQL error)
 - **`p_ErrorMsg`** VARCHAR(500) - Error message (empty string on success)
 
 ### Return Type
+
 **DataTable** with columns matching `inv_transaction` table structure:
 
-| Column           | Type         | Nullable | Description                                    |
-|------------------|--------------|----------|------------------------------------------------|
-| ID               | INT(11)      | No       | Unique transaction identifier                  |
-| TransactionType  | VARCHAR(20)  | No       | IN/OUT/TRANSFER                                |
-| PartID           | VARCHAR(300) | No       | Part number                                    |
-| BatchNumber      | VARCHAR(300) | Yes      | Batch identifier                               |
-| Quantity         | INT(11)      | No       | Transaction quantity                           |
-| FromLocation     | VARCHAR(100) | Yes      | Source location                                |
-| ToLocation       | VARCHAR(100) | Yes      | Destination location (TRANSFER only)           |
-| Operation        | VARCHAR(100) | Yes      | Manufacturing operation number                 |
-| User             | VARCHAR(100) | No       | Username who created transaction               |
-| ItemType         | VARCHAR(100) | No       | WIP/FG/RM/etc                                  |
-| Notes            | TEXT         | Yes      | Optional transaction notes                     |
-| ReceiveDate      | DATETIME     | No       | Transaction timestamp                          |
+| Column          | Type         | Nullable | Description                          |
+| --------------- | ------------ | -------- | ------------------------------------ |
+| ID              | INT(11)      | No       | Unique transaction identifier        |
+| TransactionType | VARCHAR(20)  | No       | IN/OUT/TRANSFER                      |
+| PartID          | VARCHAR(300) | No       | Part number                          |
+| BatchNumber     | VARCHAR(300) | Yes      | Batch identifier                     |
+| Quantity        | INT(11)      | No       | Transaction quantity                 |
+| FromLocation    | VARCHAR(100) | Yes      | Source location                      |
+| ToLocation      | VARCHAR(100) | Yes      | Destination location (TRANSFER only) |
+| Operation       | VARCHAR(100) | Yes      | Manufacturing operation number       |
+| User            | VARCHAR(100) | No       | Username who created transaction     |
+| ItemType        | VARCHAR(100) | No       | WIP/FG/RM/etc                        |
+| Notes           | TEXT         | Yes      | Optional transaction notes           |
+| ReceiveDate     | DATETIME     | No       | Transaction timestamp                |
 
 ---
 
@@ -68,7 +73,7 @@ BEGIN
         SET p_ErrorMsg = CONCAT('Error retrieving batch lifecycle: ', SUBSTRING(MESSAGE_TEXT, 1, 400));
         ROLLBACK;
     END;
-    
+
     -- Validate input
     IF p_BatchNumber IS NULL OR TRIM(p_BatchNumber) = '' THEN
         SET p_Status = -1;
@@ -76,7 +81,7 @@ BEGIN
         SELECT NULL LIMIT 0; -- Return empty result set
     ELSE
         -- Query transactions for batch in chronological order
-        SELECT 
+        SELECT
             ID,
             TransactionType,
             PartID,
@@ -92,7 +97,7 @@ BEGIN
         FROM inv_transaction
         WHERE BatchNumber = p_BatchNumber
         ORDER BY ReceiveDate ASC, ID ASC; -- Chronological order critical for tree building
-        
+
         -- Set status based on result count
         IF FOUND_ROWS() > 0 THEN
             SET p_Status = 0;
@@ -128,6 +133,7 @@ CREATE INDEX idx_batchnumber ON inv_transaction(BatchNumber);
 ### Table Structure (Reference Only - No Changes)
 
 Table: `inv_transaction`
+
 - All columns exist in current schema
 - No schema modifications required
 - Procedure uses read-only SELECT
@@ -137,6 +143,7 @@ Table: `inv_transaction`
 ## Usage Example
 
 ### Direct MySQL Call
+
 ```sql
 -- Declare output variables
 SET @status = 0;
@@ -150,13 +157,14 @@ SELECT @status AS Status, @errorMsg AS ErrorMessage;
 ```
 
 **Expected Result** (Batch 0000021324):
-| ID    | TransactionType | PartID       | Quantity | FromLocation | ToLocation | ReceiveDate         |
+| ID | TransactionType | PartID | Quantity | FromLocation | ToLocation | ReceiveDate |
 |-------|-----------------|--------------|----------|--------------|------------|---------------------|
-| 40361 | IN              | 21-28841-006 | 500      | X-00         | NULL       | 2025-11-01 20:47:31 |
-| 40362 | TRANSFER        | 21-28841-006 | 250      | X-00         | X-04       | 2025-11-01 20:47:48 |
-| 40363 | TRANSFER        | 21-28841-006 | 100      | X-04         | X-03       | 2025-11-01 20:48:37 |
+| 40361 | IN | 21-28841-006 | 500 | X-00 | NULL | 2025-11-01 20:47:31 |
+| 40362 | TRANSFER | 21-28841-006 | 250 | X-00 | X-04 | 2025-11-01 20:47:48 |
+| 40363 | TRANSFER | 21-28841-006 | 100 | X-04 | X-03 | 2025-11-01 20:48:37 |
 
 ### C# DAO Integration
+
 ```csharp
 // File: Data/Dao_Transactions.cs
 
@@ -210,6 +218,7 @@ internal static async Task<Model_Dao_Result<List<Model_Transactions_Core>>> GetB
 ## Performance Characteristics
 
 ### Expected Performance
+
 - **Typical batch size**: 2-10 transactions per batch
 - **Large batch size**: 20-50 transactions per batch
 - **Maximum observed**: 100 transactions per batch
@@ -218,6 +227,7 @@ internal static async Task<Model_Dao_Result<List<Model_Transactions_Core>>> GetB
 - **Total roundtrip**: <100ms for typical batches
 
 ### Optimization Strategies
+
 - **Index on BatchNumber**: PRIMARY optimization - ensures fast WHERE clause execution
 - **Covering index potential**: Could add (BatchNumber, ReceiveDate, ID) composite index if query becomes bottleneck
 - **Result set size**: Chronological ordering happens in MySQL (efficient), no client-side sorting needed
@@ -228,6 +238,7 @@ internal static async Task<Model_Dao_Result<List<Model_Transactions_Core>>> GetB
 ## Testing Strategy
 
 ### Manual Testing Checklist
+
 - [ ] Execute procedure with valid batch number (0000021324) - verify chronological order
 - [ ] Execute with non-existent batch number - verify p_Status = 1, p_ErrorMsg contains batch number
 - [ ] Execute with NULL batch number - verify p_Status = -1, p_ErrorMsg = 'BatchNumber parameter is required'
@@ -237,6 +248,7 @@ internal static async Task<Model_Dao_Result<List<Model_Transactions_Core>>> GetB
 - [ ] Test with batch containing splits (partial TRANSFERs) - verify all transactions returned in order
 
 ### Integration Test (BaseIntegrationTest Pattern)
+
 ```csharp
 [TestMethod]
 public async Task GetBatchLifecycleAsync_ValidBatch_ReturnsChronologicalTransactions()
@@ -251,11 +263,11 @@ public async Task GetBatchLifecycleAsync_ValidBatch_ReturnsChronologicalTransact
     Assert.IsTrue(result.IsSuccess, $"Expected success, got: {result.ErrorMessage}");
     Assert.IsNotNull(result.Data, "Expected non-null transaction list");
     Assert.IsTrue(result.Data.Count > 0, "Expected at least one transaction for known batch");
-    
+
     // Verify chronological order
     for (int i = 1; i < result.Data.Count; i++)
     {
-        Assert.IsTrue(result.Data[i].DateTime >= result.Data[i-1].DateTime, 
+        Assert.IsTrue(result.Data[i].DateTime >= result.Data[i-1].DateTime,
             "Transactions must be in chronological order");
     }
 }
@@ -266,6 +278,7 @@ public async Task GetBatchLifecycleAsync_ValidBatch_ReturnsChronologicalTransact
 ## Deployment Plan
 
 ### Step 1: Create Stored Procedure
+
 ```bash
 # File location: Database/UpdatedStoredProcedures/ReadyForVerification/inv_transactions_GetBatchLifecycle.sql
 
@@ -277,6 +290,7 @@ mysql -h 172.16.1.104 -P 3306 -u root -p mtm_wip_application_winforms_test -e "S
 ```
 
 ### Step 2: Create Index (If Missing)
+
 ```bash
 # Check if index exists
 mysql -h 172.16.1.104 -P 3306 -u root -p mtm_wip_application_winforms_test -e "SHOW INDEX FROM inv_transaction WHERE Key_name='idx_batchnumber';"
@@ -286,16 +300,19 @@ mysql -h 172.16.1.104 -P 3306 -u root -p mtm_wip_application_winforms_test -e "C
 ```
 
 ### Step 3: Implement DAO Method
+
 - Add `GetBatchLifecycleAsync` to `Data/Dao_Transactions.cs`
 - Follow discovery-first workflow from `.github/instructions/integration-testing.instructions.md`
 - Use `Helper_Database_StoredProcedure.ExecuteDataTableWithStatusAsync`
 
 ### Step 4: Integration Testing
+
 - Create test in `Tests/Integration/Dao_Transactions_Tests.cs`
 - Validate chronological ordering
 - Validate error handling (invalid batch, null batch)
 
 ### Step 5: Production Deployment
+
 - Deploy stored procedure to production database (172.16.1.104)
 - Verify index exists in production
 - Test with real batch numbers
@@ -316,8 +333,9 @@ mysql -h 172.16.1.104 -P 3306 -u root -p mtm_wip_application_winforms_test -e "C
 ## Approval Checklist
 
 Before moving to implementation (T071):
+
 - [ ] SQL syntax validated (no syntax errors)
-- [ ] Parameter naming follows MTM conventions (p_ prefix)
+- [ ] Parameter naming follows MTM conventions (p\_ prefix)
 - [ ] Output parameters (p_Status, p_ErrorMsg) included
 - [ ] Error handling (EXIT HANDLER FOR SQLEXCEPTION) implemented
 - [ ] Chronological ordering (ORDER BY ReceiveDate ASC, ID ASC) confirmed

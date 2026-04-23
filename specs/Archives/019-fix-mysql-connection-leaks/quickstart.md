@@ -45,15 +45,15 @@ dotnet build MTM_WIP_Application_Winforms.csproj
 
 ### 3. Key Files to Modify
 
-| File | Change Type | Description |
-|------|-------------|-------------|
-| `Helpers/Helper_Database_StoredProcedure.cs` | MODIFY | Mark ExecuteReaderAsync [Obsolete], add ExecuteRawSqlAsync |
-| `Helpers/Helper_Database_Variables.cs` | MODIFY | Add Pooling=false to connection strings |
-| `Helpers/Helper_Database_ConnectionMonitor.cs` | CREATE | New connection lifecycle monitoring |
-| `Services/Analytics/Service_Analytics.cs` | REFACTOR | Replace inline SQL with stored procedure calls |
-| `Services/Maintenance/Service_Migration.cs` | REFACTOR | Replace direct MySqlConnection with ExecuteRawSqlAsync |
-| `Forms/MainForm/MainForm.cs` | MODIFY | Add connection monitoring to timer |
-| `Database/UpdatedStoredProcedures/md_analytics_*.sql` | CREATE | New analytics stored procedures |
+| File                                                  | Change Type | Description                                                |
+| ----------------------------------------------------- | ----------- | ---------------------------------------------------------- |
+| `Helpers/Helper_Database_StoredProcedure.cs`          | MODIFY      | Mark ExecuteReaderAsync [Obsolete], add ExecuteRawSqlAsync |
+| `Helpers/Helper_Database_Variables.cs`                | MODIFY      | Add Pooling=false to connection strings                    |
+| `Helpers/Helper_Database_ConnectionMonitor.cs`        | CREATE      | New connection lifecycle monitoring                        |
+| `Services/Analytics/Service_Analytics.cs`             | REFACTOR    | Replace inline SQL with stored procedure calls             |
+| `Services/Maintenance/Service_Migration.cs`           | REFACTOR    | Replace direct MySqlConnection with ExecuteRawSqlAsync     |
+| `Forms/MainForm/MainForm.cs`                          | MODIFY      | Add connection monitoring to timer                         |
+| `Database/UpdatedStoredProcedures/md_analytics_*.sql` | CREATE      | New analytics stored procedures                            |
 
 ## Development Workflow
 
@@ -147,7 +147,8 @@ public static async Task<MySqlDataReader> ExecuteReaderAsync(
 */
 ```
 
-**Verification**: 
+**Verification**:
+
 1. Build project - should succeed with 0 errors
 2. If build fails with "ExecuteReaderAsync does not exist", you missed a caller
 3. Search entire solution for "ExecuteReaderAsync" - should find 0 results
@@ -226,7 +227,7 @@ public static async Task<Model_Dao_Result<int>> ExecuteRawSqlAsync(
         string userMessage = IsConnectionRelatedError(ex)
             ? GetUserFriendlyConnectionError(ex, "ExecuteRawSqlAsync")
             : $"Database error during raw SQL execution: {ex.Message}";
-        
+
         return Model_Dao_Result<int>.Failure(userMessage);
     }
 }
@@ -271,7 +272,7 @@ BEGIN
         SELECT NULL LIMIT 0;
     ELSE
         -- Return transaction analytics
-        SELECT 
+        SELECT
             t.TransactionID,
             t.UserID,
             t.TransactionDate,
@@ -293,6 +294,7 @@ DELIMITER ;
 ```
 
 **Installation**: Run script in MAMP MySQL console or via command line:
+
 ```powershell
 & "C:\MAMP\bin\mysql\bin\mysql.exe" -h 172.16.1.104 -P 3306 -u root -proot mtm_wip_application_winforms < Database/UpdatedStoredProcedures/md_analytics_GetTransactionsByRange.sql
 ```
@@ -479,6 +481,7 @@ public static class Helper_Database_ConnectionMonitor
 ### Issue: "max users reached" still occurring
 
 **Solution**:
+
 1. Verify Pooling=false in connection string: Check Helper_Database_Variables.cs
 2. Run SHOW PROCESSLIST during idle - should be 0
 3. Check connection monitoring logs for leak patterns
@@ -487,6 +490,7 @@ public static class Helper_Database_ConnectionMonitor
 ### Issue: Performance degradation
 
 **Solution**:
+
 1. Measure operation times - should be <20ms overhead
 2. If >50ms overhead, check network latency to MySQL server
 3. Consider connection string optimizations (CommandTimeout, compression)
@@ -495,6 +499,7 @@ public static class Helper_Database_ConnectionMonitor
 ### Issue: Stored procedures not found
 
 **Solution**:
+
 ```powershell
 # Verify stored procedures exist
 & "C:\MAMP\bin\mysql\bin\mysql.exe" -h 172.16.1.104 -P 3306 -u root -proot mtm_wip_application_winforms -e "SHOW PROCEDURE STATUS WHERE Db = 'mtm_wip_application_winforms' AND Name LIKE 'md_analytics%';"
@@ -523,15 +528,15 @@ After completing implementation:
 1. ✅ Replace all ExecuteReaderAsync callers (4 locations)
 2. ✅ Remove ExecuteReaderAsync method entirely
 3. ✅ Disable connection pooling (Pooling=false)
-3. ✅ Create ExecuteRawSqlAsync
-4. ✅ Create analytics stored procedures
-5. ✅ Refactor Service_Analytics
-6. ✅ Refactor Service_Migration
-7. ✅ Create Helper_Database_ConnectionMonitor
-8. ✅ Add monitoring to MainForm timer
-9. ✅ Run manual tests (all 5 test scenarios)
-10. ✅ Run constitution compliance validation
-11. → Create pull request using `.github/PULL_REQUEST_TEMPLATE.md`
-12. → Deploy to production after approval
+4. ✅ Create ExecuteRawSqlAsync
+5. ✅ Create analytics stored procedures
+6. ✅ Refactor Service_Analytics
+7. ✅ Refactor Service_Migration
+8. ✅ Create Helper_Database_ConnectionMonitor
+9. ✅ Add monitoring to MainForm timer
+10. ✅ Run manual tests (all 5 test scenarios)
+11. ✅ Run constitution compliance validation
+12. → Create pull request using `.github/PULL_REQUEST_TEMPLATE.md`
+13. → Deploy to production after approval
 
 **Estimated Development Time**: 8-12 hours

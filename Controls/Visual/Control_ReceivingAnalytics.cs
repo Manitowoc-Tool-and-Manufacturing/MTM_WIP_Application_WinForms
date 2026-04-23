@@ -14,9 +14,11 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
     {
         #region Fields
         private readonly IService_VisualDatabase? _visualService;
+        private CancellationTokenSource? _analyticsRequestCancellationTokenSource;
         private DataTable? _cachedDataTable;
+        private CancellationTokenSource? _fetchRequestCancellationTokenSource;
         private bool _isHandlingFilterLogic = false;
-        
+
         // Animation controls for expand/collapse
         private readonly Component_TextAnimationSequence _dateRangeAnimation;
         private readonly Component_TextAnimationSequence _filtersAnimation;
@@ -24,7 +26,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         private readonly Component_TextAnimationSequence _deliveryStatesAnimation;
         private readonly Component_TextAnimationSequence _receivingScopeAnimation;
         private readonly Component_TextAnimationSequence _searchPanelAnimation;
-        
+
         // Expanded state tracking
         private bool _isDateRangeExpanded = true;
         private bool _isFiltersExpanded = true;
@@ -43,6 +45,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             InitializeComponent();
             this.MinimumSize = new Size(1100, 700);
             _visualService = Program.ServiceProvider?.GetService<IService_VisualDatabase>();
+            Disposed += (_, _) => CancelPendingRequests();
 
             // Initialize Animation Controls
             _dateRangeAnimation = new Component_TextAnimationSequence();
@@ -103,6 +106,40 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         #endregion
 
         #region Methods
+        private CancellationTokenSource BeginAnalyticsRequest()
+        {
+            CancelPendingAnalyticsRequest();
+            _analyticsRequestCancellationTokenSource = new CancellationTokenSource();
+            return _analyticsRequestCancellationTokenSource;
+        }
+
+        private CancellationTokenSource BeginFetchRequest()
+        {
+            CancelPendingFetchRequest();
+            _fetchRequestCancellationTokenSource = new CancellationTokenSource();
+            return _fetchRequestCancellationTokenSource;
+        }
+
+        private void CancelPendingAnalyticsRequest()
+        {
+            _analyticsRequestCancellationTokenSource?.Cancel();
+            _analyticsRequestCancellationTokenSource?.Dispose();
+            _analyticsRequestCancellationTokenSource = null;
+        }
+
+        private void CancelPendingFetchRequest()
+        {
+            _fetchRequestCancellationTokenSource?.Cancel();
+            _fetchRequestCancellationTokenSource?.Dispose();
+            _fetchRequestCancellationTokenSource = null;
+        }
+
+        private void CancelPendingRequests()
+        {
+            CancelPendingFetchRequest();
+            CancelPendingAnalyticsRequest();
+        }
+
         /// <summary>
         /// Applies the theme to the control and restores legend colors.
         /// </summary>
@@ -133,7 +170,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
 
             // Server-side filters (require fetch)
             Control_ReceivingAnalytics_CheckBox_ShowClosed.CheckedChanged += async (s, e) => await FetchDataAsync();
-            
+
             // Mutually Exclusive / Interaction Filters
             Control_ReceivingAnalytics_CheckBox_ShowOutsideService.CheckedChanged += async (s, e) => { HandleFilterLogic(Control_ReceivingAnalytics_CheckBox_ShowOutsideService); await FetchDataAsync(); };
             Control_ReceivingAnalytics_CheckBox_ShowWithPartID.CheckedChanged += async (s, e) => { HandleFilterLogic(Control_ReceivingAnalytics_CheckBox_ShowWithPartID); await FetchDataAsync(); };
@@ -143,7 +180,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_ReceivingAnalytics_CheckBox_ShowPartial.CheckedChanged += async (s, e) => await ApplyFiltersAsync();
             Control_ReceivingAnalytics_CheckBox_ShowOnTime.CheckedChanged += async (s, e) => await ApplyFiltersAsync();
             Control_ReceivingAnalytics_CheckBox_ShowOpen.CheckedChanged += async (s, e) => await ApplyFiltersAsync();
-            
+
             // MMC/MMF Logic
             Control_ReceivingAnalytics_CheckBox_ShowMMC.CheckedChanged += async (s, e) => { HandleFilterLogic(Control_ReceivingAnalytics_CheckBox_ShowMMC); await ApplyFiltersAsync(); };
             Control_ReceivingAnalytics_CheckBox_ShowMMF.CheckedChanged += async (s, e) => { HandleFilterLogic(Control_ReceivingAnalytics_CheckBox_ShowMMF); await ApplyFiltersAsync(); };
@@ -153,7 +190,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Carrier.SuggestionSelected += async (s, e) => await ApplyFiltersAsync();
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Supplier.SuggestionSelected += async (s, e) => await ApplyFiltersAsync();
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PONumber.SuggestionSelected += async (s, e) => await ApplyFiltersAsync();
-            
+
             // Also trigger on Enter key for text boxes
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PartNumber.TextBox.KeyDown += async (s, e) => { if (e.KeyCode == Keys.Enter) await ApplyFiltersAsync(); };
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Carrier.TextBox.KeyDown += async (s, e) => { if (e.KeyCode == Keys.Enter) await ApplyFiltersAsync(); };
@@ -178,13 +215,13 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         {
             // Date Type
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_DateType.LabelText = "Filter By";
-            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_DateType.TextBox.DataProvider = async () => await Task.FromResult(new List<string> 
-            { 
-                "PO Desired Date", 
-                "PO Promise Date", 
-                "Line Desired Date", 
-                "Line Promise Date", 
-                "All of the Above" 
+            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_DateType.TextBox.DataProvider = async () => await Task.FromResult(new List<string>
+            {
+                "PO Desired Date",
+                "PO Promise Date",
+                "Line Desired Date",
+                "Line Promise Date",
+                "All of the Above"
             });
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_DateType.Text = "All of the Above";
             Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_DateType.EnableSuggestions = true;
@@ -257,6 +294,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
 
             try
             {
+                var requestCancellationTokenSource = BeginFetchRequest();
                 LoggingUtility.Log("[Control_ReceivingAnalytics] FetchData started");
                 Control_ReceivingAnalytics_Button_Search.Enabled = false;
                 Control_ReceivingAnalytics_Button_Search.Text = "Loading...";
@@ -271,8 +309,13 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                     Control_ReceivingAnalytics_CheckBox_ShowOutsideService.Checked,
                     Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Supplier.Text?.Trim() ?? "",
                     Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PONumber.Text?.Trim() ?? "",
-                    Control_ReceivingAnalytics_CheckBox_ShowWithPartID.Checked
+                    Control_ReceivingAnalytics_CheckBox_ShowWithPartID.Checked,
+                    requestCancellationTokenSource.Token
                 );
+                if (requestCancellationTokenSource.IsCancellationRequested)
+                {
+                    return;
+                }
 
                 if (result.IsSuccess && result.Data != null)
                 {
@@ -287,14 +330,21 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                     Control_ReceivingAnalytics_DataGridView_Results.DataSource = null;
                 }
             }
+            catch (OperationCanceledException)
+            {
+                LoggingUtility.Log("[Control_ReceivingAnalytics] Fetch canceled");
+            }
             catch (Exception ex)
             {
                 Service_ErrorHandler.HandleException(ex, Models.Enum_ErrorSeverity.Medium);
             }
             finally
             {
-                Control_ReceivingAnalytics_Button_Search.Enabled = true;
-                Control_ReceivingAnalytics_Button_Search.Text = "Search";
+                if (_fetchRequestCancellationTokenSource != null)
+                {
+                    Control_ReceivingAnalytics_Button_Search.Enabled = true;
+                    Control_ReceivingAnalytics_Button_Search.Text = "Search";
+                }
             }
         }
 
@@ -348,7 +398,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                 {
                     string poStatus = row["PO Status"]?.ToString() ?? "";
                     string lineStatus = row["Line Status"]?.ToString() ?? "";
-                    
+
                     decimal orderQty = 0;
                     decimal receivedQty = 0;
                     decimal.TryParse(row["Order Qty"]?.ToString(), out orderQty);
@@ -458,7 +508,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                 // Get values safely from DataRowView (faster than Cells access)
                 string poStatus = drv["PO Status"]?.ToString() ?? "";
                 string lineStatus = drv["Line Status"]?.ToString() ?? "";
-                
+
                 decimal orderQty = 0;
                 decimal receivedQty = 0;
                 decimal.TryParse(drv["Order Qty"]?.ToString(), out orderQty);
@@ -509,7 +559,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         {
             _isDateRangeExpanded = !_isDateRangeExpanded;
             Control_ReceivingAnalytics_Panel_DateRangeContents.Visible = _isDateRangeExpanded;
-            
+
             UpdateSectionState(_dateRangeAnimation, Control_ReceivingAnalytics_Button_DateRangeHeader, _isDateRangeExpanded);
         }
 
@@ -517,7 +567,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         {
             _isFiltersExpanded = !_isFiltersExpanded;
             Control_ReceivingAnalytics_Panel_FiltersContents.Visible = _isFiltersExpanded;
-            
+
             UpdateSectionState(_filtersAnimation, Control_ReceivingAnalytics_Button_FiltersHeader, _isFiltersExpanded);
         }
 
@@ -525,7 +575,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         {
             _isPOStatesExpanded = !_isPOStatesExpanded;
             Control_ReceivingAnalytics_TableLayoutPanel_POStatesContents.Visible = _isPOStatesExpanded;
-            
+
             UpdateSectionState(_poStatesAnimation, Control_ReceivingAnalytics_Button_POStatesHeader, _isPOStatesExpanded);
         }
 
@@ -533,7 +583,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         {
             _isDeliveryStatesExpanded = !_isDeliveryStatesExpanded;
             Control_ReceivingAnalytics_Panel_DeliveryStatesContents.Visible = _isDeliveryStatesExpanded;
-            
+
             UpdateSectionState(_deliveryStatesAnimation, Control_ReceivingAnalytics_Button_DeliveryStatesHeader, _isDeliveryStatesExpanded);
         }
 
@@ -541,7 +591,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         {
             _isReceivingScopeExpanded = !_isReceivingScopeExpanded;
             Control_ReceivingAnalytics_Panel_ReceivingScopeContents.Visible = _isReceivingScopeExpanded;
-            
+
             UpdateSectionState(_receivingScopeAnimation, Control_ReceivingAnalytics_Button_ReceivingScopeHeader, _isReceivingScopeExpanded);
         }
 
@@ -564,7 +614,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             {
                 LoggingUtility.Log("[Control_ReceivingAnalytics] Analytics clicked");
                 string htmlPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "Html", "ReceivingAnalytics_Enhanced.html");
-                
+
                 // Fallback for development environment if not copied to bin
                 if (!System.IO.File.Exists(htmlPath))
                 {
@@ -588,10 +638,11 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                 {
                     htmlContent = await sr.ReadToEndAsync();
                 }
-                
+
                 // Fetch Data
                 if (_visualService == null) return;
-                
+                var requestCancellationTokenSource = BeginAnalyticsRequest();
+
                 Control_ReceivingAnalytics_Button_Analytics.Enabled = false;
                 Control_ReceivingAnalytics_Button_Analytics.Text = "Loading...";
 
@@ -602,9 +653,13 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                 // Fetch a wider range of data (1 year history, 6 months forecast) so the user can explore in the HTML view
                 var dataStart = DateTime.Today.AddYears(-1);
                 var dataEnd = DateTime.Today.AddMonths(6);
-                
-                var result = await _visualService.GetReceivingAnalyticsAsync(dataStart, dataEnd);
-                
+
+                var result = await _visualService.GetReceivingAnalyticsAsync(dataStart, dataEnd, requestCancellationTokenSource.Token);
+                if (requestCancellationTokenSource.IsCancellationRequested)
+                {
+                    return;
+                }
+
                 Control_ReceivingAnalytics_Button_Analytics.Enabled = true;
                 Control_ReceivingAnalytics_Button_Analytics.Text = "Receiving Analytics";
 
@@ -637,12 +692,12 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                         PropertyNamingPolicy = null,
                         WriteIndented = false
                     };
-                    
+
                     string jsonData = System.Text.Json.JsonSerializer.Serialize(transformedData, jsonOptions);
-                    
+
                     // Escape for JavaScript string
                     jsonData = jsonData.Replace("\\", "\\\\").Replace("'", "\\'").Replace("\r", "").Replace("\n", "");
-                    
+
                     htmlContent = htmlContent.Replace("// To be populated by C#", $"loadData('{jsonData}');");
 
                     // Use temp file to avoid NavigateToString size limits
@@ -659,6 +714,12 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                     Service_ErrorHandler.ShowError(result.ErrorMessage);
                 }
             }
+            catch (OperationCanceledException)
+            {
+                LoggingUtility.Log("[Control_ReceivingAnalytics] Analytics request canceled");
+                Control_ReceivingAnalytics_Button_Analytics.Enabled = true;
+                Control_ReceivingAnalytics_Button_Analytics.Text = "Receiving Analytics";
+            }
             catch (Exception ex)
             {
                 Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, controlName: this.Name);
@@ -671,19 +732,19 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         {
             // Map the type from Visual Analytics to chart categories
             // This handles the categorization from GetReceivingAnalyticsAsync
-            
+
             // Check for Uninventoried (missing part number) first
             if (string.IsNullOrWhiteSpace(partNumber)) return "Uninventoried";
 
             if (originalType == null) return "Part";
-            
+
             var type = originalType.ToUpperInvariant();
-            
+
             if (type.Contains("MMC")) return "MMC";
             if (type.Contains("MMF")) return "MMF";
             if (type.Contains("SERVICE")) return "Service";
             // Consignment and Internal removed per requirements
-            
+
             return "Part";
         }
 
@@ -753,21 +814,21 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                         Uncheck(Control_ReceivingAnalytics_CheckBox_ShowOutsideService);
                         Uncheck(Control_ReceivingAnalytics_CheckBox_ShowMMC);
                         Uncheck(Control_ReceivingAnalytics_CheckBox_ShowMMF);
-                        
+
                         EnableAllFilters();
                     }
                     else if (source == Control_ReceivingAnalytics_CheckBox_ShowMMC)
                     {
                         Uncheck(Control_ReceivingAnalytics_CheckBox_ShowWithPartID);
                         Uncheck(Control_ReceivingAnalytics_CheckBox_ShowOutsideService);
-                        
+
                         EnableAllFilters();
                     }
                     else if (source == Control_ReceivingAnalytics_CheckBox_ShowMMF)
                     {
                         Uncheck(Control_ReceivingAnalytics_CheckBox_ShowWithPartID);
                         Uncheck(Control_ReceivingAnalytics_CheckBox_ShowOutsideService);
-                        
+
                         EnableAllFilters();
                     }
                 }

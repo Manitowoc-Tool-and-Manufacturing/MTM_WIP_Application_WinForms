@@ -7,26 +7,42 @@
   "Topics": [
     {
       "TopicId": "user-performance",
-      "Title": "User Analytics",
-      "Summary": "View material handler performance metrics.",
-      "Content": "<h2>User Analytics</h2><p>Access the User Analytics dashboard to view performance metrics for material handlers.</p><h3>Available Metrics</h3><ul><li><strong>Total Tx (Transactions):</strong> Total number of inventory movements within the date range.</li><li><strong>Total Qty (Quantity):</strong> Sum of all quantities moved.</li><li><strong>Unique Parts:</strong> Number of distinct Part IDs handled.</li><li><strong>Rapid Fire:</strong> Count of transactions occurring less than 10 seconds apart for the same part.</li><li><strong>Quality Score:</strong> Overall performance rating based on transaction accuracy and speed.</li></ul><h3>Accessing Analytics</h3><ol><li>Navigate to <strong>Visual > Visual User Analytics</strong>.</li><li>Select a date range using the date pickers.</li><li>Click <strong>Load Data</strong> to view metrics.</li></ol>",
-      "Keywords": ["analytics", "metrics", "performance", "user"],
+      "Title": "User and Team Analytics",
+      "Summary": "Review clear activity totals, trends, and recent history without the old score model.",
+      "Content": "<h2>User and Team Analytics</h2><p>The analytics workspace shows clear activity data for the selected date range. It replaces the old scoring view with simple, explainable metrics.</p><h3>Summary Cards</h3><ul><li><strong>Total Transactions:</strong> Every recorded inventory movement inside the selected range.</li><li><strong>Total Quantity Moved:</strong> The summed quantity across matching transactions.</li><li><strong>Unique Parts Handled:</strong> Distinct part numbers touched during the range.</li><li><strong>Active Days:</strong> Calendar days with at least one matching transaction.</li></ul><h3>Fairness Rules</h3><p><strong>Advanced Inventory</strong> and <strong>Advanced Remove</strong> are labeled for clarity, but they count the same as single actions in all totals and trends.</p><h3>Role Behavior</h3><ul><li><strong>Normal users</strong> see only their own analytics.</li><li><strong>Admin and developer roles</strong> can review team totals and drill down into an individual user.</li></ul><h3>Using the Page</h3><ol><li>Open <strong>View &gt; Analytics</strong> or launch analytics from the Visual dashboard.</li><li>Adjust the date range.</li><li>Switch between <strong>Transactions</strong> and <strong>Quantity</strong> for the trend chart.</li><li>Use the activity filter chips to narrow recent activity.</li><li>Use <strong>Export Summary CSV</strong>, <strong>Export Activity CSV</strong>, or <strong>Print</strong> for reporting.</li></ol>",
+      "Keywords": [
+        "analytics",
+        "metrics",
+        "team",
+        "user",
+        "transactions"
+      ],
       "LastUpdated": "2025-12-07T10:00:00"
     },
     {
       "TopicId": "data-visualization",
       "Title": "Data Visualization",
-      "Summary": "Understanding charts and graphs.",
-      "Content": "<h2>Data Visualization</h2><p>The application uses various charts to visualize data trends.</p><h3>Chart Types</h3><ul><li><strong>Bar Charts:</strong> Compare quantities across different categories (e.g., transactions per user).</li><li><strong>Line Charts:</strong> Show trends over time (e.g., inventory levels over the last 30 days).</li><li><strong>Pie Charts:</strong> Display distribution of data (e.g., inventory by item type).</li></ul><h3>Interactivity</h3><p>Hover over chart elements to see exact values. Click on legend items to toggle data series visibility.</p>",
-      "Keywords": ["charts", "graphs", "visuals", "trends"],
+      "Summary": "Understanding the trend and drill-down views.",
+      "Content": "<h2>Data Visualization</h2><p>The analytics page uses a simple trend chart instead of a leaderboard or grading model.</p><h3>Trend View</h3><ul><li><strong>Daily / Weekly:</strong> Group activity by day or by week.</li><li><strong>Transactions / Quantity:</strong> Switch the chart to compare movement count or total quantity.</li><li><strong>Peak / Quiet Periods:</strong> The page highlights the busiest and quietest periods inside the selected range.</li></ul><h3>Team Drill-Down</h3><p>When team access is available, select a user from the drill-down panel to view the same personal layout for that user without opening a separate window.</p>",
+      "Keywords": [
+        "charts",
+        "graphs",
+        "visuals",
+        "trends"
+      ],
       "LastUpdated": "2025-12-07T10:00:00"
     },
     {
       "TopicId": "export-print",
       "Title": "Exporting and Printing",
       "Summary": "Export data to Excel or print reports.",
-      "Content": "<h2>Exporting and Printing</h2><p>Most grids in the application support exporting to Excel and printing.</p><h3>Export to Excel</h3><ol><li>Right-click on any data grid.</li><li>Select <strong>Export to Excel</strong> from the context menu.</li><li>Choose a save location for the .xlsx file.</li><li>The export includes all visible columns with current filters applied.</li></ol><h3>Print</h3><ol><li>Right-click on a data grid.</li><li>Select <strong>Print</strong>.</li><li>Configure print settings (page range, orientation, etc.).</li><li>Click <strong>Print</strong> to send to printer.</li></ol><p><em>Note: Hidden columns are not included in exports or prints.</em></p>",
-      "Keywords": ["export", "excel", "print", "pdf"],
+      "Content": "<h2>Exporting and Printing</h2><p>The analytics workspace includes export and print actions directly in the header.</p><h3>Summary Export</h3><ol><li>Click <strong>Export Summary CSV</strong>.</li><li>In team scope, the export includes the visible user summary list.</li><li>In personal scope, the export includes the current summary metrics.</li></ol><h3>Activity Export</h3><ol><li>Click <strong>Export Activity CSV</strong>.</li><li>The export reflects the current user drill-down and activity-type filter.</li></ol><h3>Print</h3><ol><li>Click <strong>Print</strong>.</li><li>The page switches to a letter-size print layout with summary cards, trend view, recent activity, and glossary content.</li></ol><p><em>Note: Printed output uses the current filters on screen.</em></p>",
+      "Keywords": [
+        "export",
+        "excel",
+        "print",
+        "pdf"
+      ],
       "LastUpdated": "2025-12-07T10:00:00"
     }
   ]

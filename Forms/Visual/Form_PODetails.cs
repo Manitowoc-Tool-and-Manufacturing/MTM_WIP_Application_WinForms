@@ -1,11 +1,11 @@
+using System.Data;
+using Microsoft.Extensions.DependencyInjection;
+using MTM_WIP_Application_Winforms.Forms.Help;
 using MTM_WIP_Application_Winforms.Forms.Shared;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Services;
 using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Services.Visual;
-using Microsoft.Extensions.DependencyInjection;
-using System.Data;
-using MTM_WIP_Application_Winforms.Forms.Help;
 
 namespace MTM_WIP_Application_Winforms.Forms.Visual
 {
@@ -18,6 +18,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
         #region Fields
         private readonly string _poNumber;
         private readonly IService_VisualDatabase? _visualService;
+        private CancellationTokenSource? _loadRequestCancellationTokenSource;
         private DataTable? _poData;
         private int _currentIndex = 0;
         #endregion
@@ -36,8 +37,9 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             InitializeComponent();
             InitializeHelpButton();
             Text = $"PO Details: {_poNumber}";
-            
+
             Load += Form_PODetails_Load;
+            FormClosed += (_, _) => CancelPendingLoadRequest();
         }
         #endregion
 
@@ -55,9 +57,17 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
 
             try
             {
+                var requestCancellationTokenSource = BeginLoadRequest();
                 ToggleLoadingState(true);
 
-                var result = await _visualService.GetPODetailsAsync(_poNumber);
+                var result = await _visualService.GetPODetailsAsync(
+                    _poNumber,
+                    requestCancellationTokenSource.Token
+                );
+                if (requestCancellationTokenSource.IsCancellationRequested)
+                {
+                    return;
+                }
 
                 if (result.IsSuccess && result.Data != null)
                 {
@@ -65,7 +75,9 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
                     _currentIndex = 0;
                     DisplayCurrentLine();
                     ToggleLoadingState(false);
-                    LoggingUtility.Log($"[Form_PODetails] Successfully loaded {_poData.Rows.Count} lines for PO: {_poNumber}");
+                    LoggingUtility.Log(
+                        $"[Form_PODetails] Successfully loaded {_poData.Rows.Count} lines for PO: {_poNumber}"
+                    );
                     return;
                 }
 
@@ -77,9 +89,18 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
                 Service_ErrorHandler.ShowUserError($"Failed to load PO details: {errorMessage}");
                 Close();
             }
+            catch (OperationCanceledException)
+            {
+                LoggingUtility.Log($"[Form_PODetails] Load canceled for PO: {_poNumber}");
+            }
             catch (Exception ex)
             {
-                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: nameof(LoadPurchaseOrderDetailsAsync), controlName: Name);
+                Service_ErrorHandler.HandleException(
+                    ex,
+                    Enum_ErrorSeverity.Medium,
+                    callerName: nameof(LoadPurchaseOrderDetailsAsync),
+                    controlName: Name
+                );
                 Close();
             }
         }
@@ -94,8 +115,10 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
                 return;
             }
 
-            if (_currentIndex < 0) _currentIndex = 0;
-            if (_currentIndex >= _poData.Rows.Count) _currentIndex = _poData.Rows.Count - 1;
+            if (_currentIndex < 0)
+                _currentIndex = 0;
+            if (_currentIndex >= _poData.Rows.Count)
+                _currentIndex = _poData.Rows.Count - 1;
 
             var row = _poData.Rows[_currentIndex];
 
@@ -122,9 +145,27 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             DisplayCurrentLine();
         }
 
-        private string FormatNumber(object? value) => value is decimal d ? d.ToString("G29") : value?.ToString() ?? "";
-        private string FormatDate(object? value) => value is DateTime d ? d.ToShortDateString() : "";
+        private string FormatNumber(object? value) =>
+            value is decimal d ? d.ToString("G29") : value?.ToString() ?? "";
+
+        private string FormatDate(object? value) =>
+            value is DateTime d ? d.ToShortDateString() : "";
+
         private string FormatCurrency(object? value) => value is decimal d ? d.ToString("C2") : "";
+
+        private CancellationTokenSource BeginLoadRequest()
+        {
+            CancelPendingLoadRequest();
+            _loadRequestCancellationTokenSource = new CancellationTokenSource();
+            return _loadRequestCancellationTokenSource;
+        }
+
+        private void CancelPendingLoadRequest()
+        {
+            _loadRequestCancellationTokenSource?.Cancel();
+            _loadRequestCancellationTokenSource?.Dispose();
+            _loadRequestCancellationTokenSource = null;
+        }
 
         private void ToggleLoadingState(bool isLoading)
         {
@@ -153,28 +194,29 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
         #region Cleanup / Dispose
         // Dispose is now handled in Designer file for components.
         #endregion
-    #region Helpers
+        #region Helpers
 
-    private Button? Form_PODetails_Button_Help;
+        private Button? Form_PODetails_Button_Help;
 
-    private void InitializeHelpButton()
-    {
-        Form_PODetails_Button_Help = new Button();
-        Form_PODetails_Button_Help.Name = "Form_PODetails_Button_Help";
-        Form_PODetails_Button_Help.Text = "?";
-        Form_PODetails_Button_Help.Size = new Size(24, 24);
-        Form_PODetails_Button_Help.Location = new Point(this.Width - 40, 5); 
-        Form_PODetails_Button_Help.Anchor = AnchorStyles.Top | AnchorStyles.Right;
-        Form_PODetails_Button_Help.Click += (s, e) => 
+        private void InitializeHelpButton()
         {
-            HelpViewerForm.GetInstance().BringToFrontAndNavigate("infor-visual-integration", "po-details");
-        };
-        
-        this.Controls.Add(Form_PODetails_Button_Help);
-        Form_PODetails_Button_Help.BringToFront();
-    }
+            Form_PODetails_Button_Help = new Button();
+            Form_PODetails_Button_Help.Name = "Form_PODetails_Button_Help";
+            Form_PODetails_Button_Help.Text = "?";
+            Form_PODetails_Button_Help.Size = new Size(24, 24);
+            Form_PODetails_Button_Help.Location = new Point(this.Width - 40, 5);
+            Form_PODetails_Button_Help.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+            Form_PODetails_Button_Help.Click += (s, e) =>
+            {
+                HelpViewerForm
+                    .GetInstance()
+                    .BringToFrontAndNavigate("infor-visual-integration", "po-details");
+            };
 
-    #endregion
+            this.Controls.Add(Form_PODetails_Button_Help);
+            Form_PODetails_Button_Help.BringToFront();
+        }
 
+        #endregion
     }
 }

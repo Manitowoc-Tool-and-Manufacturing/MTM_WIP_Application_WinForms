@@ -1,6 +1,5 @@
 using System.Data;
 using MTM_WIP_Application_Winforms.Data;
-using MTM_WIP_Application_Winforms.Models.Analytics;
 using MTM_WIP_Application_Winforms.Models;
 using Newtonsoft.Json;
 
@@ -14,7 +13,10 @@ namespace MTM_WIP_Application_Winforms.Services.Analytics
         private readonly IDao_VisualAnalytics _daoVisualAnalytics;
         private readonly Visual.IService_VisualDatabase _serviceVisualDatabase;
 
-        public Service_UserShiftLogic(IDao_VisualAnalytics daoVisualAnalytics, Visual.IService_VisualDatabase serviceVisualDatabase)
+        public Service_UserShiftLogic(
+            IDao_VisualAnalytics daoVisualAnalytics,
+            Visual.IService_VisualDatabase serviceVisualDatabase
+        )
         {
             _daoVisualAnalytics = daoVisualAnalytics;
             _serviceVisualDatabase = serviceVisualDatabase;
@@ -23,13 +25,15 @@ namespace MTM_WIP_Application_Winforms.Services.Analytics
         /// <summary>
         /// Analyzes transaction history to calculate shift assignments for all users.
         /// </summary>
-        public async Task<Model_Dao_Result<Dictionary<string, int>>> CalculateAllUserShiftsAsync()
+        public async Task<Model_Dao_Result<Dictionary<string, int>>> CalculateAllUserShiftsAsync(
+            CancellationToken cancellationToken = default
+        )
         {
             try
             {
                 // 1. Get list of active users from last 30 days of transactions
                 // Using Visual Service directly to query SQL Server
-                var result = await _serviceVisualDatabase.GetUserShiftDataAsync();
+                var result = await _serviceVisualDatabase.GetUserShiftDataAsync(cancellationToken);
 
                 if (!result.IsSuccess)
                 {
@@ -44,8 +48,10 @@ namespace MTM_WIP_Application_Winforms.Services.Analytics
                 {
                     foreach (DataRow row in result.Data.Rows)
                     {
-                        string userId = row["USER_ID"]?.ToString()?.Trim().ToUpperInvariant() ?? string.Empty;
-                        if (string.IsNullOrEmpty(userId)) continue;
+                        string userId =
+                            row["USER_ID"]?.ToString()?.Trim().ToUpperInvariant() ?? string.Empty;
+                        if (string.IsNullOrEmpty(userId))
+                            continue;
 
                         if (!userTransactions.ContainsKey(userId))
                         {
@@ -106,8 +112,11 @@ namespace MTM_WIP_Application_Winforms.Services.Analytics
                     }
 
                     // Determine dominant shift
-                    int maxCount = Math.Max(Math.Max(shift1Count, shift2Count), Math.Max(shift3Count, weekendCount));
-                    
+                    int maxCount = Math.Max(
+                        Math.Max(shift1Count, shift2Count),
+                        Math.Max(shift3Count, weekendCount)
+                    );
+
                     if (maxCount == 0)
                     {
                         userShifts[userId] = 0;
@@ -134,24 +143,34 @@ namespace MTM_WIP_Application_Winforms.Services.Analytics
             }
             catch (Exception ex)
             {
-                Service_ErrorHandler.HandleException(ex, callerName: nameof(CalculateAllUserShiftsAsync));
-                return Model_Dao_Result<Dictionary<string, int>>.Failure("Failed to calculate user shifts.", ex);
+                Service_ErrorHandler.HandleException(
+                    ex,
+                    callerName: nameof(CalculateAllUserShiftsAsync)
+                );
+                return Model_Dao_Result<Dictionary<string, int>>.Failure(
+                    "Failed to calculate user shifts.",
+                    ex
+                );
             }
         }
 
         /// <summary>
         /// Retrieves full names for all users from Infor Visual database.
         /// </summary>
-        public async Task<Model_Dao_Result<Dictionary<string, string>>> FetchUserFullNamesAsync()
+        public async Task<Model_Dao_Result<Dictionary<string, string>>> FetchUserFullNamesAsync(
+            CancellationToken cancellationToken = default
+        )
         {
             try
             {
                 // Query Visual EMPLOYEE table via Visual Service
-                var result = await _serviceVisualDatabase.GetUserFullNamesAsync();
-                
+                var result = await _serviceVisualDatabase.GetUserFullNamesAsync(cancellationToken);
+
                 if (!result.IsSuccess)
                 {
-                    return Model_Dao_Result<Dictionary<string, string>>.Failure("Could not fetch users from EMPLOYEE table. " + result.ErrorMessage);
+                    return Model_Dao_Result<Dictionary<string, string>>.Failure(
+                        "Could not fetch users from EMPLOYEE table. " + result.ErrorMessage
+                    );
                 }
 
                 var userNames = new Dictionary<string, string>();
@@ -160,8 +179,10 @@ namespace MTM_WIP_Application_Winforms.Services.Analytics
                 {
                     foreach (DataRow row in result.Data.Rows)
                     {
-                        string userId = row["USER_ID"]?.ToString()?.Trim().ToUpperInvariant() ?? string.Empty;
-                        if (string.IsNullOrEmpty(userId)) continue;
+                        string userId =
+                            row["USER_ID"]?.ToString()?.Trim().ToUpperInvariant() ?? string.Empty;
+                        if (string.IsNullOrEmpty(userId))
+                            continue;
 
                         string firstName = row["FIRST_NAME"]?.ToString()?.Trim() ?? "";
                         string lastName = row["LAST_NAME"]?.ToString()?.Trim() ?? "";
@@ -178,8 +199,14 @@ namespace MTM_WIP_Application_Winforms.Services.Analytics
             }
             catch (Exception ex)
             {
-                Service_ErrorHandler.HandleException(ex, callerName: nameof(FetchUserFullNamesAsync));
-                return Model_Dao_Result<Dictionary<string, string>>.Failure("Failed to fetch user full names.", ex);
+                Service_ErrorHandler.HandleException(
+                    ex,
+                    callerName: nameof(FetchUserFullNamesAsync)
+                );
+                return Model_Dao_Result<Dictionary<string, string>>.Failure(
+                    "Failed to fetch user full names.",
+                    ex
+                );
             }
         }
 
@@ -188,7 +215,9 @@ namespace MTM_WIP_Application_Winforms.Services.Analytics
         /// </summary>
         public async Task<Model_Dao_Result<bool>> SaveVisualMetadataAsync(
             Dictionary<string, int> shifts,
-            Dictionary<string, string> names)
+            Dictionary<string, string> names,
+            CancellationToken cancellationToken = default
+        )
         {
             try
             {
@@ -199,157 +228,11 @@ namespace MTM_WIP_Application_Winforms.Services.Analytics
             }
             catch (Exception ex)
             {
-                Service_ErrorHandler.HandleException(ex, callerName: nameof(SaveVisualMetadataAsync));
+                Service_ErrorHandler.HandleException(
+                    ex,
+                    callerName: nameof(SaveVisualMetadataAsync)
+                );
                 return Model_Dao_Result<bool>.Failure("Failed to save visual metadata.", ex);
-            }
-        }
-        /// <summary>
-        /// Calculates material handler scores with shift balancing and grading curve.
-        /// </summary>
-        public async Task<Model_Dao_Result<List<Model_Visual_MaterialHandlerScore>>> CalculateMaterialHandlerScoresAsync(DateTime startDate, DateTime endDate)
-        {
-            try
-            {
-                // 1. Get Raw Stats from Visual Database
-                var statsResult = await _serviceVisualDatabase.GetMaterialHandlerStatsAsync(startDate, endDate);
-                if (!statsResult.IsSuccess) return Model_Dao_Result<List<Model_Visual_MaterialHandlerScore>>.Failure(statsResult.ErrorMessage);
-
-                // 2. Get Metadata (Shifts and Names)
-                var metaResult = await _daoVisualAnalytics.GetSysVisualDataAsync();
-                Dictionary<string, int> userShifts = new Dictionary<string, int>();
-                Dictionary<string, string> userNames = new Dictionary<string, string>();
-
-                if (metaResult.IsSuccess && metaResult.Data != null)
-                {
-                    try
-                    {
-                        if (!string.IsNullOrEmpty(metaResult.Data.JsonShiftData))
-                            userShifts = JsonConvert.DeserializeObject<Dictionary<string, int>>(metaResult.Data.JsonShiftData) ?? new Dictionary<string, int>();
-                        
-                        if (!string.IsNullOrEmpty(metaResult.Data.JsonUserFullNames))
-                            userNames = JsonConvert.DeserializeObject<Dictionary<string, string>>(metaResult.Data.JsonUserFullNames) ?? new Dictionary<string, string>();
-                    }
-                    catch { /* Ignore JSON errors */ }
-                }
-
-                // 3. Process Raw Data into User Objects
-                var userScores = new Dictionary<string, Model_Visual_MaterialHandlerScore>();
-                var shiftTotalScores = new Dictionary<int, double> { { 1, 0 }, { 2, 0 }, { 3, 0 }, { 4, 0 }, { 0, 0 } };
-
-                if (statsResult.Data != null)
-                {
-                    foreach (DataRow row in statsResult.Data.Rows)
-                    {
-                        string user = row["User"]?.ToString()?.Trim().ToUpperInvariant() ?? "UNKNOWN";
-                        string visualType = row["TransactionType"]?.ToString() ?? "";
-                        int count = Convert.ToInt32(row["TransactionCount"]);
-
-                        // Map Visual Types to Logic Types
-                        // The Service_VisualDatabase now returns the final category in TransactionType
-                        string type = visualType; // "Location Transfer", "Work Order", "Adjusted In", "Adjusted Out", "Coil", "Flatstock"
-
-                        if (!userScores.ContainsKey(user))
-                        {
-                            int shift = userShifts.ContainsKey(user) ? userShifts[user] : 0;
-                            string fullName = userNames.ContainsKey(user) ? userNames[user] : user;
-
-                            userScores[user] = new Model_Visual_MaterialHandlerScore
-                            {
-                                UserName = user,
-                                FullName = fullName,
-                                Shift = shift
-                            };
-                        }
-
-                        var scoreModel = userScores[user];
-                        if (!scoreModel.TransactionCounts.ContainsKey(type))
-                            scoreModel.TransactionCounts[type] = 0;
-                        
-                        scoreModel.TransactionCounts[type] += count;
-                        scoreModel.TotalTransactions += count;
-
-                        // Scoring Logic
-                        // Flatstock = 8, Coil = 4, Others = 1
-                        double points = 1.0;
-                        if (type == "Flatstock") points = 8.0;
-                        else if (type == "Coil") points = 4.0;
-                        
-                        double totalPoints = points * count;
-                        scoreModel.TotalScore += totalPoints;
-                        
-                        // Add to shift total
-                        if (shiftTotalScores.ContainsKey(scoreModel.Shift))
-                            shiftTotalScores[scoreModel.Shift] += totalPoints;
-                        else
-                            shiftTotalScores[0] += totalPoints;
-                    }
-                }
-
-                // 4. Calculate Shift Volume Factors
-                // Find max shift score (excluding shift 0/Unknown if possible, or include it?)
-                // Usually we compare Shift 1, 2, 3. Weekend (4) might be separate or included.
-                // Let's consider 1, 2, 3 for balancing.
-                double maxShiftScore = Math.Max(Math.Max(shiftTotalScores[1], shiftTotalScores[2]), shiftTotalScores[3]);
-                
-                // Avoid division by zero
-                if (maxShiftScore == 0) maxShiftScore = 1;
-
-                var shiftFactors = new Dictionary<int, double>();
-                foreach (var kvp in shiftTotalScores)
-                {
-                    int shift = kvp.Key;
-                    double score = kvp.Value;
-                    
-                    if (shift == 0) 
-                    {
-                        shiftFactors[shift] = 1.0; // No adjustment for unknown
-                        continue;
-                    }
-
-                    if (score > 0)
-                        shiftFactors[shift] = maxShiftScore / score;
-                    else
-                        shiftFactors[shift] = 1.0;
-                }
-
-                // 5. Apply Factors and Calculate Adjusted Score
-                var finalList = userScores.Values.ToList();
-                foreach (var item in finalList)
-                {
-                    item.ShiftVolumeFactor = shiftFactors.ContainsKey(item.Shift) ? shiftFactors[item.Shift] : 1.0;
-                    // Apply factor to TotalScore
-                    item.TotalScore *= item.ShiftVolumeFactor;
-                }
-
-                // 6. Grading Curve
-                // Sort by Adjusted Score Descending
-                finalList = finalList.OrderByDescending(x => x.TotalScore).ToList();
-                int totalUsers = finalList.Count;
-
-                if (totalUsers > 0)
-                {
-                    int countA = (int)Math.Ceiling(totalUsers * 0.20);
-                    int countB = (int)Math.Ceiling(totalUsers * 0.30);
-                    int countC = (int)Math.Ceiling(totalUsers * 0.30);
-                    int countD = (int)Math.Ceiling(totalUsers * 0.15);
-                    // Remainder is F
-
-                    for (int i = 0; i < totalUsers; i++)
-                    {
-                        if (i < countA) finalList[i].Grade = "A";
-                        else if (i < countA + countB) finalList[i].Grade = "B";
-                        else if (i < countA + countB + countC) finalList[i].Grade = "C";
-                        else if (i < countA + countB + countC + countD) finalList[i].Grade = "D";
-                        else finalList[i].Grade = "F";
-                    }
-                }
-
-                return Model_Dao_Result<List<Model_Visual_MaterialHandlerScore>>.Success(finalList);
-            }
-            catch (Exception ex)
-            {
-                Service_ErrorHandler.HandleException(ex, callerName: nameof(CalculateMaterialHandlerScoresAsync));
-                return Model_Dao_Result<List<Model_Visual_MaterialHandlerScore>>.Failure("Failed to calculate scores.", ex);
             }
         }
     }

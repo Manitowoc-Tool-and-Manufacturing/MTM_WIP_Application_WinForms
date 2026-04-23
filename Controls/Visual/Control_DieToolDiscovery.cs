@@ -1,9 +1,9 @@
 using Microsoft.Extensions.DependencyInjection;
 using MTM_WIP_Application_Winforms.Forms.Shared;
-using MTM_WIP_Application_Winforms.Services;
-using MTM_WIP_Application_Winforms.Services.Visual;
 using MTM_WIP_Application_Winforms.Models;
+using MTM_WIP_Application_Winforms.Services;
 using MTM_WIP_Application_Winforms.Services.Logging;
+using MTM_WIP_Application_Winforms.Services.Visual;
 
 namespace MTM_WIP_Application_Winforms.Controls.Visual
 {
@@ -16,6 +16,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         #region Fields
 
         private readonly IService_VisualDatabase? _visualService;
+        private CancellationTokenSource? _requestCancellationTokenSource;
 
         #endregion
 
@@ -42,19 +43,25 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_DieToolDiscovery_Button_WhereUsed.Click += btnWhereUsed_Click;
 
             // Wire up Radio Buttons
-            Control_DieToolDiscovery_RadioButton_SearchByPart.CheckedChanged += (s, e) => UpdateSearchPlaceholder();
-            Control_DieToolDiscovery_RadioButton_SearchByDie.CheckedChanged += (s, e) => UpdateSearchPlaceholder();
+            Control_DieToolDiscovery_RadioButton_SearchByPart.CheckedChanged += (s, e) =>
+                UpdateSearchPlaceholder();
+            Control_DieToolDiscovery_RadioButton_SearchByDie.CheckedChanged += (s, e) =>
+                UpdateSearchPlaceholder();
 
             _visualService = Program.ServiceProvider?.GetService<IService_VisualDatabase>();
 
             if (_visualService == null)
             {
-                LoggingUtility.Log("[Control_DieToolDiscovery] Visual Database Service not available in DI container");
+                LoggingUtility.Log(
+                    "[Control_DieToolDiscovery] Visual Database Service not available in DI container"
+                );
             }
             else
             {
                 InitializeSuggestionBoxes();
             }
+
+            Disposed += (_, _) => CancelPendingRequest();
         }
 
         #endregion
@@ -63,12 +70,13 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
 
         private void InitializeSuggestionBoxes()
         {
-            if (_visualService == null) return;
+            if (_visualService == null)
+                return;
 
             // Configure Die Search Suggestion Box
             Control_DieToolDiscovery_SuggestionBox_Search.EnableSuggestions = true;
             Control_DieToolDiscovery_SuggestionBox_Search.ShowF4Button = true;
-            
+
             if (Control_DieToolDiscovery_SuggestionBox_Search.TextBox != null)
             {
                 Control_DieToolDiscovery_SuggestionBox_Search.TextBox.DataProvider = async () =>
@@ -76,12 +84,16 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                     if (Control_DieToolDiscovery_RadioButton_SearchByPart.Checked)
                     {
                         var result = await _visualService.GetPartIdsAsync();
-                        return result.IsSuccess && result.Data != null ? result.Data : new List<string>();
+                        return result.IsSuccess && result.Data != null
+                            ? result.Data
+                            : new List<string>();
                     }
                     else
                     {
                         var result = await _visualService.GetDieIdsAsync();
-                        return result.IsSuccess && result.Data != null ? result.Data : new List<string>();
+                        return result.IsSuccess && result.Data != null
+                            ? result.Data
+                            : new List<string>();
                     }
                 };
 
@@ -97,11 +109,14 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                 Control_DieToolDiscovery_SuggestionBox_CoilSearch.TextBox.DataProvider = async () =>
                 {
                     var result = await _visualService.GetCoilFlatstockPartIdsAsync();
-                    return result.IsSuccess && result.Data != null ? result.Data : new List<string>();
+                    return result.IsSuccess && result.Data != null
+                        ? result.Data
+                        : new List<string>();
                 };
 
                 // Wire up Enter key for coil search
-                Control_DieToolDiscovery_SuggestionBox_CoilSearch.TextBox.KeyDown += txtCoilSearch_KeyDown;
+                Control_DieToolDiscovery_SuggestionBox_CoilSearch.TextBox.KeyDown +=
+                    txtCoilSearch_KeyDown;
             }
         }
 
@@ -117,6 +132,27 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             }
         }
 
+        private CancellationTokenSource BeginRequest()
+        {
+            CancelPendingRequest();
+            _requestCancellationTokenSource = new CancellationTokenSource();
+            return _requestCancellationTokenSource;
+        }
+
+        private void CancelPendingRequest()
+        {
+            _requestCancellationTokenSource?.Cancel();
+            _requestCancellationTokenSource?.Dispose();
+            _requestCancellationTokenSource = null;
+        }
+
+        private void SetActionButtonsEnabled(bool enabled)
+        {
+            Control_DieToolDiscovery_Button_Search.Enabled = enabled;
+            Control_DieToolDiscovery_Button_CoilSearch.Enabled = enabled;
+            Control_DieToolDiscovery_Button_WhereUsed.Enabled = enabled;
+        }
+
         /// <summary>
         /// Performs the die/tool search operation based on current search criteria.
         /// </summary>
@@ -125,8 +161,12 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         {
             if (_visualService == null)
             {
-                Service_ErrorHandler.ShowUserError("Visual Database Service is not available. Please restart the application.");
-                LoggingUtility.Log("[Control_DieToolDiscovery] Search failed - Service not available");
+                Service_ErrorHandler.ShowUserError(
+                    "Visual Database Service is not available. Please restart the application."
+                );
+                LoggingUtility.Log(
+                    "[Control_DieToolDiscovery] Search failed - Service not available"
+                );
                 return;
             }
 
@@ -139,40 +179,72 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                     "Please enter a search term.",
                     field: "Search Term",
                     callerName: nameof(PerformSearch),
-                    controlName: this.Name);
+                    controlName: this.Name
+                );
                 Control_DieToolDiscovery_SuggestionBox_Search.Focus();
                 return;
             }
 
             bool searchByPart = Control_DieToolDiscovery_RadioButton_SearchByPart.Checked;
-            LoggingUtility.Log($"[Control_DieToolDiscovery] Search initiated | SearchTerm={searchTerm}, SearchByPart={searchByPart}");
+            LoggingUtility.Log(
+                $"[Control_DieToolDiscovery] Search initiated | SearchTerm={searchTerm}, SearchByPart={searchByPart}"
+            );
 
             try
             {
-                var result = await _visualService.SearchDiesAsync(searchTerm, searchByPart);
+                var requestCancellationTokenSource = BeginRequest();
+                SetActionButtonsEnabled(false);
+
+                var result = await _visualService.SearchDiesAsync(
+                    searchTerm,
+                    searchByPart,
+                    requestCancellationTokenSource.Token
+                );
+                if (requestCancellationTokenSource.IsCancellationRequested)
+                {
+                    return;
+                }
 
                 if (result.IsSuccess)
                 {
                     Control_DieToolDiscovery_DataGridView_Results.DataSource = result.Data;
-                    Service_DataGridView.ApplySmartNumericFormatting(Control_DieToolDiscovery_DataGridView_Results);
-                    
+                    Service_DataGridView.ApplySmartNumericFormatting(
+                        Control_DieToolDiscovery_DataGridView_Results
+                    );
+
                     if (result.Data != null && result.Data.Rows.Count > 0)
                     {
-                        Control_DieToolDiscovery_DataGridView_Results.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.DisplayedCells);
-                        LoggingUtility.Log($"[Control_DieToolDiscovery] Search completed successfully | ResultCount={result.Data.Rows.Count}");
-                        Service_ErrorHandler.ShowInformation($"Found {result.Data.Rows.Count} result(s).");
+                        Control_DieToolDiscovery_DataGridView_Results.AutoResizeColumns(
+                            DataGridViewAutoSizeColumnsMode.DisplayedCells
+                        );
+                        LoggingUtility.Log(
+                            $"[Control_DieToolDiscovery] Search completed successfully | ResultCount={result.Data.Rows.Count}"
+                        );
+                        Service_ErrorHandler.ShowInformation(
+                            $"Found {result.Data.Rows.Count} result(s)."
+                        );
                     }
                     else
                     {
-                        LoggingUtility.Log($"[Control_DieToolDiscovery] Search completed with no results | SearchTerm={searchTerm}");
-                        Service_ErrorHandler.ShowInformation("No results found for the specified search criteria.");
+                        LoggingUtility.Log(
+                            $"[Control_DieToolDiscovery] Search completed with no results | SearchTerm={searchTerm}"
+                        );
+                        Service_ErrorHandler.ShowInformation(
+                            "No results found for the specified search criteria."
+                        );
                     }
                 }
                 else
                 {
                     Service_ErrorHandler.ShowUserError($"Search failed: {result.ErrorMessage}");
-                    LoggingUtility.Log($"[Control_DieToolDiscovery] Search failed | ErrorMessage={result.ErrorMessage}");
+                    LoggingUtility.Log(
+                        $"[Control_DieToolDiscovery] Search failed | ErrorMessage={result.ErrorMessage}"
+                    );
                 }
+            }
+            catch (OperationCanceledException)
+            {
+                LoggingUtility.Log("[Control_DieToolDiscovery] Search canceled");
             }
             catch (Exception ex)
             {
@@ -184,10 +256,18 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                         ["User"] = Model_Application_Variables.User,
                         ["SearchTerm"] = searchTerm,
                         ["SearchByPart"] = searchByPart,
-                        ["Operation"] = "SearchDies"
+                        ["Operation"] = "SearchDies",
                     },
                     callerName: nameof(PerformSearch),
-                    controlName: this.Name);
+                    controlName: this.Name
+                );
+            }
+            finally
+            {
+                if (_requestCancellationTokenSource != null)
+                {
+                    SetActionButtonsEnabled(true);
+                }
             }
         }
 
@@ -198,27 +278,43 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         {
             if (_visualService == null)
             {
-                Service_ErrorHandler.ShowUserError("Visual Database Service is not available. Please restart the application.");
+                Service_ErrorHandler.ShowUserError(
+                    "Visual Database Service is not available. Please restart the application."
+                );
                 return;
             }
 
-            string partNumber = Control_DieToolDiscovery_SuggestionBox_CoilSearch.Text?.Trim() ?? "";
+            string partNumber =
+                Control_DieToolDiscovery_SuggestionBox_CoilSearch.Text?.Trim() ?? "";
             if (string.IsNullOrEmpty(partNumber))
             {
                 Service_ErrorHandler.HandleValidationError(
                     "Please enter a part number.",
                     field: "Part Number",
                     callerName: nameof(PerformCoilSearch),
-                    controlName: this.Name);
+                    controlName: this.Name
+                );
                 Control_DieToolDiscovery_SuggestionBox_CoilSearch.Focus();
                 return;
             }
 
-            LoggingUtility.Log($"[Control_DieToolDiscovery] Coil Search initiated | PartNumber={partNumber}");
+            LoggingUtility.Log(
+                $"[Control_DieToolDiscovery] Coil Search initiated | PartNumber={partNumber}"
+            );
 
             try
             {
-                var result = await _visualService.GetCoilFlatstockInfoAsync(partNumber);
+                var requestCancellationTokenSource = BeginRequest();
+                SetActionButtonsEnabled(false);
+
+                var result = await _visualService.GetCoilFlatstockInfoAsync(
+                    partNumber,
+                    requestCancellationTokenSource.Token
+                );
+                if (requestCancellationTokenSource.IsCancellationRequested)
+                {
+                    return;
+                }
 
                 if (result.IsSuccess)
                 {
@@ -233,8 +329,11 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                     Control_DieToolDiscovery_SuggestionBox_ScrapLocation.Text = info?.ScrapLocation;
                     Control_DieToolDiscovery_SuggestionBox_GenericType.Text = info?.GenericType;
                     Control_DieToolDiscovery_SuggestionBox_DetailedType.Text = info?.DetailedType;
-                    Control_DieToolDiscovery_SuggestionBox_AutoIssueLocation.Text = info?.AutoIssueLocation;
-                    LoggingUtility.Log($"[Control_DieToolDiscovery] Coil Search completed successfully");
+                    Control_DieToolDiscovery_SuggestionBox_AutoIssueLocation.Text =
+                        info?.AutoIssueLocation;
+                    LoggingUtility.Log(
+                        $"[Control_DieToolDiscovery] Coil Search completed successfully"
+                    );
                 }
                 else
                 {
@@ -242,11 +341,27 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                     ClearCoilFields();
                 }
             }
+            catch (OperationCanceledException)
+            {
+                LoggingUtility.Log("[Control_DieToolDiscovery] Coil search canceled");
+                ClearCoilFields();
+            }
             catch (Exception ex)
             {
-                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, 
-                    callerName: nameof(PerformCoilSearch), controlName: this.Name);
+                Service_ErrorHandler.HandleException(
+                    ex,
+                    Enum_ErrorSeverity.Medium,
+                    callerName: nameof(PerformCoilSearch),
+                    controlName: this.Name
+                );
                 ClearCoilFields();
+            }
+            finally
+            {
+                if (_requestCancellationTokenSource != null)
+                {
+                    SetActionButtonsEnabled(true);
+                }
             }
         }
 
@@ -313,34 +428,56 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             {
                 e.SuppressKeyPress = true;
                 e.Handled = true;
-                LoggingUtility.Log("[Control_DieToolDiscovery] Enter key pressed in coil search box");
+                LoggingUtility.Log(
+                    "[Control_DieToolDiscovery] Enter key pressed in coil search box"
+                );
                 await PerformCoilSearch();
             }
         }
 
         private async void btnWhereUsed_Click(object? sender, EventArgs e)
         {
-            if (_visualService == null) return;
+            if (_visualService == null)
+                return;
 
             string partId = Control_DieToolDiscovery_SuggestionBox_Search.Text?.Trim() ?? "";
             if (string.IsNullOrEmpty(partId))
             {
-                Service_ErrorHandler.ShowInformation("Please enter a Part Number to search for usage.");
+                Service_ErrorHandler.ShowInformation(
+                    "Please enter a Part Number to search for usage."
+                );
                 return;
             }
 
             try
             {
-                var result = await _visualService.GetWhereUsedAsync(partId);
+                var requestCancellationTokenSource = BeginRequest();
+                SetActionButtonsEnabled(false);
+
+                var result = await _visualService.GetWhereUsedAsync(
+                    partId,
+                    requestCancellationTokenSource.Token
+                );
+                if (requestCancellationTokenSource.IsCancellationRequested)
+                {
+                    return;
+                }
+
                 if (result.IsSuccess)
                 {
                     Control_DieToolDiscovery_DataGridView_Results.DataSource = result.Data;
-                    Service_DataGridView.ApplySmartNumericFormatting(Control_DieToolDiscovery_DataGridView_Results);
-                    
+                    Service_DataGridView.ApplySmartNumericFormatting(
+                        Control_DieToolDiscovery_DataGridView_Results
+                    );
+
                     if (result.Data != null && result.Data.Rows.Count > 0)
                     {
-                        Control_DieToolDiscovery_DataGridView_Results.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.DisplayedCells);
-                        Service_ErrorHandler.ShowInformation($"Found {result.Data.Rows.Count} parent part(s).");
+                        Control_DieToolDiscovery_DataGridView_Results.AutoResizeColumns(
+                            DataGridViewAutoSizeColumnsMode.DisplayedCells
+                        );
+                        Service_ErrorHandler.ShowInformation(
+                            $"Found {result.Data.Rows.Count} parent part(s)."
+                        );
                     }
                     else
                     {
@@ -352,9 +489,25 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                     Service_ErrorHandler.ShowError(result.ErrorMessage);
                 }
             }
+            catch (OperationCanceledException)
+            {
+                LoggingUtility.Log("[Control_DieToolDiscovery] Where Used request canceled");
+            }
             catch (Exception ex)
             {
-                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, callerName: nameof(btnWhereUsed_Click), controlName: this.Name);
+                Service_ErrorHandler.HandleException(
+                    ex,
+                    Enum_ErrorSeverity.Medium,
+                    callerName: nameof(btnWhereUsed_Click),
+                    controlName: this.Name
+                );
+            }
+            finally
+            {
+                if (_requestCancellationTokenSource != null)
+                {
+                    SetActionButtonsEnabled(true);
+                }
             }
         }
 

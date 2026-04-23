@@ -2,11 +2,11 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using MTM_WIP_Application_Winforms.Forms.Shared;
-using MTM_WIP_Application_Winforms.Services.Logging;
+using MTM_WIP_Application_Winforms.Helpers;
 using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Models.Enums;
 using MTM_WIP_Application_Winforms.Services;
-using MTM_WIP_Application_Winforms.Helpers;
+using MTM_WIP_Application_Winforms.Services.Logging;
 
 namespace MTM_WIP_Application_Winforms.Components.Shared
 {
@@ -25,7 +25,12 @@ namespace MTM_WIP_Application_Winforms.Components.Shared
         private const int EM_SETCUEBANNER = 0x1501;
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        private static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wParam, [MarshalAs(UnmanagedType.LPWStr)] string lParam);
+        private static extern IntPtr SendMessage(
+            IntPtr hWnd,
+            int msg,
+            IntPtr wParam,
+            [MarshalAs(UnmanagedType.LPWStr)] string lParam
+        );
 
         #endregion
 
@@ -33,6 +38,7 @@ namespace MTM_WIP_Application_Winforms.Components.Shared
 
         private SuggestionOverlayForm? _currentOverlay;
         private bool _isOverlayVisible;
+        private int _isSuggestionLoadInProgress;
         private List<string>? _lastFilteredResults;
         private string _originalInput = string.Empty;
 
@@ -134,7 +140,8 @@ namespace MTM_WIP_Application_Winforms.Components.Shared
         [Category("Behavior")]
         [Description("Action to take when no suggestions match")]
         [DefaultValue(Enum_SuggestionNoMatchAction.ShowWarningAndClear)]
-        public Enum_SuggestionNoMatchAction NoMatchAction { get; set; } = Enum_SuggestionNoMatchAction.ShowWarningAndClear;
+        public Enum_SuggestionNoMatchAction NoMatchAction { get; set; } =
+            Enum_SuggestionNoMatchAction.ShowWarningAndClear;
 
         /// <summary>
         /// Gets or sets the action to take when a suggestion is selected.
@@ -143,7 +150,8 @@ namespace MTM_WIP_Application_Winforms.Components.Shared
         [Category("Behavior")]
         [Description("Action to take when a suggestion is selected")]
         [DefaultValue(Enum_SuggestionSelectionAction.MoveFocusToNextControl)]
-        public Enum_SuggestionSelectionAction SelectionAction { get; set; } = Enum_SuggestionSelectionAction.MoveFocusToNextControl;
+        public Enum_SuggestionSelectionAction SelectionAction { get; set; } =
+            Enum_SuggestionSelectionAction.MoveFocusToNextControl;
 
         /// <summary>
         /// Gets or sets whether to clear field when no matches found.
@@ -157,8 +165,13 @@ namespace MTM_WIP_Application_Winforms.Components.Shared
         [Obsolete("Use NoMatchAction instead")]
         public bool ClearOnNoMatch
         {
-            get => NoMatchAction == Enum_SuggestionNoMatchAction.ShowWarningAndClear || NoMatchAction == Enum_SuggestionNoMatchAction.ClearField;
-            set => NoMatchAction = value ? Enum_SuggestionNoMatchAction.ShowWarningAndClear : Enum_SuggestionNoMatchAction.None;
+            get =>
+                NoMatchAction == Enum_SuggestionNoMatchAction.ShowWarningAndClear
+                || NoMatchAction == Enum_SuggestionNoMatchAction.ClearField;
+            set =>
+                NoMatchAction = value
+                    ? Enum_SuggestionNoMatchAction.ShowWarningAndClear
+                    : Enum_SuggestionNoMatchAction.None;
         }
 
         /// <summary>
@@ -182,8 +195,6 @@ namespace MTM_WIP_Application_Winforms.Components.Shared
         /// </summary>
         internal TextBox InnerTextBox => SuggestionTextBox_TextBox;
 
-
-               
         /// <inheritdoc />
         [Browsable(true)]
         [Category("Appearance")]
@@ -193,7 +204,6 @@ namespace MTM_WIP_Application_Winforms.Components.Shared
             get => SuggestionTextBox_TextBox.Text;
             set => SuggestionTextBox_TextBox.Text = value ?? string.Empty;
         }
-
 
         /// <inheritdoc />
         [AllowNull]
@@ -306,8 +316,6 @@ namespace MTM_WIP_Application_Winforms.Components.Shared
         [Description("Occurs when suggestion overlay opens")]
         public event EventHandler<EventArgs>? SuggestionOverlayOpened;
 
-
-
         /// <summary>
         /// Occurs when suggestion overlay is closed (any reason).
         /// </summary>
@@ -321,59 +329,150 @@ namespace MTM_WIP_Application_Winforms.Components.Shared
 
         private void ConfigureDataSource()
         {
-            if (DesignMode) return;
+            if (DesignMode)
+                return;
 
             switch (_suggestionDataSource)
             {
                 case Enum_SuggestionDataSource.MTM_PartNumber:
-                    ConfigureInternal(Helper_SuggestionTextBox.GetCachedPartNumbersAsync, 100, true, Enum_SuggestionNoMatchAction.ShowWarningAndClear, true);
+                    ConfigureInternal(
+                        Helper_SuggestionTextBox.GetCachedPartNumbersAsync,
+                        100,
+                        true,
+                        Enum_SuggestionNoMatchAction.ShowWarningAndClear,
+                        true
+                    );
                     break;
                 case Enum_SuggestionDataSource.MTM_Operation:
-                    ConfigureInternal(Helper_SuggestionTextBox.GetCachedOperationsAsync, 50, true, Enum_SuggestionNoMatchAction.ShowWarningAndClear, true);
+                    ConfigureInternal(
+                        Helper_SuggestionTextBox.GetCachedOperationsAsync,
+                        50,
+                        true,
+                        Enum_SuggestionNoMatchAction.ShowWarningAndClear,
+                        true
+                    );
                     break;
                 case Enum_SuggestionDataSource.MTM_Location:
-                    ConfigureInternal(Helper_SuggestionTextBox.GetCachedLocationsAsync, 100, true, Enum_SuggestionNoMatchAction.ShowWarningAndClear, true);
+                    ConfigureInternal(
+                        Helper_SuggestionTextBox.GetCachedLocationsAsync,
+                        100,
+                        true,
+                        Enum_SuggestionNoMatchAction.ShowWarningAndClear,
+                        true
+                    );
                     break;
                 case Enum_SuggestionDataSource.MTM_Color:
-                    ConfigureInternal(Helper_SuggestionTextBox.GetCachedColorsAsync, 20, false, Enum_SuggestionNoMatchAction.None, true);
+                    ConfigureInternal(
+                        Helper_SuggestionTextBox.GetCachedColorsAsync,
+                        20,
+                        false,
+                        Enum_SuggestionNoMatchAction.None,
+                        true
+                    );
                     break;
                 case Enum_SuggestionDataSource.MTM_User:
-                    ConfigureInternal(Helper_SuggestionTextBox.GetCachedUsersAsync, 50, false, Enum_SuggestionNoMatchAction.ShowWarningAndClear, true);
+                    ConfigureInternal(
+                        Helper_SuggestionTextBox.GetCachedUsersAsync,
+                        50,
+                        false,
+                        Enum_SuggestionNoMatchAction.ShowWarningAndClear,
+                        true
+                    );
                     break;
                 case Enum_SuggestionDataSource.MTM_ItemType:
-                    ConfigureInternal(Helper_SuggestionTextBox.GetCachedItemTypesAsync, 50, false, Enum_SuggestionNoMatchAction.ShowWarningAndClear, true);
+                    ConfigureInternal(
+                        Helper_SuggestionTextBox.GetCachedItemTypesAsync,
+                        50,
+                        false,
+                        Enum_SuggestionNoMatchAction.ShowWarningAndClear,
+                        true
+                    );
                     break;
                 // InforVisual types
                 case Enum_SuggestionDataSource.Infor_PartNumber:
-                    ConfigureInternal(Helper_SuggestionTextBox.GetCachedInforPartNumbersAsync, 100, true, Enum_SuggestionNoMatchAction.ShowWarningAndClear, true);
+                    ConfigureInternal(
+                        Helper_SuggestionTextBox.GetCachedInforPartNumbersAsync,
+                        100,
+                        true,
+                        Enum_SuggestionNoMatchAction.ShowWarningAndClear,
+                        true
+                    );
                     break;
                 case Enum_SuggestionDataSource.Infor_User:
-                    ConfigureInternal(Helper_SuggestionTextBox.GetCachedInforUsersAsync, 50, false, Enum_SuggestionNoMatchAction.ShowWarningAndClear, true);
+                    ConfigureInternal(
+                        Helper_SuggestionTextBox.GetCachedInforUsersAsync,
+                        50,
+                        false,
+                        Enum_SuggestionNoMatchAction.ShowWarningAndClear,
+                        true
+                    );
                     break;
                 case Enum_SuggestionDataSource.Infor_Location:
-                    ConfigureInternal(Helper_SuggestionTextBox.GetCachedInforLocationsAsync, 100, true, Enum_SuggestionNoMatchAction.ShowWarningAndClear, true);
+                    ConfigureInternal(
+                        Helper_SuggestionTextBox.GetCachedInforLocationsAsync,
+                        100,
+                        true,
+                        Enum_SuggestionNoMatchAction.ShowWarningAndClear,
+                        true
+                    );
                     break;
                 case Enum_SuggestionDataSource.Infor_Warehouse:
-                    ConfigureInternal(Helper_SuggestionTextBox.GetCachedInforWarehousesAsync, 50, true, Enum_SuggestionNoMatchAction.ShowWarningAndClear, true);
+                    ConfigureInternal(
+                        Helper_SuggestionTextBox.GetCachedInforWarehousesAsync,
+                        50,
+                        true,
+                        Enum_SuggestionNoMatchAction.ShowWarningAndClear,
+                        true
+                    );
                     break;
                 case Enum_SuggestionDataSource.Infor_Operation:
                     // Not implemented yet
                     break;
                 case Enum_SuggestionDataSource.Infor_PONumber:
-                    ConfigureInternal(Helper_SuggestionTextBox.GetCachedInforPurchaseOrdersAsync, 50, true, Enum_SuggestionNoMatchAction.ShowWarningAndClear, true);
+                    ConfigureInternal(
+                        Helper_SuggestionTextBox.GetCachedInforPurchaseOrdersAsync,
+                        50,
+                        true,
+                        Enum_SuggestionNoMatchAction.ShowWarningAndClear,
+                        true
+                    );
                     break;
                 case Enum_SuggestionDataSource.Infor_CONumber:
-                    ConfigureInternal(Helper_SuggestionTextBox.GetCachedInforCustomerOrdersAsync, 50, true, Enum_SuggestionNoMatchAction.ShowWarningAndClear, true);
+                    ConfigureInternal(
+                        Helper_SuggestionTextBox.GetCachedInforCustomerOrdersAsync,
+                        50,
+                        true,
+                        Enum_SuggestionNoMatchAction.ShowWarningAndClear,
+                        true
+                    );
                     break;
                 case Enum_SuggestionDataSource.Infor_WONumber:
-                    ConfigureInternal(Helper_SuggestionTextBox.GetCachedInforWorkOrdersAsync, 50, true, Enum_SuggestionNoMatchAction.ShowWarningAndClear, true);
+                    ConfigureInternal(
+                        Helper_SuggestionTextBox.GetCachedInforWorkOrdersAsync,
+                        50,
+                        true,
+                        Enum_SuggestionNoMatchAction.ShowWarningAndClear,
+                        true
+                    );
                     break;
                 case Enum_SuggestionDataSource.Infor_FGTNumber:
-                    ConfigureInternal(Helper_SuggestionTextBox.GetCachedInforFGTNumbersAsync, 100, true, Enum_SuggestionNoMatchAction.ShowWarningAndClear, true);
+                    ConfigureInternal(
+                        Helper_SuggestionTextBox.GetCachedInforFGTNumbersAsync,
+                        100,
+                        true,
+                        Enum_SuggestionNoMatchAction.ShowWarningAndClear,
+                        true
+                    );
                     break;
                 case Enum_SuggestionDataSource.Infor_MMCNumber:
                 case Enum_SuggestionDataSource.Infor_MMFNumber:
-                    ConfigureInternal(Helper_SuggestionTextBox.GetCachedInforCoilFlatstockNumbersAsync, 100, true, Enum_SuggestionNoMatchAction.ShowWarningAndClear, true);
+                    ConfigureInternal(
+                        Helper_SuggestionTextBox.GetCachedInforCoilFlatstockNumbersAsync,
+                        100,
+                        true,
+                        Enum_SuggestionNoMatchAction.ShowWarningAndClear,
+                        true
+                    );
                     break;
                 case Enum_SuggestionDataSource.None:
                 default:
@@ -381,7 +480,13 @@ namespace MTM_WIP_Application_Winforms.Components.Shared
             }
         }
 
-        private void ConfigureInternal(Func<Task<List<string>>> dataProvider, int maxResults, bool enableWildcards, Enum_SuggestionNoMatchAction noMatchAction, bool suppressExactMatch)
+        private void ConfigureInternal(
+            Func<Task<List<string>>> dataProvider,
+            int maxResults,
+            bool enableWildcards,
+            Enum_SuggestionNoMatchAction noMatchAction,
+            bool suppressExactMatch
+        )
         {
             this.DataProvider = dataProvider;
             this.MaxResults = maxResults;
@@ -391,29 +496,37 @@ namespace MTM_WIP_Application_Winforms.Components.Shared
             this.EnableF4 = true;
         }
 
-            private void WireInnerTextBoxEvents()
-            {
-                SuggestionTextBox_TextBox.LostFocus += InnerTextBox_LostFocus;
-                SuggestionTextBox_TextBox.KeyDown += InnerTextBox_KeyDown;
-                SuggestionTextBox_TextBox.Leave += InnerTextBox_Leave;
-                SuggestionTextBox_TextBox.KeyPress += InnerTextBox_KeyPress;
-                SuggestionTextBox_TextBox.KeyUp += InnerTextBox_KeyUp;
-                SuggestionTextBox_TextBox.TextChanged += InnerTextBox_TextChanged;
-                SuggestionTextBox_TextBox.Click += InnerTextBox_Click;
-                SuggestionTextBox_TextBox.DoubleClick += InnerTextBox_DoubleClick;
-                HandleCreated += (s, e) => UpdateCueBanner();
-                SuggestionTextBox_TextBox.HandleCreated += (s, e) => UpdateCueBanner();
-            }
-private void UpdateCueBanner()
+        private void WireInnerTextBoxEvents()
         {
-            if (SuggestionTextBox_TextBox.IsHandleCreated && !string.IsNullOrEmpty(SuggestionTextBox_TextBox.PlaceholderText))
+            SuggestionTextBox_TextBox.LostFocus += InnerTextBox_LostFocus;
+            SuggestionTextBox_TextBox.KeyDown += InnerTextBox_KeyDown;
+            SuggestionTextBox_TextBox.Leave += InnerTextBox_Leave;
+            SuggestionTextBox_TextBox.KeyPress += InnerTextBox_KeyPress;
+            SuggestionTextBox_TextBox.KeyUp += InnerTextBox_KeyUp;
+            SuggestionTextBox_TextBox.TextChanged += InnerTextBox_TextChanged;
+            SuggestionTextBox_TextBox.Click += InnerTextBox_Click;
+            SuggestionTextBox_TextBox.DoubleClick += InnerTextBox_DoubleClick;
+            HandleCreated += (s, e) => UpdateCueBanner();
+            SuggestionTextBox_TextBox.HandleCreated += (s, e) => UpdateCueBanner();
+        }
+
+        private void UpdateCueBanner()
+        {
+            if (
+                SuggestionTextBox_TextBox.IsHandleCreated
+                && !string.IsNullOrEmpty(SuggestionTextBox_TextBox.PlaceholderText)
+            )
             {
                 // wParam = 1 (TRUE) to show when focused
-                SendMessage(SuggestionTextBox_TextBox.Handle, EM_SETCUEBANNER, (IntPtr)(KeepPlaceholderOnFocus ? 1 : 0), SuggestionTextBox_TextBox.PlaceholderText);
+                SendMessage(
+                    SuggestionTextBox_TextBox.Handle,
+                    EM_SETCUEBANNER,
+                    (IntPtr)(KeepPlaceholderOnFocus ? 1 : 0),
+                    SuggestionTextBox_TextBox.PlaceholderText
+                );
             }
         }
 
-        
         /// <summary>
         /// Manually triggers suggestion display for current Text value.
         /// Useful for programmatically showing suggestions without focus change.
@@ -423,7 +536,9 @@ private void UpdateCueBanner()
         public async Task ShowSuggestionsAsync()
         {
             if (DataProvider == null)
-                throw new InvalidOperationException("DataProvider must be set before showing suggestions");
+                throw new InvalidOperationException(
+                    "DataProvider must be set before showing suggestions"
+                );
 
             await ShowSuggestionOverlayAsync();
         }
@@ -434,13 +549,17 @@ private void UpdateCueBanner()
         /// <returns>Task that completes when overlay is closed</returns>
         public async Task ShowFullListAsync()
         {
-            if (DataProvider == null) return;
+            if (DataProvider == null)
+                return;
+
+            if (!TryBeginSuggestionLoad())
+                return;
 
             try
             {
                 // Get all suggestions from data provider
                 var allSuggestions = await DataProvider.Invoke();
-                
+
                 if (allSuggestions == null || allSuggestions.Count == 0)
                 {
                     Service_ErrorHandler.ShowWarning("No suggestions available.");
@@ -455,9 +574,16 @@ private void UpdateCueBanner()
             }
             catch (Exception ex)
             {
-                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low,
+                Service_ErrorHandler.HandleException(
+                    ex,
+                    Enum_ErrorSeverity.Low,
                     controlName: this.Name,
-                    callerName: nameof(ShowFullListAsync));
+                    callerName: nameof(ShowFullListAsync)
+                );
+            }
+            finally
+            {
+                EndSuggestionLoad();
             }
         }
 
@@ -478,6 +604,7 @@ private void UpdateCueBanner()
         public void RefreshDataSource()
         {
             _lastFilteredResults = null;
+            Helper_SuggestionTextBox.InvalidateVisualSuggestionCache(_suggestionDataSource);
         }
 
         /// <summary>
@@ -628,17 +755,30 @@ private void UpdateCueBanner()
                 // Check for empty input
                 if (string.IsNullOrWhiteSpace(_originalInput))
                 {
-                    OnSuggestionCancelled(new EventArgs_SuggestionCancelledEventArgs
-                    {
-                        OriginalInput = _originalInput,
-                        Reason = SuggestionCancelReason.EmptyInput,
-                        FieldName = this.Name
-                    });
+                    OnSuggestionCancelled(
+                        new EventArgs_SuggestionCancelledEventArgs
+                        {
+                            OriginalInput = _originalInput,
+                            Reason = SuggestionCancelReason.EmptyInput,
+                            FieldName = this.Name,
+                        }
+                    );
                     return;
                 }
 
-                // Invoke data provider
-                var allSuggestions = await DataProvider!.Invoke();
+                if (!TryBeginSuggestionLoad())
+                    return;
+
+                List<string>? allSuggestions;
+                try
+                {
+                    // Invoke data provider
+                    allSuggestions = await DataProvider!.Invoke();
+                }
+                finally
+                {
+                    EndSuggestionLoad();
+                }
 
                 if (allSuggestions == null || allSuggestions.Count == 0)
                 {
@@ -654,11 +794,15 @@ private void UpdateCueBanner()
                     allSuggestions,
                     _originalInput,
                     MaxResults,
-                    EnableWildcards);
+                    EnableWildcards
+                );
 
                 // Check if exact match (overlay suppressed)
-                if (SuppressExactMatch && filteredSuggestions.Count == 0 &&
-                    Service_SuggestionFilter.IsExactMatch(allSuggestions, _originalInput))
+                if (
+                    SuppressExactMatch
+                    && filteredSuggestions.Count == 0
+                    && Service_SuggestionFilter.IsExactMatch(allSuggestions, _originalInput)
+                )
                 {
                     HandleExactMatchWithoutOverlay(allSuggestions);
                     return;
@@ -685,9 +829,10 @@ private void UpdateCueBanner()
                     contextData: new Dictionary<string, object>
                     {
                         ["Control"] = this.Name,
-                        ["Input"] = _originalInput
+                        ["Input"] = _originalInput,
                     },
-                    callerName: nameof(ShowSuggestionOverlayAsync));
+                    callerName: nameof(ShowSuggestionOverlayAsync)
+                );
             }
         }
 
@@ -701,30 +846,29 @@ private void UpdateCueBanner()
                 _isOverlayVisible = true;
                 OnSuggestionOverlayOpened(EventArgs.Empty);
 
-
-
                 _currentOverlay = new SuggestionOverlayForm(suggestions, SuggestionTextBox_TextBox);
 
                 var parentForm = this.FindForm();
                 if (parentForm == null)
                 {
-                    LoggingUtility.LogApplicationError(new InvalidOperationException($"[SuggestionTextBox] Cannot find parent form for control: {this.Name}"));
+                    LoggingUtility.LogApplicationError(
+                        new InvalidOperationException(
+                            $"[SuggestionTextBox] Cannot find parent form for control: {this.Name}"
+                        )
+                    );
                     _currentOverlay.Dispose();
                     _currentOverlay = null;
                     _isOverlayVisible = false;
                     return;
                 }
 
-
                 var result = _currentOverlay.ShowDialog(parentForm);
-
 
                 // Capture selected item IMMEDIATELY after dialog closes (before any disposal)
                 string? selectedValue = null;
                 try
                 {
                     selectedValue = _currentOverlay?.SelectedItem;
-
                 }
                 catch (Exception ex)
                 {
@@ -749,50 +893,53 @@ private void UpdateCueBanner()
                 {
                     // User accepted selection - update TextBox with capitalized value
 
-
                     this.Text = selectedValue.ToUpperInvariant();
 
-
-
-                    OnSuggestionSelected(new EventArgs_SuggestionSelectedEventArgs
-                    {
-                        OriginalInput = _originalInput,
-                        SelectedValue = selectedValue,
-                        SelectionIndex = 0, // Index not available after disposal
-                        FieldName = this.Name
-                    });
+                    OnSuggestionSelected(
+                        new EventArgs_SuggestionSelectedEventArgs
+                        {
+                            OriginalInput = _originalInput,
+                            SelectedValue = selectedValue,
+                            SelectionIndex = 0, // Index not available after disposal
+                            FieldName = this.Name,
+                        }
+                    );
 
                     // Handle Selection Action
                     if (SelectionAction == Enum_SuggestionSelectionAction.MoveFocusToNextControl)
                     {
                         // Move focus to next control
-                        var nextControlFocused = this.FindForm()?.SelectNextControl(this, forward: true, tabStopOnly: true, nested: true, wrap: false);
+                        var nextControlFocused = this.FindForm()
+                            ?.SelectNextControl(
+                                this,
+                                forward: true,
+                                tabStopOnly: true,
+                                nested: true,
+                                wrap: false
+                            );
                     }
                 }
                 else
                 {
                     // User cancelled - restore focus to this field
 
-
-                    OnSuggestionCancelled(new EventArgs_SuggestionCancelledEventArgs
-                    {
-                        OriginalInput = _originalInput,
-                        Reason = SuggestionCancelReason.Escape,
-                        FieldName = this.Name
-                    });
-
-
+                    OnSuggestionCancelled(
+                        new EventArgs_SuggestionCancelledEventArgs
+                        {
+                            OriginalInput = _originalInput,
+                            Reason = SuggestionCancelReason.Escape,
+                            FieldName = this.Name,
+                        }
+                    );
 
                     // Ensure focus returns to this field (prevents focus moving to next field)
                     SuggestionTextBox_TextBox.Focus();
-
                 }
             }
             finally
             {
                 _isOverlayVisible = false;
                 OnSuggestionOverlayClosed(EventArgs.Empty);
-
             }
         }
 
@@ -801,17 +948,21 @@ private void UpdateCueBanner()
         /// </summary>
         private void HandleNoMatches()
         {
-            OnSuggestionCancelled(new EventArgs_SuggestionCancelledEventArgs
-            {
-                OriginalInput = _originalInput,
-                Reason = SuggestionCancelReason.NoMatches,
-                FieldName = this.Name
-            });
+            OnSuggestionCancelled(
+                new EventArgs_SuggestionCancelledEventArgs
+                {
+                    OriginalInput = _originalInput,
+                    Reason = SuggestionCancelReason.NoMatches,
+                    FieldName = this.Name,
+                }
+            );
 
             if (NoMatchAction == Enum_SuggestionNoMatchAction.ShowWarningAndClear)
             {
                 this.Text = string.Empty;
-                Service_ErrorHandler.ShowWarning($"No matching values found for '{_originalInput}'");
+                Service_ErrorHandler.ShowWarning(
+                    $"No matching values found for '{_originalInput}'"
+                );
             }
             else if (NoMatchAction == Enum_SuggestionNoMatchAction.ClearField)
             {
@@ -849,6 +1000,16 @@ private void UpdateCueBanner()
         protected virtual void OnSuggestionOverlayClosed(EventArgs e)
         {
             SuggestionOverlayClosed?.Invoke(this, e);
+        }
+
+        private bool TryBeginSuggestionLoad()
+        {
+            return Interlocked.CompareExchange(ref _isSuggestionLoadInProgress, 1, 0) == 0;
+        }
+
+        private void EndSuggestionLoad()
+        {
+            Interlocked.Exchange(ref _isSuggestionLoadInProgress, 0);
         }
 
         #endregion
@@ -989,7 +1150,9 @@ private void UpdateCueBanner()
                 return;
             }
 
-            var matchedValue = source.FirstOrDefault(s => s.Equals(_originalInput, StringComparison.OrdinalIgnoreCase));
+            var matchedValue = source.FirstOrDefault(s =>
+                s.Equals(_originalInput, StringComparison.OrdinalIgnoreCase)
+            );
             if (matchedValue == null)
             {
                 return;
@@ -1001,14 +1164,18 @@ private void UpdateCueBanner()
                 Text = normalizedValue;
             }
 
-            var selectionIndex = source.FindIndex(s => s.Equals(matchedValue, StringComparison.OrdinalIgnoreCase));
-            OnSuggestionSelected(new EventArgs_SuggestionSelectedEventArgs
-            {
-                OriginalInput = _originalInput,
-                SelectedValue = matchedValue,
-                SelectionIndex = selectionIndex < 0 ? 0 : selectionIndex,
-                FieldName = this.Name
-            });
+            var selectionIndex = source.FindIndex(s =>
+                s.Equals(matchedValue, StringComparison.OrdinalIgnoreCase)
+            );
+            OnSuggestionSelected(
+                new EventArgs_SuggestionSelectedEventArgs
+                {
+                    OriginalInput = _originalInput,
+                    SelectedValue = matchedValue,
+                    SelectionIndex = selectionIndex < 0 ? 0 : selectionIndex,
+                    FieldName = this.Name,
+                }
+            );
         }
 
         #endregion

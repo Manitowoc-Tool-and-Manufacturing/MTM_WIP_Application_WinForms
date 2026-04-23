@@ -1,12 +1,12 @@
 using System.Data;
 using Microsoft.Extensions.DependencyInjection;
 using MTM_WIP_Application_Winforms.Forms.Shared;
-using MTM_WIP_Application_Winforms.Models;
-using MTM_WIP_Application_Winforms.Services;
-using MTM_WIP_Application_Winforms.Services.Visual;
-using MTM_WIP_Application_Winforms.Services.Logging;
 using MTM_WIP_Application_Winforms.Helpers;
+using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Models.Enums;
+using MTM_WIP_Application_Winforms.Services;
+using MTM_WIP_Application_Winforms.Services.Logging;
+using MTM_WIP_Application_Winforms.Services.Visual;
 
 namespace MTM_WIP_Application_Winforms.Controls.Visual
 {
@@ -17,6 +17,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
     {
         #region Fields
         private readonly IService_VisualDatabase? _visualService;
+        private CancellationTokenSource? _searchRequestCancellationTokenSource;
         private DataTable? _cachedDataTable;
         #endregion
 
@@ -29,6 +30,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             InitializeComponent();
             this.MinimumSize = new Size(600, 400);
             _visualService = Program.ServiceProvider?.GetService<IService_VisualDatabase>();
+            Disposed += (_, _) => CancelPendingSearchRequest();
 
             InitializeSuggestionBoxes();
             WireUpEvents();
@@ -46,26 +48,52 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         {
             // Part Number
             Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber.LabelText = "Part Number";
-            Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber.SuggestionDataSource = Enum_SuggestionDataSource.Infor_PartNumber;
+            Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber.SuggestionDataSource =
+                Enum_SuggestionDataSource.Infor_PartNumber;
 
             // Warehouse
             Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse.LabelText = "Warehouse";
-            Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse.SuggestionDataSource = Enum_SuggestionDataSource.Infor_Warehouse;
+            Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse.SuggestionDataSource =
+                Enum_SuggestionDataSource.Infor_Warehouse;
 
             // Location
             Control_VisualInventory_SuggestionTextBoxWithLabel_Location.LabelText = "Location";
-            Control_VisualInventory_SuggestionTextBoxWithLabel_Location.SuggestionDataSource = Enum_SuggestionDataSource.Infor_Location;
+            Control_VisualInventory_SuggestionTextBoxWithLabel_Location.SuggestionDataSource =
+                Enum_SuggestionDataSource.Infor_Location;
         }
 
         private void WireUpEvents()
         {
-            Control_VisualInventory_Button_Search.Click += async (s, e) => await PerformSearchAsync();
-            Control_VisualInventory_Button_Export.Click += Control_VisualInventory_Button_Export_Click;
-            
+            Control_VisualInventory_Button_Search.Click += async (s, e) =>
+                await PerformSearchAsync();
+            Control_VisualInventory_Button_Export.Click +=
+                Control_VisualInventory_Button_Export_Click;
+
             // Enter key support
-            Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber.TextBox.KeyDown += async (s, e) => { if (e.KeyCode == Keys.Enter) await PerformSearchAsync(); };
-            Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse.TextBox.KeyDown += async (s, e) => { if (e.KeyCode == Keys.Enter) await PerformSearchAsync(); };
-            Control_VisualInventory_SuggestionTextBoxWithLabel_Location.TextBox.KeyDown += async (s, e) => { if (e.KeyCode == Keys.Enter) await PerformSearchAsync(); };
+            Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber.TextBox.KeyDown += async (
+                s,
+                e
+            ) =>
+            {
+                if (e.KeyCode == Keys.Enter)
+                    await PerformSearchAsync();
+            };
+            Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse.TextBox.KeyDown += async (
+                s,
+                e
+            ) =>
+            {
+                if (e.KeyCode == Keys.Enter)
+                    await PerformSearchAsync();
+            };
+            Control_VisualInventory_SuggestionTextBoxWithLabel_Location.TextBox.KeyDown += async (
+                s,
+                e
+            ) =>
+            {
+                if (e.KeyCode == Keys.Enter)
+                    await PerformSearchAsync();
+            };
         }
 
         private async Task PerformSearchAsync()
@@ -78,23 +106,43 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
 
             try
             {
+                var requestCancellationTokenSource = BeginSearchRequest();
                 LoggingUtility.Log("[Control_VisualInventory] Search started");
                 Control_VisualInventory_Button_Search.Enabled = false;
                 Control_VisualInventory_Button_Search.Text = "Searching...";
 
-                string partNumber = Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber.Text?.Trim() ?? "";
-                string warehouse = Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse.Text?.Trim() ?? "";
-                string location = Control_VisualInventory_SuggestionTextBoxWithLabel_Location.Text?.Trim() ?? "";
+                string partNumber =
+                    Control_VisualInventory_SuggestionTextBoxWithLabel_PartNumber.Text?.Trim()
+                    ?? "";
+                string warehouse =
+                    Control_VisualInventory_SuggestionTextBoxWithLabel_Warehouse.Text?.Trim() ?? "";
+                string location =
+                    Control_VisualInventory_SuggestionTextBoxWithLabel_Location.Text?.Trim() ?? "";
                 bool nonZeroOnly = Control_VisualInventory_CheckBox_NonZeroOnly.Checked;
 
-                var result = await _visualService.GetInventoryAsync(partNumber, warehouse, location, nonZeroOnly);
+                var result = await _visualService.GetInventoryAsync(
+                    partNumber,
+                    warehouse,
+                    location,
+                    nonZeroOnly,
+                    requestCancellationTokenSource.Token
+                );
+                if (requestCancellationTokenSource.IsCancellationRequested)
+                {
+                    return;
+                }
 
                 if (result.IsSuccess && result.Data != null)
                 {
                     _cachedDataTable = result.Data;
                     Control_VisualInventory_DataGridView_Results.DataSource = _cachedDataTable;
-                    await Service_DataGridView.ApplyStandardSettingsAsync(Control_VisualInventory_DataGridView_Results, Model_Application_Variables.User);
-                    Service_DataGridView.ApplySmartNumericFormatting(Control_VisualInventory_DataGridView_Results);
+                    await Service_DataGridView.ApplyStandardSettingsAsync(
+                        Control_VisualInventory_DataGridView_Results,
+                        Model_Application_Variables.User
+                    );
+                    Service_DataGridView.ApplySmartNumericFormatting(
+                        Control_VisualInventory_DataGridView_Results
+                    );
 
                     // if (Control_VisualInventory_Image_NothingFound != null)
                     // {
@@ -112,14 +160,25 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                     // }
                 }
             }
+            catch (OperationCanceledException)
+            {
+                LoggingUtility.Log("[Control_VisualInventory] Search canceled");
+            }
             catch (Exception ex)
             {
-                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, controlName: this.Name);
+                Service_ErrorHandler.HandleException(
+                    ex,
+                    Enum_ErrorSeverity.Medium,
+                    controlName: this.Name
+                );
             }
             finally
             {
-                Control_VisualInventory_Button_Search.Enabled = true;
-                Control_VisualInventory_Button_Search.Text = "Search";
+                if (_searchRequestCancellationTokenSource != null)
+                {
+                    Control_VisualInventory_Button_Search.Enabled = true;
+                    Control_VisualInventory_Button_Search.Text = "Search";
+                }
             }
         }
 
@@ -136,12 +195,29 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
 
             await PerformSearchAsync();
         }
+
+        private CancellationTokenSource BeginSearchRequest()
+        {
+            CancelPendingSearchRequest();
+            _searchRequestCancellationTokenSource = new CancellationTokenSource();
+            return _searchRequestCancellationTokenSource;
+        }
+
+        private void CancelPendingSearchRequest()
+        {
+            _searchRequestCancellationTokenSource?.Cancel();
+            _searchRequestCancellationTokenSource?.Dispose();
+            _searchRequestCancellationTokenSource = null;
+        }
         #endregion
 
         #region Events
         private async void Control_VisualInventory_Button_Export_Click(object? sender, EventArgs e)
         {
-            if (Control_VisualInventory_DataGridView_Results.DataSource is not DataTable dt || dt.Rows.Count == 0)
+            if (
+                Control_VisualInventory_DataGridView_Results.DataSource is not DataTable dt
+                || dt.Rows.Count == 0
+            )
             {
                 Service_ErrorHandler.ShowError("No data to export.");
                 return;
@@ -153,7 +229,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             {
                 Filter = "Excel Workbook|*.xlsx",
                 Title = "Export to Excel",
-                FileName = $"VisualInventory_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx"
+                FileName = $"VisualInventory_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx",
             };
 
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
@@ -169,12 +245,22 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                         columnOrder.Add(col.ColumnName);
                     }
 
-                    var printJob = new Model_Print_Job(dt, columnOrder, columnOrder, "Visual Inventory Export");
-                    var result = await Helper_ExportManager.ExportToExcelAsync(printJob, saveFileDialog.FileName);
+                    var printJob = new Model_Print_Job(
+                        dt,
+                        columnOrder,
+                        columnOrder,
+                        "Visual Inventory Export"
+                    );
+                    var result = await Helper_ExportManager.ExportToExcelAsync(
+                        printJob,
+                        saveFileDialog.FileName
+                    );
 
                     if (result.IsSuccess)
                     {
-                        Service_ErrorHandler.ShowInformation($"Export successful to {saveFileDialog.FileName}");
+                        Service_ErrorHandler.ShowInformation(
+                            $"Export successful to {saveFileDialog.FileName}"
+                        );
                     }
                     else
                     {
@@ -183,7 +269,11 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                 }
                 catch (Exception ex)
                 {
-                    Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, controlName: this.Name);
+                    Service_ErrorHandler.HandleException(
+                        ex,
+                        Enum_ErrorSeverity.Medium,
+                        controlName: this.Name
+                    );
                 }
                 finally
                 {
@@ -193,6 +283,5 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             }
         }
         #endregion
-
     }
 }

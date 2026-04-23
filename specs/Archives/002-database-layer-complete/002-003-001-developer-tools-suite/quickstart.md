@@ -89,25 +89,25 @@ dotnet run --project MTM_WIP_Application_Winforms.csproj
 
 ### Step 2: Login with Developer Credentials
 
--   Username: `JOHNK` (or your developer account)
--   Password: `[your password]`
+- Username: `JOHNK` (or your developer account)
+- Password: `[your password]`
 
 ### Step 3: Open Settings Form
 
--   Click **Settings** button in MainForm toolbar
--   OR press **F10** keyboard shortcut
+- Click **Settings** button in MainForm toolbar
+- OR press **F10** keyboard shortcut
 
 ### Step 4: Navigate to Developer Category
 
--   Settings form opens with TreeView on left
--   Expand **Developer** node (appears after "About" category)
--   Six tools available:
-    -   🐛 Debug Dashboard
-    -   📝 Parameter Prefix Maintenance
-    -   📊 Schema Inspector
-    -   🔗 Procedure Call Hierarchy
-    -   💻 Code Generator
-    -   🔌 Database (connection monitor)
+- Settings form opens with TreeView on left
+- Expand **Developer** node (appears after "About" category)
+- Six tools available:
+    - 🐛 Debug Dashboard
+    - 📝 Parameter Prefix Maintenance
+    - 📊 Schema Inspector
+    - 🔗 Procedure Call Hierarchy
+    - 💻 Code Generator
+    - 🔌 Database (connection monitor)
 
 ---
 
@@ -168,10 +168,10 @@ Real-time monitoring of application activity for debugging stored procedure exec
 
 ### Keyboard Shortcuts
 
--   **F5**: Refresh display
--   **Ctrl+P**: Pause/Resume capture
--   **Ctrl+S**: Save log
--   **Ctrl+L**: Clear output
+- **F5**: Refresh display
+- **Ctrl+P**: Pause/Resume capture
+- **Ctrl+S**: Save log
+- **Ctrl+L**: Clear output
 
 ---
 
@@ -255,13 +255,13 @@ Manage parameter prefix overrides for stored procedures that don't follow the p\
 
 **What This Means**:
 
--   Procedure doesn't exist in current database
--   Could be typo, or future procedure, or Production-only procedure
+- Procedure doesn't exist in current database
+- Could be typo, or future procedure, or Production-only procedure
 
 **What To Do**:
 
--   Click "Yes" if you're sure procedure name is correct (e.g., Production hotfix)
--   Click "No" to fix typo and try again
+- Click "Yes" if you're sure procedure name is correct (e.g., Production hotfix)
+- Click "No" to fix typo and try again
 
 ---
 
@@ -518,10 +518,10 @@ public static async Task<Model_Dao_Result<DataTable>> SearchTransactionsAsync(
 
 ### Best Practices
 
--   **Always Review Generated Code**: Generator provides 95% solution, but verify error handling and return types
--   **Update XML Comments**: Add specific business rules to `<summary>` tag
--   **Test Compilation**: Build project after pasting to catch any type mismatches
--   **Version Control**: Commit generated code separately from manual changes for easier review
+- **Always Review Generated Code**: Generator provides 95% solution, but verify error handling and return types
+- **Update XML Comments**: Add specific business rules to `<summary>` tag
+- **Test Compilation**: Build project after pasting to catch any type mismatches
+- **Version Control**: Commit generated code separately from manual changes for easier review
 
 ---
 
@@ -798,9 +798,9 @@ using MTM_WIP_Application_Winforms.Logging;
 
 ### Developer Role Access Control
 
--   Developer tools intentionally hidden from non-developers
--   Production databases should have minimal Developer role grants
--   Override table allows tracking who added/modified each override (audit trail)
+- Developer tools intentionally hidden from non-developers
+- Production databases should have minimal Developer role grants
+- Override table allows tracking who added/modified each override (audit trail)
 
 ### Production Warning Dialog
 
@@ -817,9 +817,9 @@ Continue?  [Yes] [No]
 
 ### Sensitive Data
 
--   Debug Dashboard output may contain business data (UserID, part numbers, etc.)
--   Debug logs should be treated as sensitive - don't commit to source control
--   Schema Inspector reveals database structure - acceptable for authorized developers only
+- Debug Dashboard output may contain business data (UserID, part numbers, etc.)
+- Debug logs should be treated as sensitive - don't commit to source control
+- Schema Inspector reveals database structure - acceptable for authorized developers only
 
 ---
 
@@ -835,11 +835,11 @@ Continue?  [Yes] [No]
 
 ## Additional Resources
 
--   **Phase 2.5 Specification**: `specs/002-003-database-layer-complete/spec.md`
--   **Developer Tools Specification**: `specs/002-003-database-layer-complete/002-003-001-developer-tools-suite/spec.md`
--   **Data Model Documentation**: `specs/002-003-database-layer-complete/002-003-001-developer-tools-suite/data-model.md`
--   **Stored Procedure Contracts**: `specs/002-003-database-layer-complete/002-003-001-developer-tools-suite/contracts/stored-procedures.md`
--   **UserControl API Documentation**: `specs/002-003-database-layer-complete/002-003-001-developer-tools-suite/contracts/usercontrol-api.md`
+- **Phase 2.5 Specification**: `specs/002-003-database-layer-complete/spec.md`
+- **Developer Tools Specification**: `specs/002-003-database-layer-complete/002-003-001-developer-tools-suite/spec.md`
+- **Data Model Documentation**: `specs/002-003-database-layer-complete/002-003-001-developer-tools-suite/data-model.md`
+- **Stored Procedure Contracts**: `specs/002-003-database-layer-complete/002-003-001-developer-tools-suite/contracts/stored-procedures.md`
+- **UserControl API Documentation**: `specs/002-003-database-layer-complete/002-003-001-developer-tools-suite/contracts/usercontrol-api.md`
 
 ---
 

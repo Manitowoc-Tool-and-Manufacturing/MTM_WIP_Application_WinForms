@@ -1,9 +1,11 @@
 # Project Overview - MTM WIP Application
 
 ## Purpose
+
 **MTM WIP Application** is a Windows Forms-based inventory management system for Manitowoc Tool and Manufacturing. It provides real-time work-in-progress (WIP) tracking, transaction management, and reporting capabilities with MySQL backend.
 
 ## Tech Stack
+
 - **.NET 8.0 Windows Forms** - Desktop application framework
 - **C# 12.0** - Programming language
 - **MySQL 5.7.24** - Database (LEGACY - NO 8.0+ features allowed)
@@ -13,13 +15,16 @@
 - **Microsoft.Web.WebView2 1.0.2792.45** - HTML help viewer
 
 ## Architecture
+
 Layered architecture with strict separation:
+
 - **Data Layer**: DAOs using stored procedures only (via `Helper_Database_StoredProcedure`)
 - **Service Layer**: Business logic and error handling (`Service_ErrorHandler`, logging)
 - **Presentation Layer**: WinForms with dependency injection-based theming system
 - **Database**: MySQL 5.7.24 with stored procedures
 
 ## Key Features
+
 - Real-time inventory tracking
 - Transaction management (add/remove items)
 - Part and location management
@@ -29,6 +34,7 @@ Layered architecture with strict separation:
 - Visual analytics dashboard
 
 ## Project Structure
+
 ```
 MTM_WIP_Application_WinForms/
 ├── Core/                   # Core utilities and theme system
@@ -43,6 +49,7 @@ MTM_WIP_Application_WinForms/
 ```
 
 ## Database
+
 - **Production**: `mtm_wip_application_winforms` (24 tables)
 - **Test**: `mtm_wip_application_winforms_test` (20 tables)
 - **Server**: MAMP MySQL on 172.16.1.104:3306
@@ -50,6 +57,7 @@ MTM_WIP_Application_WinForms/
 - **Stored Procedures**: All database access via stored procedures
 
 ## Version
+
 - **Current**: 6.5.0.0
 - **Repository**: https://github.com/Dorotel/MTM_WIP_Application_Winforms
 - **Maintained By**: Manitowoc Tool and Manufacturing

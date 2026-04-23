@@ -10,21 +10,21 @@
 
 **Required Software**:
 
--   Visual Studio 2022 (or VS Code with C# DevKit)
--   .NET 8.0 SDK
--   MySQL 5.7+ (MAMP or standalone)
--   Git for version control
+- Visual Studio 2022 (or VS Code with C# DevKit)
+- .NET 8.0 SDK
+- MySQL 5.7+ (MAMP or standalone)
+- Git for version control
 
 **Database Access**:
 
--   **Development**: `mtm_wip_application_winforms_test` on `172.16.1.104` or `172.16.1.104`
--   **Production**: `MTM_WIP_Application_Winforms` on `172.16.1.104` (Release builds only)
+- **Development**: `mtm_wip_application_winforms_test` on `172.16.1.104` or `172.16.1.104`
+- **Production**: `MTM_WIP_Application_Winforms` on `172.16.1.104` (Release builds only)
 
 **Test Data**:
 
--   Test database contains 24,000+ transaction records
--   Sample transactions available from 2024-01-01 to present
--   Test user: `JOHNK` (or create your own via usr_users table)
+- Test database contains 24,000+ transaction records
+- Sample transactions available from 2024-01-01 to present
+- Test user: `JOHNK` (or create your own via usr_users table)
 
 ### Documentation Review
 
@@ -37,9 +37,9 @@
 
 **Reference during coding**:
 
--   `.github/instructions/csharp-dotnet8.instructions.md` - Language patterns
--   `.github/instructions/mysql-database.instructions.md` - Database patterns
--   `.github/instructions/testing-standards.instructions.md` - Manual validation approach
+- `.github/instructions/csharp-dotnet8.instructions.md` - Language patterns
+- `.github/instructions/mysql-database.instructions.md` - Database patterns
+- `.github/instructions/testing-standards.instructions.md` - Manual validation approach
 
 ---
 
@@ -257,8 +257,8 @@ public partial class TransactionSearchControl : UserControl
 
 **Similar pattern for**:
 
--   `TransactionGridControl.cs` (DataGridView + pagination, 300 lines)
--   `TransactionDetailPanel.cs` (Detail display, 200 lines)
+- `TransactionGridControl.cs` (DataGridView + pagination, 300 lines)
+- `TransactionDetailPanel.cs` (Detail display, 200 lines)
 
 ### Step 5: Refactor Main Form
 
@@ -642,12 +642,12 @@ mcp_mtm-workflow_validate_build(
 
 **Expected Results**:
 
--   ✅ 0 MessageBox.Show calls
--   ✅ 0 inline SQL statements
--   ✅ 95%+ XML documentation coverage
--   ✅ No HIGH severity performance issues
--   ✅ No CRITICAL/HIGH security vulnerabilities
--   ✅ Clean build (0 errors, 0 warnings)
+- ✅ 0 MessageBox.Show calls
+- ✅ 0 inline SQL statements
+- ✅ 95%+ XML documentation coverage
+- ✅ No HIGH severity performance issues
+- ✅ No CRITICAL/HIGH security vulnerabilities
+- ✅ Clean build (0 errors, 0 warnings)
 
 ---
 
@@ -669,14 +669,14 @@ docs: update XML comments for Model_Transactions_ViewModel
 
 Before submitting PR:
 
--   [ ] All files under line count limits (Form <500, UserControls <300)
--   [ ] Constitution Check passes (all 8 principles)
--   [ ] MCP validation tools pass (listed above)
--   [ ] Manual test scenarios completed (8 scenarios)
--   [ ] XML documentation coverage >95%
--   [ ] Build succeeds with 0 errors, 0 warnings
--   [ ] Feature branch up-to-date with master
--   [ ] Commit history clean (squash if needed)
+- [ ] All files under line count limits (Form <500, UserControls <300)
+- [ ] Constitution Check passes (all 8 principles)
+- [ ] MCP validation tools pass (listed above)
+- [ ] Manual test scenarios completed (8 scenarios)
+- [ ] XML documentation coverage >95%
+- [ ] Build succeeds with 0 errors, 0 warnings
+- [ ] Feature branch up-to-date with master
+- [ ] Commit history clean (squash if needed)
 
 ---
 
@@ -743,30 +743,30 @@ After completing development:
 
 ### Documentation
 
--   Feature Specification: `specs/005-transaction-viewer-form/spec.md`
--   Research Decisions: `specs/005-transaction-viewer-form/research.md`
--   Data Models: `specs/005-transaction-viewer-form/data-model.md`
--   Constitution: `.specify/memory/constitution.md`
+- Feature Specification: `specs/005-transaction-viewer-form/spec.md`
+- Research Decisions: `specs/005-transaction-viewer-form/research.md`
+- Data Models: `specs/005-transaction-viewer-form/data-model.md`
+- Constitution: `.specify/memory/constitution.md`
 
 ### Instruction Files
 
--   C# Patterns: `.github/instructions/csharp-dotnet8.instructions.md`
--   Database Patterns: `.github/instructions/mysql-database.instructions.md`
--   Testing Standards: `.github/instructions/testing-standards.instructions.md`
--   Integration Testing: `.github/instructions/integration-testing.instructions.md`
+- C# Patterns: `.github/instructions/csharp-dotnet8.instructions.md`
+- Database Patterns: `.github/instructions/mysql-database.instructions.md`
+- Testing Standards: `.github/instructions/testing-standards.instructions.md`
+- Integration Testing: `.github/instructions/integration-testing.instructions.md`
 
 ### Tools
 
--   MCP Server: `mtm-workflow` (installed)
--   Excel Library: ClosedXML (already included)
--   Progress Reporting: `Helper_StoredProcedureProgress`
--   Error Handling: `Service_ErrorHandler`
+- MCP Server: `mtm-workflow` (installed)
+- Excel Library: ClosedXML (already included)
+- Progress Reporting: `Helper_StoredProcedureProgress`
+- Error Handling: `Service_ErrorHandler`
 
 ### Support
 
--   GitHub Issues: Report bugs and feature requests
--   Code Review: Submit PR for team review
--   Documentation: Update this quickstart as patterns evolve
+- GitHub Issues: Report bugs and feature requests
+- Code Review: Submit PR for team review
+- Documentation: Update this quickstart as patterns evolve
 
 ---
 

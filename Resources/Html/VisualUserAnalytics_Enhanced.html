@@ -1,508 +1,1366 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Analytics</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Analytics</title>
     <style>
+        :root {
+            --bg: #eef1eb;
+            --panel: #fbf9f3;
+            --panel-strong: #ffffff;
+            --ink: #1f2a1f;
+            --muted: #5f6f62;
+            --line: #d7ddce;
+            --accent: #1f5f4a;
+            --accent-soft: #d8eadf;
+            --accent-alt: #c98742;
+            --danger: #8a3d2f;
+            --shadow: 0 20px 40px rgba(34, 51, 34, 0.08);
+            --radius: 18px;
+            --font: "Segoe UI", Tahoma, sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
-            padding: 20px;
-            background-color: #f0f2f5;
+            font-family: var(--font);
+            color: var(--ink);
+            background:
+                radial-gradient(circle at top left, rgba(201, 135, 66, 0.14), transparent 28%),
+                radial-gradient(circle at right center, rgba(31, 95, 74, 0.16), transparent 24%),
+                linear-gradient(180deg, #f3f5ef 0%, var(--bg) 100%);
         }
-        .container {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            padding: 20px;
-            height: 90vh;
-            display: flex;
-            flex-direction: column;
+
+        .shell {
+            display: grid;
+            grid-template-columns: minmax(0, 1.7fr) minmax(290px, 0.85fr);
+            gap: 22px;
+            min-height: 100vh;
+            padding: 24px;
         }
-        .metrics-row {
+
+        .main-column,
+        .side-column {
+            display: grid;
+            gap: 22px;
+            align-content: start;
+        }
+
+        .panel {
+            background: rgba(251, 249, 243, 0.88);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(215, 221, 206, 0.95);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        .hero {
+            padding: 24px 24px 20px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            right: -42px;
+            top: -46px;
+            width: 220px;
+            height: 220px;
+            background: radial-gradient(circle, rgba(31, 95, 74, 0.12), transparent 65%);
+            pointer-events: none;
+        }
+
+        .eyebrow {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            color: var(--accent);
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 34px;
+            line-height: 1.08;
+            letter-spacing: -0.04em;
+        }
+
+        .subhead {
+            margin: 12px 0 0;
+            color: var(--muted);
+            max-width: 760px;
+            line-height: 1.5;
+        }
+
+        .toolbar {
+            display: grid;
+            grid-template-columns: repeat(6, minmax(0, 1fr));
+            gap: 12px;
+            margin-top: 22px;
+            align-items: end;
+        }
+
+        .field,
+        .actions {
+            display: grid;
+            gap: 6px;
+        }
+
+        .field label,
+        .section-title small,
+        .meta-badge,
+        .chart-summary span,
+        .empty-state {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .field input,
+        .field select,
+        .inline-toggle button,
+        .action-button,
+        .user-button,
+        .type-chip,
+        .link-button {
+            font: inherit;
+        }
+
+        .field input,
+        .field select {
+            width: 100%;
+            padding: 11px 12px;
+            border-radius: 12px;
+            border: 1px solid var(--line);
+            background: var(--panel-strong);
+            color: var(--ink);
+        }
+
+        .inline-toggle {
             display: flex;
-            gap: 20px;
-            margin-bottom: 20px;
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            padding: 4px;
+            background: rgba(255, 255, 255, 0.65);
+            gap: 4px;
+        }
+
+        .inline-toggle button,
+        .action-button,
+        .user-button,
+        .type-chip,
+        .link-button {
+            border: 0;
+            background: transparent;
+            color: var(--ink);
+            cursor: pointer;
+            transition: 160ms ease;
+        }
+
+        .inline-toggle button {
+            flex: 1;
+            padding: 10px 10px;
+            border-radius: 10px;
+        }
+
+        .inline-toggle button.active,
+        .user-button.active,
+        .type-chip.active {
+            background: var(--accent);
+            color: #fff;
+        }
+
+        .actions {
+            grid-column: span 2;
+            align-self: stretch;
+        }
+
+        .action-row {
+            display: flex;
+            gap: 10px;
             flex-wrap: wrap;
         }
+
+        .action-button,
+        .link-button {
+            padding: 11px 14px;
+            border-radius: 12px;
+            background: var(--panel-strong);
+            border: 1px solid var(--line);
+            font-weight: 600;
+        }
+
+        .action-button.primary {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #fff;
+        }
+
+        .action-button:hover,
+        .link-button:hover,
+        .user-button:hover,
+        .type-chip:hover,
+        .inline-toggle button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 18px rgba(34, 51, 34, 0.08);
+        }
+
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 14px;
+        }
+
         .metric-card {
-            flex: 1;
-            min-width: 150px;
-            padding: 15px;
-            border-radius: 8px;
-            color: white;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            padding: 18px;
+            border-radius: 16px;
+            background: var(--panel-strong);
+            border: 1px solid var(--line);
+            position: relative;
+            overflow: hidden;
         }
-        .metric-value {
-            font-size: 32px;
-            font-weight: bold;
-            margin-bottom: 5px;
+
+        .metric-card::before {
+            content: "";
+            position: absolute;
+            inset: auto -30px -60px auto;
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: rgba(31, 95, 74, 0.08);
         }
+
+        .metric-card:nth-child(2)::before {
+            background: rgba(201, 135, 66, 0.12);
+        }
+
+        .metric-card:nth-child(3)::before {
+            background: rgba(91, 118, 93, 0.12);
+        }
+
+        .metric-card:nth-child(4)::before {
+            background: rgba(138, 61, 47, 0.08);
+        }
+
         .metric-label {
             font-size: 12px;
-            opacity: 0.9;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            position: relative;
+            z-index: 1;
         }
-        .leaderboard-container {
-            margin-top: 20px;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 8px;
+
+        .metric-value {
+            font-size: 34px;
+            font-weight: 700;
+            margin-top: 10px;
+            position: relative;
+            z-index: 1;
         }
-        .leaderboard-item {
+
+        .metric-note {
+            margin-top: 8px;
+            position: relative;
+            z-index: 1;
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .section-title {
             display: flex;
             justify-content: space-between;
-            padding: 8px;
-            border-bottom: 1px solid #eee;
+            align-items: baseline;
+            gap: 12px;
+            margin-bottom: 16px;
         }
-        .leaderboard-item:last-child { border-bottom: none; }
-        .rank-badge {
-            background: #0078d4;
-            color: white;
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            margin-right: 10px;
+
+        .section-title h2 {
+            margin: 0;
+            font-size: 20px;
         }
-        .toolbar {
+
+        .trend-panel,
+        .activity-panel,
+        .user-panel,
+        .glossary-panel,
+        .context-panel {
+            padding: 20px;
+        }
+
+        .chart-frame {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.4));
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            padding: 16px;
+        }
+
+        .chart-summary {
             display: flex;
+            gap: 18px;
             flex-wrap: wrap;
-            gap: 20px;
-            margin-bottom: 20px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #eee;
-            align-items: center;
+            margin-bottom: 14px;
         }
-        .chart-container {
-            flex: 1;
-            position: relative;
-            min-height: 0;
+
+        .chart-summary strong {
+            display: block;
+            font-size: 18px;
+            color: var(--ink);
         }
-        .table-container {
-            flex: 1;
-            overflow: auto;
-            display: none;
+
+        .chart-area {
+            width: 100%;
+            min-height: 260px;
         }
+
+        .chart-axis-labels {
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            margin-top: 8px;
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .type-chip-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 14px;
+        }
+
+        .type-chip {
+            padding: 8px 12px;
+            border-radius: 999px;
+            border: 1px solid var(--line);
+            background: rgba(255, 255, 255, 0.78);
+            font-size: 13px;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 14px;
         }
-        th, td {
-            padding: 10px;
+
+        th,
+        td {
             text-align: left;
-            border-bottom: 1px solid #eee;
+            padding: 11px 10px;
+            border-bottom: 1px solid var(--line);
+            font-size: 14px;
+            vertical-align: top;
         }
+
         th {
-            background-color: #f8f9fa;
-            position: sticky;
-            top: 0;
+            color: var(--muted);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.09em;
+        }
+
+        tbody tr:hover {
+            background: rgba(31, 95, 74, 0.04);
+        }
+
+        .meta-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--accent-soft);
+            color: var(--accent);
+            border-radius: 999px;
+            padding: 6px 10px;
             font-weight: 600;
-            color: #444;
         }
-        tr:hover {
-            background-color: #f5f5f5;
+
+        .meta-badge.warn {
+            background: rgba(201, 135, 66, 0.16);
+            color: var(--accent-alt);
         }
-        .btn-group {
-            display: flex;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            overflow: hidden;
+
+        .meta-badge.subtle {
+            background: rgba(95, 111, 98, 0.12);
+            color: var(--muted);
         }
-        .btn-group button {
-            border: none;
-            background: #fff;
-            padding: 6px 12px;
-            cursor: pointer;
-            transition: all 0.2s;
+
+        .side-column {
+            position: sticky;
+            top: 24px;
+            max-height: calc(100vh - 48px);
+            overflow: auto;
+            padding-right: 2px;
         }
-        .btn-group button:not(:last-child) {
-            border-right: 1px solid #ccc;
+
+        .user-panel .section-title,
+        .glossary-panel .section-title,
+        .context-panel .section-title {
+            margin-bottom: 14px;
         }
-        .btn-group button:hover {
-            background: #f5f5f5;
+
+        .user-list {
+            display: grid;
+            gap: 10px;
         }
-        .btn-group button.active {
-            background: #0078d4;
-            color: white;
+
+        .user-button {
+            display: grid;
+            gap: 4px;
+            text-align: left;
+            padding: 12px 14px;
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.82);
+        }
+
+        .user-button small {
+            color: var(--muted);
+        }
+
+        .glossary-list,
+        .context-list {
+            display: grid;
+            gap: 14px;
+        }
+
+        .glossary-item,
+        .context-item {
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .glossary-item:last-child,
+        .context-item:last-child {
+            border-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .glossary-item strong,
+        .context-item strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .glossary-item p,
+        .context-item p,
+        .empty-state {
+            margin: 0;
+            line-height: 1.45;
+        }
+
+        .print-note {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        @media (max-width: 1280px) {
+            .shell {
+                grid-template-columns: 1fr;
+            }
+
+            .side-column {
+                position: static;
+                max-height: none;
+                overflow: visible;
+            }
+
+            .toolbar {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .actions {
+                grid-column: auto;
+            }
+
+            .metrics {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 760px) {
+            .shell {
+                padding: 14px;
+            }
+
+            .hero,
+            .trend-panel,
+            .activity-panel,
+            .user-panel,
+            .glossary-panel,
+            .context-panel {
+                padding: 16px;
+            }
+
+            .toolbar,
+            .metrics {
+                grid-template-columns: 1fr;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            .action-row {
+                flex-direction: column;
+            }
+        }
+
+        @media print {
+            @page {
+                size: Letter portrait;
+                margin: 0.45in;
+            }
+
+            body {
+                background: #fff;
+            }
+
+            .shell {
+                display: block;
+                padding: 0;
+            }
+
+            .main-column,
+            .side-column {
+                display: block;
+            }
+
+            .panel {
+                box-shadow: none;
+                background: #fff;
+                break-inside: avoid;
+                margin-bottom: 12px;
+            }
+
+            .toolbar,
+            .type-chip-row,
+            .user-panel,
+            .print-note {
+                display: none !important;
+            }
+
+            .chart-frame {
+                border-style: solid;
+            }
+
+            th,
+            td {
+                font-size: 10px;
+                padding: 6px 4px;
+            }
+
+            .metric-value {
+                font-size: 24px;
+            }
         }
     </style>
 </head>
+
 <body>
-    <div class="container">
-        <!-- Metrics Row -->
-        <div class="metrics-row">
-            <div class="metric-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-                <div class="metric-value" id="totalTransactions">0</div>
-                <div class="metric-label">Total Transactions</div>
-            </div>
-            <div class="metric-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
-                <div class="metric-value" id="topUser">N/A</div>
-                <div class="metric-label">Top User (By Score)</div>
-            </div>
-            <div class="metric-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
-                <div class="metric-value" id="avgScore">0</div>
-                <div class="metric-label">Avg Score/User</div>
-            </div>
+    <div class="shell">
+        <div class="main-column">
+            <section class="panel hero">
+                <div class="eyebrow" id="eyebrow">Analytics Workspace</div>
+                <h1 id="pageTitle">Analytics</h1>
+                <p class="subhead" id="pageSubtitle"></p>
+
+                <div class="toolbar">
+                    <div class="field">
+                        <label for="startDate">Start Date</label>
+                        <input id="startDate" type="date">
+                    </div>
+                    <div class="field">
+                        <label for="endDate">End Date</label>
+                        <input id="endDate" type="date">
+                    </div>
+                    <div class="field" id="scopeField">
+                        <label>Scope</label>
+                        <div class="inline-toggle" id="scopeToggle">
+                            <button type="button" data-scope="mine">Myself</button>
+                            <button type="button" data-scope="team">Team</button>
+                        </div>
+                    </div>
+                    <div class="field" id="userField">
+                        <label for="userSelect">User Detail</label>
+                        <select id="userSelect"></select>
+                    </div>
+                    <div class="field">
+                        <label for="groupBySelect">Trend Grouping</label>
+                        <select id="groupBySelect">
+                            <option value="daily">Daily</option>
+                            <option value="weekly">Weekly</option>
+                        </select>
+                    </div>
+                    <div class="actions">
+                        <label>Actions</label>
+                        <div class="action-row">
+                            <button type="button" class="action-button primary" id="refreshButton">Refresh View</button>
+                            <button type="button" class="action-button" id="exportSummaryButton">Export Summary
+                                CSV</button>
+                            <button type="button" class="action-button" id="exportActivityButton">Export Activity
+                                CSV</button>
+                            <button type="button" class="action-button" id="printButton">Print</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="metrics" id="metricsGrid"></section>
+
+            <section class="panel trend-panel">
+                <div class="section-title">
+                    <div>
+                        <h2>Trends & Context</h2>
+                        <small>Switch between transaction counts and quantity moved. Peak and quiet periods are
+                            highlighted below the chart.</small>
+                    </div>
+                    <div class="inline-toggle" id="metricToggle">
+                        <button type="button" data-metric="transactions">Transactions</button>
+                        <button type="button" data-metric="quantity">Quantity</button>
+                    </div>
+                </div>
+
+                <div class="chart-frame">
+                    <div class="chart-summary">
+                        <div>
+                            <span>Peak Period</span>
+                            <strong id="peakPeriodValue">-</strong>
+                        </div>
+                        <div>
+                            <span>Quiet Period</span>
+                            <strong id="quietPeriodValue">-</strong>
+                        </div>
+                        <div>
+                            <span>Range</span>
+                            <strong id="rangeSummaryValue">-</strong>
+                        </div>
+                    </div>
+                    <div class="chart-area" id="trendChart"></div>
+                    <div class="chart-axis-labels" id="chartAxisLabels"></div>
+                </div>
+            </section>
+
+            <section class="panel activity-panel">
+                <div class="section-title">
+                    <div>
+                        <h2>Recent Activity</h2>
+                        <small>Advanced Inventory and Advanced Remove are labeled for clarity but counted the same as
+                            single actions.</small>
+                    </div>
+                    <span class="print-note">Print uses the filtered activity list currently on screen.</span>
+                </div>
+
+                <div class="type-chip-row" id="typeChipRow"></div>
+
+                <div style="overflow:auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date/Time</th>
+                                <th>Type</th>
+                                <th>Part</th>
+                                <th>Qty</th>
+                                <th>From</th>
+                                <th>To</th>
+                                <th>Operation</th>
+                                <th>User</th>
+                            </tr>
+                        </thead>
+                        <tbody id="activityTableBody"></tbody>
+                    </table>
+                </div>
+            </section>
         </div>
 
-        <div class="toolbar">
-            <div class="btn-group">
-                <button id="btnChart" class="active" onclick="setView('chart')">Chart View</button>
-                <button id="btnTable" onclick="setView('table')">Table View</button>
-                <button id="btnLeaderboard" onclick="setView('leaderboard')">Leaderboard</button>
-            </div>
-            <div style="margin-left: auto;">
-                 <button id="btnScoring" onclick="toggleScoring()" style="padding: 6px 12px; border: 1px solid #ccc; border-radius: 4px; background: #fff; cursor: pointer; font-size: 14px;">ℹ️ Scoring Rules</button>
-            </div>
-        </div>
+        <aside class="side-column">
+            <section class="panel user-panel" id="userPanel">
+                <div class="section-title">
+                    <div>
+                        <h2>Team Drill-Down</h2>
+                        <small>Choose a user to view the same personal layout without leaving the page.</small>
+                    </div>
+                </div>
+                <div class="user-list" id="userList"></div>
+            </section>
 
-        <div class="chart-container" id="chartView">
-            <canvas id="analyticsChart"></canvas>
-        </div>
-        
-        <div class="table-container" id="tableView">
-            <table id="dataTable">
-                <thead>
-                    <tr>
-                        <th>User</th>
-                        <th>Work Orders</th>
-                        <th>Loc-to-Loc</th>
-                        <th>Coils (MMC)</th>
-                        <th>Flatstock (MMF)</th>
-                        <th>Adj In</th>
-                        <th>Adj Out</th>
-                        <th>Total Count</th>
-                        <th>Total Score</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </div>
+            <section class="panel context-panel">
+                <div class="section-title">
+                    <div>
+                        <h2>Scope Context</h2>
+                        <small id="contextCaption">Selected range and scope details.</small>
+                    </div>
+                </div>
+                <div class="context-list" id="contextList"></div>
+            </section>
 
-        <div class="table-container" id="leaderboardView" style="display:none;">
-            <div class="leaderboard-container" id="leaderboardList">
-                <!-- Populated by JS -->
-            </div>
-        </div>
-
-        <div id="scoringView" style="display:none; padding: 20px; background: #fff; border-radius: 8px; border: 1px solid #eee;">
-            <h3 style="margin-top: 0; color: #333;">🏆 Scoring System</h3>
-            <p style="color: #555;">Points are awarded based on the complexity and effort required for each transaction type:</p>
-            <ul style="list-style: none; padding: 0; margin-top: 15px;">
-                <li style="padding: 12px; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center;">
-                    <span style="display: flex; align-items: center;">
-                        <span style="display:inline-block; width: 16px; height: 16px; background: #fee140; margin-right: 12px; border-radius: 4px;"></span>
-                        <strong style="font-size: 16px;">Flatstock (MMF)</strong>
-                    </span>
-                    <strong style="font-size: 18px; color: #0078d4;">8 pts</strong>
-                </li>
-                <li style="padding: 12px; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center;">
-                    <span style="display: flex; align-items: center;">
-                        <span style="display:inline-block; width: 16px; height: 16px; background: #fa709a; margin-right: 12px; border-radius: 4px;"></span>
-                        <strong style="font-size: 16px;">Coils (MMC)</strong>
-                    </span>
-                    <strong style="font-size: 18px; color: #0078d4;">4 pts</strong>
-                </li>
-                <li style="padding: 12px; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center;">
-                    <span style="display: flex; align-items: center;">
-                        <span style="display:inline-block; width: 16px; height: 16px; background: #4facfe; margin-right: 12px; border-radius: 4px;"></span>
-                        <strong style="font-size: 16px;">Work Orders</strong>
-                    </span>
-                    <strong style="font-size: 18px; color: #666;">1 pt</strong>
-                </li>
-                <li style="padding: 12px; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center;">
-                    <span style="display: flex; align-items: center;">
-                        <span style="display:inline-block; width: 16px; height: 16px; background: #43e97b; margin-right: 12px; border-radius: 4px;"></span>
-                        <strong style="font-size: 16px;">Location Transfers</strong>
-                    </span>
-                    <strong style="font-size: 18px; color: #666;">1 pt</strong>
-                </li>
-                <li style="padding: 12px; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center;">
-                    <span style="display: flex; align-items: center;">
-                        <span style="display:inline-block; width: 16px; height: 16px; background: #f093fb; margin-right: 12px; border-radius: 4px;"></span>
-                        <strong style="font-size: 16px;">Adjustments (In/Out)</strong>
-                    </span>
-                    <strong style="font-size: 18px; color: #666;">1 pt</strong>
-                </li>
-            </ul>
-            <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 6px; border-left: 4px solid #0078d4;">
-                <p style="margin: 0; color: #444; font-size: 14px;">
-                    <strong>Why the difference?</strong><br>
-                    Flatstock and Coils are weighted higher due to the physical effort, equipment usage (forklift/crane), and time required to move these heavy items compared to standard parts.
-                </p>
-            </div>
-        </div>
+            <section class="panel glossary-panel">
+                <div class="section-title">
+                    <div>
+                        <h2>Glossary</h2>
+                        <small>Each metric has a short plain-language definition.</small>
+                    </div>
+                </div>
+                <div class="glossary-list" id="glossaryList"></div>
+            </section>
+        </aside>
     </div>
 
     <script>
-        let chartInstance = null;
-        let lastView = 'chart';
-        // Default data structure
-        let analyticsData = [];
-        let aggregatedData = [];
+        window.__ANALYTICS_DATA__ = null;
 
-        // Points System
-        const POINTS = {
-            'Work Order': 1,
-            'Location Transfer': 1,
-            'Adjusted In': 1,
-            'Adjusted Out': 1,
-            'Coil': 4,
-            'Flatstock': 8,
-            'Unknown': 0
+        const state = {
+            data: null,
+            scope: "mine",
+            selectedUserId: null,
+            metricMode: "transactions",
+            groupBy: "daily",
+            activityType: "All"
         };
 
-        function initChart() {
-            // Ensure Chart.js is loaded
-            if (typeof Chart === 'undefined') {
-                console.error("Chart.js not loaded");
-                document.getElementById('chartView').innerHTML = '<div style="color:red; padding:20px;">Error: Chart library failed to load. Please check internet connection.</div>';
-                // Still try to load data for table view
-                if (window.injectedData) loadData(window.injectedData);
+        const metricDefinitions = [
+            {
+                key: "totalTransactions",
+                label: "Total Transactions",
+                note: "Every recorded inventory movement inside the filtered range."
+            },
+            {
+                key: "totalQuantity",
+                label: "Total Quantity Moved",
+                note: "The summed quantity across all filtered transactions."
+            },
+            {
+                key: "uniqueParts",
+                label: "Unique Parts Handled",
+                note: "Distinct part numbers touched in the current view."
+            },
+            {
+                key: "activeDays",
+                label: "Active Days",
+                note: "Calendar days with at least one matching transaction."
+            }
+        ];
+
+        const metricsGrid = document.getElementById("metricsGrid");
+        const glossaryList = document.getElementById("glossaryList");
+        const userList = document.getElementById("userList");
+        const userPanel = document.getElementById("userPanel");
+        const userSelect = document.getElementById("userSelect");
+        const scopeField = document.getElementById("scopeField");
+        const userField = document.getElementById("userField");
+        const typeChipRow = document.getElementById("typeChipRow");
+        const activityTableBody = document.getElementById("activityTableBody");
+        const trendChart = document.getElementById("trendChart");
+        const chartAxisLabels = document.getElementById("chartAxisLabels");
+        const contextList = document.getElementById("contextList");
+        const pageTitle = document.getElementById("pageTitle");
+        const eyebrow = document.getElementById("eyebrow");
+        const pageSubtitle = document.getElementById("pageSubtitle");
+        const contextCaption = document.getElementById("contextCaption");
+
+        document.addEventListener("DOMContentLoaded", () => {
+            bootstrap(window.__ANALYTICS_DATA__);
+        });
+
+        function bootstrap(data) {
+            if (!data || !Array.isArray(data.transactions)) {
+                renderEmptyPage();
                 return;
             }
 
-            const ctx = document.getElementById('analyticsChart').getContext('2d');
-            chartInstance = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: [],
-                    datasets: [
-                        { label: 'Work Orders', data: [], backgroundColor: '#4facfe' },
-                        { label: 'Loc-to-Loc', data: [], backgroundColor: '#43e97b' },
-                        { label: 'Coils', data: [], backgroundColor: '#fa709a' },
-                        { label: 'Flatstock', data: [], backgroundColor: '#fee140' },
-                        { label: 'Adj In', data: [], backgroundColor: '#f093fb' },
-                        { label: 'Adj Out', data: [], backgroundColor: '#f5576c' }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        x: { stacked: true },
-                        y: { stacked: true, beginAtZero: true }
+            state.data = normalizeData(data);
+            state.scope = state.data.canViewTeam ? "team" : "mine";
+            state.selectedUserId = state.data.currentUserId;
+            state.groupBy = "daily";
+            state.metricMode = "transactions";
+            state.activityType = "All";
+
+            initializeControls();
+            renderGlossary();
+            render();
+        }
+
+        function normalizeData(data) {
+            return {
+                ...data,
+                transactions: data.transactions.map((transaction) => ({
+                    ...transaction,
+                    occurredAt: new Date(transaction.occurredAt),
+                    quantity: Number(transaction.quantity || 0)
+                }))
+            };
+        }
+
+        function initializeControls() {
+            const startDate = document.getElementById("startDate");
+            const endDate = document.getElementById("endDate");
+            const groupBySelect = document.getElementById("groupBySelect");
+            const refreshButton = document.getElementById("refreshButton");
+            const exportSummaryButton = document.getElementById("exportSummaryButton");
+            const exportActivityButton = document.getElementById("exportActivityButton");
+            const printButton = document.getElementById("printButton");
+
+            startDate.min = formatDateInput(new Date(state.data.dataWindowStart));
+            startDate.max = formatDateInput(new Date(state.data.dataWindowEnd));
+            startDate.value = formatDateInput(new Date(state.data.defaultStartDate));
+
+            endDate.min = formatDateInput(new Date(state.data.dataWindowStart));
+            endDate.max = formatDateInput(new Date(state.data.dataWindowEnd));
+            endDate.value = formatDateInput(new Date(state.data.defaultEndDate));
+
+            startDate.addEventListener("change", render);
+            endDate.addEventListener("change", render);
+
+            groupBySelect.value = state.groupBy;
+            groupBySelect.addEventListener("change", (event) => {
+                state.groupBy = event.target.value;
+                render();
+            });
+
+            document.querySelectorAll("#scopeToggle button").forEach((button) => {
+                button.addEventListener("click", () => {
+                    state.scope = button.dataset.scope;
+                    if (state.scope === "mine") {
+                        state.selectedUserId = state.data.currentUserId;
                     }
-                }
-            });
-            
-            // Check if data was injected from C#
-            if (window.injectedData) {
-                loadData(window.injectedData);
-            } else {
-                // Load default/sample data
-                refreshDashboard();
-            }
-        }
-
-        function loadData(jsonData) {
-            try {
-                const rawData = typeof jsonData === 'string' ? JSON.parse(jsonData) : jsonData;
-                processData(rawData);
-                refreshDashboard();
-            } catch (e) {
-                console.error("Failed to load data", e);
-            }
-        }
-
-        function processData(rawData) {
-            // Check if data is already aggregated (Model_Visual_MaterialHandlerScore)
-            if (rawData.length > 0 && rawData[0].TransactionCounts) {
-                aggregatedData = rawData.map(item => {
-                    const counts = item.TransactionCounts || {};
-                    return {
-                        User: item.UserName || item.FullName,
-                        WorkOrders: counts['Work Order'] || 0,
-                        LocToLoc: counts['Location Transfer'] || counts['Transfer'] || counts['T'] || 0,
-                        Coils: counts['Coil'] || 0,
-                        Flatstock: counts['Flatstock'] || 0,
-                        AdjIn: counts['Adjusted In'] || counts['Receive'] || 0,
-                        AdjOut: counts['Adjusted Out'] || counts['Pick'] || 0,
-                        TotalCount: item.TotalTransactions,
-                        TotalScore: item.TotalScore
-                    };
+                    render();
                 });
-                analyticsData = []; // No raw data available
+            });
+
+            document.querySelectorAll("#metricToggle button").forEach((button) => {
+                button.addEventListener("click", () => {
+                    state.metricMode = button.dataset.metric;
+                    render();
+                });
+            });
+
+            refreshButton.addEventListener("click", render);
+            exportSummaryButton.addEventListener("click", exportSummaryCsv);
+            exportActivityButton.addEventListener("click", exportActivityCsv);
+            printButton.addEventListener("click", () => window.print());
+
+            if (!state.data.canViewTeam) {
+                scopeField.classList.add("hidden");
+                userField.classList.add("hidden");
+                userPanel.classList.add("hidden");
+            }
+
+            userSelect.addEventListener("change", (event) => {
+                state.selectedUserId = event.target.value;
+                render();
+            });
+        }
+
+        function render() {
+            const viewModel = buildViewModel();
+            renderHeader(viewModel);
+            renderMetricCards(viewModel.metrics);
+            renderScopeControls(viewModel);
+            renderTypeChips(viewModel.activityTypes);
+            renderTrend(viewModel.trendPoints);
+            renderActivityTable(viewModel.activityRows);
+            renderUsers(viewModel.userSummaries);
+            renderContext(viewModel);
+        }
+
+        function buildViewModel() {
+            const startDate = parseInputDate(document.getElementById("startDate").value, new Date(state.data.defaultStartDate));
+            const endDate = parseInputDate(document.getElementById("endDate").value, new Date(state.data.defaultEndDate));
+
+            if (startDate > endDate) {
+                const resetValue = formatDateInput(startDate);
+                document.getElementById("endDate").value = resetValue;
+            }
+
+            const safeEndDate = parseInputDate(document.getElementById("endDate").value, endDate);
+            const baseTransactions = state.data.transactions.filter((transaction) => {
+                return transaction.occurredAt >= startDate && transaction.occurredAt <= endOfDay(safeEndDate);
+            });
+
+            const scopeTransactions = state.scope === "mine"
+                ? baseTransactions.filter((transaction) => transaction.userId === state.data.currentUserId)
+                : baseTransactions;
+
+            const detailUserId = state.scope === "mine"
+                ? state.data.currentUserId
+                : (state.selectedUserId || state.data.currentUserId);
+
+            const detailTransactions = state.scope === "team" && detailUserId
+                ? scopeTransactions.filter((transaction) => transaction.userId === detailUserId)
+                : scopeTransactions;
+
+            const currentDetailTransactions = detailTransactions;
+            const visibleActivityRows = currentDetailTransactions
+                .filter((transaction) => state.activityType === "All" || transaction.activityType === state.activityType)
+                .sort((left, right) => right.occurredAt - left.occurredAt)
+                .slice(0, 20);
+
+            const trendPoints = buildTrendPoints(currentDetailTransactions, state.groupBy, state.metricMode);
+            const metrics = summarizeTransactions(currentDetailTransactions);
+            const userSummaries = buildUserSummaries(scopeTransactions);
+            const activityTypes = ["All", ...new Set(currentDetailTransactions.map((transaction) => transaction.activityType))];
+
+            if (!activityTypes.includes(state.activityType)) {
+                state.activityType = "All";
+            }
+
+            return {
+                startDate,
+                endDate: safeEndDate,
+                scopeTransactions,
+                detailTransactions: currentDetailTransactions,
+                detailUserId,
+                detailUserName: resolveUserName(detailUserId),
+                metrics,
+                trendPoints,
+                activityRows: visibleActivityRows,
+                activityTypes,
+                userSummaries
+            };
+        }
+
+        function renderHeader(viewModel) {
+            const titleBase = state.scope === "team" ? "Team Analytics" : "My Analytics";
+            const detailLabel = state.scope === "team"
+                ? `Viewing ${viewModel.detailUserName} inside the team range.`
+                : "Viewing your personal activity for the selected range.";
+
+            eyebrow.textContent = state.data.canViewTeam ? "Role-Aware Analytics" : "Personal Analytics";
+            pageTitle.textContent = titleBase;
+            pageSubtitle.textContent = `${detailLabel} Bulk activity is labeled for clarity and counted the same as single transactions.`;
+            contextCaption.textContent = `${formatFriendlyDate(viewModel.startDate)} through ${formatFriendlyDate(viewModel.endDate)}`;
+        }
+
+        function renderMetricCards(metrics) {
+            metricsGrid.innerHTML = "";
+
+            metricDefinitions.forEach((definition) => {
+                const card = document.createElement("section");
+                card.className = "panel metric-card";
+                card.innerHTML = `
+                    <div class="metric-label">${definition.label}</div>
+                    <div class="metric-value">${formatNumber(metrics[definition.key])}</div>
+                    <div class="metric-note">${definition.note}</div>
+                `;
+                metricsGrid.appendChild(card);
+            });
+        }
+
+        function renderScopeControls(viewModel) {
+            document.querySelectorAll("#scopeToggle button").forEach((button) => {
+                button.classList.toggle("active", button.dataset.scope === state.scope);
+            });
+
+            document.querySelectorAll("#metricToggle button").forEach((button) => {
+                button.classList.toggle("active", button.dataset.metric === state.metricMode);
+            });
+
+            userSelect.innerHTML = "";
+            viewModel.userSummaries.forEach((user) => {
+                const option = document.createElement("option");
+                option.value = user.userId;
+                option.textContent = `${user.displayName} · ${formatNumber(user.totalTransactions)} tx`;
+                userSelect.appendChild(option);
+            });
+            userSelect.value = viewModel.detailUserId;
+        }
+
+        function renderTypeChips(activityTypes) {
+            typeChipRow.innerHTML = "";
+            activityTypes.forEach((type) => {
+                const button = document.createElement("button");
+                button.type = "button";
+                button.className = `type-chip${type === state.activityType ? " active" : ""}`;
+                button.textContent = type;
+                button.addEventListener("click", () => {
+                    state.activityType = type;
+                    render();
+                });
+                typeChipRow.appendChild(button);
+            });
+        }
+
+        function renderTrend(points) {
+            const peak = pickPeakPoint(points);
+            const quiet = pickQuietPoint(points);
+            document.getElementById("peakPeriodValue").textContent = peak ? `${peak.label} · ${formatNumber(peak.value)}` : "-";
+            document.getElementById("quietPeriodValue").textContent = quiet ? `${quiet.label} · ${formatNumber(quiet.value)}` : "-";
+            document.getElementById("rangeSummaryValue").textContent = `${state.groupBy === "daily" ? "Daily" : "Weekly"} ${state.metricMode === "transactions" ? "transaction" : "quantity"} view`;
+
+            if (!points.length) {
+                trendChart.innerHTML = `<p class="empty-state">No activity exists for the selected filters.</p>`;
+                chartAxisLabels.innerHTML = "";
                 return;
             }
 
-            // Aggregate raw transaction list into user summaries
-            const userMap = {};
+            const width = 720;
+            const height = 240;
+            const padding = 24;
+            const maxValue = Math.max(...points.map((point) => point.value), 1);
+            const step = points.length === 1 ? 0 : (width - padding * 2) / (points.length - 1);
 
-            rawData.forEach(row => {
-                if (!userMap[row.User]) {
-                    userMap[row.User] = {
-                        User: row.User,
-                        WorkOrders: 0,
-                        LocToLoc: 0,
-                        Coils: 0,
-                        Flatstock: 0,
-                        AdjIn: 0,
-                        AdjOut: 0,
-                        TotalCount: 0,
-                        TotalScore: 0
-                    };
-                }
+            const polyline = points.map((point, index) => {
+                const x = padding + index * step;
+                const y = height - padding - ((point.value / maxValue) * (height - padding * 2));
+                return `${x},${y}`;
+            }).join(" ");
 
-                const user = userMap[row.User];
-                const type = row.Type;
-                const points = POINTS[type] || 0;
+            const area = `${padding},${height - padding} ${polyline} ${width - padding},${height - padding}`;
+            const gridLines = [0.25, 0.5, 0.75, 1].map((fraction) => {
+                const y = height - padding - ((height - padding * 2) * fraction);
+                return `<line x1="${padding}" y1="${y}" x2="${width - padding}" y2="${y}" stroke="rgba(95,111,98,0.15)" stroke-width="1" />`;
+            }).join("");
+            const pointDots = points.map((point, index) => {
+                const x = padding + index * step;
+                const y = height - padding - ((point.value / maxValue) * (height - padding * 2));
+                return `<circle cx="${x}" cy="${y}" r="4" fill="#1f5f4a"><title>${point.label}: ${formatNumber(point.value)}</title></circle>`;
+            }).join("");
 
-                user.TotalCount++;
-                user.TotalScore += points;
+            trendChart.innerHTML = `
+                <svg viewBox="0 0 ${width} ${height}" preserveAspectRatio="none" aria-label="Trend chart">
+                    ${gridLines}
+                    <polygon points="${area}" fill="rgba(31,95,74,0.12)"></polygon>
+                    <polyline points="${polyline}" fill="none" stroke="#1f5f4a" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></polyline>
+                    ${pointDots}
+                </svg>
+            `;
 
-                if (type === 'Work Order') user.WorkOrders++;
-                else if (type === 'Location Transfer') user.LocToLoc++;
-                else if (type === 'Coil') user.Coils++;
-                else if (type === 'Flatstock') user.Flatstock++;
-                else if (type === 'Adjusted In') user.AdjIn++;
-                else if (type === 'Adjusted Out') user.AdjOut++;
-            });
+            const axisCandidates = points.length > 6
+                ? [points[0], points[Math.floor(points.length / 2)], points[points.length - 1]]
+                : points;
 
-            aggregatedData = Object.values(userMap);
-            analyticsData = rawData; // Keep raw data if needed for drill-down later
+            chartAxisLabels.innerHTML = axisCandidates.map((point) => `<span>${point.label}</span>`).join("");
         }
 
-        function refreshDashboard() {
-            updateMetrics();
-            updateChart();
-            updateTable();
-            updateLeaderboard();
-        }
-
-        function updateMetrics() {
-            let totalTrans = 0;
-            let totalScore = 0;
-            let maxScore = -1;
-            let topUser = 'N/A';
-
-            aggregatedData.forEach(d => {
-                totalTrans += d.TotalCount;
-                totalScore += d.TotalScore;
-                if (d.TotalScore > maxScore) {
-                    maxScore = d.TotalScore;
-                    topUser = d.User;
-                }
-            });
-
-            document.getElementById('totalTransactions').innerText = totalTrans.toLocaleString();
-            document.getElementById('topUser').innerText = topUser;
-            document.getElementById('avgScore').innerText = aggregatedData.length ? Math.round(totalScore / aggregatedData.length).toLocaleString() : 0;
-        }
-
-        function updateChart() {
-            if (!chartInstance) return;
-
-            const labels = aggregatedData.map(d => d.User);
-            const woData = aggregatedData.map(d => d.WorkOrders);
-            const ltlData = aggregatedData.map(d => d.LocToLoc);
-            const coilData = aggregatedData.map(d => d.Coils);
-            const flatData = aggregatedData.map(d => d.Flatstock);
-            const aiData = aggregatedData.map(d => d.AdjIn);
-            const aoData = aggregatedData.map(d => d.AdjOut);
-
-            chartInstance.data.labels = labels;
-            chartInstance.data.datasets[0].data = woData;
-            chartInstance.data.datasets[1].data = ltlData;
-            chartInstance.data.datasets[2].data = coilData;
-            chartInstance.data.datasets[3].data = flatData;
-            chartInstance.data.datasets[4].data = aiData;
-            chartInstance.data.datasets[5].data = aoData;
-            chartInstance.update();
-        }
-
-        function updateTable() {
-            const tbody = document.querySelector('#dataTable tbody');
-            tbody.innerHTML = '';
-            
-            aggregatedData.forEach(d => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${d.User}</td>
-                    <td>${d.WorkOrders}</td>
-                    <td>${d.LocToLoc}</td>
-                    <td>${d.Coils}</td>
-                    <td>${d.Flatstock}</td>
-                    <td>${d.AdjIn}</td>
-                    <td>${d.AdjOut}</td>
-                    <td><strong>${d.TotalCount}</strong></td>
-                    <td><strong style="color:#0078d4">${d.TotalScore}</strong></td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function updateLeaderboard() {
-            const container = document.getElementById('leaderboardList');
-            container.innerHTML = '';
-
-            // Sort by score descending
-            const sorted = [...aggregatedData].sort((a, b) => b.TotalScore - a.TotalScore);
-
-            sorted.forEach((d, index) => {
-                const div = document.createElement('div');
-                div.className = 'leaderboard-item';
-                div.innerHTML = `
-                    <div>
-                        <span class="rank-badge">${index + 1}</span>
-                        <strong>${d.User}</strong>
-                    </div>
-                    <div>
-                        <span style="color:#666; font-size:12px; margin-right:10px;">${d.TotalCount} Trans</span>
-                        <strong style="color:#0078d4; font-size:18px;">${d.TotalScore} pts</strong>
-                    </div>
-                `;
-                container.appendChild(div);
-            });
-        }
-
-        function toggleScoring() {
-            const scoringView = document.getElementById('scoringView');
-            const btn = document.getElementById('btnScoring');
-            
-            if (scoringView.style.display === 'none') {
-                // Show Scoring
-                document.getElementById('chartView').style.display = 'none';
-                document.getElementById('tableView').style.display = 'none';
-                document.getElementById('leaderboardView').style.display = 'none';
-                
-                scoringView.style.display = 'block';
-                btn.style.background = '#e1dfdd';
-                btn.innerText = '❌ Close Rules';
-            } else {
-                // Hide Scoring, restore last view
-                scoringView.style.display = 'none';
-                setView(lastView); // Restore
-                btn.style.background = '#fff';
-                btn.innerText = 'ℹ️ Scoring Rules';
+        function renderActivityTable(rows) {
+            if (!rows.length) {
+                activityTableBody.innerHTML = `<tr><td colspan="8"><p class="empty-state">No activity matches the current filters.</p></td></tr>`;
+                return;
             }
+
+            activityTableBody.innerHTML = rows.map((row) => {
+                return `
+                    <tr>
+                        <td>${formatDateTime(row.occurredAt)}</td>
+                        <td><span class="meta-badge ${row.activityType.includes("Advanced") ? "warn" : "subtle"}">${escapeHtml(row.activityType)}</span></td>
+                        <td>${escapeHtml(row.partId || "-")}</td>
+                        <td>${formatNumber(row.quantity)}</td>
+                        <td>${escapeHtml(row.fromLocation || "-")}</td>
+                        <td>${escapeHtml(row.toLocation || "-")}</td>
+                        <td>${escapeHtml(row.operation || "-")}</td>
+                        <td>${escapeHtml(row.userDisplayName || row.userId || "-")}</td>
+                    </tr>
+                `;
+            }).join("");
         }
 
-        function setView(view) {
-            lastView = view;
-            document.getElementById('btnChart').classList.toggle('active', view === 'chart');
-            document.getElementById('btnTable').classList.toggle('active', view === 'table');
-            document.getElementById('btnLeaderboard').classList.toggle('active', view === 'leaderboard');
-            
-            document.getElementById('chartView').style.display = view === 'chart' ? 'block' : 'none';
-            document.getElementById('tableView').style.display = view === 'table' ? 'block' : 'none';
-            document.getElementById('leaderboardView').style.display = view === 'leaderboard' ? 'block' : 'none';
-            
-            // Ensure scoring view is hidden if we switch views explicitly
-            document.getElementById('scoringView').style.display = 'none';
-            document.getElementById('btnScoring').style.background = '#fff';
-            document.getElementById('btnScoring').innerText = 'ℹ️ Scoring Rules';
+        function renderUsers(userSummaries) {
+            if (!state.data.canViewTeam) {
+                return;
+            }
+
+            userList.innerHTML = "";
+            userSummaries.forEach((user) => {
+                const button = document.createElement("button");
+                button.type = "button";
+                button.className = `user-button${user.userId === state.selectedUserId ? " active" : ""}`;
+                button.innerHTML = `
+                    <strong>${escapeHtml(user.displayName)}</strong>
+                    <small>${formatNumber(user.totalTransactions)} tx · ${formatNumber(user.totalQuantity)} qty · ${formatNumber(user.uniqueParts)} parts</small>
+                `;
+                button.addEventListener("click", () => {
+                    state.scope = "team";
+                    state.selectedUserId = user.userId;
+                    render();
+                });
+                userList.appendChild(button);
+            });
         }
 
-        window.onload = initChart;
-        
-        // DATA_INJECTION_POINT
+        function renderContext(viewModel) {
+            const items = [
+                {
+                    title: "Scope",
+                    detail: state.scope === "team"
+                        ? `Team summary is active. Drill-down is focused on ${viewModel.detailUserName}.`
+                        : "Personal scope is active. Only your transactions are included."
+                },
+                {
+                    title: "Fairness Rule",
+                    detail: "Advanced Inventory and Advanced Remove are tagged for clarity and counted the same as single actions."
+                },
+                {
+                    title: "Visible Activity",
+                    detail: `${formatNumber(viewModel.detailTransactions.length)} matching transactions are inside the selected date range before the activity-type filter is applied.`
+                }
+            ];
+
+            contextList.innerHTML = items.map((item) => `
+                <div class="context-item">
+                    <strong>${escapeHtml(item.title)}</strong>
+                    <p>${escapeHtml(item.detail)}</p>
+                </div>
+            `).join("");
+        }
+
+        function renderGlossary() {
+            const glossary = state.data?.glossary?.length ? state.data.glossary : [
+                { key: "Total Transactions", definition: "Every recorded inventory movement inside the selected range." },
+                { key: "Total Quantity Moved", definition: "The sum of quantities across the matching transactions." },
+                { key: "Unique Parts Handled", definition: "Distinct part numbers touched in the selected range." },
+                { key: "Active Days", definition: "Calendar days with at least one matching transaction." }
+            ];
+
+            glossaryList.innerHTML = glossary.map((item) => `
+                <div class="glossary-item">
+                    <strong>${escapeHtml(item.key)}</strong>
+                    <p>${escapeHtml(item.definition)}</p>
+                </div>
+            `).join("");
+        }
+
+        function buildTrendPoints(transactions, groupBy, metricMode) {
+            const buckets = new Map();
+            transactions.forEach((transaction) => {
+                const keyDate = groupBy === "weekly" ? startOfWeek(transaction.occurredAt) : startOfDay(transaction.occurredAt);
+                const key = keyDate.toISOString();
+                const bucket = buckets.get(key) || { date: keyDate, value: 0 };
+                bucket.value += metricMode === "quantity" ? Math.abs(transaction.quantity) : 1;
+                buckets.set(key, bucket);
+            });
+
+            return Array.from(buckets.values())
+                .sort((left, right) => left.date - right.date)
+                .map((bucket) => ({
+                    label: groupBy === "weekly"
+                        ? `${formatFriendlyDate(bucket.date)} wk`
+                        : formatFriendlyDate(bucket.date),
+                    value: bucket.value
+                }));
+        }
+
+        function buildUserSummaries(transactions) {
+            const map = new Map();
+            transactions.forEach((transaction) => {
+                const existing = map.get(transaction.userId) || {
+                    userId: transaction.userId,
+                    displayName: transaction.userDisplayName || transaction.userId,
+                    totalTransactions: 0,
+                    totalQuantity: 0,
+                    uniqueParts: new Set()
+                };
+
+                existing.totalTransactions += 1;
+                existing.totalQuantity += Math.abs(transaction.quantity);
+                if (transaction.partId) {
+                    existing.uniqueParts.add(transaction.partId);
+                }
+
+                map.set(transaction.userId, existing);
+            });
+
+            return Array.from(map.values())
+                .map((item) => ({
+                    userId: item.userId,
+                    displayName: item.displayName,
+                    totalTransactions: item.totalTransactions,
+                    totalQuantity: item.totalQuantity,
+                    uniqueParts: item.uniqueParts.size
+                }))
+                .sort((left, right) => right.totalTransactions - left.totalTransactions || left.displayName.localeCompare(right.displayName));
+        }
+
+        function summarizeTransactions(transactions) {
+            const partSet = new Set();
+            const daySet = new Set();
+            let totalQuantity = 0;
+
+            transactions.forEach((transaction) => {
+                if (transaction.partId) {
+                    partSet.add(transaction.partId);
+                }
+                daySet.add(formatDateInput(transaction.occurredAt));
+                totalQuantity += Math.abs(transaction.quantity);
+            });
+
+            return {
+                totalTransactions: transactions.length,
+                totalQuantity,
+                uniqueParts: partSet.size,
+                activeDays: daySet.size
+            };
+        }
+
+        function pickPeakPoint(points) {
+            return points.length ? points.reduce((best, point) => point.value > best.value ? point : best, points[0]) : null;
+        }
+
+        function pickQuietPoint(points) {
+            return points.length ? points.reduce((best, point) => point.value < best.value ? point : best, points[0]) : null;
+        }
+
+        function exportSummaryCsv() {
+            const viewModel = buildViewModel();
+            const rows = viewModel.userSummaries.length && state.scope === "team"
+                ? viewModel.userSummaries.map((user) => ({
+                    scope: "Team",
+                    user: user.displayName,
+                    totalTransactions: user.totalTransactions,
+                    totalQuantity: user.totalQuantity,
+                    uniqueParts: user.uniqueParts
+                }))
+                : [{
+                    scope: state.scope === "team" ? "Team Drill-Down" : "My Analytics",
+                    user: viewModel.detailUserName,
+                    totalTransactions: viewModel.metrics.totalTransactions,
+                    totalQuantity: viewModel.metrics.totalQuantity,
+                    uniqueParts: viewModel.metrics.uniqueParts,
+                    activeDays: viewModel.metrics.activeDays
+                }];
+
+            downloadCsv("analytics-summary.csv", rows);
+        }
+
+        function exportActivityCsv() {
+            const viewModel = buildViewModel();
+            const rows = viewModel.detailTransactions
+                .filter((transaction) => state.activityType === "All" || transaction.activityType === state.activityType)
+                .sort((left, right) => right.occurredAt - left.occurredAt)
+                .map((transaction) => ({
+                    occurredAt: formatDateTime(transaction.occurredAt),
+                    activityType: transaction.activityType,
+                    transactionType: transaction.transactionType,
+                    partId: transaction.partId,
+                    quantity: transaction.quantity,
+                    fromLocation: transaction.fromLocation || "",
+                    toLocation: transaction.toLocation || "",
+                    operation: transaction.operation || "",
+                    user: transaction.userDisplayName || transaction.userId || "",
+                    notes: transaction.notes || ""
+                }));
+
+            downloadCsv("analytics-activity.csv", rows);
+        }
+
+        function downloadCsv(fileName, rows) {
+            if (!rows.length) {
+                return;
+            }
+
+            const headers = Object.keys(rows[0]);
+            const csv = [headers.join(",")]
+                .concat(rows.map((row) => headers.map((header) => csvEscape(row[header])).join(",")))
+                .join("\r\n");
+
+            const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = fileName;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        function renderEmptyPage() {
+            pageTitle.textContent = "Analytics";
+            pageSubtitle.textContent = "Analytics data could not be loaded for this page.";
+            metricsGrid.innerHTML = `<section class="panel metric-card"><div class="metric-label">Status</div><div class="metric-note">No analytics snapshot was injected into the page.</div></section>`;
+            trendChart.innerHTML = `<p class="empty-state">No analytics data is available.</p>`;
+            chartAxisLabels.innerHTML = "";
+            activityTableBody.innerHTML = `<tr><td colspan="8"><p class="empty-state">No data to display.</p></td></tr>`;
+            glossaryList.innerHTML = "";
+            contextList.innerHTML = "";
+            userPanel.classList.add("hidden");
+            scopeField.classList.add("hidden");
+            userField.classList.add("hidden");
+        }
+
+        function resolveUserName(userId) {
+            const match = state.data.users.find((user) => user.userId === userId);
+            return match ? match.displayName : userId;
+        }
+
+        function parseInputDate(value, fallback) {
+            if (!value) {
+                return new Date(fallback);
+            }
+            const parsed = new Date(`${value}T00:00:00`);
+            return Number.isNaN(parsed.getTime()) ? new Date(fallback) : parsed;
+        }
+
+        function startOfDay(value) {
+            const date = new Date(value);
+            date.setHours(0, 0, 0, 0);
+            return date;
+        }
+
+        function endOfDay(value) {
+            const date = new Date(value);
+            date.setHours(23, 59, 59, 999);
+            return date;
+        }
+
+        function startOfWeek(value) {
+            const date = startOfDay(value);
+            const day = date.getDay();
+            const diff = day === 0 ? -6 : 1 - day;
+            date.setDate(date.getDate() + diff);
+            return date;
+        }
+
+        function formatDateInput(value) {
+            const date = new Date(value);
+            const year = date.getFullYear();
+            const month = `${date.getMonth() + 1}`.padStart(2, "0");
+            const day = `${date.getDate()}`.padStart(2, "0");
+            return `${year}-${month}-${day}`;
+        }
+
+        function formatFriendlyDate(value) {
+            return new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric" }).format(value);
+        }
+
+        function formatDateTime(value) {
+            return new Intl.DateTimeFormat("en-US", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+                hour: "2-digit",
+                minute: "2-digit"
+            }).format(value);
+        }
+
+        function formatNumber(value) {
+            return Number(value || 0).toLocaleString("en-US");
+        }
+
+        function escapeHtml(value) {
+            return String(value ?? "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/\"/g, "&quot;")
+                .replace(/'/g, "&#39;");
+        }
+
+        function csvEscape(value) {
+            const stringValue = String(value ?? "");
+            if (/[",\r\n]/.test(stringValue)) {
+                return `"${stringValue.replace(/"/g, '""')}"`;
+            }
+            return stringValue;
+        }
     </script>
 </body>
+
 </html>

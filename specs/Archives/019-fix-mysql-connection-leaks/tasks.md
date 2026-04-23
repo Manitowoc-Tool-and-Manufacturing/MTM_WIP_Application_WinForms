@@ -20,9 +20,11 @@
 ## Phase 1: Setup & Prerequisites
 
 ### Story Goal
+
 Establish development branch and verify environment is ready for implementation.
 
 ### Independent Test Criteria
+
 - Branch `001-fix-mysql-connection-leaks` exists and is checked out
 - Repository builds successfully with no errors
 - MySQL 5.7.24 server is accessible on 172.16.1.104:3306
@@ -40,9 +42,11 @@ Establish development branch and verify environment is ready for implementation.
 ## Phase 2: User Story 1 - Application Runs Without Connection Exhaustion (P1)
 
 ### Story Goal
+
 Eliminate the root cause of "max users reached" errors by completely removing ExecuteReaderAsync and replacing all callers with ExecuteDataTableWithStatusAsync, which properly disposes connections.
 
 ### Independent Test Criteria
+
 - Application runs for 4+ hours with 100+ database transactions without "max users reached" errors
 - MySQL `SHOW PROCESSLIST` shows 0 sleeping connections from application when idle
 - Search for "ExecuteReaderAsync" in solution returns 0 results
@@ -88,9 +92,11 @@ Eliminate the root cause of "max users reached" errors by completely removing Ex
 ## Phase 3: User Story 2 - Proactive Connection Lifecycle Monitoring (P2)
 
 ### Story Goal
+
 Implement monitoring system that logs connection statistics every 5 minutes to provide early warning of connection leaks before they cause failures.
 
 ### Independent Test Criteria
+
 - Connection monitoring logs connection statistics every 5 minutes
 - Logs show OpenConnections = 0 when application is idle
 - Monitoring system detects and warns when connections remain open
@@ -139,9 +145,11 @@ Implement monitoring system that logs connection statistics every 5 minutes to p
 ## Phase 4: User Story 3 - Immediate Connection Disposal (P3)
 
 ### Story Goal
+
 Disable connection pooling by adding Pooling=false to MySQL connection strings, ensuring every connection is opened, used, and closed immediately.
 
 ### Independent Test Criteria
+
 - Connection string contains "Pooling=false"
 - MySQL `SHOW PROCESSLIST` shows connections are created and closed for each operation
 - No idle connections remain after operations complete
@@ -168,9 +176,11 @@ Disable connection pooling by adding Pooling=false to MySQL connection strings, 
 ## Phase 5: User Story 4 - Centralized Database Access Pattern (P3)
 
 ### Story Goal
+
 Refactor Service_Migration and Service_Analytics to use Helper_Database_StoredProcedure pattern, eliminating direct MySqlConnection usage (except documented architectural exceptions).
 
 ### Independent Test Criteria
+
 - Service_Migration uses ExecuteRawSqlAsync for raw SQL needs
 - Service_Analytics uses stored procedures via ExecuteDataTableWithStatusAsync
 - Constitution compliance validation passes with 0 violations
@@ -235,9 +245,11 @@ Refactor Service_Migration and Service_Analytics to use Helper_Database_StoredPr
 ## Phase 6: User Story 5 - Visual SQL Server Immediate Disposal (P3)
 
 ### Story Goal
+
 Disable connection pooling for SQL Server (Infor Visual ERP) connections to maintain consistency with MySQL immediate disposal pattern.
 
 ### Independent Test Criteria
+
 - Service_VisualDatabase connection string contains "Pooling=false"
 - SQL Server `sys.dm_exec_connections` shows 0 connections from application when idle
 - All 18 connection usages remain properly wrapped in `using` statements
@@ -266,6 +278,7 @@ Disable connection pooling for SQL Server (Infor Visual ERP) connections to main
 ## Phase 7: Final Validation & Testing
 
 ### Story Goal
+
 Comprehensive validation that all user stories are complete, constitution compliance is 100%, and system passes all manual tests.
 
 ### Tasks
@@ -315,14 +328,17 @@ Phase 7 (Final Validation)
 ### Parallel Execution Opportunities
 
 **Phase 2 (US1) Parallelization**:
+
 - Group 1: T006, T007, T008 (replace 3 Service_Analytics callers independently)
 - Group 2: T010, T011 (replace Service_Migration caller independently)
 - After both groups: T013 (remove method)
 
 **Phase 3 (US3) Parallelization**:
+
 - All tasks (T046-T048) can be done as single commit
 
 **Phase 4 (US4) Parallelization**:
+
 - Group 1: T054-T060 (create ExecuteRawSqlAsync)
 - Group 2: T061-T066 (create stored procedures)
 - Both groups are independent and can run in parallel
@@ -330,10 +346,12 @@ Phase 7 (Final Validation)
 - After Group 2: T076-T080 (refactor Service_Analytics)
 
 **Phase 5 (US5) Parallelization**:
+
 - All tasks (T089-T092) can be done as single commit
 - Entire Phase 5 can run in parallel with Phase 2 (US2)
 
 **Phase 7 Parallelization**:
+
 - T100, T101, T102, T103, T108 can all run in parallel
 - T104-T107 are sequential (runtime tests)
 
@@ -342,7 +360,9 @@ Phase 7 (Final Validation)
 ## Implementation Strategy
 
 ### MVP Scope (Minimum Viable Product)
+
 **User Story 1 (P1) ONLY** - Fixes critical "max users reached" errors
+
 - Complete removal of ExecuteReaderAsync
 - Replace 4 callers with ExecuteDataTableWithStatusAsync
 - Verify 0 connection leaks
@@ -350,11 +370,13 @@ Phase 7 (Final Validation)
 **Estimated Time**: 3-4 hours
 
 ### Incremental Delivery
+
 1. **Sprint 1**: US1 (P1) - Critical leak fix
 2. **Sprint 2**: US3 (P3) + US4 (P3) - Architecture cleanup and immediate disposal
 3. **Sprint 3**: US2 (P2) + US5 (P3) - Monitoring and consistency
 
 ### Verification at Each Increment
+
 - After Sprint 1: 8-hour stability test should pass
 - After Sprint 2: Constitution compliance should be 100%
 - After Sprint 3: Complete feature validation
@@ -364,6 +386,7 @@ Phase 7 (Final Validation)
 ## Summary
 
 **Total Tasks**: 108
+
 - Phase 1 (Setup): 4 tasks
 - Phase 2 (US1 - P1): 19 tasks (5 implementation + 5 compliance + 3 testing + 6 caller replacements)
 - Phase 3 (US2 - P2): 22 tasks (13 implementation + 5 compliance + 3 testing + 1 integration)

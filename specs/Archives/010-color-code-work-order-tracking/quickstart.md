@@ -105,20 +105,20 @@ dotnet run --project MTM_WIP_Application_Winforms.csproj
 
 ### Key Components
 
-| Component | Purpose | Status |
-|-----------|---------|--------|
-| `Dao_ColorCode.cs` | Color code master data operations | NEW |
-| `Service_ColorCodeValidator.cs` | Work order validation & formatting | NEW |
-| `Model_ColorCode.cs` | Color code entity model | NEW |
+| Component                        | Purpose                            | Status   |
+| -------------------------------- | ---------------------------------- | -------- |
+| `Dao_ColorCode.cs`               | Color code master data operations  | NEW      |
+| `Service_ColorCodeValidator.cs`  | Work order validation & formatting | NEW      |
+| `Model_ColorCode.cs`             | Color code entity model            | NEW      |
 | `Model_Application_Variables.cs` | In-memory caches for flagged parts | MODIFIED |
-| `Helper_UI_ComboBoxes.cs` | Cache management | MODIFIED |
-| `Control_InventoryTab.cs` | Dynamic color code fields | MODIFIED |
-| `Control_RemoveTab.cs` | Column display + auto-sort | MODIFIED |
-| `Control_TransferTab.cs` | Read-only column display | MODIFIED |
-| `Control_AdvancedInventory.cs` | Validation + redirect | MODIFIED |
-| `Control_AdvancedRemove.cs` | Show All button | MODIFIED |
-| `Control_Add_PartID.cs` | RequiresColorCode checkbox | MODIFIED |
-| `Control_Edit_PartID.cs` | RequiresColorCode checkbox | MODIFIED |
+| `Helper_UI_ComboBoxes.cs`        | Cache management                   | MODIFIED |
+| `Control_InventoryTab.cs`        | Dynamic color code fields          | MODIFIED |
+| `Control_RemoveTab.cs`           | Column display + auto-sort         | MODIFIED |
+| `Control_TransferTab.cs`         | Read-only column display           | MODIFIED |
+| `Control_AdvancedInventory.cs`   | Validation + redirect              | MODIFIED |
+| `Control_AdvancedRemove.cs`      | Show All button                    | MODIFIED |
+| `Control_Add_PartID.cs`          | RequiresColorCode checkbox         | MODIFIED |
+| `Control_Edit_PartID.cs`         | RequiresColorCode checkbox         | MODIFIED |
 
 ## Development Workflow
 
@@ -127,12 +127,14 @@ dotnet run --project MTM_WIP_Application_Winforms.csproj
 **Goal**: Set up database schema and stored procedures
 
 **Tasks**:
+
 1. Create migration scripts in `Database/UpdatedTables/`
 2. Create stored procedures in `Database/UpdatedStoredProcedures/`
 3. Test migrations in test database first
 4. Verify schema with validation script
 
 **Files to Create**:
+
 - `Database/UpdatedTables/001_add_md_color_codes_table.sql`
 - `Database/UpdatedTables/002_add_requires_colorcode_to_parts.sql`
 - `Database/UpdatedTables/003_add_colorcode_workorder_to_inventory.sql`
@@ -144,6 +146,7 @@ dotnet run --project MTM_WIP_Application_Winforms.csproj
 - `Database/Scripts/seed_color_codes.sql`
 
 **Testing**:
+
 ```sql
 -- Verify table creation
 SHOW TABLES LIKE '%color%';
@@ -165,6 +168,7 @@ SELECT @status, @msg;
 **Goal**: Create data access objects following Model_Dao_Result pattern
 
 **Tasks**:
+
 1. Create `Dao_ColorCode.cs` in `Data/`
 2. Add methods: `GetAllAsync()`, `AddCustomColorAsync()`
 3. Update `Dao_Part.cs`: Add `GetAllColorCodeFlaggedAsync()`
@@ -172,6 +176,7 @@ SELECT @status, @msg;
 5. Add XML documentation to all public methods
 
 **Pattern to Follow**:
+
 ```csharp
 public async Task<Model_Dao_Result<DataTable>> GetAllAsync()
 {
@@ -179,7 +184,7 @@ public async Task<Model_Dao_Result<DataTable>> GetAllAsync()
     {
         var result = await Helper_Database_StoredProcedure
             .ExecuteDataTableWithStatusAsync("md_color_codes_GetAll", null);
-            
+
         return result.IsSuccess
             ? Model_Dao_Result<DataTable>.Success(result.Data, result.StatusMessage)
             : Model_Dao_Result<DataTable>.Failure(result.ErrorMessage);
@@ -193,6 +198,7 @@ public async Task<Model_Dao_Result<DataTable>> GetAllAsync()
 ```
 
 **Testing**:
+
 - Use xUnit integration tests with `BaseIntegrationTest`
 - Test success cases, error cases, edge cases
 - Verify `Model_Dao_Result<T>` properties (IsSuccess, Data, ErrorMessage)
@@ -202,12 +208,14 @@ public async Task<Model_Dao_Result<DataTable>> GetAllAsync()
 **Goal**: Implement work order validation and color formatting
 
 **Tasks**:
+
 1. Create `Service_ColorCodeValidator.cs` in `Services/`
 2. Implement `ValidateAndFormatWorkOrder(string input)`
 3. Implement `FormatColorToTitleCase(string input)`
 4. Add unit tests for validation logic
 
 **Validation Rules**:
+
 - Work order: 5-6 digits, optional WO- prefix
 - Auto-format: `64153` → `WO-064153`
 - Reject: Letters, symbols, < 5 digits, > 6 digits
@@ -218,15 +226,17 @@ public async Task<Model_Dao_Result<DataTable>> GetAllAsync()
 **Goal**: Load color codes and flagged parts into memory at startup
 
 **Tasks**:
+
 1. Add properties to `Model_Application_Variables.cs`:
-   - `public static List<string> ColorFlaggedParts { get; set; }`
-   - `public static DataTable ColorCodes { get; set; }`
+    - `public static List<string> ColorFlaggedParts { get; set; }`
+    - `public static DataTable ColorCodes { get; set; }`
 2. Update `Helper_UI_ComboBoxes.cs`:
-   - Add `ReloadColorCodeCachesAsync()` method
+    - Add `ReloadColorCodeCachesAsync()` method
 3. Call from `MainForm.cs` initialization
 4. Add Shift+Click refresh to Reset buttons
 
 **Cache Loading**:
+
 ```csharp
 public static async Task ReloadColorCodeCachesAsync()
 {
@@ -252,23 +262,25 @@ public static async Task ReloadColorCodeCachesAsync()
 **Goal**: Add dynamic color code and work order input fields
 
 **Tasks**:
+
 1. Open `Controls/MainForm/Control_InventoryTab.cs`
 2. Add SuggestionTextBox for ColorCode (reuse existing control)
 3. Add TextBox for WorkOrder with validation
 4. Implement Part ID TextChanged event:
-   - Check if part in `Model_Application_Variables.ColorFlaggedParts`
-   - Show/hide color code and work order fields dynamically
+    - Check if part in `Model_Application_Variables.ColorFlaggedParts`
+    - Show/hide color code and work order fields dynamically
 5. Add "OTHER" color code dialog
 6. Update Save button validation
 
 **Key Code**:
+
 ```csharp
 private async void PartIDTextBox_TextChanged(object sender, EventArgs e)
 {
     var partId = PartIDTextBox.Text.Trim();
     bool requiresColorCode = Model_Application_Variables.ColorFlaggedParts
         .Contains(partId, StringComparer.OrdinalIgnoreCase);
-    
+
     ColorCodeTextBox.Visible = requiresColorCode;
     ColorCodeLabel.Visible = requiresColorCode;
     WorkOrderTextBox.Visible = requiresColorCode;
@@ -281,21 +293,23 @@ private async void PartIDTextBox_TextChanged(object sender, EventArgs e)
 **Goal**: Display color code and work order columns with auto-sort
 
 **Tasks**:
+
 1. Update `Control_RemoveTab.cs`:
-   - Add Color and Work Order columns
-   - Implement dynamic column visibility
-   - Add auto-sort by Color (ASC), Location (ASC)
-   - Add >1000 record warning for Show All
+    - Add Color and Work Order columns
+    - Implement dynamic column visibility
+    - Add auto-sort by Color (ASC), Location (ASC)
+    - Add >1000 record warning for Show All
 2. Update `Control_TransferTab.cs`:
-   - Add read-only Color and Work Order columns
+    - Add read-only Color and Work Order columns
 3. Update `Control_AdvancedRemove.cs`:
-   - Add Show All button
-   - Implement >1000 record warning
+    - Add Show All button
+    - Implement >1000 record warning
 
 **Auto-Sort Implementation**:
+
 ```csharp
 // In stored procedure or LINQ
-ORDER BY 
+ORDER BY
     CASE WHEN ColorCode = 'Unknown' THEN 1 ELSE 0 END,
     ColorCode ASC,
     Location ASC
@@ -306,15 +320,16 @@ ORDER BY
 **Goal**: Add RequiresColorCode checkbox to Part ID forms
 
 **Tasks**:
+
 1. Update `Control_Add_PartID.cs` and `.Designer.cs`:
-   - Add CheckBox "Requires Color Code & Work Order"
-   - Place near Part ID input
+    - Add CheckBox "Requires Color Code & Work Order"
+    - Place near Part ID input
 2. Update `Control_Edit_PartID.cs` and `.Designer.cs`:
-   - Add same checkbox
-   - Load current value from database
+    - Add same checkbox
+    - Load current value from database
 3. Implement save logic:
-   - Call `Dao_Part.UpdateColorCodeFlagAsync(partId, requiresColorCode)`
-   - Set `parentForm.requiresRestart = true` if changed
+    - Call `Dao_Part.UpdateColorCodeFlagAsync(partId, requiresColorCode)`
+    - Set `parentForm.requiresRestart = true` if changed
 4. Test restart prompt on Settings form close
 
 ### Phase 8: Testing
@@ -322,6 +337,7 @@ ORDER BY
 **Goal**: Comprehensive testing of all feature components
 
 **Test Types**:
+
 1. **Unit Tests**: Service_ColorCodeValidator logic
 2. **Integration Tests**: DAO methods with test database
 3. **UI Tests**: Manual testing of dynamic field visibility
@@ -329,20 +345,21 @@ ORDER BY
 5. **Edge Case Tests**: Invalid work orders, duplicate colors, legacy data
 
 **Sample Integration Test**:
+
 ```csharp
 [Fact]
 public async Task AddCustomColor_NewColor_ReturnsSuccess()
 {
     // Arrange
     var customColor = "Blueberry";
-    
+
     // Act
     var result = await Dao_ColorCode.AddCustomColorAsync(customColor);
-    
+
     // Assert
     Assert.True(result.IsSuccess);
     Assert.True(result.Data);  // Was inserted (not duplicate)
-    
+
     // Verify in database
     var allColors = await Dao_ColorCode.GetAllAsync();
     Assert.Contains(allColors.Data.AsEnumerable(),
@@ -401,7 +418,7 @@ private async void SaveButton_Click(object sender, EventArgs e)
     {
         // Disable button to prevent double-click
         SaveButton.Enabled = false;
-        
+
         var result = await dao.SaveDataAsync();
         if (result.IsSuccess)
         {
@@ -421,7 +438,7 @@ private async void SaveButton_Click(object sender, EventArgs e)
 
 ```powershell
 # Check stored procedure exists
-SELECT * FROM INFORMATION_SCHEMA.ROUTINES 
+SELECT * FROM INFORMATION_SCHEMA.ROUTINES
 WHERE ROUTINE_NAME = 'md_color_codes_GetAll';
 
 # Test stored procedure directly
@@ -453,12 +470,14 @@ await Helper_UI_ComboBoxes.ReloadColorCodeCachesAsync();
 ## Useful Resources
 
 ### Documentation
+
 - [Feature Spec](./spec.md) - Complete feature requirements
 - [Data Model](./data-model.md) - Database schema and relationships
 - [Research](./research.md) - Technology decisions and patterns
 - [Contracts](./contracts/) - Stored procedure signatures
 
 ### Codebase References
+
 - `Service_ErrorHandler.cs` - Error handling patterns
 - `LoggingUtility.cs` - Logging patterns
 - `Helper_Database_StoredProcedure.cs` - Database access patterns
@@ -466,6 +485,7 @@ await Helper_UI_ComboBoxes.ReloadColorCodeCachesAsync();
 - `Dao_Inventory.cs` - Existing DAO patterns
 
 ### External Links
+
 - [MySQL 5.7.24 Documentation](https://dev.mysql.com/doc/refman/5.7/en/)
 - [.NET 8.0 API Reference](https://learn.microsoft.com/en-us/dotnet/api/)
 - [WinForms Documentation](https://learn.microsoft.com/en-us/dotnet/desktop/winforms/)
@@ -473,21 +493,25 @@ await Helper_UI_ComboBoxes.ReloadColorCodeCachesAsync();
 ## Troubleshooting
 
 ### "Stored procedure not found"
+
 - Verify procedure exists: `SHOW PROCEDURE STATUS WHERE Db='mtm_wip_application_winforms_test';`
 - Check spelling in DAO call
 - Ensure migration script ran successfully
 
 ### "Cache not loading"
+
 - Check `MainForm.cs` initialization calls `ReloadColorCodeCachesAsync()`
 - Verify database connection successful
 - Check log files for errors: `%APPDATA%\MTM\Logs\`
 
 ### "Columns not showing in DataGridView"
+
 - Verify column names match stored procedure output
 - Check `Visible` property set correctly
 - Ensure part is flagged in `Model_Application_Variables.ColorFlaggedParts`
 
 ### "Work order validation failing"
+
 - Check `Service_ColorCodeValidator.ValidateAndFormatWorkOrder()` logic
 - Verify regex pattern matches requirements
 - Test with various inputs (5 digits, 6 digits, with/without WO-)
@@ -503,6 +527,7 @@ await Helper_UI_ComboBoxes.ReloadColorCodeCachesAsync();
 ---
 
 **Need Help?**
+
 - Review constitution compliance: `.specify/memory/constitution.md`
 - Check AGENTS.md for project-specific guidance
 - Reference existing codebase patterns in similar features

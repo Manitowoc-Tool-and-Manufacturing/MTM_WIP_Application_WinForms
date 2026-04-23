@@ -3,7 +3,6 @@ using MTM_WIP_Application_Winforms.Models;
 
 namespace MTM_WIP_Application_Winforms.Services.Visual
 {
-
     #region Methods
     /// <summary>
     /// Provides Visual database access operations for dashboards, analytics, and inventory.
@@ -17,7 +16,9 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
         /// Model_Dao_Result containing true when the connection succeeds.
         /// Check IsSuccess before accessing Data.
         /// </returns>
-        Task<Model_Dao_Result<bool>> TestConnectionAsync();
+        Task<Model_Dao_Result<bool>> TestConnectionAsync(
+            CancellationToken cancellationToken = default
+        );
 
         /// <summary>
         /// Executes a read-only query from an embedded resource file.
@@ -27,7 +28,10 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
         /// Model_Dao_Result containing a DataTable of dashboard results.
         /// Check IsSuccess before accessing Data.
         /// </returns>
-        Task<Model_Dao_Result<DataTable>> GetDashboardDataAsync(Enum_VisualDashboardCategory category);
+        Task<Model_Dao_Result<DataTable>> GetDashboardDataAsync(
+            Enum_VisualDashboardCategory category,
+            CancellationToken cancellationToken = default
+        );
 
         /// <summary>
         /// Searches for dies based on part number or die number.
@@ -38,7 +42,11 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
         /// Model_Dao_Result containing search results in a DataTable.
         /// Check IsSuccess before accessing Data.
         /// </returns>
-        Task<Model_Dao_Result<DataTable>> SearchDiesAsync(string searchTerm, bool searchByPart);
+        Task<Model_Dao_Result<DataTable>> SearchDiesAsync(
+            string searchTerm,
+            bool searchByPart,
+            CancellationToken cancellationToken = default
+        );
 
         /// <summary>
         /// Retrieves coil/flatstock information for a given part number.
@@ -47,14 +55,20 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
         /// <returns>
         /// Model_Dao_Result containing the coil/flatstock details.
         /// </returns>
-        Task<Model_Dao_Result<Model_Visual_CoilFlatstock>> GetCoilFlatstockInfoAsync(string partNumber);
+        Task<Model_Dao_Result<Model_Visual_CoilFlatstock>> GetCoilFlatstockInfoAsync(
+            string partNumber,
+            CancellationToken cancellationToken = default
+        );
 
         /// <summary>
         /// Retrieves a list of parent parts where the specified part is used as a component (BOM lookup).
         /// </summary>
         /// <param name="partId">The component part ID.</param>
         /// <returns>DataTable containing parent part details.</returns>
-        Task<Model_Dao_Result<DataTable>> GetWhereUsedAsync(string partId);
+        Task<Model_Dao_Result<DataTable>> GetWhereUsedAsync(
+            string partId,
+            CancellationToken cancellationToken = default
+        );
 
         /// <summary>
         /// Retrieves the receiving schedule based on specified filters.
@@ -83,7 +97,9 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
             bool includeService,
             string vendorFilter = "",
             string poFilter = "",
-            bool mustHavePartNumber = false);
+            bool mustHavePartNumber = false,
+            CancellationToken cancellationToken = default
+        );
 
         /// <summary>
         /// Retrieves all line details for a specific Purchase Order.
@@ -93,7 +109,10 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
         /// Model_Dao_Result containing a DataTable of PO line details.
         /// Check IsSuccess before accessing Data.
         /// </returns>
-        Task<Model_Dao_Result<DataTable>> GetPODetailsAsync(string poNumber);
+        Task<Model_Dao_Result<DataTable>> GetPODetailsAsync(
+            string poNumber,
+            CancellationToken cancellationToken = default
+        );
 
         /// <summary>
         /// Retrieves analytics data for receiving history and forecast.
@@ -104,7 +123,11 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
         /// Model_Dao_Result containing receiving analytics data.
         /// Check IsSuccess before accessing Data.
         /// </returns>
-        Task<Model_Dao_Result<Model_ReceivingAnalytics>> GetReceivingAnalyticsAsync(DateTime? startDate = null, DateTime? endDate = null);
+        Task<Model_Dao_Result<Model_ReceivingAnalytics>> GetReceivingAnalyticsAsync(
+            DateTime? startDate = null,
+            DateTime? endDate = null,
+            CancellationToken cancellationToken = default
+        );
 
         /// <summary>
         /// Retrieves inventory data based on search criteria.
@@ -117,7 +140,13 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
         /// Model_Dao_Result containing the inventory DataTable.
         /// Check IsSuccess before accessing Data.
         /// </returns>
-        Task<Model_Dao_Result<DataTable>> GetInventoryAsync(string partNumber, string warehouse, string location, bool nonZeroOnly);
+        Task<Model_Dao_Result<DataTable>> GetInventoryAsync(
+            string partNumber,
+            string warehouse,
+            string location,
+            bool nonZeroOnly,
+            CancellationToken cancellationToken = default
+        );
 
         /// <summary>
         /// Retrieves transaction history based on flexible filter criteria.
@@ -127,52 +156,73 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
         /// Model_Dao_Result containing the transaction DataTable.
         /// Check IsSuccess before accessing Data.
         /// </returns>
-        Task<Model_Dao_Result<DataTable>> GetTransactionsAsync(Model_VisualTransactionFilter filter);
+        Task<Model_Dao_Result<DataTable>> GetTransactionsAsync(
+            Model_VisualTransactionFilter filter,
+            CancellationToken cancellationToken = default
+        );
 
         /// <summary>
         /// Retrieves a list of all User IDs from the transaction history.
         /// </summary>
-        Task<Model_Dao_Result<List<string>>> GetUserIdsAsync();
+        Task<Model_Dao_Result<List<string>>> GetUserIdsAsync(
+            CancellationToken cancellationToken = default
+        );
 
         /// <summary>
         /// Retrieves a list of all Work Order IDs from the transaction history.
         /// </summary>
-        Task<Model_Dao_Result<List<string>>> GetWorkOrdersAsync();
+        Task<Model_Dao_Result<List<string>>> GetWorkOrdersAsync(
+            CancellationToken cancellationToken = default
+        );
 
         /// <summary>
         /// Retrieves a list of all Purchase Order IDs from the transaction history.
         /// </summary>
-        Task<Model_Dao_Result<List<string>>> GetPurchaseOrdersAsync();
+        Task<Model_Dao_Result<List<string>>> GetPurchaseOrdersAsync(
+            CancellationToken cancellationToken = default
+        );
 
         /// <summary>
         /// Retrieves a list of all Customer Order IDs from the transaction history.
         /// </summary>
-        Task<Model_Dao_Result<List<string>>> GetCustomerOrdersAsync();
+        Task<Model_Dao_Result<List<string>>> GetCustomerOrdersAsync(
+            CancellationToken cancellationToken = default
+        );
 
         /// <summary>
         /// Retrieves a list of all Part IDs from the Visual database.
         /// </summary>
-        Task<Model_Dao_Result<List<string>>> GetPartIdsAsync();
+        Task<Model_Dao_Result<List<string>>> GetPartIdsAsync(
+            CancellationToken cancellationToken = default
+        );
 
         /// <summary>
         /// Retrieves a list of all Die IDs from the Visual database (FGT%-01).
         /// </summary>
-        Task<Model_Dao_Result<List<string>>> GetDieIdsAsync();
+        Task<Model_Dao_Result<List<string>>> GetDieIdsAsync(
+            CancellationToken cancellationToken = default
+        );
 
         /// <summary>
         /// Retrieves a list of all Coil/Flatstock Part IDs from the Visual database (MMC% or MMF%).
         /// </summary>
-        Task<Model_Dao_Result<List<string>>> GetCoilFlatstockPartIdsAsync();
+        Task<Model_Dao_Result<List<string>>> GetCoilFlatstockPartIdsAsync(
+            CancellationToken cancellationToken = default
+        );
 
         /// <summary>
         /// Retrieves a list of all Location IDs from the Visual database.
         /// </summary>
-        Task<Model_Dao_Result<List<string>>> GetLocationIdsAsync();
+        Task<Model_Dao_Result<List<string>>> GetLocationIdsAsync(
+            CancellationToken cancellationToken = default
+        );
 
         /// <summary>
         /// Retrieves a list of all Warehouse IDs from the Visual database.
         /// </summary>
-        Task<Model_Dao_Result<List<string>>> GetWarehouseIdsAsync();
+        Task<Model_Dao_Result<List<string>>> GetWarehouseIdsAsync(
+            CancellationToken cancellationToken = default
+        );
 
         /// <summary>
         /// Retrieves a list of distinct users who have performed transactions within the specified date range.
@@ -180,7 +230,11 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
         /// <param name="start">Start date.</param>
         /// <param name="end">End date.</param>
         /// <returns>List of user IDs.</returns>
-        Task<Model_Dao_Result<List<string>>> GetDistinctUsersForAnalyticsAsync(DateTime start, DateTime end);
+        Task<Model_Dao_Result<List<string>>> GetDistinctUsersForAnalyticsAsync(
+            DateTime start,
+            DateTime end,
+            CancellationToken cancellationToken = default
+        );
 
         /// <summary>
         /// Retrieves detailed analytics data for selected users within a date range.
@@ -189,28 +243,29 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
         /// <param name="end">End date.</param>
         /// <param name="userIds">List of user IDs to include.</param>
         /// <returns>DataTable with analytics columns.</returns>
-        Task<Model_Dao_Result<DataTable>> GetUserAnalyticsDataAsync(DateTime start, DateTime end, List<string> userIds);
+        Task<Model_Dao_Result<DataTable>> GetUserAnalyticsDataAsync(
+            DateTime start,
+            DateTime end,
+            List<string> userIds,
+            CancellationToken cancellationToken = default
+        );
 
         /// <summary>
         /// Retrieves transaction history for shift calculation (last 30 days).
         /// </summary>
         /// <returns>DataTable with USER_ID and TRANSACTION_DATE.</returns>
-        Task<Model_Dao_Result<DataTable>> GetUserShiftDataAsync();
+        Task<Model_Dao_Result<DataTable>> GetUserShiftDataAsync(
+            CancellationToken cancellationToken = default
+        );
 
         /// <summary>
         /// Retrieves full names for all employees.
         /// </summary>
         /// <returns>DataTable with USER_ID, FIRST_NAME, LAST_NAME.</returns>
-        Task<Model_Dao_Result<DataTable>> GetUserFullNamesAsync();
+        Task<Model_Dao_Result<DataTable>> GetUserFullNamesAsync(
+            CancellationToken cancellationToken = default
+        );
 
-        /// <summary>
-        /// Retrieves material handler statistics for scoring.
-        /// </summary>
-        /// <param name="startDate">Start date.</param>
-        /// <param name="endDate">End date.</param>
-        /// <returns>DataTable with User, TransactionType, TransactionCount.</returns>
-        Task<Model_Dao_Result<DataTable>> GetMaterialHandlerStatsAsync(DateTime startDate, DateTime endDate);
     }
     #endregion
-
 }

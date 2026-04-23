@@ -1,1 +1,0 @@
-SELECT 'Material Handler Analytics General Placeholder' AS Status

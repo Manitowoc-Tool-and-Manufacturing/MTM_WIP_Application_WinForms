@@ -5,12 +5,14 @@
 **MTM WIP Application** is a Windows Forms-based inventory management system for Manitowoc Tool and Manufacturing. Built on .NET 8.0 with C# 12.0, it provides real-time work-in-progress tracking, transaction management, and reporting capabilities with MySQL 5.7.24 backend.
 
 **Architecture**: Layered architecture with strict separation:
+
 - **Data Layer**: DAOs using stored procedures only (via `Helper_Database_StoredProcedure`)
 - **Service Layer**: Business logic and error handling (`Service_ErrorHandler`, logging)
 - **Presentation Layer**: WinForms with dependency injection-based theming system
 - **Database**: MySQL 5.7.24 (LEGACY - no 8.0+ features allowed)
 
 **Key Technologies**:
+
 - .NET 8.0 Windows Forms
 - MySQL 5.7.24 (via MySql.Data 9.4.0)
 - Microsoft.Extensions.DependencyInjection 8.0.0
@@ -19,6 +21,7 @@
 ## Setup Commands
 
 ### Prerequisites
+
 - .NET 8.0 SDK
 - MySQL Server 5.7.24 (running on 172.16.1.104:3306)
 - Visual Studio 2022 or VS Code with C# extension
@@ -105,6 +108,7 @@ dotnet run --project MTM_WIP_Application_Winforms.csproj
 ```
 
 ### Hot Reload
+
 - WinForms does not support hot reload like web applications
 - Changes require rebuild and restart
 - Use Debug mode (F5) for faster iteration with debugger attached
@@ -112,6 +116,7 @@ dotnet run --project MTM_WIP_Application_Winforms.csproj
 ### Environment Configuration
 
 **MAMP MySQL Server Configuration:**
+
 - **Host**: 172.16.1.104
 - **Port**: 3306
 - **Username**: root
@@ -119,14 +124,15 @@ dotnet run --project MTM_WIP_Application_Winforms.csproj
 - **MySQL Binary**: `C:\MAMP\bin\mysql\bin\mysql.exe`
 
 **Database Names:**
+
 - **Production**: `mtm_wip_application_winforms`
 - **Testing**: `mtm_wip_application_winforms_test`
 
 **Application Settings:**
+
 - Database connection managed in `Helpers/Helper_Database_Variables.cs`
 - User-specific settings stored in `%APPDATA%\MTM\`
 - Theme preferences in database (`app_themes`, `app_users` tables)
-
 
 ## Code Style Guidelines
 
@@ -378,12 +384,14 @@ public partial class MyControl : ThemedUserControl  // NOT UserControl!
 The application features a modern, JSON-driven help system that renders HTML content via WebView2.
 
 **Architecture**:
+
 - **Content**: Stored as JSON files in `Documentation/Help/JSON/`.
 - **Rendering**: `Service_HelpTemplateEngine` generates HTML from templates in `Documentation/Help/Templates/`.
 - **Viewer**: `HelpViewerForm` hosts a WebView2 control to display content.
 - **Search**: In-memory search implemented in `Service_HelpSystem`.
 
 **Adding Help Content**:
+
 1. Create a new JSON file in `Documentation/Help/JSON/`.
 2. Follow the schema defined in `Models/Help/Model_HelpCategory.cs`.
 3. Restart the application to see the new category.
@@ -391,9 +399,11 @@ The application features a modern, JSON-driven help system that renders HTML con
 ## Pull Request Guidelines
 
 ### Title Format
+
 `[Component] Brief description`
 
 Examples:
+
 - `[DAO] Add Dao_Inventory.GetByPartAsync method`
 - `[Theme] Fix ComboBox border colors in Forest theme`
 
@@ -423,6 +433,7 @@ dotnet build MTM_WIP_Application_Winforms.csproj
 Format: `{TaskID}: {Description}`
 
 Examples:
+
 - `T042: Add XML documentation to PrintForm`
 - `T051: Implement ComboBox FlatStyle.Standard for visible borders`
 - `Fix: Correct StatusStrip background color inheritance`
@@ -469,6 +480,7 @@ Examples:
 ### Common Issues
 
 **Build Errors:**
+
 ```powershell
 # Clean and rebuild
 dotnet clean
@@ -479,12 +491,14 @@ dotnet build
 ```
 
 **Database Connection Issues:**
+
 - Verify MySQL service running
 - Check connection string in `Helper_Database_Variables.cs`
 - Ensure database `mtm_wip_application_winforms` exists
 - Verify user permissions for database access
 
 **Theme Not Applying:**
+
 - Verify form inherits from `ThemedForm` (not `Form`)
 - Check `Model_Application_Variables.ThemeEnabled = true`
 - Ensure theme exists in `app_themes` table
@@ -495,6 +509,7 @@ dotnet build
 Application logs location: `%APPDATA%\MTM\Logs\`
 
 Log format: CSV with columns:
+
 - Timestamp
 - Log Level
 - Component
@@ -503,6 +518,7 @@ Log format: CSV with columns:
 - Additional Context
 
 View logs:
+
 - Menu: View → Application Logs
 - Or manually open CSV files in `%APPDATA%\MTM\Logs\`
 
@@ -537,6 +553,7 @@ This project follows strict architectural rules (`.specify/memory/constitution.m
 ### Instruction Files
 
 Detailed guidance in `.github/instructions/`:
+
 - `csharp-dotnet8.instructions.md` - C# and .NET patterns
 - `mysql-database.instructions.md` - Database patterns
 - `testing-standards.instructions.md` - Test requirements
@@ -550,6 +567,7 @@ Detailed guidance in `.github/instructions/`:
 #### Installation & Setup
 
 **Prerequisites:**
+
 - Python 3.10+ with uv (recommended) or pip
 - .NET 8.0 SDK (for C# language server)
 - Git (for repository access)
@@ -590,17 +608,18 @@ serena project health-check
 ```
 
 **Configuration File** (`.serena/project.yml`):
+
 ```yaml
 name: MTM_WIP_Application
 languages:
-  - csharp
-read_only: false  # Set true for QA/review-only agents
-excluded_tools: []  # Add tools to disable (e.g., execute_shell_command for safety)
+    - csharp
+read_only: false # Set true for QA/review-only agents
+excluded_tools: [] # Add tools to disable (e.g., execute_shell_command for safety)
 ignore_patterns:
-  - "bin/**"
-  - "obj/**"
-  - "*.dll"
-  - "*.exe"
+    - "bin/**"
+    - "obj/**"
+    - "*.dll"
+    - "*.exe"
 ```
 
 #### MCP Server Setup (For AI Assistants)
@@ -621,64 +640,79 @@ serena start-mcp-server --context ide --project "C:\Users\johnk\source\repos\MTM
 **MCP Client Configuration Examples:**
 
 **Gemini CLI** (`~/.gemini-cli/config.json`):
+
 ```json
 {
-  "mcpServers": {
-    "serena": {
-      "command": "uvx",
-      "args": [
-        "--from", "git+https://github.com/oraios/serena",
-        "serena", "start-mcp-server",
-        "--context", "ide",
-        "--project", "C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms"
-      ]
+    "mcpServers": {
+        "serena": {
+            "command": "uvx",
+            "args": [
+                "--from",
+                "git+https://github.com/oraios/serena",
+                "serena",
+                "start-mcp-server",
+                "--context",
+                "ide",
+                "--project",
+                "C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms"
+            ]
+        }
     }
-  }
 }
 ```
 
 **Claude Desktop** (`claude_desktop_config.json`):
+
 ```json
 {
-  "mcpServers": {
-    "serena": {
-      "command": "C:\\path\\to\\uvx.exe",
-      "args": [
-        "--from", "git+https://github.com/oraios/serena",
-        "serena", "start-mcp-server",
-        "--context", "desktop-app",
-        "--project", "C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms"
-      ]
+    "mcpServers": {
+        "serena": {
+            "command": "C:\\path\\to\\uvx.exe",
+            "args": [
+                "--from",
+                "git+https://github.com/oraios/serena",
+                "serena",
+                "start-mcp-server",
+                "--context",
+                "desktop-app",
+                "--project",
+                "C:\\Users\\johnk\\source\\repos\\MTM_WIP_Application_WinForms"
+            ]
+        }
     }
-  }
 }
 ```
 
 **VS Code** (via Cline/Roo Code extension settings):
+
 ```json
 {
-  "mcp.servers": {
-    "serena": {
-      "command": "serena",
-      "args": [
-        "start-mcp-server",
-        "--context", "ide",
-        "--project", "${workspaceFolder}"
-      ]
+    "mcp.servers": {
+        "serena": {
+            "command": "serena",
+            "args": [
+                "start-mcp-server",
+                "--context",
+                "ide",
+                "--project",
+                "${workspaceFolder}"
+            ]
+        }
     }
-  }
 }
 ```
 
 #### Contexts & Modes
 
 **Contexts** (Choose based on environment):
+
 - `ide` - For VS Code, Cursor, Cline (disables basic file ops AI already has)
 - `desktop-app` - For Claude Desktop (full tool suite)
 - `claude-code` - For Claude Code CLI (optimized for Claude Code)
 - `agent` - For autonomous agents (Agno, custom frameworks)
 
 **Modes** (Combine for workflow):
+
 - `editing` - Code modification focus
 - `interactive` - Asks questions before acting
 - `planning` - Analysis/design, no immediate editing
@@ -686,6 +720,7 @@ serena start-mcp-server --context ide --project "C:\Users\johnk\source\repos\MTM
 - `no-onboarding` - Skip initial project exploration (use after first time)
 
 **MTM Recommended Combinations:**
+
 ```powershell
 # Daily development work
 serena start-mcp-server --context ide --mode editing --mode interactive
@@ -734,14 +769,15 @@ list_memories()
 
 - **URL**: http://127.0.0.1:24282/dashboard/
 - **Features**:
-  - Real-time tool usage monitoring
-  - Execution queue status
-  - Memory list and contents
-  - Language server status
-  - Configuration viewer
-  - Log viewer
+    - Real-time tool usage monitoring
+    - Execution queue status
+    - Memory list and contents
+    - Language server status
+    - Configuration viewer
+    - Log viewer
 
 **Troubleshooting via Dashboard:**
+
 - Check if language server is running (should show "csharp: Running")
 - View execution logs for failed tool calls
 - Monitor token usage per tool
@@ -750,6 +786,7 @@ list_memories()
 #### Performance Optimization
 
 **Pre-Indexing** (Recommended for MTM's 300+ files):
+
 ```powershell
 # One-time indexing (takes ~60 seconds)
 serena project index
@@ -758,6 +795,7 @@ serena project index
 ```
 
 **Git Worktrees** (Parallel development):
+
 ```powershell
 # Create worktree for feature branch
 git worktree add ../MTM_feature_branch
@@ -771,11 +809,13 @@ Copy-Item -Recurse .serena/cache ../MTM_feature_branch/.serena/cache
 #### Token Efficiency Benchmarks
 
 **MTM Codebase Exploration:**
+
 - **Without Serena**: Reading 10 DAO files = ~50,000 tokens
 - **With Serena**: Symbol-level exploration = ~3,000 tokens
 - **Savings**: 94%
 
 **Refactoring Impact Analysis:**
+
 - **Without Serena**: Grep + read files = ~50,000 tokens
 - **With Serena**: `find_referencing_symbols` = ~1,500 tokens
 - **Savings**: 97%
@@ -789,6 +829,7 @@ Serena enables specialized agent workflows for MTM project. Choose profile based
 **Focus:** Data layer (DAOs, stored procedures, database access)
 
 **Serena Workflow:**
+
 ```
 1. Explore existing DAOs:
    get_symbols_overview("Data/Dao_Entity.cs", depth=1)
@@ -806,6 +847,7 @@ Serena enables specialized agent workflows for MTM project. Choose profile based
 ```
 
 **Memories to Load:**
+
 - `dao_best_practices.md`
 - `helper_database_usage.md`
 - `model_dao_result_pattern.md`
@@ -815,6 +857,7 @@ Serena enables specialized agent workflows for MTM project. Choose profile based
 **Focus:** WinForms (Forms, Controls, theme integration)
 
 **Serena Workflow:**
+
 ```
 1. Explore Form structure:
    get_symbols_overview("Forms/Settings/SettingsForm.cs", depth=1)
@@ -831,6 +874,7 @@ Serena enables specialized agent workflows for MTM project. Choose profile based
 ```
 
 **Memories to Load:**
+
 - `theme_system_guide.md`
 - `winforms_patterns.md`
 - `ui_naming_conventions.md`
@@ -840,6 +884,7 @@ Serena enables specialized agent workflows for MTM project. Choose profile based
 **Focus:** Business logic (Services, error handling, logging)
 
 **Serena Workflow:**
+
 ```
 1. Explore Service methods:
    get_symbols_overview("Services/Service_ErrorHandler.cs", depth=1)
@@ -857,6 +902,7 @@ Serena enables specialized agent workflows for MTM project. Choose profile based
 ```
 
 **Memories to Load:**
+
 - `service_error_handler_usage.md`
 - `logging_patterns.md`
 - `service_layer_architecture.md`
@@ -866,6 +912,7 @@ Serena enables specialized agent workflows for MTM project. Choose profile based
 **Focus:** Stored procedures, database migrations, SP-DAO mapping
 
 **Serena Workflow:**
+
 ```
 1. Map stored procedure to DAO:
    search_for_pattern('"md_inventory_GetAll"', relative_path="Data")
@@ -884,6 +931,7 @@ Serena enables specialized agent workflows for MTM project. Choose profile based
 ```
 
 **Memories to Load:**
+
 - `stored_procedure_conventions.md`
 - `database_schema.md`
 - `sp_dao_mapping.md`
@@ -893,17 +941,19 @@ Serena enables specialized agent workflows for MTM project. Choose profile based
 **Focus:** Code review, architectural compliance, documentation
 
 **Serena Configuration:**
+
 ```yaml
 # .serena/project.yml
-read_only: true  # Prevent accidental edits
+read_only: true # Prevent accidental edits
 excluded_tools:
-  - execute_shell_command  # No command execution
-  - replace_symbol_body    # No code modification
-  - insert_after_symbol
-  - insert_before_symbol
+    - execute_shell_command # No command execution
+    - replace_symbol_body # No code modification
+    - insert_after_symbol
+    - insert_before_symbol
 ```
 
 **Serena Workflow:**
+
 ```
 1. Architectural validation:
    search_for_pattern("MessageBox\\.Show")  # Should be 0
@@ -924,6 +974,7 @@ excluded_tools:
 ```
 
 **Memories to Load:**
+
 - `architectural_patterns.md`
 - `coding_standards.md`
 - `compliance_checklist.md`
@@ -933,6 +984,7 @@ excluded_tools:
 **Focus:** XML documentation, help system, release notes
 
 **Serena Workflow:**
+
 ```
 1. Find undocumented methods:
    search_for_pattern("^\\s*public.*Task.*\\(", relative_path="Data", context_lines_before=1)
@@ -953,6 +1005,7 @@ excluded_tools:
 ```
 
 **Memories to Load:**
+
 - `xml_documentation_standards.md`
 - `help_system_guide.md`
 
@@ -961,6 +1014,7 @@ excluded_tools:
 #### Troubleshooting Serena
 
 **Issue: "find_symbol returns empty"**
+
 ```powershell
 # Solution 1: Restart language server
 restart_language_server()
@@ -974,6 +1028,7 @@ serena project index
 ```
 
 **Issue: "Slow tool execution"**
+
 ```powershell
 # Solution: Pre-index project
 serena project index
@@ -983,6 +1038,7 @@ search_for_pattern("pattern", relative_path="Data")  # Not entire project
 ```
 
 **Issue: "Context window filling up"**
+
 ```
 # Solution: Use memory system
 write_memory("current_progress.md", summary_of_work)
@@ -1000,6 +1056,7 @@ read_memory("current_progress.md")
 ### MCP Workflow Tools
 
 If MCP server is running (`.mcp/mtm-workflow/`), additional validation tools available:
+
 - `validate_dao_patterns` - Check DAO compliance
 - `validate_error_handling` - Verify Service_ErrorHandler usage
 - `validate_ui_scaling` - Check DPI scaling patterns

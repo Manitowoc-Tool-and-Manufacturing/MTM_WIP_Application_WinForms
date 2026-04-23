@@ -250,10 +250,10 @@
 
 **Decision Impact**: New tasks required in Phase 2.5:
 
--   **T113c - Create Developer User Role**: Add `IsDeveloper` BOOLEAN column to `sys_user` table, update user management UI to assign role, restrict Development TreeView node visibility to Developer role
--   **T113d - Create Parameter Prefix Maintenance Form**: New UserControl `Control_Settings_ParameterPrefixMaintenance` with DataGridView showing all procedures/parameters, prefix columns (detected vs override), confidence score column, Save/Reload buttons, and audit log panel
--   **T123 update**: Parameter cache implements reload mechanism called from maintenance form, validates prefix changes before applying
--   Settings Form TreeView includes gated Development category (visible only to Developer role users)
+- **T113c - Create Developer User Role**: Add `IsDeveloper` BOOLEAN column to `sys_user` table, update user management UI to assign role, restrict Development TreeView node visibility to Developer role
+- **T113d - Create Parameter Prefix Maintenance Form**: New UserControl `Control_Settings_ParameterPrefixMaintenance` with DataGridView showing all procedures/parameters, prefix columns (detected vs override), confidence score column, Save/Reload buttons, and audit log panel
+- **T123 update**: Parameter cache implements reload mechanism called from maintenance form, validates prefix changes before applying
+- Settings Form TreeView includes gated Development category (visible only to Developer role users)
 
 ---
 
@@ -391,11 +391,11 @@
 
 **Decision Impact**:
 
--   T103 deliverable expanded: Audit produces `procedure-transaction-analysis.csv` alongside compliance report
--   CSV structure: `ProcedureName, DetectedPattern, RecommendedStrategy, Confidence, Rationale, DeveloperCorrection, RefactoringNotes`
--   New gate between T103 and T113: Developer review checkpoint requiring completed CSV with corrections
--   T114-T118 refactoring uses corrected CSV as authoritative source for transaction management decisions
--   T129 Documentation Update Matrix references CSV for procedure classification
+- T103 deliverable expanded: Audit produces `procedure-transaction-analysis.csv` alongside compliance report
+- CSV structure: `ProcedureName, DetectedPattern, RecommendedStrategy, Confidence, Rationale, DeveloperCorrection, RefactoringNotes`
+- New gate between T103 and T113: Developer review checkpoint requiring completed CSV with corrections
+- T114-T118 refactoring uses corrected CSV as authoritative source for transaction management decisions
+- T129 Documentation Update Matrix references CSV for procedure classification
 
 ---
 
@@ -432,11 +432,11 @@
 
 **Decision Impact**:
 
--   FR-013 connection string centralization focuses on **code organization** not credential management changes
--   T013 refactoring consolidates scattered connection string assembly code into Helper_Database_Variables without changing underlying security model
--   No new tasks for credential encryption/Key Vault integration
--   Documentation clarifies that connection string centralization improves maintainability without altering credential protection approach
--   Current appsettings.json structure retained with existing credential storage pattern
+- FR-013 connection string centralization focuses on **code organization** not credential management changes
+- T013 refactoring consolidates scattered connection string assembly code into Helper_Database_Variables without changing underlying security model
+- No new tasks for credential encryption/Key Vault integration
+- Documentation clarifies that connection string centralization improves maintainability without altering credential protection approach
+- Current appsettings.json structure retained with existing credential storage pattern
 
 ---
 
@@ -462,11 +462,11 @@ Benefits over PowerShell script: Real-time IDE feedback (red squiggles), prevent
 
 **Decision Impact**:
 
--   New task **T124a - Develop Roslyn Analyzer**: Create custom analyzer package `MTM.CodeAnalysis.DatabaseAccess` with 4 diagnostic rules (2-3 hours development)
--   T124 becomes analyzer validation task: Run analyzer across codebase, generate compliance report, fix any violations
--   Analyzer deployed via NuGet package reference in .csproj file
--   CI/CD integration: Analyzer runs on every build, treats violations as warnings (non-blocking initially, error-level post-Phase 2.5)
--   Developer onboarding improved: New developers see violations immediately in IDE
+- New task **T124a - Develop Roslyn Analyzer**: Create custom analyzer package `MTM.CodeAnalysis.DatabaseAccess` with 4 diagnostic rules (2-3 hours development)
+- T124 becomes analyzer validation task: Run analyzer across codebase, generate compliance report, fix any violations
+- Analyzer deployed via NuGet package reference in .csproj file
+- CI/CD integration: Analyzer runs on every build, treats violations as warnings (non-blocking initially, error-level post-Phase 2.5)
+- Developer onboarding improved: New developers see violations immediately in IDE
 
 ---
 
@@ -557,22 +557,22 @@ Format as structured JSON block for easy parsing. Enables rapid diagnosis withou
 
 **User Response**: **Development tools category** (Option 2) - Developer role grants access to entire Development TreeView category including:
 
--   Parameter Prefix Maintenance (primary tool from Q13)
--   Performance baseline measurement tools (future)
--   Database connection diagnostics
--   Stored procedure call history viewer
--   Log file viewer with filtering
--   Cache inspection and refresh tools
+- Parameter Prefix Maintenance (primary tool from Q13)
+- Performance baseline measurement tools (future)
+- Database connection diagnostics
+- Stored procedure call history viewer
+- Log file viewer with filtering
+- Cache inspection and refresh tools
 
 Role hierarchy: Basic User < Admin < Developer. Developer inherits all Admin permissions plus Development tools. Cannot be granted independently - user must be Admin first, then granted Developer flag. Prevents accidental exposure of diagnostic tools to regular users.
 
 **Decision Impact**: T113c Developer role implementation includes:
 
--   Database flag `IsDeveloper` BOOLEAN (requires `IsAdmin = TRUE` as prerequisite)
--   Settings Form TreeView "Development" node visibility check: `CurrentUser.IsAdmin && CurrentUser.IsDeveloper`
--   User management form updated with Developer checkbox (enabled only if Admin checked)
--   Role validation in Control base constructors for all Development tools
--   Documentation updated with role permission matrix
+- Database flag `IsDeveloper` BOOLEAN (requires `IsAdmin = TRUE` as prerequisite)
+- Settings Form TreeView "Development" node visibility check: `CurrentUser.IsAdmin && CurrentUser.IsDeveloper`
+- User management form updated with Developer checkbox (enabled only if Admin checked)
+- Role validation in Control base constructors for all Development tools
+- Documentation updated with role permission matrix
 
 ---
 
@@ -617,15 +617,15 @@ Each cell contains file path link (clickable in VS Code/GitHub). "Required"/"N/A
 
 **User Response**: **Staged reconciliation** (Option 4) - T119b re-audit produces drift report identifying procedures added/modified after baseline. Developer categorizes each drifted procedure:
 
--   **Category A - Independent hotfix**: Production change unrelated to Phase 2.5 refactoring (keep production version as-is, apply Phase 2.5 standards separately)
--   **Category B - Conflicting change**: Production change affects same procedure being refactored (manual three-way merge required)
--   **Category C - New procedure**: Procedure added to production during Phase 2.5 (refactor according to standards before deployment)
+- **Category A - Independent hotfix**: Production change unrelated to Phase 2.5 refactoring (keep production version as-is, apply Phase 2.5 standards separately)
+- **Category B - Conflicting change**: Production change affects same procedure being refactored (manual three-way merge required)
+- **Category C - New procedure**: Procedure added to production during Phase 2.5 (refactor according to standards before deployment)
 
 Each category gets separate task:
 
--   **T119c - Refactor Category A procedures**: Apply standards to hotfixes (preserve business logic changes)
--   **T119d - Merge Category B conflicts**: Manual merge with conflict resolution documentation
--   **T119e - Refactor Category C procedures**: New procedures get full Phase 2.5 treatment
+- **T119c - Refactor Category A procedures**: Apply standards to hotfixes (preserve business logic changes)
+- **T119d - Merge Category B conflicts**: Manual merge with conflict resolution documentation
+- **T119e - Refactor Category C procedures**: New procedures get full Phase 2.5 treatment
 
 All three complete before T120 test deployment. Reconciliation report documents all drift handling decisions.
 
@@ -676,15 +676,15 @@ Leverage existing Git workflow, provides audit trail of all corrections, peer re
 
 **Phase 2.5 (T124a-T132)**: Diagnostics emit **Warnings**
 
--   Allows developers to see violations without blocking builds during active refactoring
--   Existing violations visible but don't prevent compilation/testing
--   T124 validation generates warning report, creates remediation tasks
+- Allows developers to see violations without blocking builds during active refactoring
+- Existing violations visible but don't prevent compilation/testing
+- T124 validation generates warning report, creates remediation tasks
 
 **Post-Phase 2.5 (T133 onwards)**: Diagnostics emit **Errors**
 
--   After T124 validation confirms zero violations, upgrade severity to Error
--   New violations block build, prevent regression
--   CI/CD pipeline fails on any direct MySQL API usage outside Helpers
+- After T124 validation confirms zero violations, upgrade severity to Error
+- New violations block build, prevent regression
+- CI/CD pipeline fails on any direct MySQL API usage outside Helpers
 
 Configuration via analyzer package version: v1.0.0 (warnings) during Phase 2.5, v2.0.0 (errors) post-completion. .csproj file updated in T124 completion task.
 

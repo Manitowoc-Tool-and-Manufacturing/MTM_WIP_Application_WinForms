@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
     <!-- ================================================================== -->
     <!-- BUILD PROPERTIES                                                   -->
     <!-- ================================================================== -->
@@ -11,7 +10,7 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Version>6.7.1.0</Version>
         <ApplicationIcon>MTMWIPApp.ico</ApplicationIcon>
-        
+
         <!-- Build Behavior -->
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
         <EnableWindowsTargeting>true</EnableWindowsTargeting>
@@ -113,9 +112,6 @@
         <Content Include="Resources\Html\VisualUserAnalytics_Enhanced.html">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
-        <Content Include="Resources\Html\WIPUserAnalytics_Enhanced.html">
-            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-        </Content>
         <Content Include="Resources\MTM.png">
             <CopyToOutputDirectory>Always</CopyToOutputDirectory>
         </Content>
@@ -155,5 +151,4 @@
             <LastGenOutput>Resources.Designer.cs</LastGenOutput>
         </EmbeddedResource>
     </ItemGroup>
-
 </Project>

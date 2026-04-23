@@ -54,7 +54,7 @@ namespace MTM_WIP_Application_Winforms.Forms.Visual
             Icon = (Icon)resources.GetObject("$this.Icon");
             Name = "Form_AnalyticsViewer";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "User Analytics Report";
+            Text = "Analytics";
             ((System.ComponentModel.ISupportInitialize)webView).EndInit();
             ResumeLayout(false);
 

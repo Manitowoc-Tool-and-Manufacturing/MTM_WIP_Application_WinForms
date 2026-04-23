@@ -21,8 +21,8 @@ namespace MTM_WIP_Application_Winforms.Forms.MainForm
 {
     #region MainForm
 
-using MTM_WIP_Application_Winforms.Services.DeveloperTools;
-using MTM_WIP_Application_Winforms.Services.ErrorHandling;
+    using MTM_WIP_Application_Winforms.Services.DeveloperTools;
+    using MTM_WIP_Application_Winforms.Services.ErrorHandling;
 
     public partial class MainForm : ThemedForm, IConnectionRecoveryView
     {
@@ -215,7 +215,8 @@ using MTM_WIP_Application_Winforms.Services.ErrorHandling;
                 privilege = "Unknown";
 
             Service_DebugTracer.TraceBusinessLogic("USER_PRIVILEGE_DETERMINATION",
-                inputData: new {
+                inputData: new
+                {
                     Developer = Model_Application_Variables.UserTypeDeveloper,
                     Admin = Model_Application_Variables.UserTypeAdmin,
                     Normal = Model_Application_Variables.UserTypeNormal,
@@ -337,13 +338,15 @@ using MTM_WIP_Application_Winforms.Services.ErrorHandling;
                     MainForm_MenuStrip_Development.Visible = isDeveloper;
 
                     Service_DebugTracer.TraceBusinessLogic("DEVELOPMENT_MENU_VISIBILITY",
-                        inputData: new {
+                        inputData: new
+                        {
                             User = Model_Application_Variables.User,
                             UserUpperCase = currentUser,
                             IsDeveloper = isDeveloper,
                             IsUserTypeDeveloper = Model_Application_Variables.UserTypeDeveloper
                         },
-                        outputData: new {
+                        outputData: new
+                        {
                             MenuVisible = isDeveloper,
                             AccessGranted = isDeveloper ? "Yes" : "No"
                         });
@@ -782,7 +785,7 @@ using MTM_WIP_Application_Winforms.Services.ErrorHandling;
                     {
                         var stats = await Helper_Database_ConnectionMonitor.GetConnectionStatsAsync();
                         LoggingUtility.Log($"[ConnectionMonitor] Server: {stats.ServerAddress}, Open: {stats.OpenConnections}, Healthy: {stats.IsHealthy}");
-                        
+
                         if (!stats.IsHealthy)
                         {
                             LoggingUtility.Log($"[ConnectionMonitor] WARNING: {stats.WarningMessage}");
@@ -914,48 +917,48 @@ using MTM_WIP_Application_Winforms.Services.ErrorHandling;
         {
             try
             {
-            string controlName = control.GetType().Name;
-            LoggingUtility.Log($"[MainForm] Attempting to invoke {methodName} on {controlName}");
-            Debug.WriteLine($"Attempting to invoke {methodName} on {controlName}");
+                string controlName = control.GetType().Name;
+                LoggingUtility.Log($"[MainForm] Attempting to invoke {methodName} on {controlName}");
+                Debug.WriteLine($"Attempting to invoke {methodName} on {controlName}");
 
-            MethodInfo? method = control.GetType().GetMethod(methodName,
-                BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                MethodInfo? method = control.GetType().GetMethod(methodName,
+                    BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 
-            if (method != null)
-            {
-                Debug.WriteLine($"Invoking {method.Name} on {controlName}");
-
-                if (control.InvokeRequired)
+                if (method != null)
                 {
-                control.BeginInvoke(new Action(() =>
-                {
-                    try
+                    Debug.WriteLine($"Invoking {method.Name} on {controlName}");
+
+                    if (control.InvokeRequired)
                     {
-                    method.Invoke(control, null);
-                    LoggingUtility.Log($"[MainForm] {method.Name} invoked on UI thread for {controlName}");
+                        control.BeginInvoke(new Action(() =>
+                        {
+                            try
+                            {
+                                method.Invoke(control, null);
+                                LoggingUtility.Log($"[MainForm] {method.Name} invoked on UI thread for {controlName}");
+                            }
+                            catch (Exception ex)
+                            {
+                                LoggingUtility.LogApplicationError(ex);
+                            }
+                        }));
                     }
-                    catch (Exception ex)
+                    else
                     {
-                    LoggingUtility.LogApplicationError(ex);
+                        method.Invoke(control, null);
+                        LoggingUtility.Log($"[MainForm] {method.Name} invoked directly for {controlName}");
                     }
-                }));
                 }
                 else
                 {
-                method.Invoke(control, null);
-                LoggingUtility.Log($"[MainForm] {method.Name} invoked directly for {controlName}");
+                    LoggingUtility.Log($"[MainForm] Method {methodName} not found on {controlName}");
+                    Debug.WriteLine($"Method {methodName} not found on {controlName}");
                 }
-            }
-            else
-            {
-                LoggingUtility.Log($"[MainForm] Method {methodName} not found on {controlName}");
-                Debug.WriteLine($"Method {methodName} not found on {controlName}");
-            }
             }
             catch (Exception ex)
             {
-            LoggingUtility.LogApplicationError(ex);
-            Debug.WriteLine($"[DEBUG] Error invoking {methodName} on {control.GetType().Name}: {ex.Message}");
+                LoggingUtility.LogApplicationError(ex);
+                Debug.WriteLine($"[DEBUG] Error invoking {methodName} on {control.GetType().Name}: {ex.Message}");
             }
         }
 
@@ -1132,7 +1135,7 @@ using MTM_WIP_Application_Winforms.Services.ErrorHandling;
                     // If Help is F1, and QuickButton 1 is F1, Help already handled it.
                     // But if Help is remapped to F12, and QuickButton 1 is F1, we want QuickButton 1 to work.
                     // The previous check handles the collision if keys are identical.
-                    
+
                     if (keyData == quickButtonKey)
                     {
                         // Trigger QuickButton click
@@ -1519,7 +1522,7 @@ using MTM_WIP_Application_Winforms.Services.ErrorHandling;
             {
                 var helpForm = new Forms.Help.HelpViewerForm();
                 helpForm.Show(); // Show non-modal
-                
+
                 if (!string.IsNullOrEmpty(categoryId))
                 {
                     helpForm.ShowHelp(categoryId, topicId);
@@ -1551,7 +1554,7 @@ using MTM_WIP_Application_Winforms.Services.ErrorHandling;
         {
             try
             {
-                using var analyticsForm = new Forms.WIPAppAnalytics.Form_WIPUserAnalytics();
+                using var analyticsForm = new Forms.Visual.Form_AnalyticsViewer();
                 analyticsForm.ShowDialog(this);
             }
             catch (Exception ex)
@@ -1569,7 +1572,7 @@ using MTM_WIP_Application_Winforms.Services.ErrorHandling;
                 var devToolsService = Program.ServiceProvider.GetRequiredService<IService_DeveloperTools>();
                 var feedbackManager = Program.ServiceProvider.GetRequiredService<IService_FeedbackManager>();
                 var errorHandler = Program.ServiceProvider.GetRequiredService<IService_ErrorHandler>();
-                
+
                 using var healthForm = new Forms.SystemHealth.Form_SystemHealth(devToolsService, feedbackManager, errorHandler);
                 healthForm.ShowDialog(this);
             }
@@ -1589,10 +1592,10 @@ using MTM_WIP_Application_Winforms.Services.ErrorHandling;
             try
             {
                 LoggingUtility.Log("[TEST] Opening Form_QuickUserCreation for testing");
-                
+
                 using var testForm = new Form_QuickUserCreation();
                 var result = testForm.ShowDialog(this);
-                
+
                 if (result == DialogResult.OK)
                 {
                     LoggingUtility.Log($"[TEST] User creation completed. New user: {Model_Application_Variables.User}");
@@ -1656,10 +1659,10 @@ using MTM_WIP_Application_Winforms.Services.ErrorHandling;
             if (!hasAnalyticsMenu)
             {
                 // Add separator if needed
-                if (MainForm_MenuStrip_View.DropDownItems.Count > 0 && 
+                if (MainForm_MenuStrip_View.DropDownItems.Count > 0 &&
                     !(MainForm_MenuStrip_View.DropDownItems[MainForm_MenuStrip_View.DropDownItems.Count - 1] is ToolStripSeparator))
                 {
-                     MainForm_MenuStrip_View.DropDownItems.Add(new ToolStripSeparator());
+                    MainForm_MenuStrip_View.DropDownItems.Add(new ToolStripSeparator());
                 }
 
                 var analyticsMenu = new ToolStripMenuItem("📈 Material Handler Analytics");

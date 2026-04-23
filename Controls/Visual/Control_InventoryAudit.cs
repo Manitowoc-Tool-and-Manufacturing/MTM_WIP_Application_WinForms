@@ -1,11 +1,11 @@
 using System.Data;
 using MTM_WIP_Application_Winforms.Forms.Shared;
-using MTM_WIP_Application_Winforms.Models;
-using MTM_WIP_Application_Winforms.Services;
-using MTM_WIP_Application_Winforms.Services.Visual;
 using MTM_WIP_Application_Winforms.Helpers;
+using MTM_WIP_Application_Winforms.Models;
 using MTM_WIP_Application_Winforms.Models.Enums;
+using MTM_WIP_Application_Winforms.Services;
 using MTM_WIP_Application_Winforms.Services.Logging;
+using MTM_WIP_Application_Winforms.Services.Visual;
 
 namespace MTM_WIP_Application_Winforms.Controls.Visual
 {
@@ -17,6 +17,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
     {
         #region Fields
         private readonly IService_VisualDatabase? _visualService;
+        private CancellationTokenSource? _searchRequestCancellationTokenSource;
         private DataTable? _cachedDataTable;
         private string _lastSearchSelection = string.Empty;
         #endregion
@@ -26,17 +27,23 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         {
             InitializeComponent();
             this.MinimumSize = new Size(600, 400);
-            _visualService = Program.ServiceProvider?.GetService(typeof(IService_VisualDatabase)) as IService_VisualDatabase;
+            _visualService =
+                Program.ServiceProvider?.GetService(typeof(IService_VisualDatabase))
+                as IService_VisualDatabase;
+            Disposed += (_, _) => CancelPendingSearchRequest();
 
             // Initialize Search By options
-            Control_InventoryAudit_SuggestionTextBox_SearchBy.TextBox.DataProvider = () => Task.FromResult(new List<string>
-            {
-                "Part Number",
-                "User",
-                "Work Order",
-                "Customer Order",
-                "Purchase Order"
-            });
+            Control_InventoryAudit_SuggestionTextBox_SearchBy.TextBox.DataProvider = () =>
+                Task.FromResult(
+                    new List<string>
+                    {
+                        "Part Number",
+                        "User",
+                        "Work Order",
+                        "Customer Order",
+                        "Purchase Order",
+                    }
+                );
             Control_InventoryAudit_SuggestionTextBox_SearchBy.EnableSuggestions = true;
             Control_InventoryAudit_SuggestionTextBox_SearchBy.ShowF4Button = true;
             Control_InventoryAudit_SuggestionTextBox_SearchBy.Text = "Part Number"; // Default
@@ -54,39 +61,72 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         private void ConfigureSuggestions()
         {
             // Initial configuration for Part Number (default)
-            Control_InventoryAudit_SuggestionTextBox_LifecyclePart.SuggestionDataSource = Enum_SuggestionDataSource.Infor_PartNumber;
+            Control_InventoryAudit_SuggestionTextBox_LifecyclePart.SuggestionDataSource =
+                Enum_SuggestionDataSource.Infor_PartNumber;
         }
 
         private void InitializeDefaultValues()
         {
             // Lifecycle Defaults
             Control_InventoryAudit_RadioButton_Month.Checked = true;
-            SetDateRange(Control_InventoryAudit_DateTimePicker_StartDate, Control_InventoryAudit_DateTimePicker_EndDate, "Month");
+            SetDateRange(
+                Control_InventoryAudit_DateTimePicker_StartDate,
+                Control_InventoryAudit_DateTimePicker_EndDate,
+                "Month"
+            );
         }
 
         private void WireUpEvents()
         {
-            Control_InventoryAudit_Button_Search.Click += async (s, e) => await PerformSearchAsync();
+            Control_InventoryAudit_Button_Search.Click += async (s, e) =>
+                await PerformSearchAsync();
             Control_InventoryAudit_Button_Export.Click += BtnExport_Click;
 
             // Search By Selection Change
-            Control_InventoryAudit_SuggestionTextBox_SearchBy.SuggestionSelected += (s, e) => OnSearchBySelected();
-            Control_InventoryAudit_SuggestionTextBox_SearchBy.TextBox.Leave += (s, e) => OnSearchBySelected(); // Ensure update on leave if typed
+            Control_InventoryAudit_SuggestionTextBox_SearchBy.SuggestionSelected += (s, e) =>
+                OnSearchBySelected();
+            Control_InventoryAudit_SuggestionTextBox_SearchBy.TextBox.Leave += (s, e) =>
+                OnSearchBySelected(); // Ensure update on leave if typed
 
             // Lifecycle Date Range Events
-            Control_InventoryAudit_RadioButton_Today.CheckedChanged += (s, e) => OnLifecycleDateRangeChanged();
-            Control_InventoryAudit_RadioButton_Week.CheckedChanged += (s, e) => OnLifecycleDateRangeChanged();
-            Control_InventoryAudit_RadioButton_Month.CheckedChanged += (s, e) => OnLifecycleDateRangeChanged();
-            Control_InventoryAudit_RadioButton_Custom.CheckedChanged += (s, e) => OnLifecycleDateRangeChanged();
+            Control_InventoryAudit_RadioButton_Today.CheckedChanged += (s, e) =>
+                OnLifecycleDateRangeChanged();
+            Control_InventoryAudit_RadioButton_Week.CheckedChanged += (s, e) =>
+                OnLifecycleDateRangeChanged();
+            Control_InventoryAudit_RadioButton_Month.CheckedChanged += (s, e) =>
+                OnLifecycleDateRangeChanged();
+            Control_InventoryAudit_RadioButton_Custom.CheckedChanged += (s, e) =>
+                OnLifecycleDateRangeChanged();
 
             // Enter key support on inputs
-            Control_InventoryAudit_SuggestionTextBox_LifecyclePart.TextBox.KeyDown += async (s, e) => { if (e.KeyCode == Keys.Enter) await PerformSearchAsync(); };
+            Control_InventoryAudit_SuggestionTextBox_LifecyclePart.TextBox.KeyDown += async (
+                s,
+                e
+            ) =>
+            {
+                if (e.KeyCode == Keys.Enter)
+                    await PerformSearchAsync();
+            };
 
-            Control_InventoryAudit_DataGridView_Results.CellDoubleClick += DataGridView_CellDoubleClick;
+            Control_InventoryAudit_DataGridView_Results.CellDoubleClick +=
+                DataGridView_CellDoubleClick;
         }
         #endregion
 
         #region Methods
+        private CancellationTokenSource BeginSearchRequest()
+        {
+            CancelPendingSearchRequest();
+            _searchRequestCancellationTokenSource = new CancellationTokenSource();
+            return _searchRequestCancellationTokenSource;
+        }
+
+        private void CancelPendingSearchRequest()
+        {
+            _searchRequestCancellationTokenSource?.Cancel();
+            _searchRequestCancellationTokenSource?.Dispose();
+            _searchRequestCancellationTokenSource = null;
+        }
 
         private void OnSearchBySelected()
         {
@@ -104,40 +144,75 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             switch (selection)
             {
                 case "User":
-                    Control_InventoryAudit_SuggestionTextBox_LifecyclePart.LabelText = "Enter User ID";
-                    Control_InventoryAudit_SuggestionTextBox_LifecyclePart.PlaceholderText = "Enter User Name";
-                    Control_InventoryAudit_SuggestionTextBox_LifecyclePart.SuggestionDataSource = Enum_SuggestionDataSource.Infor_User;
+                    Control_InventoryAudit_SuggestionTextBox_LifecyclePart.LabelText =
+                        "Enter User ID";
+                    Control_InventoryAudit_SuggestionTextBox_LifecyclePart.PlaceholderText =
+                        "Enter User Name";
+                    Control_InventoryAudit_SuggestionTextBox_LifecyclePart.SuggestionDataSource =
+                        Enum_SuggestionDataSource.Infor_User;
                     break;
                 case "Work Order":
-                    Control_InventoryAudit_SuggestionTextBox_LifecyclePart.LabelText = "Enter Work Order";
-                    Control_InventoryAudit_SuggestionTextBox_LifecyclePart.PlaceholderText = "Enter Work Order Number";
-                    Control_InventoryAudit_SuggestionTextBox_LifecyclePart.SuggestionDataSource = Enum_SuggestionDataSource.Infor_WONumber;
+                    Control_InventoryAudit_SuggestionTextBox_LifecyclePart.LabelText =
+                        "Enter Work Order";
+                    Control_InventoryAudit_SuggestionTextBox_LifecyclePart.PlaceholderText =
+                        "Enter Work Order Number";
+                    Control_InventoryAudit_SuggestionTextBox_LifecyclePart.SuggestionDataSource =
+                        Enum_SuggestionDataSource.Infor_WONumber;
                     break;
                 case "Customer Order":
-                    Control_InventoryAudit_SuggestionTextBox_LifecyclePart.LabelText = "Enter Customer Order";
-                    Control_InventoryAudit_SuggestionTextBox_LifecyclePart.PlaceholderText = "Enter Customer Order Number";
-                    Control_InventoryAudit_SuggestionTextBox_LifecyclePart.SuggestionDataSource = Enum_SuggestionDataSource.Infor_CONumber;
+                    Control_InventoryAudit_SuggestionTextBox_LifecyclePart.LabelText =
+                        "Enter Customer Order";
+                    Control_InventoryAudit_SuggestionTextBox_LifecyclePart.PlaceholderText =
+                        "Enter Customer Order Number";
+                    Control_InventoryAudit_SuggestionTextBox_LifecyclePart.SuggestionDataSource =
+                        Enum_SuggestionDataSource.Infor_CONumber;
                     break;
                 case "Purchase Order":
-                    Control_InventoryAudit_SuggestionTextBox_LifecyclePart.LabelText = "Enter Purchase Order";
-                    Control_InventoryAudit_SuggestionTextBox_LifecyclePart.PlaceholderText = "Enter Purchase Order Number";
-                    Control_InventoryAudit_SuggestionTextBox_LifecyclePart.SuggestionDataSource = Enum_SuggestionDataSource.Infor_PONumber;
+                    Control_InventoryAudit_SuggestionTextBox_LifecyclePart.LabelText =
+                        "Enter Purchase Order";
+                    Control_InventoryAudit_SuggestionTextBox_LifecyclePart.PlaceholderText =
+                        "Enter Purchase Order Number";
+                    Control_InventoryAudit_SuggestionTextBox_LifecyclePart.SuggestionDataSource =
+                        Enum_SuggestionDataSource.Infor_PONumber;
                     break;
                 case "Part Number":
                 default:
-                    Control_InventoryAudit_SuggestionTextBox_LifecyclePart.LabelText = "Enter Part ID";
-                    Control_InventoryAudit_SuggestionTextBox_LifecyclePart.PlaceholderText = "Enter Part Number";
-                    Control_InventoryAudit_SuggestionTextBox_LifecyclePart.SuggestionDataSource = Enum_SuggestionDataSource.Infor_PartNumber;
+                    Control_InventoryAudit_SuggestionTextBox_LifecyclePart.LabelText =
+                        "Enter Part ID";
+                    Control_InventoryAudit_SuggestionTextBox_LifecyclePart.PlaceholderText =
+                        "Enter Part Number";
+                    Control_InventoryAudit_SuggestionTextBox_LifecyclePart.SuggestionDataSource =
+                        Enum_SuggestionDataSource.Infor_PartNumber;
                     break;
             }
         }
 
         private void OnLifecycleDateRangeChanged()
         {
-            if (Control_InventoryAudit_RadioButton_Today.Checked) SetDateRange(Control_InventoryAudit_DateTimePicker_StartDate, Control_InventoryAudit_DateTimePicker_EndDate, "Today");
-            else if (Control_InventoryAudit_RadioButton_Week.Checked) SetDateRange(Control_InventoryAudit_DateTimePicker_StartDate, Control_InventoryAudit_DateTimePicker_EndDate, "Week");
-            else if (Control_InventoryAudit_RadioButton_Month.Checked) SetDateRange(Control_InventoryAudit_DateTimePicker_StartDate, Control_InventoryAudit_DateTimePicker_EndDate, "Month");
-            else if (Control_InventoryAudit_RadioButton_Custom.Checked) SetDateRange(Control_InventoryAudit_DateTimePicker_StartDate, Control_InventoryAudit_DateTimePicker_EndDate, "Custom");
+            if (Control_InventoryAudit_RadioButton_Today.Checked)
+                SetDateRange(
+                    Control_InventoryAudit_DateTimePicker_StartDate,
+                    Control_InventoryAudit_DateTimePicker_EndDate,
+                    "Today"
+                );
+            else if (Control_InventoryAudit_RadioButton_Week.Checked)
+                SetDateRange(
+                    Control_InventoryAudit_DateTimePicker_StartDate,
+                    Control_InventoryAudit_DateTimePicker_EndDate,
+                    "Week"
+                );
+            else if (Control_InventoryAudit_RadioButton_Month.Checked)
+                SetDateRange(
+                    Control_InventoryAudit_DateTimePicker_StartDate,
+                    Control_InventoryAudit_DateTimePicker_EndDate,
+                    "Month"
+                );
+            else if (Control_InventoryAudit_RadioButton_Custom.Checked)
+                SetDateRange(
+                    Control_InventoryAudit_DateTimePicker_StartDate,
+                    Control_InventoryAudit_DateTimePicker_EndDate,
+                    "Custom"
+                );
         }
 
         private void SetDateRange(DateTimePicker dtpStart, DateTimePicker dtpEnd, string rangeType)
@@ -146,7 +221,8 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             dtpStart.Enabled = isCustom;
             dtpEnd.Enabled = isCustom;
 
-            if (isCustom) return;
+            if (isCustom)
+                return;
 
             DateTime end = DateTime.Today.AddDays(1).AddSeconds(-1);
             DateTime start = DateTime.Today;
@@ -170,7 +246,8 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
 
         private async void DataGridView_CellDoubleClick(object? sender, DataGridViewCellEventArgs e)
         {
-            if (e.RowIndex < 0) return;
+            if (e.RowIndex < 0)
+                return;
 
             try
             {
@@ -219,7 +296,8 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                         Control_InventoryAudit_SuggestionTextBox_LifecyclePart.Text = partId;
 
                         // Set date range to cover a broad history
-                        Control_InventoryAudit_DateTimePicker_StartDate.Value = DateTime.Today.AddYears(-2);
+                        Control_InventoryAudit_DateTimePicker_StartDate.Value =
+                            DateTime.Today.AddYears(-2);
                         Control_InventoryAudit_DateTimePicker_EndDate.Value = DateTime.Today;
 
                         await PerformSearchAsync();
@@ -228,16 +306,22 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             }
             catch (Exception ex)
             {
-                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Low, controlName: this.Name);
+                Service_ErrorHandler.HandleException(
+                    ex,
+                    Enum_ErrorSeverity.Low,
+                    controlName: this.Name
+                );
             }
         }
 
         private async Task PerformTraceSearchAsync(int transId)
         {
-            if (_visualService == null) return;
+            if (_visualService == null)
+                return;
 
             try
             {
+                var requestCancellationTokenSource = BeginSearchRequest();
                 Control_InventoryAudit_Button_Search.Enabled = false;
                 Control_InventoryAudit_Button_Search.Text = "Tracing...";
 
@@ -247,36 +331,64 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                 {
                     PartId = Control_InventoryAudit_SuggestionTextBox_LifecyclePart.Text?.Trim(),
                     StartDate = Control_InventoryAudit_DateTimePicker_StartDate.Value,
-                    EndDate = Control_InventoryAudit_DateTimePicker_EndDate.Value
+                    EndDate = Control_InventoryAudit_DateTimePicker_EndDate.Value,
                 };
 
-                var result = await _visualService.GetTransactionsAsync(filter);
+                var result = await _visualService.GetTransactionsAsync(
+                    filter,
+                    requestCancellationTokenSource.Token
+                );
+                if (requestCancellationTokenSource.IsCancellationRequested)
+                {
+                    return;
+                }
 
                 if (result.IsSuccess && result.Data != null)
                 {
                     // Apply Trace Logic
-                    _cachedDataTable = Helper_VisualLifecycle.TraceTransactionFlow(result.Data, transId);
+                    _cachedDataTable = Helper_VisualLifecycle.TraceTransactionFlow(
+                        result.Data,
+                        transId
+                    );
 
                     Control_InventoryAudit_DataGridView_Results.DataSource = _cachedDataTable;
-                    await Service_DataGridView.ApplyStandardSettingsAsync(Control_InventoryAudit_DataGridView_Results, Model_Application_Variables.User);
-                    Service_DataGridView.ApplySmartNumericFormatting(Control_InventoryAudit_DataGridView_Results);
+                    await Service_DataGridView.ApplyStandardSettingsAsync(
+                        Control_InventoryAudit_DataGridView_Results,
+                        Model_Application_Variables.User
+                    );
+                    Service_DataGridView.ApplySmartNumericFormatting(
+                        Control_InventoryAudit_DataGridView_Results
+                    );
                     ApplyLifecycleColoring();
 
-                    Service_ErrorHandler.ShowInformation("Showing transaction flow trace. Search again to reset.");
+                    Service_ErrorHandler.ShowInformation(
+                        "Showing transaction flow trace. Search again to reset."
+                    );
                 }
                 else
                 {
                     Service_ErrorHandler.ShowError(result.ErrorMessage);
                 }
             }
+            catch (OperationCanceledException)
+            {
+                LoggingUtility.Log("[Control_InventoryAudit] Trace search canceled");
+            }
             catch (Exception ex)
             {
-                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, controlName: this.Name);
+                Service_ErrorHandler.HandleException(
+                    ex,
+                    Enum_ErrorSeverity.Medium,
+                    controlName: this.Name
+                );
             }
             finally
             {
-                Control_InventoryAudit_Button_Search.Enabled = true;
-                Control_InventoryAudit_Button_Search.Text = "Search";
+                if (_searchRequestCancellationTokenSource != null)
+                {
+                    Control_InventoryAudit_Button_Search.Enabled = true;
+                    Control_InventoryAudit_Button_Search.Text = "Search";
+                }
             }
         }
 
@@ -290,6 +402,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
 
             try
             {
+                var requestCancellationTokenSource = BeginSearchRequest();
                 LoggingUtility.Log("[Control_InventoryAudit] Search started");
                 Control_InventoryAudit_Button_Search.Enabled = false;
                 Control_InventoryAudit_Button_Search.Text = "Searching...";
@@ -297,8 +410,10 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                 var filter = new Model_VisualTransactionFilter();
                 bool isLifecycleView = false;
 
-                string searchBy = Control_InventoryAudit_SuggestionTextBox_SearchBy.Text ?? "Part Number";
-                string searchTerm = Control_InventoryAudit_SuggestionTextBox_LifecyclePart.Text?.Trim() ?? "";
+                string searchBy =
+                    Control_InventoryAudit_SuggestionTextBox_SearchBy.Text ?? "Part Number";
+                string searchTerm =
+                    Control_InventoryAudit_SuggestionTextBox_LifecyclePart.Text?.Trim() ?? "";
 
                 filter.StartDate = Control_InventoryAudit_DateTimePicker_StartDate.Value;
                 filter.EndDate = Control_InventoryAudit_DateTimePicker_EndDate.Value;
@@ -330,7 +445,14 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                         break;
                 }
 
-                var result = await _visualService.GetTransactionsAsync(filter);
+                var result = await _visualService.GetTransactionsAsync(
+                    filter,
+                    requestCancellationTokenSource.Token
+                );
+                if (requestCancellationTokenSource.IsCancellationRequested)
+                {
+                    return;
+                }
 
                 if (result.IsSuccess && result.Data != null)
                 {
@@ -344,8 +466,13 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                     }
 
                     Control_InventoryAudit_DataGridView_Results.DataSource = _cachedDataTable;
-                    await Service_DataGridView.ApplyStandardSettingsAsync(Control_InventoryAudit_DataGridView_Results, Model_Application_Variables.User);
-                    Service_DataGridView.ApplySmartNumericFormatting(Control_InventoryAudit_DataGridView_Results);
+                    await Service_DataGridView.ApplyStandardSettingsAsync(
+                        Control_InventoryAudit_DataGridView_Results,
+                        Model_Application_Variables.User
+                    );
+                    Service_DataGridView.ApplySmartNumericFormatting(
+                        Control_InventoryAudit_DataGridView_Results
+                    );
 
                     // Apply row coloring if Lifecycle view
                     if (isLifecycleView)
@@ -359,14 +486,25 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                     Control_InventoryAudit_DataGridView_Results.DataSource = null;
                 }
             }
+            catch (OperationCanceledException)
+            {
+                LoggingUtility.Log("[Control_InventoryAudit] Search canceled");
+            }
             catch (Exception ex)
             {
-                Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, controlName: this.Name);
+                Service_ErrorHandler.HandleException(
+                    ex,
+                    Enum_ErrorSeverity.Medium,
+                    controlName: this.Name
+                );
             }
             finally
             {
-                Control_InventoryAudit_Button_Search.Enabled = true;
-                Control_InventoryAudit_Button_Search.Text = "Search";
+                if (_searchRequestCancellationTokenSource != null)
+                {
+                    Control_InventoryAudit_Button_Search.Enabled = true;
+                    Control_InventoryAudit_Button_Search.Text = "Search";
+                }
             }
         }
 
@@ -379,10 +517,18 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                     string type = drv["RowType"]?.ToString() ?? "";
                     switch (type)
                     {
-                        case "receipt": row.DefaultCellStyle.BackColor = Color.FromArgb(26, 76, 46); break; // Dark Green
-                        case "transfer-out": row.DefaultCellStyle.BackColor = Color.FromArgb(76, 58, 26); break; // Dark Brown/Orange
-                        case "transfer-in": row.DefaultCellStyle.BackColor = Color.FromArgb(26, 46, 76); break; // Dark Blue
-                        case "shipment": row.DefaultCellStyle.BackColor = Color.FromArgb(76, 26, 26); break; // Dark Red
+                        case "receipt":
+                            row.DefaultCellStyle.BackColor = Color.FromArgb(26, 76, 46);
+                            break; // Dark Green
+                        case "transfer-out":
+                            row.DefaultCellStyle.BackColor = Color.FromArgb(76, 58, 26);
+                            break; // Dark Brown/Orange
+                        case "transfer-in":
+                            row.DefaultCellStyle.BackColor = Color.FromArgb(26, 46, 76);
+                            break; // Dark Blue
+                        case "shipment":
+                            row.DefaultCellStyle.BackColor = Color.FromArgb(76, 26, 26);
+                            break; // Dark Red
                     }
 
                     // Ensure text is readable on dark backgrounds
@@ -396,7 +542,10 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
 
         private async void BtnExport_Click(object? sender, EventArgs e)
         {
-            if (Control_InventoryAudit_DataGridView_Results.DataSource is not DataTable dt || dt.Rows.Count == 0)
+            if (
+                Control_InventoryAudit_DataGridView_Results.DataSource is not DataTable dt
+                || dt.Rows.Count == 0
+            )
             {
                 Service_ErrorHandler.ShowError("No data to export.");
                 return;
@@ -408,7 +557,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             {
                 Filter = "Excel Workbook|*.xlsx",
                 Title = "Export to Excel",
-                FileName = $"VisualAudit_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx"
+                FileName = $"VisualAudit_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx",
             };
 
             if (saveFileDialog.ShowDialog() == DialogResult.OK)
@@ -419,17 +568,30 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                     Control_InventoryAudit_Button_Export.Text = "Exporting...";
 
                     var columnOrder = new List<string>();
-                    foreach (DataGridViewColumn col in Control_InventoryAudit_DataGridView_Results.Columns)
+                    foreach (
+                        DataGridViewColumn col in Control_InventoryAudit_DataGridView_Results.Columns
+                    )
                     {
-                        if (col.Visible) columnOrder.Add(col.Name);
+                        if (col.Visible)
+                            columnOrder.Add(col.Name);
                     }
 
-                    var printJob = new Model_Print_Job(dt, columnOrder, columnOrder, "Visual Audit Export");
-                    var result = await Helper_ExportManager.ExportToExcelAsync(printJob, saveFileDialog.FileName);
+                    var printJob = new Model_Print_Job(
+                        dt,
+                        columnOrder,
+                        columnOrder,
+                        "Visual Audit Export"
+                    );
+                    var result = await Helper_ExportManager.ExportToExcelAsync(
+                        printJob,
+                        saveFileDialog.FileName
+                    );
 
                     if (result.IsSuccess)
                     {
-                        Service_ErrorHandler.ShowInformation($"Export successful to {saveFileDialog.FileName}");
+                        Service_ErrorHandler.ShowInformation(
+                            $"Export successful to {saveFileDialog.FileName}"
+                        );
                     }
                     else
                     {
@@ -438,7 +600,11 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                 }
                 catch (Exception ex)
                 {
-                    Service_ErrorHandler.HandleException(ex, Enum_ErrorSeverity.Medium, controlName: this.Name);
+                    Service_ErrorHandler.HandleException(
+                        ex,
+                        Enum_ErrorSeverity.Medium,
+                        controlName: this.Name
+                    );
                 }
                 finally
                 {

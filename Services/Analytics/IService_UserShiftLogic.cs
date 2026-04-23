@@ -1,5 +1,4 @@
 using MTM_WIP_Application_Winforms.Models;
-using MTM_WIP_Application_Winforms.Models.Analytics;
 
 namespace MTM_WIP_Application_Winforms.Services.Analytics
 {
@@ -12,13 +11,17 @@ namespace MTM_WIP_Application_Winforms.Services.Analytics
         /// Analyzes transaction history to calculate shift assignments for all users.
         /// </summary>
         /// <returns>Dictionary mapping UserName to ShiftNumber.</returns>
-        Task<Model_Dao_Result<Dictionary<string, int>>> CalculateAllUserShiftsAsync();
+        Task<Model_Dao_Result<Dictionary<string, int>>> CalculateAllUserShiftsAsync(
+            CancellationToken cancellationToken = default
+        );
 
         /// <summary>
         /// Retrieves full names for all users from Infor Visual database.
         /// </summary>
         /// <returns>Dictionary mapping UserName to FullName.</returns>
-        Task<Model_Dao_Result<Dictionary<string, string>>> FetchUserFullNamesAsync();
+        Task<Model_Dao_Result<Dictionary<string, string>>> FetchUserFullNamesAsync(
+            CancellationToken cancellationToken = default
+        );
 
         /// <summary>
         /// Persists shift and name data to sys_visual table.
@@ -28,14 +31,9 @@ namespace MTM_WIP_Application_Winforms.Services.Analytics
         /// <returns>Success status.</returns>
         Task<Model_Dao_Result<bool>> SaveVisualMetadataAsync(
             Dictionary<string, int> shifts,
-            Dictionary<string, string> names);
+            Dictionary<string, string> names,
+            CancellationToken cancellationToken = default
+        );
 
-        /// <summary>
-        /// Calculates material handler scores with shift balancing and grading curve.
-        /// </summary>
-        /// <param name="startDate">Start date.</param>
-        /// <param name="endDate">End date.</param>
-        /// <returns>List of scored material handlers.</returns>
-        Task<Model_Dao_Result<List<Model_Visual_MaterialHandlerScore>>> CalculateMaterialHandlerScoresAsync(DateTime startDate, DateTime endDate);
     }
 }

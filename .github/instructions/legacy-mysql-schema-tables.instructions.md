@@ -5,7 +5,9 @@ This document outlines the table structure of the legacy `mtm_wip_application` d
 ## Inventory & Transactions
 
 ### `inv_inventory`
+
 Stores current inventory items.
+
 - **ID**: `int(11)` (PK, Auto Increment)
 - **PartID**: `varchar(300)` (Indexed)
 - **Location**: `varchar(100)`
@@ -19,12 +21,16 @@ Stores current inventory items.
 - **Notes**: `varchar(1000)`
 
 ### `inv_inventory_batch_seq`
+
 Sequence table for batch numbers.
+
 - **last_batch_number**: `bigint(20)` (PK)
 - **current_match**: `int(11)`
 
 ### `inv_transaction`
+
 History of inventory movements (IN, OUT, TRANSFER).
+
 - **ID**: `int(11)` (PK, Auto Increment)
 - **TransactionType**: `enum('IN','OUT','TRANSFER')`
 - **BatchNumber**: `varchar(300)`
@@ -41,7 +47,9 @@ History of inventory movements (IN, OUT, TRANSFER).
 ## Master Data
 
 ### `md_part_ids`
+
 Master list of parts.
+
 - **ID**: `int(11)` (PK, Auto Increment)
 - **PartID**: `varchar(300)` (Unique)
 - **Customer**: `varchar(300)`
@@ -51,20 +59,26 @@ Master list of parts.
 - **Operations**: `json`
 
 ### `md_locations`
+
 Master list of locations.
+
 - **ID**: `int(11)` (PK, Auto Increment)
 - **Location**: `varchar(100)` (Unique)
 - **Building**: `varchar(100)` (Default: 'Expo')
 - **IssuedBy**: `varchar(100)`
 
 ### `md_operation_numbers`
+
 Master list of operations.
+
 - **ID**: `int(11)` (PK, Auto Increment)
 - **Operation**: `varchar(100)` (Unique)
 - **IssuedBy**: `varchar(100)`
 
 ### `md_item_types`
+
 Master list of item types.
+
 - **ID**: `int(11)` (PK, Auto Increment)
 - **ItemType**: `varchar(100)` (Unique)
 - **IssuedBy**: `varchar(100)`
@@ -72,7 +86,9 @@ Master list of item types.
 ## Users & Settings
 
 ### `usr_users`
+
 User accounts and legacy settings.
+
 - **ID**: `int(11)` (PK, Auto Increment)
 - **User**: `varchar(100)` (Unique)
 - **Full Name**: `varchar(200)`
@@ -90,14 +106,18 @@ User accounts and legacy settings.
 - **WipServerPort**: `varchar(10)` (Default: '3306')
 
 ### `usr_ui_settings`
+
 Legacy UI settings storage.
+
 - **UserId**: `varchar(64)` (PK)
 - **SettingsJson**: `json`
 - **ShortcutsJson**: `json`
 - **UpdatedAt**: `datetime` (Default: CURRENT_TIMESTAMP, On Update: CURRENT_TIMESTAMP)
 
 ### `sys_roles`
+
 System roles definition.
+
 - **ID**: `int(11)` (PK, Auto Increment)
 - **RoleName**: `varchar(50)` (Unique)
 - **Description**: `varchar(255)`
@@ -107,7 +127,9 @@ System roles definition.
 - **CreatedAt**: `datetime` (Default: CURRENT_TIMESTAMP)
 
 ### `sys_user_roles`
+
 Mapping of users to roles.
+
 - **UserID**: `int(11)` (PK)
 - **RoleID**: `int(11)` (PK)
 - **AssignedBy**: `varchar(100)`
@@ -116,12 +138,16 @@ Mapping of users to roles.
 ## System & Logs
 
 ### `app_themes`
+
 Application themes.
+
 - **ThemeName**: `varchar(100)` (PK)
 - **SettingsJson**: `json`
 
 ### `log_error`
+
 Application error logs.
+
 - **ID**: `int(11)` (PK, Auto Increment)
 - **User**: `varchar(100)` (Indexed)
 - **Severity**: `enum('Information','Warning','Error','Critical','High')` (Indexed, Default: 'Error')
@@ -137,12 +163,16 @@ Application error logs.
 - **ErrorTime**: `datetime` (Indexed, Default: CURRENT_TIMESTAMP)
 
 ### `log_changelog`
+
 Application changelog.
+
 - **Version**: `varchar(50)` (PK)
 - **Notes**: `longtext`
 
 ### `sys_last_10_transactions`
+
 Cache for user's recent transactions (Quick Buttons).
+
 - **id**: `int(11)` (PK, Auto Increment)
 - **in_id**, **in_part**, **in_loc**, **in_batch**
 - **out_id**, **out_part**, **out_loc**, **out_batch**

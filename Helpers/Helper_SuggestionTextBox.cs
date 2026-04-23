@@ -1,9 +1,12 @@
-using MTM_WIP_Application_Winforms.Components.Shared;
-using MTM_WIP_Application_Winforms.Services.Logging;
-using MTM_WIP_Application_Winforms.Services;
-using MTM_WIP_Application_Winforms.Services.Visual;
-using Microsoft.Extensions.DependencyInjection;
+using System.Collections.Concurrent;
 using System.Data;
+using Microsoft.Extensions.DependencyInjection;
+using MTM_WIP_Application_Winforms.Components.Shared;
+using MTM_WIP_Application_Winforms.Models;
+using MTM_WIP_Application_Winforms.Models.Enums;
+using MTM_WIP_Application_Winforms.Services;
+using MTM_WIP_Application_Winforms.Services.Logging;
+using MTM_WIP_Application_Winforms.Services.Visual;
 
 namespace MTM_WIP_Application_Winforms.Helpers
 {
@@ -16,6 +19,19 @@ namespace MTM_WIP_Application_Winforms.Helpers
     /// </summary>
     public static class Helper_SuggestionTextBox
     {
+        #region Fields
+
+        private const int VISUAL_SUGGESTION_CACHE_TTL_MINUTES = 10;
+        private static readonly ConcurrentDictionary<
+            string,
+            VisualSuggestionCacheEntry
+        > VisualSuggestionCache = new(StringComparer.OrdinalIgnoreCase);
+        private static readonly ConcurrentDictionary<
+            string,
+            SemaphoreSlim
+        > VisualSuggestionCacheLocks = new(StringComparer.OrdinalIgnoreCase);
+
+        #endregion
 
         #region Validation Helpers
 
@@ -25,7 +41,10 @@ namespace MTM_WIP_Application_Winforms.Helpers
         /// <param name="suggestionTextBox">The control to validate</param>
         /// <param name="fieldName">Friendly name for error messages</param>
         /// <returns>True if valid, false otherwise</returns>
-        public static async Task<bool> ValidateSelectionAsync(Component_SuggestionTextBox suggestionTextBox, string fieldName)
+        public static async Task<bool> ValidateSelectionAsync(
+            Component_SuggestionTextBox suggestionTextBox,
+            string fieldName
+        )
         {
             if (suggestionTextBox == null)
                 throw new ArgumentNullException(nameof(suggestionTextBox));
@@ -42,12 +61,15 @@ namespace MTM_WIP_Application_Winforms.Helpers
                 try
                 {
                     var allSuggestions = await suggestionTextBox.DataProvider.Invoke();
-                    var exactMatch = allSuggestions?.FirstOrDefault(s => 
-                        string.Equals(s, suggestionTextBox.Text, StringComparison.OrdinalIgnoreCase));
+                    var exactMatch = allSuggestions?.FirstOrDefault(s =>
+                        string.Equals(s, suggestionTextBox.Text, StringComparison.OrdinalIgnoreCase)
+                    );
 
                     if (exactMatch == null)
                     {
-                        Service_ErrorHandler.ShowWarning($"{fieldName} '{suggestionTextBox.Text}' is not valid. Please select from the list.");
+                        Service_ErrorHandler.ShowWarning(
+                            $"{fieldName} '{suggestionTextBox.Text}' is not valid. Please select from the list."
+                        );
                         suggestionTextBox.Focus();
                         suggestionTextBox.SelectAll();
                         return false;
@@ -70,13 +92,16 @@ namespace MTM_WIP_Application_Winforms.Helpers
         /// <summary>
         /// Clears a SuggestionTextBox and optionally refreshes its data source.
         /// </summary>
-        public static void Clear(Component_SuggestionTextBox suggestionTextBox, bool refreshDataSource = false)
+        public static void Clear(
+            Component_SuggestionTextBox suggestionTextBox,
+            bool refreshDataSource = false
+        )
         {
             if (suggestionTextBox == null)
                 throw new ArgumentNullException(nameof(suggestionTextBox));
 
             suggestionTextBox.Text = string.Empty;
-            
+
             if (refreshDataSource)
             {
                 suggestionTextBox.RefreshDataSource();
@@ -87,9 +112,151 @@ namespace MTM_WIP_Application_Winforms.Helpers
 
         #region Cached Data Providers
 
+        private sealed class VisualSuggestionCacheEntry
+        {
+            public required List<string> Values { get; init; }
+            public required DateTime ExpiresAtUtc { get; init; }
+        }
+
         private static IService_VisualDatabase? GetVisualService()
         {
             return Program.ServiceProvider?.GetService<IService_VisualDatabase>();
+        }
+
+        private static bool TryGetVisualSuggestionCache(string cacheKey, out List<string> values)
+        {
+            values = new List<string>();
+
+            if (
+                !VisualSuggestionCache.TryGetValue(
+                    cacheKey,
+                    out VisualSuggestionCacheEntry? cacheEntry
+                )
+            )
+            {
+                return false;
+            }
+
+            if (cacheEntry.ExpiresAtUtc <= DateTime.UtcNow)
+            {
+                VisualSuggestionCache.TryRemove(cacheKey, out _);
+                return false;
+            }
+
+            values = new List<string>(cacheEntry.Values);
+            return true;
+        }
+
+        private static List<string> NormalizeVisualSuggestionValues(IEnumerable<string> values)
+        {
+            return values
+                .Where(value => !string.IsNullOrWhiteSpace(value))
+                .Select(value => value.Trim())
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .OrderBy(value => value, StringComparer.OrdinalIgnoreCase)
+                .ToList();
+        }
+
+        private static async Task<List<string>> GetOrLoadVisualSuggestionsAsync(
+            string cacheKey,
+            Func<IService_VisualDatabase, Task<Model_Dao_Result<List<string>>>> loader
+        )
+        {
+            if (TryGetVisualSuggestionCache(cacheKey, out List<string> cachedValues))
+            {
+                return cachedValues;
+            }
+
+            IService_VisualDatabase? service = GetVisualService();
+            if (service == null)
+            {
+                return new List<string>();
+            }
+
+            SemaphoreSlim cacheLock = VisualSuggestionCacheLocks.GetOrAdd(
+                cacheKey,
+                static _ => new SemaphoreSlim(1, 1)
+            );
+            await cacheLock.WaitAsync();
+
+            try
+            {
+                if (TryGetVisualSuggestionCache(cacheKey, out cachedValues))
+                {
+                    return cachedValues;
+                }
+
+                Model_Dao_Result<List<string>> result = await loader(service);
+                if (!result.IsSuccess || result.Data == null)
+                {
+                    return new List<string>();
+                }
+
+                List<string> normalizedValues = NormalizeVisualSuggestionValues(result.Data);
+                VisualSuggestionCache[cacheKey] = new VisualSuggestionCacheEntry
+                {
+                    Values = normalizedValues,
+                    ExpiresAtUtc = DateTime.UtcNow.AddMinutes(VISUAL_SUGGESTION_CACHE_TTL_MINUTES),
+                };
+
+                return new List<string>(normalizedValues);
+            }
+            finally
+            {
+                cacheLock.Release();
+            }
+        }
+
+        private static string? GetVisualSuggestionCacheKey(
+            Enum_SuggestionDataSource suggestionDataSource
+        )
+        {
+            return suggestionDataSource switch
+            {
+                Enum_SuggestionDataSource.Infor_PartNumber => "Infor.PartNumber",
+                Enum_SuggestionDataSource.Infor_User => "Infor.User",
+                Enum_SuggestionDataSource.Infor_Location => "Infor.Location",
+                Enum_SuggestionDataSource.Infor_Warehouse => "Infor.Warehouse",
+                Enum_SuggestionDataSource.Infor_PONumber
+                or Enum_SuggestionDataSource.Infor_PurchaseOrder => "Infor.PurchaseOrder",
+                Enum_SuggestionDataSource.Infor_CONumber
+                or Enum_SuggestionDataSource.Infor_CustomerOrder => "Infor.CustomerOrder",
+                Enum_SuggestionDataSource.Infor_WONumber
+                or Enum_SuggestionDataSource.Infor_WorkOrder => "Infor.WorkOrder",
+                Enum_SuggestionDataSource.Infor_FGTNumber => "Infor.FGTNumber",
+                Enum_SuggestionDataSource.Infor_MMCNumber
+                or Enum_SuggestionDataSource.Infor_MMFNumber => "Infor.CoilFlatstock",
+                _ => null,
+            };
+        }
+
+        /// <summary>
+        /// Invalidates the shared Visual suggestion cache for a specific Infor data source.
+        /// Non-Infor data sources are ignored.
+        /// </summary>
+        /// <param name="suggestionDataSource">The data source to invalidate.</param>
+        public static void InvalidateVisualSuggestionCache(
+            Enum_SuggestionDataSource suggestionDataSource
+        )
+        {
+            string? cacheKey = GetVisualSuggestionCacheKey(suggestionDataSource);
+            if (cacheKey == null)
+            {
+                return;
+            }
+
+            VisualSuggestionCache.TryRemove(cacheKey, out _);
+        }
+
+        /// <summary>
+        /// Invalidates all shared Infor Visual suggestion caches.
+        /// </summary>
+        public static void InvalidateAllVisualSuggestionCaches()
+        {
+            foreach (string cacheKey in VisualSuggestionCache.Keys)
+            {
+                VisualSuggestionCache.TryRemove(cacheKey, out _);
+            }
         }
 
         /// <summary>
@@ -102,7 +269,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
             try
             {
                 var cachedParts = Helper_UI_ComboBoxes.GetCachedPartNumbers();
-                
+
                 return Task.FromResult(cachedParts);
             }
             catch (Exception ex)
@@ -122,7 +289,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
             try
             {
                 var cachedItemTypes = Helper_UI_ComboBoxes.GetCachedItemTypes();
-                
+
                 return Task.FromResult(cachedItemTypes);
             }
             catch (Exception ex)
@@ -142,7 +309,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
             try
             {
                 var cachedOperations = Helper_UI_ComboBoxes.GetCachedOperations();
-                
+
                 return Task.FromResult(cachedOperations);
             }
             catch (Exception ex)
@@ -162,7 +329,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
             try
             {
                 var cachedLocations = Helper_UI_ComboBoxes.GetCachedLocations();
-                
+
                 return Task.FromResult(cachedLocations);
             }
             catch (Exception ex)
@@ -182,7 +349,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
             try
             {
                 var cachedUsers = Helper_UI_ComboBoxes.GetCachedUsers();
-                
+
                 return Task.FromResult(cachedUsers);
             }
             catch (Exception ex)
@@ -202,7 +369,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
             {
                 var dao = new Data.Dao_ColorCode();
                 var result = await dao.GetAllAsync();
-                
+
                 if (result.IsSuccess && result.Data != null)
                 {
                     var colors = new List<string>();
@@ -215,7 +382,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
                     }
                     return colors;
                 }
-                
+
                 return new List<string>();
             }
             catch (Exception ex)
@@ -231,74 +398,74 @@ namespace MTM_WIP_Application_Winforms.Helpers
 
         public static async Task<List<string>> GetCachedInforPartNumbersAsync()
         {
-            var service = GetVisualService();
-            if (service == null) return new List<string>();
-            var result = await service.GetPartIdsAsync();
-            return result.IsSuccess ? result.Data ?? new List<string>() : new List<string>();
+            return await GetOrLoadVisualSuggestionsAsync(
+                "Infor.PartNumber",
+                static service => service.GetPartIdsAsync()
+            );
         }
 
         public static async Task<List<string>> GetCachedInforUsersAsync()
         {
-            var service = GetVisualService();
-            if (service == null) return new List<string>();
-            var result = await service.GetUserIdsAsync();
-            return result.IsSuccess ? result.Data ?? new List<string>() : new List<string>();
+            return await GetOrLoadVisualSuggestionsAsync(
+                "Infor.User",
+                static service => service.GetUserIdsAsync()
+            );
         }
 
         public static async Task<List<string>> GetCachedInforLocationsAsync()
         {
-            var service = GetVisualService();
-            if (service == null) return new List<string>();
-            var result = await service.GetLocationIdsAsync();
-            return result.IsSuccess ? result.Data ?? new List<string>() : new List<string>();
+            return await GetOrLoadVisualSuggestionsAsync(
+                "Infor.Location",
+                static service => service.GetLocationIdsAsync()
+            );
         }
 
         public static async Task<List<string>> GetCachedInforWarehousesAsync()
         {
-            var service = GetVisualService();
-            if (service == null) return new List<string>();
-            var result = await service.GetWarehouseIdsAsync();
-            return result.IsSuccess ? result.Data ?? new List<string>() : new List<string>();
+            return await GetOrLoadVisualSuggestionsAsync(
+                "Infor.Warehouse",
+                static service => service.GetWarehouseIdsAsync()
+            );
         }
 
         public static async Task<List<string>> GetCachedInforWorkOrdersAsync()
         {
-            var service = GetVisualService();
-            if (service == null) return new List<string>();
-            var result = await service.GetWorkOrdersAsync();
-            return result.IsSuccess ? result.Data ?? new List<string>() : new List<string>();
+            return await GetOrLoadVisualSuggestionsAsync(
+                "Infor.WorkOrder",
+                static service => service.GetWorkOrdersAsync()
+            );
         }
 
         public static async Task<List<string>> GetCachedInforPurchaseOrdersAsync()
         {
-            var service = GetVisualService();
-            if (service == null) return new List<string>();
-            var result = await service.GetPurchaseOrdersAsync();
-            return result.IsSuccess ? result.Data ?? new List<string>() : new List<string>();
+            return await GetOrLoadVisualSuggestionsAsync(
+                "Infor.PurchaseOrder",
+                static service => service.GetPurchaseOrdersAsync()
+            );
         }
 
         public static async Task<List<string>> GetCachedInforCustomerOrdersAsync()
         {
-            var service = GetVisualService();
-            if (service == null) return new List<string>();
-            var result = await service.GetCustomerOrdersAsync();
-            return result.IsSuccess ? result.Data ?? new List<string>() : new List<string>();
+            return await GetOrLoadVisualSuggestionsAsync(
+                "Infor.CustomerOrder",
+                static service => service.GetCustomerOrdersAsync()
+            );
         }
 
         public static async Task<List<string>> GetCachedInforFGTNumbersAsync()
         {
-            var service = GetVisualService();
-            if (service == null) return new List<string>();
-            var result = await service.GetDieIdsAsync();
-            return result.IsSuccess ? result.Data ?? new List<string>() : new List<string>();
+            return await GetOrLoadVisualSuggestionsAsync(
+                "Infor.FGTNumber",
+                static service => service.GetDieIdsAsync()
+            );
         }
 
         public static async Task<List<string>> GetCachedInforCoilFlatstockNumbersAsync()
         {
-            var service = GetVisualService();
-            if (service == null) return new List<string>();
-            var result = await service.GetCoilFlatstockPartIdsAsync();
-            return result.IsSuccess ? result.Data ?? new List<string>() : new List<string>();
+            return await GetOrLoadVisualSuggestionsAsync(
+                "Infor.CoilFlatstock",
+                static service => service.GetCoilFlatstockPartIdsAsync()
+            );
         }
 
         #endregion
@@ -319,7 +486,10 @@ namespace MTM_WIP_Application_Winforms.Helpers
         /// <summary>
         /// Sets the enabled state of multiple SuggestionTextBox controls.
         /// </summary>
-        public static void SetEnabledMultiple(bool enabled, params Component_SuggestionTextBox[] suggestionTextBoxes)
+        public static void SetEnabledMultiple(
+            bool enabled,
+            params Component_SuggestionTextBox[] suggestionTextBoxes
+        )
         {
             foreach (var control in suggestionTextBoxes)
             {
@@ -330,7 +500,10 @@ namespace MTM_WIP_Application_Winforms.Helpers
         /// <summary>
         /// Clears multiple SuggestionTextBox controls.
         /// </summary>
-        public static void ClearMultiple(bool refreshDataSource = false, params Component_SuggestionTextBox[] suggestionTextBoxes)
+        public static void ClearMultiple(
+            bool refreshDataSource = false,
+            params Component_SuggestionTextBox[] suggestionTextBoxes
+        )
         {
             foreach (var control in suggestionTextBoxes)
             {
@@ -355,7 +528,7 @@ namespace MTM_WIP_Application_Winforms.Helpers
         Location,
         ItemType,
         ColorCode,
-        Custom
+        Custom,
     }
 
     #endregion
