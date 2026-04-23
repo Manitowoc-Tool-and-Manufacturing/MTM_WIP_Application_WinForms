@@ -67,6 +67,12 @@ namespace MTM_WIP_Application_Winforms.Helpers
 
                     if (exactMatch == null)
                     {
+                        if (IsInforVisualSuggestionSource(suggestionTextBox.SuggestionDataSource))
+                        {
+                            suggestionTextBox.Text = suggestionTextBox.Text?.Trim() ?? string.Empty;
+                            return true;
+                        }
+
                         Service_ErrorHandler.ShowWarning(
                             $"{fieldName} '{suggestionTextBox.Text}' is not valid. Please select from the list."
                         );
@@ -257,6 +263,35 @@ namespace MTM_WIP_Application_Winforms.Helpers
             {
                 VisualSuggestionCache.TryRemove(cacheKey, out _);
             }
+        }
+
+        /// <summary>
+        /// Determines whether a suggestion data source is backed by the bounded Infor Visual lookup cache.
+        /// </summary>
+        /// <param name="suggestionDataSource">The suggestion data source to inspect.</param>
+        /// <returns>True when the source is an Infor Visual lookup; otherwise false.</returns>
+        public static bool IsInforVisualSuggestionSource(
+            Enum_SuggestionDataSource suggestionDataSource
+        )
+        {
+            return suggestionDataSource switch
+            {
+                Enum_SuggestionDataSource.Infor_PartNumber
+                or Enum_SuggestionDataSource.Infor_User
+                or Enum_SuggestionDataSource.Infor_Location
+                or Enum_SuggestionDataSource.Infor_Warehouse
+                or Enum_SuggestionDataSource.Infor_Operation
+                or Enum_SuggestionDataSource.Infor_PONumber
+                or Enum_SuggestionDataSource.Infor_CONumber
+                or Enum_SuggestionDataSource.Infor_WONumber
+                or Enum_SuggestionDataSource.Infor_FGTNumber
+                or Enum_SuggestionDataSource.Infor_MMCNumber
+                or Enum_SuggestionDataSource.Infor_MMFNumber
+                or Enum_SuggestionDataSource.Infor_WorkOrder
+                or Enum_SuggestionDataSource.Infor_CustomerOrder
+                or Enum_SuggestionDataSource.Infor_PurchaseOrder => true,
+                _ => false,
+            };
         }
 
         /// <summary>

@@ -811,6 +811,11 @@ namespace MTM_WIP_Application_Winforms.Components.Shared
                 // Check for no matches
                 if (filteredSuggestions.Count == 0)
                 {
+                    if (Helper_SuggestionTextBox.IsInforVisualSuggestionSource(_suggestionDataSource))
+                    {
+                        return;
+                    }
+
                     HandleNoMatches();
                     return;
                 }
