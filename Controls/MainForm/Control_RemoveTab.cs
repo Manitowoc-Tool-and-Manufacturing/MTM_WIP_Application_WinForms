@@ -614,11 +614,11 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
                 _progressHelper?.UpdateProgress(80, "Refreshing results...");
                 if (!string.IsNullOrWhiteSpace(Control_RemoveTab_TextBox_Part.Text))
                 {
-                    Control_RemoveTab_Button_Search_Click(null, null);
+                    Control_RemoveTab_Button_Search_Click(this, EventArgs.Empty);
                 }
                 else
                 {
-                    Control_RemoveTab_Button_ShowAll_Click(null, null);
+                    Control_RemoveTab_Button_ShowAll_Click(this, EventArgs.Empty);
                 }
                 _progressHelper?.UpdateProgress(100, "Delete complete");
 
@@ -679,11 +679,11 @@ namespace MTM_WIP_Application_Winforms.Controls.MainForm
 
                 if (!string.IsNullOrWhiteSpace(Control_RemoveTab_TextBox_Part.Text))
                 {
-                    Control_RemoveTab_Button_Search_Click(null, null);
+                    Control_RemoveTab_Button_Search_Click(this, EventArgs.Empty);
                 }
                 else
                 {
-                    Control_RemoveTab_Button_ShowAll_Click(null, null);
+                    Control_RemoveTab_Button_ShowAll_Click(this, EventArgs.Empty);
                 }
                 _progressHelper?.UpdateProgress(100, "Undo complete");
             }

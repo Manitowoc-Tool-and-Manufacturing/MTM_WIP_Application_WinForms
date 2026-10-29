@@ -14,7 +14,7 @@
         <!-- Build Behavior -->
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
         <EnableWindowsTargeting>true</EnableWindowsTargeting>
-        <NoWarn>$(NoWarn);CA1416</NoWarn>
+        <NoWarn>$(NoWarn);CA1416;MSB3277</NoWarn>
 
         <!-- Assembly Info Generation -->
         <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
@@ -60,7 +60,7 @@
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.3" />
         <PackageReference Include="Microsoft.Extensions.Logging" Version="10.0.3" />
         <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="10.0.3" />
-        <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3800.47" />
+        <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.4022.49" />
         <PackageReference Include="MySql.Data" Version="9.6.0" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
         <PackageReference Include="System.Configuration.ConfigurationManager" Version="10.0.3" />

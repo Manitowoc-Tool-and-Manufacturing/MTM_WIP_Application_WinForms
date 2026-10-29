@@ -15,7 +15,6 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         #region Fields
         private readonly IService_VisualDatabase? _visualService;
         private CancellationTokenSource? _analyticsRequestCancellationTokenSource;
-        private DataTable? _cachedDataTable;
         private CancellationTokenSource? _fetchRequestCancellationTokenSource;
         private bool _isHandlingFilterLogic = false;
 
@@ -168,34 +167,39 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             Control_ReceivingAnalytics_DataGridView_Results.DataBindingComplete += (s, e) => ApplyRowColors();
             Control_ReceivingAnalytics_DataGridView_Results.Sorted += (s, e) => ApplyRowColors();
 
-            // Server-side filters (require fetch)
-            Control_ReceivingAnalytics_CheckBox_ShowClosed.CheckedChanged += async (s, e) => await FetchDataAsync();
+            // Reloading filters
+            Control_ReceivingAnalytics_CheckBox_ShowClosed.CheckedChanged += async (s, e) => await ApplyClosedFilterAsync();
 
             // Mutually Exclusive / Interaction Filters
-            Control_ReceivingAnalytics_CheckBox_ShowOutsideService.CheckedChanged += async (s, e) => { HandleFilterLogic(Control_ReceivingAnalytics_CheckBox_ShowOutsideService); await FetchDataAsync(); };
-            Control_ReceivingAnalytics_CheckBox_ShowWithPartID.CheckedChanged += async (s, e) => { HandleFilterLogic(Control_ReceivingAnalytics_CheckBox_ShowWithPartID); await FetchDataAsync(); };
+            Control_ReceivingAnalytics_CheckBox_ShowOutsideService.CheckedChanged += async (s, e) => await ApplyOutsideServiceFilterAsync();
+            Control_ReceivingAnalytics_CheckBox_ShowWithPartID.CheckedChanged += async (s, e) => await ApplyWithPartIdFilterAsync();
 
-            // Client-side filters (apply to cached data)
-            Control_ReceivingAnalytics_CheckBox_ShowLate.CheckedChanged += async (s, e) => await ApplyFiltersAsync();
-            Control_ReceivingAnalytics_CheckBox_ShowPartial.CheckedChanged += async (s, e) => await ApplyFiltersAsync();
-            Control_ReceivingAnalytics_CheckBox_ShowOnTime.CheckedChanged += async (s, e) => await ApplyFiltersAsync();
-            Control_ReceivingAnalytics_CheckBox_ShowOpen.CheckedChanged += async (s, e) => await ApplyFiltersAsync();
+            // Status filters
+            Control_ReceivingAnalytics_CheckBox_ShowLate.CheckedChanged += async (s, e) => await ApplyLateFilterAsync();
+            Control_ReceivingAnalytics_CheckBox_ShowPartial.CheckedChanged += async (s, e) => await ApplyPartialFilterAsync();
+            Control_ReceivingAnalytics_CheckBox_ShowOnTime.CheckedChanged += async (s, e) => await ApplyOnTimeFilterAsync();
+            Control_ReceivingAnalytics_CheckBox_ShowOpen.CheckedChanged += async (s, e) => await ApplyOpenFilterAsync();
 
             // MMC/MMF Logic
-            Control_ReceivingAnalytics_CheckBox_ShowMMC.CheckedChanged += async (s, e) => { HandleFilterLogic(Control_ReceivingAnalytics_CheckBox_ShowMMC); await ApplyFiltersAsync(); };
-            Control_ReceivingAnalytics_CheckBox_ShowMMF.CheckedChanged += async (s, e) => { HandleFilterLogic(Control_ReceivingAnalytics_CheckBox_ShowMMF); await ApplyFiltersAsync(); };
+            Control_ReceivingAnalytics_CheckBox_ShowMMC.CheckedChanged += async (s, e) => await ApplyMmcFilterAsync();
+            Control_ReceivingAnalytics_CheckBox_ShowMMF.CheckedChanged += async (s, e) => await ApplyMmfFilterAsync();
 
-            // Suggestion Boxes (Client-side)
-            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PartNumber.SuggestionSelected += async (s, e) => await ApplyFiltersAsync();
-            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Carrier.SuggestionSelected += async (s, e) => await ApplyFiltersAsync();
-            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Supplier.SuggestionSelected += async (s, e) => await ApplyFiltersAsync();
-            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PONumber.SuggestionSelected += async (s, e) => await ApplyFiltersAsync();
+            // Suggestion Boxes
+            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PartNumber.SuggestionSelected += async (s, e) => await ApplyPartNumberFilterAsync();
+            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Carrier.SuggestionSelected += async (s, e) => await ApplyCarrierFilterAsync();
+            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Supplier.SuggestionSelected += async (s, e) => await ApplyVendorFilterAsync();
+            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PONumber.SuggestionSelected += async (s, e) => await ApplyPoFilterAsync();
+
+            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PartNumber.TextBox.Leave += async (s, e) => await ApplyPartNumberFilterAsync();
+            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Carrier.TextBox.Leave += async (s, e) => await ApplyCarrierFilterAsync();
+            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Supplier.TextBox.Leave += async (s, e) => await ApplyVendorFilterAsync();
+            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PONumber.TextBox.Leave += async (s, e) => await ApplyPoFilterAsync();
 
             // Also trigger on Enter key for text boxes
-            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PartNumber.TextBox.KeyDown += async (s, e) => { if (e.KeyCode == Keys.Enter) await ApplyFiltersAsync(); };
-            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Carrier.TextBox.KeyDown += async (s, e) => { if (e.KeyCode == Keys.Enter) await ApplyFiltersAsync(); };
-            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Supplier.TextBox.KeyDown += async (s, e) => { if (e.KeyCode == Keys.Enter) await ApplyFiltersAsync(); };
-            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PONumber.TextBox.KeyDown += async (s, e) => { if (e.KeyCode == Keys.Enter) await ApplyFiltersAsync(); };
+            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PartNumber.TextBox.KeyDown += async (s, e) => { if (e.KeyCode == Keys.Enter) await ApplyPartNumberFilterAsync(); };
+            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Carrier.TextBox.KeyDown += async (s, e) => { if (e.KeyCode == Keys.Enter) await ApplyCarrierFilterAsync(); };
+            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Supplier.TextBox.KeyDown += async (s, e) => { if (e.KeyCode == Keys.Enter) await ApplyVendorFilterAsync(); };
+            Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PONumber.TextBox.KeyDown += async (s, e) => { if (e.KeyCode == Keys.Enter) await ApplyPoFilterAsync(); };
 
             // Week Navigation
             Control_ReceivingAnalytics_Button_PreviousWeek.Click += async (s, e) => { SetPreviousWeek(); await FetchDataAsync(); };
@@ -295,6 +299,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             try
             {
                 var requestCancellationTokenSource = BeginFetchRequest();
+                var filters = CaptureFilterSnapshot();
                 LoggingUtility.Log("[Control_ReceivingAnalytics] FetchData started");
                 Control_ReceivingAnalytics_Button_Search.Enabled = false;
                 Control_ReceivingAnalytics_Button_Search.Text = "Loading...";
@@ -310,6 +315,7 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
                     Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Supplier.Text?.Trim() ?? "",
                     Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PONumber.Text?.Trim() ?? "",
                     Control_ReceivingAnalytics_CheckBox_ShowWithPartID.Checked,
+                    true,
                     requestCancellationTokenSource.Token
                 );
                 if (requestCancellationTokenSource.IsCancellationRequested)
@@ -319,14 +325,12 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
 
                 if (result.IsSuccess && result.Data != null)
                 {
-                    _cachedDataTable = result.Data;
-                    PopulateSuggestionBoxes(_cachedDataTable);
-                    await ApplyFiltersAsync();
+                    PopulateSuggestionBoxes(result.Data);
+                    await RenderFilteredResultsAsync(result.Data, filters);
                 }
                 else
                 {
                     Service_ErrorHandler.ShowError(result.ErrorMessage);
-                    _cachedDataTable = null;
                     Control_ReceivingAnalytics_DataGridView_Results.DataSource = null;
                 }
             }
@@ -378,173 +382,39 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
             }
         }
 
-        private async Task ApplyFiltersAsync()
-        {
-            if (_cachedDataTable == null) return;
-
-            try
-            {
-                // Create a view or clone to filter without modifying cache
-                DataTable dt = _cachedDataTable.Copy();
-                var rowsToRemove = new List<DataRow>();
-
-                // Client-side filtering logic from LoadDataAsync
-                string carrierFilter = Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Carrier.Text?.Trim() ?? "";
-                string partNumberFilter = Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PartNumber.Text?.Trim() ?? "";
-                string vendorFilter = Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Supplier.Text?.Trim() ?? "";
-                string poFilter = Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PONumber.Text?.Trim() ?? "";
-
-                foreach (DataRow row in dt.Rows)
-                {
-                    string poStatus = row["PO Status"]?.ToString() ?? "";
-                    string lineStatus = row["Line Status"]?.ToString() ?? "";
-
-                    decimal orderQty = 0;
-                    decimal receivedQty = 0;
-                    decimal.TryParse(row["Order Qty"]?.ToString(), out orderQty);
-                    decimal.TryParse(row["Received Qty"]?.ToString(), out receivedQty);
-
-                    DateTime? desiredDate = null;
-                    if (DateTime.TryParse(row["Line Desired Date"]?.ToString(), out DateTime d1)) desiredDate = d1;
-                    else if (DateTime.TryParse(row["PO Desired Date"]?.ToString(), out DateTime d2)) desiredDate = d2;
-
-                    bool isClosed = poStatus == "C" || lineStatus == "C";
-                    bool isLate = !isClosed && desiredDate.HasValue && desiredDate.Value.Date < DateTime.Today && receivedQty < orderQty;
-                    bool isPartial = !isClosed && !isLate && receivedQty > 0 && receivedQty < orderQty;
-                    bool isOnTime = !isClosed && !isLate && !isPartial;
-
-                    // Status Filters
-                    if (isLate && !Control_ReceivingAnalytics_CheckBox_ShowLate.Checked) { rowsToRemove.Add(row); continue; }
-                    if (isPartial && !Control_ReceivingAnalytics_CheckBox_ShowPartial.Checked) { rowsToRemove.Add(row); continue; }
-                    if (isOnTime && !Control_ReceivingAnalytics_CheckBox_ShowOnTime.Checked) { rowsToRemove.Add(row); continue; }
-                    if (!isClosed && !Control_ReceivingAnalytics_CheckBox_ShowOpen.Checked) { rowsToRemove.Add(row); continue; }
-
-                    // MMC/MMF Filters (Inclusive Logic)
-                    string partNumber = row["Part Number"]?.ToString() ?? "";
-                    bool showMMC = Control_ReceivingAnalytics_CheckBox_ShowMMC.Checked;
-                    bool showMMF = Control_ReceivingAnalytics_CheckBox_ShowMMF.Checked;
-
-                    if (showMMC || showMMF)
-                    {
-                        bool isMMC = partNumber.StartsWith("MMC", StringComparison.OrdinalIgnoreCase);
-                        bool isMMF = partNumber.StartsWith("MMF", StringComparison.OrdinalIgnoreCase);
-
-                        if (showMMC && showMMF)
-                        {
-                            if (!isMMC && !isMMF) { rowsToRemove.Add(row); continue; }
-                        }
-                        else if (showMMC)
-                        {
-                            if (!isMMC) { rowsToRemove.Add(row); continue; }
-                        }
-                        else if (showMMF)
-                        {
-                            if (!isMMF) { rowsToRemove.Add(row); continue; }
-                        }
-                    }
-
-                    // Carrier Filter
-                    if (!string.IsNullOrEmpty(carrierFilter))
-                    {
-                        string carrier = row["Ship Via"]?.ToString() ?? "";
-                        if (string.IsNullOrEmpty(carrier) || !carrier.Contains(carrierFilter, StringComparison.OrdinalIgnoreCase)) { rowsToRemove.Add(row); continue; }
-                    }
-
-                    // Part Number Filter
-                    if (!string.IsNullOrEmpty(partNumberFilter))
-                    {
-                        if (string.IsNullOrEmpty(partNumber) || !partNumber.Contains(partNumberFilter, StringComparison.OrdinalIgnoreCase)) { rowsToRemove.Add(row); continue; }
-                    }
-
-                    // Vendor Filter
-                    if (!string.IsNullOrEmpty(vendorFilter))
-                    {
-                        string vendor = row["Vendor"]?.ToString() ?? "";
-                        if (string.IsNullOrEmpty(vendor) || !vendor.Contains(vendorFilter, StringComparison.OrdinalIgnoreCase)) { rowsToRemove.Add(row); continue; }
-                    }
-
-                    // PO Filter
-                    if (!string.IsNullOrEmpty(poFilter))
-                    {
-                        string po = row["PO Number"]?.ToString() ?? "";
-                        if (string.IsNullOrEmpty(po) || !po.Contains(poFilter, StringComparison.OrdinalIgnoreCase)) { rowsToRemove.Add(row); continue; }
-                    }
-                }
-
-                foreach (var row in rowsToRemove)
-                {
-                    dt.Rows.Remove(row);
-                }
-
-                Control_ReceivingAnalytics_DataGridView_Results.DataSource = dt;
-
-                // Format columns
-                if (Control_ReceivingAnalytics_DataGridView_Results.Columns["Order Date"] != null)
-                    Control_ReceivingAnalytics_DataGridView_Results.Columns["Order Date"].DefaultCellStyle.Format = "d";
-                if (Control_ReceivingAnalytics_DataGridView_Results.Columns["PO Desired Date"] != null)
-                    Control_ReceivingAnalytics_DataGridView_Results.Columns["PO Desired Date"].DefaultCellStyle.Format = "d";
-                if (Control_ReceivingAnalytics_DataGridView_Results.Columns["PO Promise Date"] != null)
-                    Control_ReceivingAnalytics_DataGridView_Results.Columns["PO Promise Date"].DefaultCellStyle.Format = "d";
-                if (Control_ReceivingAnalytics_DataGridView_Results.Columns["Line Desired Date"] != null)
-                    Control_ReceivingAnalytics_DataGridView_Results.Columns["Line Desired Date"].DefaultCellStyle.Format = "d";
-                if (Control_ReceivingAnalytics_DataGridView_Results.Columns["Line Promise Date"] != null)
-                    Control_ReceivingAnalytics_DataGridView_Results.Columns["Line Promise Date"].DefaultCellStyle.Format = "d";
-
-                await Service_DataGridView.ApplyStandardSettingsAsync(Control_ReceivingAnalytics_DataGridView_Results, Model_Application_Variables.User);
-                Service_DataGridView.ApplySmartNumericFormatting(Control_ReceivingAnalytics_DataGridView_Results);
-            }
-            catch (Exception ex)
-            {
-                Service_ErrorHandler.HandleException(ex, Models.Enum_ErrorSeverity.Medium);
-            }
-        }
-
         private void ApplyRowColors()
         {
             foreach (DataGridViewRow row in Control_ReceivingAnalytics_DataGridView_Results.Rows)
             {
                 if (row.DataBoundItem is not DataRowView drv) continue;
 
-                // Get values safely from DataRowView (faster than Cells access)
                 string poStatus = drv["PO Status"]?.ToString() ?? "";
                 string lineStatus = drv["Line Status"]?.ToString() ?? "";
 
-                decimal orderQty = 0;
-                decimal receivedQty = 0;
-                decimal.TryParse(drv["Order Qty"]?.ToString(), out orderQty);
-                decimal.TryParse(drv["Received Qty"]?.ToString(), out receivedQty);
+                decimal orderQty = ReadDecimal(drv.Row, "Order Qty");
+                decimal receivedQty = ReadDecimal(drv.Row, "Received Qty");
+                bool hasEffectiveReceiveDate = TryGetEffectiveReceiveDate(drv.Row, out DateTime effectiveReceiveDate, out bool missingDateType);
 
-                DateTime? desiredDate = null;
-                if (DateTime.TryParse(drv["Line Desired Date"]?.ToString(), out DateTime dt))
-                {
-                    desiredDate = dt;
-                }
-                else if (DateTime.TryParse(drv["PO Desired Date"]?.ToString(), out DateTime dt2))
-                {
-                    desiredDate = dt2;
-                }
-
-                // Logic for coloring
                 Color backColor = Color.White;
 
-                if (poStatus == "C" || lineStatus == "C")
+                if (missingDateType)
                 {
-                    // Closed - Green
+                    backColor = Color.Red;
+                }
+                else if (poStatus == "C" || lineStatus == "C")
+                {
                     backColor = Color.FromArgb(200, 255, 200);
                 }
-                else if (desiredDate.HasValue && desiredDate.Value.Date < DateTime.Today && receivedQty < orderQty)
+                else if (hasEffectiveReceiveDate && effectiveReceiveDate.Date < DateTime.Today && receivedQty < orderQty)
                 {
-                    // Late - Red
                     backColor = Color.FromArgb(255, 200, 200);
                 }
-                else if (receivedQty > 0 && receivedQty < orderQty)
+                else if (receivedQty > 0 && receivedQty < (orderQty * 0.9m))
                 {
-                    // Partial - Yellow
                     backColor = Color.FromArgb(255, 255, 200);
                 }
                 else
                 {
-                    // On Time / Open - Blue (Light)
                     backColor = Color.FromArgb(200, 240, 255);
                 }
 
@@ -795,6 +665,206 @@ namespace MTM_WIP_Application_Winforms.Controls.Visual
         #endregion
 
         #region Helpers
+        private async Task RenderFilteredResultsAsync(DataTable source, ReceivingAnalyticsFilterSnapshot filters)
+        {
+            try
+            {
+                DataTable dt = source.Copy();
+                var rowsToRemove = new List<DataRow>();
+
+                foreach (DataRow row in dt.Rows)
+                {
+                    string poStatus = row["PO Status"]?.ToString() ?? "";
+                    string lineStatus = row["Line Status"]?.ToString() ?? "";
+                    decimal orderQty = ReadDecimal(row, "Order Qty");
+                    decimal receivedQty = ReadDecimal(row, "Received Qty");
+                    bool hasEffectiveReceiveDate = TryGetEffectiveReceiveDate(row, out DateTime effectiveReceiveDate, out bool missingDateType);
+                    string partNumber = row["Part Number"]?.ToString() ?? "";
+
+                    bool isClosed = poStatus == "C" || lineStatus == "C";
+                    bool isLate = !isClosed && hasEffectiveReceiveDate && effectiveReceiveDate.Date < DateTime.Today && receivedQty < orderQty;
+                    bool isPartial = !isClosed && receivedQty > 0 && receivedQty < (orderQty * 0.9m);
+                    bool isOnTime = !isClosed && !isLate && !isPartial;
+
+                    if (isLate && !filters.ShowLate) { rowsToRemove.Add(row); continue; }
+                    if (isPartial && !filters.ShowPartial) { rowsToRemove.Add(row); continue; }
+                    if (isOnTime && !filters.ShowOnTime) { rowsToRemove.Add(row); continue; }
+                    if (!isClosed && !filters.ShowOpen) { rowsToRemove.Add(row); continue; }
+
+                    if (filters.ShowMMC || filters.ShowMMF)
+                    {
+                        bool isMMC = partNumber.StartsWith("MMC", StringComparison.OrdinalIgnoreCase);
+                        bool isMMF = partNumber.StartsWith("MMF", StringComparison.OrdinalIgnoreCase);
+
+                        if (filters.ShowMMC && filters.ShowMMF)
+                        {
+                            if (!isMMC && !isMMF) { rowsToRemove.Add(row); continue; }
+                        }
+                        else if (filters.ShowMMC)
+                        {
+                            if (!isMMC) { rowsToRemove.Add(row); continue; }
+                        }
+                        else if (filters.ShowMMF)
+                        {
+                            if (!isMMF) { rowsToRemove.Add(row); continue; }
+                        }
+                    }
+
+                    if (!string.IsNullOrEmpty(filters.CarrierFilter))
+                    {
+                        string carrier = row["Ship Via"]?.ToString() ?? "";
+                        if (string.IsNullOrEmpty(carrier) || !carrier.Contains(filters.CarrierFilter, StringComparison.OrdinalIgnoreCase)) { rowsToRemove.Add(row); continue; }
+                    }
+
+                    if (!string.IsNullOrEmpty(filters.PartNumberFilter))
+                    {
+                        if (string.IsNullOrEmpty(partNumber) || !partNumber.Contains(filters.PartNumberFilter, StringComparison.OrdinalIgnoreCase)) { rowsToRemove.Add(row); continue; }
+                    }
+
+                    if (!string.IsNullOrEmpty(filters.VendorFilter))
+                    {
+                        string vendor = row["Vendor"]?.ToString() ?? "";
+                        if (string.IsNullOrEmpty(vendor) || !vendor.Contains(filters.VendorFilter, StringComparison.OrdinalIgnoreCase)) { rowsToRemove.Add(row); continue; }
+                    }
+
+                    if (!string.IsNullOrEmpty(filters.PoFilter))
+                    {
+                        string po = row["PO Number"]?.ToString() ?? "";
+                        if (string.IsNullOrEmpty(po) || !po.Contains(filters.PoFilter, StringComparison.OrdinalIgnoreCase)) { rowsToRemove.Add(row); continue; }
+                    }
+                }
+
+                foreach (var row in rowsToRemove)
+                {
+                    dt.Rows.Remove(row);
+                }
+
+                Control_ReceivingAnalytics_DataGridView_Results.DataSource = dt;
+
+                if (Control_ReceivingAnalytics_DataGridView_Results.Columns["Order Date"] != null)
+                    Control_ReceivingAnalytics_DataGridView_Results.Columns["Order Date"].DefaultCellStyle.Format = "d";
+                if (Control_ReceivingAnalytics_DataGridView_Results.Columns["PO Desired Date"] != null)
+                    Control_ReceivingAnalytics_DataGridView_Results.Columns["PO Desired Date"].DefaultCellStyle.Format = "d";
+                if (Control_ReceivingAnalytics_DataGridView_Results.Columns["PO Promise Date"] != null)
+                    Control_ReceivingAnalytics_DataGridView_Results.Columns["PO Promise Date"].DefaultCellStyle.Format = "d";
+                if (Control_ReceivingAnalytics_DataGridView_Results.Columns["Line Desired Date"] != null)
+                    Control_ReceivingAnalytics_DataGridView_Results.Columns["Line Desired Date"].DefaultCellStyle.Format = "d";
+                if (Control_ReceivingAnalytics_DataGridView_Results.Columns["Line Promise Date"] != null)
+                    Control_ReceivingAnalytics_DataGridView_Results.Columns["Line Promise Date"].DefaultCellStyle.Format = "d";
+
+                await Service_DataGridView.ApplyStandardSettingsAsync(Control_ReceivingAnalytics_DataGridView_Results, Model_Application_Variables.User);
+                Service_DataGridView.ApplySmartNumericFormatting(Control_ReceivingAnalytics_DataGridView_Results);
+            }
+            catch (Exception ex)
+            {
+                Service_ErrorHandler.HandleException(ex, Models.Enum_ErrorSeverity.Medium);
+            }
+        }
+
+        private Task ApplyClosedFilterAsync() => FetchDataAsync();
+
+        private async Task ApplyOutsideServiceFilterAsync()
+        {
+            HandleFilterLogic(Control_ReceivingAnalytics_CheckBox_ShowOutsideService);
+            await FetchDataAsync();
+        }
+
+        private async Task ApplyWithPartIdFilterAsync()
+        {
+            HandleFilterLogic(Control_ReceivingAnalytics_CheckBox_ShowWithPartID);
+            await FetchDataAsync();
+        }
+
+        private Task ApplyLateFilterAsync() => FetchDataAsync();
+
+        private Task ApplyPartialFilterAsync() => FetchDataAsync();
+
+        private Task ApplyOnTimeFilterAsync() => FetchDataAsync();
+
+        private Task ApplyOpenFilterAsync() => FetchDataAsync();
+
+        private async Task ApplyMmcFilterAsync()
+        {
+            HandleFilterLogic(Control_ReceivingAnalytics_CheckBox_ShowMMC);
+            await FetchDataAsync();
+        }
+
+        private async Task ApplyMmfFilterAsync()
+        {
+            HandleFilterLogic(Control_ReceivingAnalytics_CheckBox_ShowMMF);
+            await FetchDataAsync();
+        }
+
+        private Task ApplyPartNumberFilterAsync() => FetchDataAsync();
+
+        private Task ApplyCarrierFilterAsync() => FetchDataAsync();
+
+        private Task ApplyVendorFilterAsync() => FetchDataAsync();
+
+        private Task ApplyPoFilterAsync() => FetchDataAsync();
+
+        private ReceivingAnalyticsFilterSnapshot CaptureFilterSnapshot()
+        {
+            return new ReceivingAnalyticsFilterSnapshot(
+                Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Carrier.Text?.Trim() ?? string.Empty,
+                Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PartNumber.Text?.Trim() ?? string.Empty,
+                Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_Supplier.Text?.Trim() ?? string.Empty,
+                Control_ReceivingAnalytics_SuggestionTextBoxWithLabel_PONumber.Text?.Trim() ?? string.Empty,
+                Control_ReceivingAnalytics_CheckBox_ShowLate.Checked,
+                Control_ReceivingAnalytics_CheckBox_ShowPartial.Checked,
+                Control_ReceivingAnalytics_CheckBox_ShowOnTime.Checked,
+                Control_ReceivingAnalytics_CheckBox_ShowOpen.Checked,
+                Control_ReceivingAnalytics_CheckBox_ShowMMC.Checked,
+                Control_ReceivingAnalytics_CheckBox_ShowMMF.Checked);
+        }
+
+        private static decimal ReadDecimal(DataRow row, string columnName)
+        {
+            decimal.TryParse(row[columnName]?.ToString(), out decimal value);
+            return value;
+        }
+
+        private static bool TryGetEffectiveReceiveDate(DataRow row, out DateTime effectiveDate, out bool missingDateType)
+        {
+            missingDateType = false;
+
+            if (TryReadDate(row, "Line Desired Date", out effectiveDate)) return true;
+            if (TryReadDate(row, "Line Promise Date", out effectiveDate)) return true;
+            if (TryReadDate(row, "PO Desired Date", out effectiveDate)) return true;
+            if (TryReadDate(row, "PO Promise Date", out effectiveDate)) return true;
+            if (TryReadDate(row, "Order Date", out effectiveDate))
+            {
+                missingDateType = true;
+                return true;
+            }
+
+            effectiveDate = DateTime.Today;
+            missingDateType = true;
+            return false;
+        }
+
+        private static bool TryReadDate(DataRow row, string columnName, out DateTime dateValue)
+        {
+            if (DateTime.TryParse(row[columnName]?.ToString(), out dateValue))
+            {
+                return true;
+            }
+
+            dateValue = default;
+            return false;
+        }
+
+        private readonly record struct ReceivingAnalyticsFilterSnapshot(
+            string CarrierFilter,
+            string PartNumberFilter,
+            string VendorFilter,
+            string PoFilter,
+            bool ShowLate,
+            bool ShowPartial,
+            bool ShowOnTime,
+            bool ShowOpen,
+            bool ShowMMC,
+            bool ShowMMF);
         private void HandleFilterLogic(CheckBox source)
         {
             if (_isHandlingFilterLogic) return;

@@ -635,7 +635,7 @@
 
             <section class="metrics" id="metricsGrid"></section>
 
-            <section class="panel trend-panel">
+            <section class="panel trend-panel" id="trendPanel">
                 <div class="section-title">
                     <div>
                         <h2>Trends & Context</h2>
@@ -882,6 +882,7 @@
             userSelect.addEventListener("change", (event) => {
                 state.selectedUserId = event.target.value;
                 render();
+                scrollToTrendPanel();
             });
         }
 
@@ -1116,8 +1117,20 @@
                     state.scope = "team";
                     state.selectedUserId = user.userId;
                     render();
+                    scrollToTrendPanel();
                 });
                 userList.appendChild(button);
+            });
+        }
+
+        function scrollToTrendPanel() {
+            const trendPanel = document.getElementById("trendPanel");
+            if (!trendPanel) {
+                return;
+            }
+
+            requestAnimationFrame(() => {
+                trendPanel.scrollIntoView({ behavior: "smooth", block: "start" });
             });
         }
 

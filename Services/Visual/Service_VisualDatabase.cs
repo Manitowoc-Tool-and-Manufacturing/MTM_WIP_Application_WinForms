@@ -42,14 +42,6 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
             CancellationToken cancellationToken = default
         )
         {
-#if DEBUG
-            // In DEBUG mode, if credentials are missing, force fallback to sample data immediately
-            if (string.IsNullOrEmpty(_userName) || string.IsNullOrEmpty(_password))
-            {
-                _useSampleData = true;
-                return new Model_Dao_Result<bool> { IsSuccess = true, Data = true, ErrorMessage = "Debug Mode: Using Sample Data (No Credentials)" };
-            }
-#else
             if (string.IsNullOrEmpty(_userName) || string.IsNullOrEmpty(_password))
             {
                 return new Model_Dao_Result<bool>
@@ -58,7 +50,6 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                     ErrorMessage = "Visual ERP credentials are not configured."
                 };
             }
-#endif
 
             try
             {
@@ -71,12 +62,6 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
             }
             catch (Exception ex)
             {
-#if DEBUG
-                // In DEBUG mode, if connection fails, fallback to sample data
-                LoggingUtility.Log($"[VisualService] Connection failed in DEBUG mode. Falling back to sample data. Error: {ex.Message}");
-                _useSampleData = true;
-                return new Model_Dao_Result<bool> { IsSuccess = true, Data = true, ErrorMessage = "Debug Mode: Using Sample Data (Connection Failed)" };
-#else
                 LoggingUtility.LogApplicationError(ex);
                 return new Model_Dao_Result<bool>
                 {
@@ -84,7 +69,6 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                     ErrorMessage = $"Connection failed: {GetFriendlyErrorMessage(ex)}",
                     Data = false
                 };
-#endif
             }
         }
 
@@ -463,26 +447,17 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
             string vendorFilter = "",
             string poFilter = "",
             bool mustHavePartNumber = false,
+            bool showPartialLines = true,
             CancellationToken cancellationToken = default
         )
         {
-            if (_useSampleData)
-            {
-                return GetSampleReceivingSchedule();
-            }
-
             if (string.IsNullOrEmpty(_userName) || string.IsNullOrEmpty(_password))
             {
-#if DEBUG
-                _useSampleData = true;
-                return GetSampleReceivingSchedule();
-#else
                 return new Model_Dao_Result<DataTable>
                 {
                     IsSuccess = false,
                     ErrorMessage = "Visual ERP credentials are not configured.",
                 };
-#endif
             }
 
             // Base Query
@@ -586,6 +561,12 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
                 sql += " AND POL.PART_ID IS NOT NULL AND POL.PART_ID <> ''";
             }
 
+            if (!showPartialLines)
+            {
+                sql +=
+                    " AND (ISNULL(POL.ORDER_QTY, 0) <= 0 OR ISNULL(POL.TOTAL_RECEIVED_QTY, 0) <= 0 OR ISNULL(POL.TOTAL_RECEIVED_QTY, 0) >= (ISNULL(POL.ORDER_QTY, 0) * 0.9))";
+            }
+
             if (!string.IsNullOrWhiteSpace(vendorFilter))
             {
                 sql += " AND V.NAME LIKE @VendorFilter";
@@ -640,20 +621,12 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
             }
             catch (Exception ex)
             {
-#if DEBUG
-                LoggingUtility.Log(
-                    $"[VisualService] GetReceivingScheduleAsync failed in DEBUG. Fallback to sample. Error: {ex.Message}"
-                );
-                _useSampleData = true;
-                return GetSampleReceivingSchedule();
-#else
                 LoggingUtility.LogApplicationError(ex);
                 return new Model_Dao_Result<DataTable>
                 {
                     IsSuccess = false,
                     ErrorMessage = $"Error retrieving receiving schedule: {ex.Message}",
                 };
-#endif
             }
         }
 
@@ -667,23 +640,13 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
             CancellationToken cancellationToken = default
         )
         {
-            if (_useSampleData)
-            {
-                return GetSamplePODetails(poNumber);
-            }
-
             if (string.IsNullOrEmpty(_userName) || string.IsNullOrEmpty(_password))
             {
-#if DEBUG
-                _useSampleData = true;
-                return GetSamplePODetails(poNumber);
-#else
                 return new Model_Dao_Result<DataTable>
                 {
                     IsSuccess = false,
                     ErrorMessage = "Visual ERP credentials are not configured.",
                 };
-#endif
             }
 
             string sql =
@@ -734,20 +697,12 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
             }
             catch (Exception ex)
             {
-#if DEBUG
-                LoggingUtility.Log(
-                    $"[VisualService] GetPODetailsAsync failed in DEBUG. Fallback to sample. Error: {ex.Message}"
-                );
-                _useSampleData = true;
-                return GetSamplePODetails(poNumber);
-#else
                 LoggingUtility.LogApplicationError(ex);
                 return new Model_Dao_Result<DataTable>
                 {
                     IsSuccess = false,
                     ErrorMessage = $"Error retrieving PO details: {ex.Message}",
                 };
-#endif
             }
         }
 
@@ -760,23 +715,13 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
             CancellationToken cancellationToken = default
         )
         {
-            if (_useSampleData)
-            {
-                return GetSampleReceivingAnalytics();
-            }
-
             if (string.IsNullOrEmpty(_userName) || string.IsNullOrEmpty(_password))
             {
-#if DEBUG
-                _useSampleData = true;
-                return GetSampleReceivingAnalytics();
-#else
                 return new Model_Dao_Result<Model_ReceivingAnalytics>
                 {
                     IsSuccess = false,
                     ErrorMessage = "Visual ERP credentials are not configured.",
                 };
-#endif
             }
 
             var analytics = new Model_ReceivingAnalytics();
@@ -1036,27 +981,13 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
             CancellationToken cancellationToken = default
         )
         {
-            if (_useSampleData)
-            {
-                return await Task.FromResult(
-                    GetSampleInventoryData(partNumber, warehouse, location, nonZeroOnly)
-                );
-            }
-
             if (string.IsNullOrEmpty(_userName) || string.IsNullOrEmpty(_password))
             {
-#if DEBUG
-                _useSampleData = true;
-                return await Task.FromResult(
-                    GetSampleInventoryData(partNumber, warehouse, location, nonZeroOnly)
-                );
-#else
                 return new Model_Dao_Result<DataTable>
                 {
                     IsSuccess = false,
                     ErrorMessage = "Visual ERP credentials are not configured.",
                 };
-#endif
             }
 
             string sql =
@@ -1146,23 +1077,13 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
             CancellationToken cancellationToken = default
         )
         {
-            if (_useSampleData)
-            {
-                return GetSampleTransactions(filter);
-            }
-
             if (string.IsNullOrEmpty(_userName) || string.IsNullOrEmpty(_password))
             {
-#if DEBUG
-                _useSampleData = true;
-                return GetSampleTransactions(filter);
-#else
                 return new Model_Dao_Result<DataTable>
                 {
                     IsSuccess = false,
                     ErrorMessage = "Visual ERP credentials are not configured.",
                 };
-#endif
             }
 
             // Base Query

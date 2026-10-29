@@ -98,6 +98,7 @@ namespace MTM_WIP_Application_Winforms.Services.Visual
             string vendorFilter = "",
             string poFilter = "",
             bool mustHavePartNumber = false,
+            bool showPartialLines = true,
             CancellationToken cancellationToken = default
         );
 
