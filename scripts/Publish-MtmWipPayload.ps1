@@ -25,7 +25,8 @@
 .PARAMETER Destination
     Optional application master folder to publish into, for example
     "\\mtmanu-fs01\Expo Drive\MH_RESOURCE\Material_Handler\MTM Application Store\MTM WIP Application".
-    The folder's current contents are cleared first so the manifest and the folder always match.
+    The payload is staged beside the folder, verified file by file, swapped into place, and only
+    then given its manifest, so the published folder is either the old payload or the new one.
 
 .PARAMETER FrameworkDependent
     Publishes framework-dependent instead of self-contained. Only use this when every
@@ -212,16 +213,64 @@ if (Test-Path -LiteralPath $existingManifestPath -PathType Leaf) {
     }
 }
 
-Write-Host "Clearing '$Destination'" -ForegroundColor Yellow
-Get-ChildItem -LiteralPath $Destination -Force | Remove-Item -Recurse -Force
+$parentPath = Split-Path -Parent $Destination
+if (-not (Test-Path -LiteralPath $parentPath -PathType Container)) {
+    throw "The parent folder '$parentPath' does not exist. Check the share path before publishing."
+}
 
+$stagingPath = "$Destination.staging"
+$previousPath = "$Destination.previous"
+
+if (Test-Path -LiteralPath $stagingPath) {
+    Remove-Item -LiteralPath $stagingPath -Recurse -Force
+}
+New-Item -ItemType Directory -Path $stagingPath -Force | Out-Null
+
+Write-Host "Staging the payload in '$stagingPath'" -ForegroundColor Cyan
 Get-ChildItem -LiteralPath $outputPath -Force |
     Where-Object { $_.Name -ne $ManifestName } |
     ForEach-Object {
-        Copy-Item -LiteralPath $_.FullName -Destination $Destination -Recurse -Force
+        Copy-Item -LiteralPath $_.FullName -Destination $stagingPath -Recurse -Force
     }
 
-Copy-Item -LiteralPath $manifestPath -Destination (Join-Path $Destination $ManifestName) -Force
+$mismatch = @()
+foreach ($entry in $entries) {
+    $stagedPath = Join-Path $stagingPath ($entry.path -replace '/', '\')
+    if (-not (Test-Path -LiteralPath $stagedPath -PathType Leaf)) {
+        $mismatch += "$($entry.path) (missing)"
+        continue
+    }
 
-Write-Host "Published version $manifestVersion to '$Destination' with the manifest written last." -ForegroundColor Green
+    $stagedHash = (Get-FileHash -LiteralPath $stagedPath -Algorithm SHA256).Hash.ToLowerInvariant()
+    if ($stagedHash -ne $entry.sha256) {
+        $mismatch += "$($entry.path) (hash differs)"
+    }
+}
+
+if ($mismatch.Count -gt 0) {
+    Remove-Item -LiteralPath $stagingPath -Recurse -Force
+    throw "The staged copy did not match the payload. Nothing was replaced. First problem: $($mismatch[0]). Total problems: $($mismatch.Count)."
+}
+
+Write-Host "Verified $($entries.Count) staged files against the payload hashes." -ForegroundColor Green
+
+if (Test-Path -LiteralPath $previousPath) {
+    Remove-Item -LiteralPath $previousPath -Recurse -Force
+}
+
+if (Test-Path -LiteralPath $Destination) {
+    Rename-Item -LiteralPath $Destination -NewName (Split-Path -Leaf $previousPath)
+}
+
+Rename-Item -LiteralPath $stagingPath -NewName (Split-Path -Leaf $Destination)
+
+Copy-Item -LiteralPath $manifestPath -Destination (Join-Path $Destination $ManifestName) -Force
+Write-Host "Wrote $ManifestName last into '$Destination'" -ForegroundColor Green
+
+if (Test-Path -LiteralPath $previousPath) {
+    Write-Host "Removing the previous payload folder '$previousPath'" -ForegroundColor Yellow
+    Remove-Item -LiteralPath $previousPath -Recurse -Force
+}
+
+Write-Host "Published version $manifestVersion to '$Destination'." -ForegroundColor Green
 Write-Output (Join-Path $Destination $ManifestName)

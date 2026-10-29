@@ -317,7 +317,8 @@ Rules the script enforces, taken from the MTM Loader specification
 2. The publish is self-contained `win-x64` with `PublishSingleFile=false` and `PublishTrimmed=false`.
 3. `build-manifest.json` records `schemaVersion`, `applicationId`, `version` (3-part semver from `<Version>`),
    `publishedUtc`, `executable`, `fileCount`, `totalBytes`, and every file with its size and SHA-256.
-4. The manifest is written last, so a half-copied payload is never advertised.
+4. The payload is staged beside the target folder, verified file by file, swapped into place, and only
+   then given its manifest, so a half-copied payload is never advertised.
 5. A version is never reused with a different executable; bump `<Version>` instead.
 
 ## Architecture Patterns
