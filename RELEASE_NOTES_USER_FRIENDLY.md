@@ -8,7 +8,8 @@
 
 | Date                                                            | Version                                                  | Summary                                                                                                                   | What to do                                                           |
 | --------------------------------------------------------------- | -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------- |
-| [Dec 15, 2025](#latest-update---december-15-2025-version-670)   | [6.7.0](#latest-update---december-15-2025-version-670)   | New Quick User Creation wizard and performance improvements.                                                              | Check out the new User Onboarding tool in Settings!                  |
+| [Oct 29, 2026](#latest-update---october-29-2026-version-680) | [6.8.0](#latest-update---october-29-2026-version-680) | New role-aware Analytics workspace, faster Receiving Analytics, smarter Infor Visual suggestions, and steadier Visual connections. | Open Analytics from the View menu to try the new Myself and Team views! |
+| [Dec 15, 2025](#previous-update---december-15-2025-version-670)   | [6.7.0](#previous-update---december-15-2025-version-670)   | New Quick User Creation wizard and performance improvements.                                                              | Check out the new User Onboarding tool in Settings!                  |
 | [Dec 14, 2025](#previous-update---december-14-2025-version-660) | [6.6.0](#previous-update---december-14-2025-version-660) | New Developer Tools Dashboard, System Health Monitor, and Core Performance Improvements.                                  | Check out the new System Health view in the View menu!               |
 | [Dec 13, 2025](#previous-update---december-13-2025-version-650) | [6.5.0](#previous-update---december-13-2025-version-650) | Help System with Feedback, Connection Stability, and Performance Improvements.                                            | Check out the new Help menu and enjoy faster startup!                |
 | [Dec 08, 2025](#previous-update---december-08-2025-version-641) | [6.4.1](#previous-update---december-08-2025-version-641) | Print Preview sorting and reliability improvements.                                                                       | Try the new "Sort By" dropdown in Print Preview!                     |
@@ -43,7 +44,70 @@
 
 ---
 
-## Latest Update - December 15, 2025 (Version 6.7.0)
+## Latest Update - October 29, 2026 (Version 6.8.0)
+
+**What Changed**: **Analytics** now opens one role-aware workspace with Myself and Team views, trend charts, exports, printing, and a glossary. **Receiving Analytics** reloads its data when you change a filter and counts a line as partial only below 90% received. Infor Visual suggestion fields accept values that are not in the lookup list and load faster. Infor Visual queries now time out and recover instead of leaving you waiting.
+**Do I Need To Do Anything?**: No. The new views are ready to use; nothing needs to be set up.
+
+---
+
+### 🎯 What This Means For You
+
+#### Role-Aware Analytics Workspace
+
+**What's new**:
+
+- **Myself and Team**: One Analytics window with a **Myself** view for your own numbers and a **Team** view for supervisors, leads, and developers.
+- **Trends & Context**: Switch between **Transactions** and **Quantity** trends, grouped **Daily** or **Weekly**, to see busy and quiet periods at a glance.
+- **Recent Activity**: Review the latest transactions in the workspace, and expand a team member in **Team Drill-Down** to see their activity.
+- **Export Summary, Export Activity, and Print**: Send a summary or the full activity list to Excel, or print the page as it appears.
+- **Glossary**: Every figure on the page is explained in plain language, so nobody has to guess what a column means.
+- **One Place to Look**: The separate WIP user analytics window has been retired; **Analytics** in the View menu replaces it.
+
+**Why this helps**:
+
+- Supervisors and leads can answer "how are we doing" without asking for a report.
+- Everyone reads the same definitions, so figures match between shifts.
+
+#### Receiving Analytics
+
+**What's new**:
+
+- **Filters reload the data**: Every filter change reloads the page data and re-applies your filters, so an out-of-date list is never left on screen.
+- **Clear partial rule**: A purchase order line counts as partial only when more than zero and less than 90% has been received. At 90% or more it is treated as complete.
+- **Dates you can trust**: The receive date comes from line desired, line promise, PO desired, then PO promise, and finally the order date. Rows with no receive date type are highlighted in red.
+
+**Why this helps**:
+
+- Late, partial, and on-time lines stay accurate while you work, instead of drifting from the data.
+
+#### Smarter Suggestions
+
+**What's new**:
+
+- **Free text from Infor Visual**: Part, user, location, warehouse, operation, and order fields backed by Infor Visual no longer reject a value that is missing from the lookup list.
+- **Less waiting while typing**: Infor Visual suggestion lists are cached for ten minutes and overlapping lookups share one request.
+
+**Why this helps**:
+
+- You are not stopped by a lookup list that has not caught up with the Visual database.
+- Typing stays responsive and the Visual server is not asked the same question repeatedly.
+
+#### Infor Visual Reliability
+
+**What's new**:
+
+- **Queries you can stop**: Long Visual queries honor a timeout and can be cancelled instead of leaving the screen waiting.
+- **Fewer reconnects**: Connection pooling and disconnect recovery were repaired, so a dropped connection no longer needs an application restart.
+
+**Why this helps**:
+
+- A slow or busy Visual server no longer makes the application feel frozen.
+- Inventory, audit, and analytics screens recover on their own after a network blip.
+
+---
+
+## Previous Update - December 15, 2025 (Version 6.7.0)
 
 **What Changed**: We've added a new **Quick User Creation** wizard to streamline onboarding, improved **Performance Metrics** reliability, and prepared the database for upcoming email notification features.
 **Do I Need To Do Anything?**: No, but Admins can now use the new "Quick Create" button in User Settings.

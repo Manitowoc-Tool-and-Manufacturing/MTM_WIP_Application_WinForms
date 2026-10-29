@@ -294,6 +294,32 @@ dotnet build --configuration Release
 4. Verify database schema matches code expectations
 5. Test application launch and database connectivity
 
+### Publishing for the MTM Loader (WinUI 3)
+
+The MTM Loader reads this application from the shared application store, not from a
+manually copied folder. Its catalogue entry is `id: "wip"`, source folder
+`MTM WIP Application`, executable `MTM_Inventory_Application.exe`, and it refuses to
+update an application whose folder has no `build-manifest.json`.
+
+```powershell
+# Stage a loader-shaped payload under artifacts/payload/win-x64
+pwsh -NoProfile -File .\scripts\Publish-MtmWipPayload.ps1
+
+# Stage and publish to the shared application store (manifest written last)
+pwsh -NoProfile -File .\scripts\Publish-MtmWipPayload.ps1 `
+  -Destination '\\mtmanu-fs01\Expo Drive\MH_RESOURCE\Material_Handler\MTM Application Store\MTM WIP Application'
+```
+
+Rules the script enforces, taken from the MTM Loader specification
+(`MTM_Loader_WinUI3/docs/spec`):
+
+1. The payload folder contains `MTM_Inventory_Application.exe` and `build-manifest.json`, nothing else is required.
+2. The publish is self-contained `win-x64` with `PublishSingleFile=false` and `PublishTrimmed=false`.
+3. `build-manifest.json` records `schemaVersion`, `applicationId`, `version` (3-part semver from `<Version>`),
+   `publishedUtc`, `executable`, `fileCount`, `totalBytes`, and every file with its size and SHA-256.
+4. The manifest is written last, so a half-copied payload is never advertised.
+5. A version is never reused with a different executable; bump `<Version>` instead.
+
 ## Architecture Patterns
 
 ### DAO Pattern (Data Access)
@@ -1069,6 +1095,6 @@ Refer to `.mcp/mtm-workflow/README.md` for full tool documentation.
 ---
 
 **Last Updated**: 2025-12-13
-**Project Version**: 6.4.1.0
+**Project Version**: 6.8.0.0
 **Maintained By**: Manitowoc Tool and Manufacturing
 **For Questions**: Refer to `.github/copilot-instructions.md` for coding patterns

@@ -15058,7 +15058,7 @@ CREATE TABLE `log_changelog` (
 --
 
 INSERT INTO `log_changelog` (`Version`, `Notes`) VALUES
-('6.3.5.0', 'QuickButtons visual improvements and theme system refinements.');
+('6.8.0.0', 'Role-aware analytics workspace, receiving analytics refresh, smarter Infor Visual suggestions, and Infor Visual connection reliability.');
 
 -- --------------------------------------------------------
 
