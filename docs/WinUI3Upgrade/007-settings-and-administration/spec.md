@@ -71,6 +71,8 @@ A user with Administrator rights can navigate all ten categories, create a user 
 
 ## 3. Behavioral Edge Cases & State Constraints
 
+> **Screen constraints** (`000-pre-foundation` D58, D59): every screen must be fully usable at **1366×768 with 100 % DPI**, and every interactive control carries `AutomationProperties.Name` matching its visible label plus a stable `AutomationId`. High contrast and text scaling are out of scope by decision.
+
 ### 3.1 Navigation and role → category availability
 
 Categories and their legacy keys: **Home, Database, User Management, Part Numbers, Operations, Locations, Item Types, Theme, Shortcuts, About**. The legacy "Theme" category is renamed **Appearance** in the new client; the rename is the only label change.

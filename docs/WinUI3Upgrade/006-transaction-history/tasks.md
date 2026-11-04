@@ -102,7 +102,7 @@ Recorded so a reviewer does not mistake them for defects.
 | Deviation | Rationale | Reviewed by |
 | :--- | :--- | :--- |
 | Column-header sorting is **removed** | Over server-paged data it sorted only the current page; the sort order is stated in the UI instead | *(this spec)* |
-| Grid binds **typed row models**, not `DataTable` | The Toolkit `DataGrid` binds `IEnumerable`; row colour moves to the row model + `IRowStyleSelector` | *(this spec)* |
+| Grid binds **typed row models**, not `DataTable` | `TableView` binds `IEnumerable`; row colour moves to the row model + a style selector | *(this spec)* |
 | Row/alternating colours become **ThemeResource brushes** | Constitution Rule 9 forbids literal hex and `Colors.*` in Views | *(this spec)* |
 | The total count is displayed but treated as **unreliable** | It is parsed from status-message text and absent on the SmartSearch path | *(this spec)* |
 | `async void`, `ConfigureAwait(false)`+`Invoke`, fire-and-forget init, `Task.Run` Excel, `ContinueWith` print are **fixed, not carried** | They are threading defects under the constitution | *(this spec)* |

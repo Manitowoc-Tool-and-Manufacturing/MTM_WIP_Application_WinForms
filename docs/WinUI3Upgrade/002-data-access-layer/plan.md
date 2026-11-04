@@ -270,7 +270,7 @@ DatabaseOptions
 Built into a connection string by a single method per section. Two properties of that method matter:
 
 - It never logs, and never returns the string in an error message.
-- It reproduces the existing WIP string's options — `Allow User Variables=True`, `SslMode=Disabled`, `AllowPublicKeyRetrieval=true` — because the server is a legacy 5.7.24 instance behind a LAN and changing TLS behaviour would break connectivity rather than improve it.
+- It reproduces the existing WIP string's options — `Allow User Variables=True`, `SslMode=Disabled`, `AllowPublicKeyRetrieval=true` — because the server sits behind a LAN behind a legacy connection contract, and changing TLS behaviour would break connectivity rather than improve it. `AllowPublicKeyRetrieval=true` is **not optional** once the target server is 8.4 LTS: `caching_sha2_password` over an unencrypted TCP connection needs the server's RSA public key, so removing it fails authentication rather than tightening security (`000-pre-foundation` D40/D41).
 
 ### 3.2 Transaction and connection ownership
 
@@ -290,7 +290,12 @@ Three integration tests per DAO, all against `mtm_wip_application_winforms_test`
 
 Where a procedure cannot be called safely without disturbing shared state, the test is skipped with `Skip = "<reason>"` and the gap is listed in `tasks.md`'s drift log. A skipped test with a reason is honest; a green test that calls nothing is not.
 
+**Fixture data comes from a deterministic seed script, never from production** (`000-pre-foundation` D56). The live 5.7.24 server is read-only to this migration (D42), so no real part number, location or transaction can leave it. The seed is a committed `.sql` file applied before the suite runs; it truncates the mutable tables and inserts a fixed set of rows with stable identifiers, so two runs produce identical counts and checksums. Tests that need a specific shape create their own rows inside the rolled-back transaction rather than depending on another test's leftovers — the seed provides a floor, not a shared fixture contract.
+
 Two behaviour tests sit above the per-DAO set:
 
 - **Transaction rollback**: insert inside a caller transaction, roll back, assert the row is absent.
+- **Seed determinism**: apply the seed twice and assert identical row counts and a stable checksum per table.
 - **No provider leak**: the forbidden-API gate from `001` already covers `MySql.Data`; a second assertion walks `obj/project.assets.json` for the package name, because a transitive reference would compile and still load the wrong provider.
+
+One constraint on the data layer that comes from the launch budget rather than from correctness: **no synchronous database call may occur during application launch** (`000-pre-foundation` D57, ≤ 5 s to interactive from a network share). Every method on this helper is `async Task<T>` and there is no synchronous counterpart, so a launch-time caller has nothing to block on — which is the point.

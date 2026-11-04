@@ -54,7 +54,7 @@ A throwaway test page can open a dialog, show an error, select a theme, bind a s
 | `Service_ErrorHandler` (static `Instance` + static facades, shows `EnhancedErrorDialog`, 5 s suppression) | `IErrorService` / `Service_ErrorHandler` (instance) | Same flow: log → suppress duplicates → present → optional retry. Same severity-to-title mapping. No static facades, no `MessageBox`. |
 | `EnhancedErrorDialog` (severity-sized, plain English, technical details expander, Retry, View Logs) | `Dialog_ErrorDetails.xaml` opened through `IDialogService` | Same three layers of information: a plain sentence, the affected operation, and expandable technical detail. Technical detail is copyable. |
 | `Enum_ErrorSeverity` — `Low`, `Medium`, `High`, `Fatal` mapped to titles Warning / Error / Critical Database Issue / Fatal Application Error | Same enum, same four titles | The severity vocabulary in `log_error.Severity` is `Information`, `Warning`, `Error`, `Critical`, `High`. Both must survive: one drives the UI, one drives the column. A single mapping table owns the conversion. |
-| `LoggingUtility` / `Service_Logging` — CSV, three files per user (`_normal`, `_db_error`, `_app_error`), `BlockingCollection` writer, 5 IO retries, 30-day + 50-file cleanup | Serilog file sink, `logs/app-.txt`, `rollingInterval: Day`, `retainedFileCountLimit: 30`, `shared: true` | Replaces it entirely. Structured properties replace the CSV columns `Timestamp, Level, Source, Message, Details`. |
+| `LoggingUtility` / `Service_Logging` — CSV, three files per user (`_normal`, `_db_error`, `_app_error`), `BlockingCollection` writer, 5 IO retries, 30-day + 50-file cleanup | Serilog local file sink at `%LOCALAPPDATA%\MTM_WIP\logs\app-.txt`, `rollingInterval: Day`, `retainedFileCountLimit: 30`, `shared: true`, plus a background copier to the configured share | Replaces it entirely. Structured properties replace the CSV columns `Timestamp, Level, Source, Message, Details`. The share is a copy destination, never the sink (D54). |
 | `Helper_LogPath` — primary path a **network share**, a developer-specific OneDrive override, then `%ProgramData%` | One per-machine folder, configured once | Both the hard-coded share and the personal override are deleted. A personal path in shipped code is a defect. |
 | `Service_OnStartup_AppLifecycle.SetupGlobalExceptionHandling` (WinForms `ThreadException` + `AppDomain.UnhandledException`) | Handled in `004` using this spec's error service | Split out because it is a lifecycle concern. |
 | `Control.Invoke` / `BeginInvoke` / `InvokeRequired` (used on ~20 screens) | `IDispatcherService.TryEnqueue(...)` | ViewModels must not reference `DispatcherQueue` directly, or they cannot be tested. The test double runs the callback inline. |
@@ -66,7 +66,7 @@ A throwaway test page can open a dialog, show an error, select a theme, bind a s
 | `ThemedForm` / `ThemedUserControl` base classes | *(deleted)* | No form enumerates its children to paint them. Theming comes from resources resolved by the framework. |
 | `app_themes` table and `sys_theme_GetAll` | Unread | The table stays; the new client does not read it. User data is not deleted. |
 | `Component_SuggestionTextBox` + `Component_SuggestionTextBoxWithLabel` + `SuggestionOverlayForm` (modal full-screen form painted with a screenshot of its parent, owner-drawn list, `EM_SETCUEBANNER` P/Invoke) | Suggestion control: `TextBox` + `Popup`/`Flyout` + `ListView`, driven by a controller | **No secondary window, no screenshot capture, no P/Invoke.** Behaviour preserved: below-then-above placement, `%` wildcards, 100-result cap, F4 full list, exact-match suppression, per-source no-match policy. |
-| `DataGridView` + `Service_DataGridView` (row colouring, per-user column state, summary panel injection) | Shared grid component over Community Toolkit `DataGrid` | Column descriptors, row-style selector, per-user state, `MenuFlyout`. **Not a drop-in** — see §4.1. |
+| `DataGridView` + `Service_DataGridView` (row colouring, per-user column state, summary panel injection) | Shared grid component over `WinUI.TableView` | Column descriptors, row-style selector, per-user state, `MenuFlyout`. **Not a drop-in** — see §4.1. |
 | `Core_TablePrinter` + `Helper_PrintManager` + `PrintForm` (GDI+ drawing, 2000-line dialog) | Print document model + renderer + a dialog over the model | The model is the seam. Logo, title, timestamp, watermark, column widths, per-row colour, footer and page boundaries must all be representable. |
 | `Helper_ExportManager` (ClosedXML, sheet `Export`, grey bold header, visible columns in order) | Same, over the print document model | Identical output rules. |
 | `Helper_StoredProcedureProgress` (`ToolStripProgressBar` + status label) | `IProgress<T>` + a progress surface | Reported 0–100, monotonic, clamped, cancellable. |
@@ -132,7 +132,7 @@ Two consequences worth stating plainly:
 | :--- | :--- |
 | `DataSource = DataTable` | The Toolkit grid binds `IEnumerable`. A `DataTable` must be projected to typed rows. Every grid screen changes its model, not just its markup. |
 | `CellFormatting` event | Does not exist. Row colour comes from a style selector bound to the row model, so **the row model must carry whatever decides the colour**. |
-| `AutoSizeColumnsMode.Fill` | Replaced by `DataGridLength(1, Star)` per column. |
+| `AutoSizeColumnsMode.Fill` | Replaced by a star-sized `TableViewColumn` width per column. |
 | Per-user column state via the existing grid-settings procedure | Payload shape is frozen. The component maps its column descriptors to that payload; it does not invent a new format. |
 | Column-header sort over server-paged data | Sorts the page only. The component **does not expose header sorting**; the sort order is stated in the UI. |
 | Delete-key interception | Becomes an accelerator with `CanExecute`, so it cannot fire on a screen that has no delete. |
@@ -169,7 +169,7 @@ Two consequences worth stating plainly:
 | Shortcut overrides | `usr_user_shortcuts` | unchanged |
 | Grid layout | existing grid-settings procedure | unchanged payload shape |
 | Print settings | `%APPDATA%\MTM\PrintSettings\{GridName}.json` | **same path and same shape** |
-| Log files | Serilog `logs/app-*.txt` | replaces CSV entirely |
+| Log files | Serilog `%LOCALAPPDATA%\MTM_WIP\logs\app-*.txt`, copied to the share | replaces CSV entirely; the share is a copy destination, not the sink (D54) |
 
 No folder is deleted at startup. The current application wipes `%APPDATA%` and `%LOCALAPPDATA%` application folders on every launch; that behaviour is not carried over, because a folder that is wiped cannot hold preferences.
 
@@ -188,6 +188,6 @@ No folder is deleted at startup. The current application wipes `%APPDATA%` and `
 
 ### Assumptions
 
-1. `CommunityToolkit.WinUI.UI.Controls` 7.1.2's `DataGrid` is acceptable for 12+ screens. Verified at TASK-046 with the reference grid from `006`.
+1. `WinUI.TableView` is acceptable for 12+ screens (`000-pre-foundation` D37). Verified at TASK-046 with the reference grid from `006`.
 2. A single `Popup`-based suggestion control can serve both master-data and ERP sources.
 3. Windows 10 machines without Mica are acceptable with a solid background fallback.

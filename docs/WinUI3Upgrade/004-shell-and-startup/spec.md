@@ -134,7 +134,7 @@ Stages 4 and 5 are conditional and mutually ordered: sign-in must complete befor
 ### 3.2 One window, one Mica backdrop, one title bar
 
 - `MainWindow` is the only window. All launch stages swap inside `StageHost` (`ContentPresenter`); after handoff the shell `Frame` hosts `Page`s. No screen may open a second window (`constitution.md` §2 Rule 6).
-- `Window.SystemBackdrop = new MicaBackdrop()` when Mica is available. The minimum supported platform is Windows 10 1809, where Mica is unavailable; the fallback is a solid `ThemeResource` background, never an unstyled default (`constitution.md` §2 Rule 9).
+- `Window.SystemBackdrop = new MicaBackdrop()` when Mica is available. The minimum supported platform is Windows 10 22H2 (`000-pre-foundation` D45), where Mica is still unavailable; the fallback is a solid `ThemeResource` background, never an unstyled default (`constitution.md` §2 Rule 9).
 - `ExtendsContentIntoTitleBar = true` with `SetTitleBar(grid)`: the caption area is drawn by the system but the client region extends under it.
 
 ### 3.3 Single instance
@@ -204,7 +204,7 @@ The launch pipeline is the writer; every consumer reads the injected service. Th
 | 3 | **The `StatusStrip` equivalent** | **Resolved (D25)** — one docked footer bar across the shell carrying the last-saved indicator, transient success/failure text and progress. It replaces the `StatusStrip` in kind rather than splitting the three signals across `InfoBar`, in-page progress and a badge. Pages publish to it through a shell status contract. |
 | 4 | **Which eight controls read `MainFormInstance`.** They must be enumerated before `005` so their replacement dependencies are known. | (to confirm) — list produced during TASK-064. |
 | 5 | **The cleanup action list.** `PerformAppCleanup`'s exact actions (temp files, stray locks, log rotation) must be read from source and mapped, not assumed. | (to confirm) — enumerated during TASK-056. |
-| 6 | **Whether any machine in the fleet is below Windows 10 1809.** If one is older, the platform minimum rises and the Mica fallback is moot. | Carried from `001` §4 #2. |
+| 6 | **Whether any machine in the fleet is below Windows 10 22H2.** The floor was raised from 1809 by `000-pre-foundation` D45 with no inventory taken; a machine below 22H2 is now excluded, and Mica remains unavailable on every supported Windows 10 build regardless. | Carried from `001` §4 #2. |
 | 7 | **Relaunch-then-exit and the loader.** Whether the loader tolerates a settings-triggered self-relaunch (new process of the same exe) while it holds the app open. | (to confirm) — behaviour must be exercised with the loader before `011`. |
 
 ### Assumptions

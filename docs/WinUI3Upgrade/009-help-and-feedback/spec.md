@@ -67,6 +67,8 @@ All 54 topics are reachable, searchable and readable offline, with typography, t
 
 ## 3. Behavioral Edge Cases & State Constraints
 
+> **Screen constraints** (`000-pre-foundation` D58, D59): every screen must be fully usable at **1366×768 with 100 % DPI**, and every interactive control carries `AutomationProperties.Name` matching its visible label plus a stable `AutomationId`. High contrast and text scaling are out of scope by decision.
+
 ### 3.1 Content loading
 
 - The loader reads every `*.json` file in the content directory.
@@ -135,6 +137,8 @@ Help content is updated **in the same change as the feature it documents** (D20;
 - A check (script or test) enumerates the declared screens and the help topics, lists every topic, and flags any screen declared without a covering topic. The check runs with the build/tests and fails on an uncovered screen.
 
 The exact location and format of the screen declaration is set by TASK-125 and recorded in §4 (gap 10). The check is a mechanism, not a manual checklist.
+
+**Who writes a topic, and when** (`000-pre-foundation` D62): each topic is **drafted by the model** from the corresponding legacy topic in the WinForms `Documentation/Help/JSON/` set, then **edited and approved by the owner** before the feature task that needed it is considered done. Every topic records which legacy topic it derives from and who approved it, so "the help is out of date" and "nobody checked this" are both visible rather than inferred. The 54 existing topics are the source each draft starts from — this is the mechanism that makes Rule 13 affordable without either writing everything from scratch or deferring help to a documentation phase that never happens.
 
 ---
 

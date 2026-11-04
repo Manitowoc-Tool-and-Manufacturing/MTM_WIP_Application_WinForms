@@ -8,12 +8,16 @@
 
 ## 1. How the pack is organised
 
-The pack is eleven numbered spec folders plus one shared constitution:
+The pack is twelve numbered spec folders plus one shared constitution:
 
 ```text
 docs/WinUI3Upgrade/
 ├── constitution.md               # shared, single, binding
 ├── 00-index.md                   # this file
+├── 000-pre-foundation/           # decisions the other eleven assume
+│   ├── spec.md                   # ratified; §4 still open
+│   ├── plan.md                   # pending Round 2
+│   └── tasks.md                  # pending Round 2
 ├── 001-foundation-and-tooling/
 │   ├── spec.md
 │   ├── plan.md
@@ -39,7 +43,8 @@ Mandated structure each file uses:
 
 | Folder | Scope | Tasks | Depends on | Unblocks |
 | :--- | :--- | :--- | :--- | :--- |
-| [001-foundation-and-tooling](./001-foundation-and-tooling/) | Solution skeleton, build settings, package pinning, project reference matrix, forbidden-API gate, assets | TASK-001 … 013 | none | every other spec |
+| [000-pre-foundation](./000-pre-foundation/) | Repository, model policy, toolchain, UI package line and control build list, MVVM depth, database target, platform floor; amends the constitution | TASK-000a … 000f | none | 001, and through it every other spec |
+| [001-foundation-and-tooling](./001-foundation-and-tooling/) | Solution skeleton, build settings, package pinning, project reference matrix, forbidden-API gate, assets | TASK-001 … 013 | 000 | every other spec |
 | [002-data-access-layer](./002-data-access-layer/) | Result type, DatabaseOptions, stored-procedure helper on MySqlConnector, prefix cache, 22 DAOs, Visual ERP reader, DI | TASK-014 … 034 | 001 | 003 (contracts), 005, 006, 007, 008, 010 |
 | [003-crosscutting-services-and-theming](./003-crosscutting-services-and-theming/) | Dialogs, error service, Serilog, dispatcher, current user, master-data cache, preferences, shortcuts, native theming, suggestion control, shared grid, print document model, Excel export, progress, focus, diagnostics | TASK-035 … 052 | 001, 002 | 004 (composition root), 005–009 (every screen) |
 | [004-shell-and-startup](./004-shell-and-startup/) | Window, composition root, single instance, launch pipeline, splash, sign-in, first-run user, role gate, global exceptions, exit, NavigationView shell | TASK-053 … 065 | 001, 003 | 005–009 |
@@ -59,6 +64,7 @@ Folders 004–011 are scaffolded and their three files are still being written; 
 
 | Task band | Folder |
 | :--- | :--- |
+| TASK-000a … 000f | [000-pre-foundation](./000-pre-foundation/) |
 | TASK-001 … 013 | [001-foundation-and-tooling](./001-foundation-and-tooling/) |
 | TASK-014 … 034 | [002-data-access-layer](./002-data-access-layer/) |
 | TASK-035 … 052 | [003-crosscutting-services-and-theming](./003-crosscutting-services-and-theming/) |
@@ -90,7 +96,7 @@ A task keeps its global number when it moves between specs — the number is the
 | D1 | Packaging: Unpackaged, WindowsPackageType=None, because the MTM Loader launches a folder payload from a network share. |
 | D2 | Solution layout: 11 projects — four foundation libraries plus one Module_* per feature area; boundaries enforced by a test, not review. |
 | D3 | MVVM: CommunityToolkit.Mvvm 8.4.2. |
-| D4 | Runtime: .NET 10 + Windows App SDK pinned to the MTM_Waitlist version, net10.0-windows10.0.19041.0; DevWinUI 10.8.0 pins the platform version. |
+| D4 | Runtime: .NET 10 + Windows App SDK pinned to the MTM_Waitlist version, net10.0-windows10.0.19041.0; DevWinUI 10.9.1 pins the platform version (raised from 10.8.0 by D36). |
 | D5 | Navigation: one window + Frame navigation; dialogs via DevWinUI.WindowedContentDialog behind IDialogService. |
 | D6 | Strategy: full rewrite; THE DATABASE IS FROZEN — same tables, same ~120 procedures, same parameter names, same p_Status/p_ErrorMsg. |
 | D7 | Naming: MTM_WIP.* |
@@ -114,6 +120,9 @@ A task keeps its global number when it moves between specs — the number is the
 | D25 | **The shell has one docked footer bar** carrying the last-saved indicator, transient success/failure text and progress — replacing the old `StatusStrip` in kind rather than splitting it across `InfoBar`, in-page progress and a badge. Decided 2026-11-02. |
 | D26 | **Cutover is performed by the application owner on a weekend**, once the WinUI 3 build is ready: the old payload folder is replaced with the new one. No scheduled maintenance window, no pilot phase. Consequence: `011`'s verification and parity tasks are the only thing standing between a defect and every machine. |
 | D27 | **The startup AppData wipe is not ported** and needs no replacement. It was clearing stale caches; the new application owns its own cache folder and never deletes it on launch. Decided 2026-11-02. |
+| D28–D46 | **Pre-foundation decisions, Round 1** — repository topology, model policy, toolchain, UI package line, control build list, MVVM depth, database target, platform floor, and the constitution amendments they require. Recorded once, in [000-pre-foundation/spec.md §3.1](./000-pre-foundation/spec.md), deliberately **not** duplicated here: a decision kept in two places drifts, which is the same argument §1 makes for keeping the constitution single. Ratified 2026-11-04. |
+| D47–D62 | **Pre-foundation decisions, Round 2** — pack governance, repo and solution shape, SDK and package pinning, secrets and configuration location, code signing, PIN pepper, log destination and share resilience, crash evidence, test-data seeding, performance budget, hardware floor, accessibility scope, parity evidence, AI review obligation, help authoring. Recorded in the same place for the same reason. Ratified 2026-11-04. |
+| — | The four that change other specs: **D37** replaces the archived Toolkit `DataGrid` with `WinUI.TableView` (rewrites `006`'s reference grid and `003`'s shared grid); **D45** raises the floor to Windows 10 22H2 (changes `001`'s `TargetPlatformMinVersion` and every Mica assumption); **D31** leaves CI absent (`011`'s verification becomes manual and evidenced); **D36** skews `DevWinUI` to 10.9.1 against the fleet's 10.8.0. |
 
 ---
 
@@ -132,6 +141,18 @@ A task keeps its global number when it moves between specs — the number is the
 
 **All eight questions are now closed.** What remains in the individual specs' §4 tables are implementation-time `(to confirm)` items — things a developer verifies while building (exact column widths, a procedure's behaviour on an empty set) — not product decisions.
 
+### 6.1 Pre-foundation questions
+
+Raised after the pack was ratified, because the pack had assumed answers to nine tool-and-platform questions without recording them. Full reasoning and downstream impact are in [000-pre-foundation/spec.md](./000-pre-foundation/spec.md).
+
+| Round | Scope | Status |
+| :--- | :--- | :--- |
+| **Round 1** | GitHub, DeepSeek, Serena, project creation, DevWinUI, Community Toolkit and the grid, WinUI 3 custom controls, CommunityToolkit.Mvvm, MySQL, Windows floor — 19 decisions | **CLOSED 2026-11-04** — D28–D46 |
+| **Round 2** | Eleven categories selected on 2026-11-04: pack governance, repo and solution topology, build reproducibility, secrets and code signing, observability, testing and test-data lifecycle, shop-floor hardware and accessibility, performance budgets, feature-parity evidence, AI-assisted development governance, help authoring — 16 decisions | **CLOSED 2026-11-04** — D47–D62 |
+| **Not selected** | OSS licence and dependency-governance policy | **Accepted gap** — recorded, not deferred silently |
+
+**No unasked questions remain in either round.** What is left in `000-pre-foundation/spec.md` §4.2 is accepted risk — consequences chosen knowingly — not open items. The Round 2 decisions are recorded but **not yet propagated** into the specs they change; that is TASK-000g … 000l.
+
 ---
 
 ## 7. Grounding
@@ -143,7 +164,7 @@ This pack was produced by inspecting the WinForms application read-only, not by 
 ## 8. The findings that most changed the plan
 
 - **(a) A second database exists**: Infor Visual ERP on SQL Server, read by inline read-only SQL, with credentials previously literal in a committed config.
-- **(b) DataGridView → DataGrid is a rewrite, not a mapping**: the 12+ screens that own a grid must be rebuilt against the WinUI DataGrid, which is why 003 lands a shared grid before any screen uses it.
+- **(b) DataGridView → `WinUI.TableView` is a rewrite, not a mapping**: the 12+ screens that own a grid must be rebuilt against `TableView` (the archived Toolkit `DataGrid` is not used — D37), which is why 003 lands a shared grid before any screen uses it.
 - **(c) Global mutable state touches nearly every screen**: `Model_Application_Variables` (40+ members) plus static DAOs and a service locator, which is why it is migrated behind interfaces first.
 
 ---
@@ -154,14 +175,14 @@ Risks that span more than one spec. A risk owned by a single spec lives in that 
 
 | Risk | Impact | Mitigation | Specs |
 | :--- | :--- | :--- | :--- |
-| `DataGridView` → Toolkit `DataGrid` is a rewrite on 12+ screens, not a mapping | Highest schedule risk in the pack | Build one grid end-to-end as the reference, extract the shared component, then apply it. The reference is `006`. | 003, 006, 007, 008 |
+| `DataGridView` → `WinUI.TableView` is a rewrite on 12+ screens, not a mapping, and the package is single-maintainer | Highest schedule risk in the pack | Build one grid end-to-end as the reference, extract the shared component, then apply it. The reference is `006`. | 003, 006, 007, 008 |
 | Printing has no equivalent pipeline — GDI+ draws the page by hand today | Shop-floor paperwork must be visually identical | **Decided (D19)**: the print document model is the seam; it renders to HTML/CSS and prints through WebView2. Prove it on one real report before building the dialog. | 003, 006 |
 | `MySqlConnector` error numbers differ from `MySql.Data` | Retry and friendly messages degrade silently | Re-validate the transient set per condition and assert each verdict in a test. | 002 |
 | Removing global state touches nearly every screen | Cross-tab regressions (quick buttons, colour codes) | Migrate statics behind interfaces first; keep the WinForms build running for comparison. | 002, 003, 005 |
 | Mica is unavailable on Windows 10, which is the supported floor | Unstyled window on some floor PCs | Explicit solid `ThemeResource` fallback per theme; smoke test on a Windows 10 build. | 001, 004 |
 | Both generations ship `MTM_Inventory_Application.exe` under loader `id: "wip"` | No side-by-side; cutover is one event, so a bad build reaches every machine at once | **Decided (D16)**: wholesale folder swap with the preserved `.previous-<version>` folder as the only rollback. Full verification and parity walk gate the swap. | 011 |
 | Help topic content is HTML | A native renderer may not reproduce nested tables and inline code | Constrain the renderer to the tag set actually used; keep one `WebView2` as the documented fallback. Undecided (Q4). | 009 |
-| `DevWinUI` 10.8.0 pins the Windows App SDK platform version | An independent SDK upgrade breaks the dialog wrapper | Pin to the `MTM_Waitlist` version; upgrade all three applications together. | 001, 003 |
+| `DevWinUI` pins the Windows App SDK platform version, and the fleet is now skewed (10.9.1 here, 10.8.0 in the siblings) | An independent SDK upgrade breaks the dialog wrapper | Pin to the `MTM_Waitlist` version unless D36 supersedes it; upgrade all three applications together. | 001, 003 |
 | Analytics dashboards currently load Chart.js from a public CDN | Offline shop-floor machines render blank charts | Native charting removes the network dependency entirely. | 008 |
 
 ---
@@ -180,3 +201,5 @@ Risks that span more than one spec. A risk owned by a single spec lives in that 
 | Date | Change |
 | :--- | :--- |
 | 2026-11-02 | Restructured from five flat files into eleven numbered spec folders plus a shared constitution; 137 tasks across 11 specs. |
+| 2026-11-04 | Added [`000-pre-foundation`](./000-pre-foundation/) ahead of `001` (twelve folders now). Ratified D28–D46: new repository under the org (D29/D30), no CI (D31), BYOK-strict model policy on DeepSeek (D32/D33), Serena on Roslyn (D34), `dotnet new` scaffold (D35), `DevWinUI` 10.9.1 (D36), Windows Community Toolkit 8.2 plus `WinUI.TableView` replacing the archived `DataGrid` (D37), a three-control build list (D38), full MVVM toolkit (D39), MySQL 8.4 LTS target with 26.10 in development and 5.7.24 read-only (D40–D42), numbered SQL documents validated on `mtm_wip_application_winforms_test` (D43/D44), and a Windows 10 22H2 floor (D45). Amended the constitution (§1 Database/UI Kit/Grid/Target Platform Minimum, §1.1, §2 Rule 4, §4 test-server) and corrected `001`, `003`, `006` and `011` accordingly. |
+| 2026-11-04 | Round 2 ratified as D47–D62: append-only pack governance (D47), `MTM_WIP` repo shape (D48), `global.json` plus Central Package Management (D49), committed lock files (D50), the `MTM_Receiving_Application` configuration pattern with a per-machine `%PROGRAMDATA%` override (D51, revised), unsigned payload (D52), shared PIN pepper (D53), local-first logging copied to the share (D54), WER `LocalDumps` plus an in-app minidump handler (D55), deterministic test seed (D56), ≤ 5 s cold-start budget (D57), 1366×768 design target (D58), automation annotations only with high contrast out of scope (D59, revised), owner-walkthrough parity gate (D60, confirmed), line-by-line model review with disclosure (D61), and model-drafted help with owner approval (D62). Propagation into `001`, `002`, `003`, `005`–`009` and `011` was completed the same day as TASK-000g … 000l, and the drift log in `000-pre-foundation/tasks.md` is closed. |

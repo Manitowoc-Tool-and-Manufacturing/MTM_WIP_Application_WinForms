@@ -12,17 +12,18 @@
 | Concern | Decision |
 | :--- | :--- |
 | Target Framework | `net10.0-windows10.0.19041.0` |
-| Target Platform Minimum | `10.0.17763.0` (Windows 10 1809) |
+| Target Platform Minimum | `10.0.19041.0` (Windows 10 22H2). Raised from 1809 by [`000-pre-foundation`](./000-pre-foundation/spec.md) D45. |
 | UI Framework | WinUI 3 (Windows App SDK, desktop) |
 | Packaging | **Unpackaged** (`<WindowsPackageType>None</WindowsPackageType>`) |
 | Architecture | `x64` only |
 | MVVM | `CommunityToolkit.Mvvm` 8.4.2 — `ObservableObject`, `[ObservableProperty]`, `[RelayCommand]` |
 | DI | `Microsoft.Extensions.Hosting` (`IHost`) + `Microsoft.Extensions.DependencyInjection` |
-| Database | **MySQL 5.7.24 — frozen. No schema, procedure, or column changes.** |
+| Database | **MySQL 8.4 LTS (target). The schema, procedures, columns and parameter names remain frozen** — no DDL, no altered or renamed column, no new procedure, no changed signature, no changed `p_Status`/`p_ErrorMsg` contract. Amended by [`000-pre-foundation`](./000-pre-foundation/spec.md) D40/D41/D42: only the server version changes, the existing 5.7.24 server is read-only to this migration, and development runs 26.10 against an 8.4 LTS cutover target. |
 | DB Provider | `MySqlConnector` |
 | Logging | `Serilog` (`Serilog.Sinks.File`) — **replaces** `LoggingUtility` CSV |
 | Charts | `LiveChartsCore.SkiaSharpView.WinUI` 2.0.5 |
-| UI Kit | `DevWinUI` — `WindowedContentDialog` and selected controls |
+| UI Kit | `DevWinUI` **10.9.1** — `WindowedContentDialog` and selected controls. Amended by [`000-pre-foundation`](./000-pre-foundation/spec.md) D36. |
+| Grid | `WinUI.TableView` — **not** `CommunityToolkit.WinUI.UI.Controls` 7.1.2, whose `DataGrid` is archived. See [`000-pre-foundation`](./000-pre-foundation/spec.md) D37. |
 | Tests | `xUnit` — see §4 |
 
 ### 1.1 Why these versions
@@ -30,7 +31,7 @@
 These are not preferences; they are the versions already proven in the two sibling WinUI 3 applications, so a defect found in one is a defect fixed in all three.
 
 - `net10.0-windows10.0.19041.0` and `Microsoft.WindowsAppSDK` **2.4.0** — as pinned by `MTM_Waitlist` (`MTM_Waitlist.csproj`).
-- `DevWinUI` **10.8.0** ships `net10.0-windows10.0.19041` assemblies, which is why the platform version above is not negotiable.
+- `DevWinUI` **10.9.1** ships `net10.0-windows10.0.19041` assemblies, which is why the platform version above is not negotiable. (The fleet's other two applications remain on 10.8.0 until they are upgraded together — a recorded version skew, [`000-pre-foundation`](./000-pre-foundation/spec.md) D36.)
 - `CommunityToolkit.Mvvm` **8.4.2** — as pinned by both `MTM_Waitlist` and `MTM_Receiving_Application`.
 - `LiveChartsCore.SkiaSharpView.WinUI` **2.0.5** — as pinned by `MTM_Receiving_Application` and used by `Module_ShipRec_Tools/Views/View_Tool_ReceivingAnalytics.xaml`.
 
@@ -61,7 +62,7 @@ The following are **hard forbidden** in any project under the new solution. A pu
 | Inline SQL strings (`"SELECT ..."`) | §2 Rule 3. All data access is stored procedures. |
 | `BackgroundWorker` | Replaced by `Task` + `DispatcherQueue`. |
 | `Thread.Sleep`, `.Result`, `.Wait()`, `GetAwaiter().GetResult()` on the UI thread | Deadlocks the UI thread. See §2 Rule 7. |
-| MySQL 8.0+ SQL syntax — JSON functions, CTEs (`WITH`), window functions (`OVER()`), `CHECK` constraints | The server is MySQL 5.7.24. |
+| SQL that is valid on the development server (26.10) but invalid on the cutover target (8.4 LTS) | Development and the cutover target deliberately run different server versions ([`000-pre-foundation`](./000-pre-foundation/spec.md) D41). A construct that only works on 26.10 fails on the machine that matters. The frozen procedures are restated verbatim, so this arises only when a restatement is "improved". |
 | `LoggingUtility` CSV logging | Replaced by Serilog. |
 | The `Core/Theming` engine (`ThemeManager`, `ThemeStore`, all `Appliers`) | Replaced by native WinUI theming. See §2 Rule 9. |
 
@@ -79,6 +80,7 @@ The following are **hard forbidden** in any project under the new solution. A pu
 
 - **Core Rule 4 — The database is frozen.** This migration is a **UI and architecture** migration, not a data migration.
 
+  - **Server version is the one thing that moves** ([`000-pre-foundation`](./000-pre-foundation/spec.md) D40–D44). The target server is MySQL 8.4 LTS; development runs 26.10 against the same schema. The existing 5.7.24 server is **read-only to this project** — no DDL, no DML, no restore, ever. The schema and procedures are restated as numbered `.sql` documents and proven on `mtm_wip_application_winforms_test` only. **Because development and the cutover target are different server versions, no construct may be relied upon that is valid on 26.10 but invalid on 8.4.**
   - The target database is `mtm_wip_application_winforms` (production) and `mtm_wip_application_winforms_test` (tests). Both already exist and are already correct.
   - **No** new table, **no** new or altered column, **no** renamed column, **no** new stored procedure, **no** changed procedure signature, **no** changed `p_Status`/`p_ErrorMsg` contract.
   - The ~120 procedures already called by `Data/Dao_*.cs` are the complete API surface. If a screen appears to need data that no procedure returns, that is an escalation to the database owner — **not** a change made during this port.
@@ -132,6 +134,8 @@ The following are **hard forbidden** in any project under the new solution. A pu
 
 ### 3.1 XAML conventions
 
+- **Design target: 1366×768 at 100 % DPI** (`000-pre-foundation` D58). Every screen, dialog and panel must be fully usable at that size before it is considered usable at all; larger displays scale up, they are not the design point. This is why no text row may be given a fixed pixel height.
+- **Automation annotations are mandatory, high contrast is not** (`000-pre-foundation` D59). Every interactive control carries `AutomationProperties.Name` matching its visible label, `HelpText` where the label is not self-explanatory, and a stable `AutomationId`. High contrast `ThemeDictionary` work and text-scaling hardening are **out of scope by decision** — their absence is a recorded accepted gap, not an omission to be corrected in review. Keyboard reachability is baseline usability and is never traded away.
 - **Controls**: `PascalCase`, and named only when code-behind or a binding actually needs them (`x:Name="InventoryGrid"`).
 - **Resource keys**: `CamelCase` for local keys inside a page (`x:Key="inventoryRowHeight"`), `PascalCase` for shared theme keys in `Themes/` (`x:Key="CardStrokeBrush"`).
 - **Converters**: `PascalCase` suffixed `Converter`, declared once in `Themes/Converters.xaml`.
@@ -202,7 +206,7 @@ These are legacy behaviours, not accidents. They must survive unchanged:
 
 - **Test project**: `MTM_WIP.Tests`, `xUnit`, referencing `MTM_WIP.Core`, `MTM_WIP.Data`, and the module projects. It is **not** a WinUI project and must not require the Windows App SDK at test time. Views and XAML are not instantiated in tests.
 
-- **Integration tests** run against `mtm_wip_application_winforms_test` using the same MySQL 5.7.24 server, with per-test transaction rollback. They never touch `mtm_wip_application_winforms`.
+- **Integration tests** run against `mtm_wip_application_winforms_test` on the MySQL 8.4 LTS validation instance, with per-test transaction rollback. They never touch `mtm_wip_application_winforms`, and never touch the legacy 5.7.24 server.
 
 - **Data-layer tests are mandatory for every ported DAO**: one success case, one "no rows" case asserting `IsSuccess == true` with empty data, and one invalid-parameter case asserting the mapped error status. If the procedure cannot be exercised safely, the test is explicitly skipped with a reason and the gap is recorded in `plan.md`.
 

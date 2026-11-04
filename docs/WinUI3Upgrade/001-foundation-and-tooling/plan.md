@@ -12,12 +12,15 @@
 ```text
 MTM_WIP.sln
 ├── Directory.Build.props
+├── Directory.Packages.props              # every package version; Central Package Management (D49)
+├── global.json                           # pins the .NET 10 SDK feature band (D49)
 ├── .editorconfig
-├── .gitignore
+├── .gitignore                            # must include appsettings.local.json (D51)
 │
 ├── MTM_WIP/                              # WinExe
 │   ├── MTM_WIP.csproj
 │   ├── app.manifest
+│   ├── appsettings.json                  # committed; credentials redacted (D51)
 │   ├── App.xaml
 │   ├── App.xaml.cs                       # template default; replaced in 004
 │   ├── MainWindow.xaml                   # template default; replaced in 004
@@ -50,6 +53,28 @@ MTM_WIP.sln
 
 Libraries are created empty in this spec. Each later spec fills only its own project:
 
+### 1.1a Build-reproducibility files (`000-pre-foundation` D49, D50)
+
+Three files exist before the first project does, because retrofitting them after forty package references exist is a rewrite rather than an edit.
+
+**`global.json`** pins the SDK feature band. Without it, "it builds on my machine" means "whatever .NET SDK that machine had", which is the state both sibling repositories are in today.
+
+```json
+{
+  "sdk": {
+    "version": "10.0.100",
+    "rollForward": "latestFeature"
+  }
+}
+```
+
+`latestFeature` is deliberate: it accepts a newer patch or feature band but never a new major version, so a servicing update on one machine does not change the toolchain.
+
+**`Directory.Packages.props`** holds every `PackageReference` version. Project files then carry `<PackageReference Include="..." />` with **no `Version` attribute**, which is the only form Central Package Management accepts. Two consequences worth stating: a version appears exactly once in the repository, and a `<PackageReference>` with an inline `Version` is a build-breaking review defect rather than a style preference.
+
+**Lock files.** `<RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>` in `Directory.Build.props` makes restore emit `packages.lock.json` per project; those files are committed. A change in a transitive dependency then fails `dotnet restore --locked-mode` instead of arriving silently between two builds.
+
+
 | Project | Filled by |
 | :--- | :--- |
 | `MTM_WIP.Core` | `002` (result type), `003` (contracts and services) |
@@ -73,7 +98,7 @@ Libraries are created empty in this spec. Each later spec fills only its own pro
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
-    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+    <TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
     <RootNamespace>MTM_WIP</RootNamespace>
     <AssemblyName>MTM_Inventory_Application</AssemblyName>
     <ApplicationIcon>Assets\mtm.ico</ApplicationIcon>
@@ -95,7 +120,7 @@ Libraries are created empty in this spec. Each later spec fills only its own pro
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net10.0-windows10.0.19041.0</TargetFramework>
-    <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
+    <TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
     <RootNamespace>MTM_WIP.Core</RootNamespace>
     <UseWinUI>true</UseWinUI>
     <RuntimeIdentifiers>win-x86;win-x64;win-arm64</RuntimeIdentifiers>
@@ -218,3 +243,32 @@ This spec introduces no data access and no state. What it does introduce is the 
 | `MTM_WIP/Themes/` folder | `003` | Merged resource dictionaries. Named `Themes/` per `constitution.md` §2 Rule 9, which is authoritative on this point |
 
 `Version` in `Directory.Build.props` is the only persisted value this spec owns. `011` reads it at publish time and refuses to proceed when it does not match the manifest being written.
+
+### 3.1 Configuration files (`000-pre-foundation` D51)
+
+Two files, following `MTM_Receiving_Application`: a **committed** `appsettings.json` and an **untracked** `appsettings.local.json` override.
+
+```jsonc
+// MTM_WIP/appsettings.json — committed, credentials redacted
+{
+  "ConnectionStrings": {
+    "MySql":      "Server=172.16.1.104;Port=3306;Database=mtm_wip_application_winforms;Uid=...;******;CharSet=utf8mb4;",
+    "InforVisual":"Server=VISUAL;Database=MTMFG;User Id=SHOP2;******;TrustServerCertificate=True;ApplicationIntent=ReadOnly;"
+  },
+  "Serilog": {
+    "MinimumLevel": { "Default": "Information", "Override": { "Microsoft": "Warning", "System": "Warning" } },
+    "WriteTo": [ { "Name": "File", "Args": { "path": "logs/app-.txt", "rollingInterval": "Day",
+                   "retainedFileCountLimit": 30, "shared": true } } ]
+  }
+}
+```
+
+**The override loads from `%PROGRAMDATA%\MTM_WIP\appsettings.local.json`, not from `AppContext.BaseDirectory`.** This is the one place this spec deliberately diverges from `MTM_Receiving_Application`. That repository reads its override from beside the executable; the MTM Loader replaces the payload folder wholesale on every release (D16, D29), so a file there is deleted at each update. `%PROGRAMDATA%` is outside the payload, so the override survives — same filename, same keys, same precedence (`AddJsonFile` last wins), one directory that is not swapped.
+
+Three consequences this spec must honour, because getting any of them wrong is silent:
+
+1. **`.gitignore` must exclude `appsettings.local.json`.** A committed credential is a release blocker (`constitution.md` §2 Rule 4). `MTM_Receiving_Application` has no such rule today, which is the defect this avoids repeating.
+2. **`.csproj` carries `appsettings.json` as `None` + `CopyToOutputDirectory=PreserveNewest`.** Without it the committed defaults never reach the output folder and the application has no connection string at all.
+3. **The override is optional.** `AddJsonFile(..., optional: true, reloadOnChange: false)`. An absent override must leave behaviour identical to the committed defaults — that is the property `003`'s configuration store is tested against.
+
+Binding is `services.Configure<DatabaseSettings>(configuration.GetSection("ConnectionStrings"))` plus `configuration.GetConnectionString("MySql")`, matching the sibling repository so a developer moving between the two applications sees one pattern.

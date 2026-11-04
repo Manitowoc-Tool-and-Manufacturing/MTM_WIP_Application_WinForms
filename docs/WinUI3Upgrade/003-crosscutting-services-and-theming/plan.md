@@ -47,7 +47,7 @@ MTM_WIP.Core/                              # contracts + pure services (no UI ty
 │   └── SerilogLoggingConfiguration.cs     # consumed by 004's composition root
 └── Models/Model_Result.cs, Model_Dao_Status.cs   # owned by 002 — not touched here
 
-MTM_WIP.Shared/                            # Core + UI: DevWinUI, Toolkit DataGrid, ClosedXML
+MTM_WIP.Shared/                            # Core + UI: DevWinUI, WinUI.TableView, ClosedXML
 ├── Dialogs/
 │   ├── Service_Dialog.cs                  # IDialogService over DevWinUI.WindowedContentDialog
 │   └── Dialog_ErrorDetails.xaml(.cs)      # renders Model_ErrorDetails
@@ -55,7 +55,7 @@ MTM_WIP.Shared/                            # Core + UI: DevWinUI, Toolkit DataGr
 │   ├── Service_SuggestionController.cs    # filtering, relevance, placement, no-match policy
 │   └── Control_Suggestion.xaml(.cs)       # TextBox + Popup/Flyout + ListView
 ├── Grid/
-│   ├── Control_DataGrid.xaml(.cs)         # shared grid component (Toolkit DataGrid)
+│   ├── Control_DataGrid.xaml(.cs)         # shared grid component (WinUI.TableView)
 │   └── Model_GridState.cs                 # column descriptors ↔ frozen usr_dgv_settings payload
 ├── Printing/
 │   ├── Model_PrintDocument.cs
@@ -81,8 +81,8 @@ MTM_WIP.Shared/                            # Core + UI: DevWinUI, Toolkit DataGr
 | Package | Version | Added by this spec to | Consumed by |
 | :--- | :--- | :--- | :--- |
 | `Serilog` + `Serilog.Sinks.File` + `Serilog.Extensions.Hosting` + `Serilog.Settings.Configuration` + `Serilog.Enrichers.Thread` + `Serilog.Enrichers.Environment` | 4.x | `MTM_WIP.Core` (helper) and the app (in `004`) | logging |
-| `DevWinUI` | 10.8.0 | `MTM_WIP.Shared` | `WindowedContentDialog`, `AutoScrollView` |
-| `CommunityToolkit.WinUI.UI.Controls` | 7.1.2 | `MTM_WIP.Shared` | `DataGrid` |
+| `DevWinUI` | 10.9.1 | `MTM_WIP.Shared` | `WindowedContentDialog`, `AutoScrollView` |
+| `WinUI.TableView` | current stable | `MTM_WIP.Shared` | `TableView` — the shared grid (`000-pre-foundation` D37) |
 | `ClosedXML` | 0.105.0 | `MTM_WIP.Shared` | Excel export |
 | `Microsoft.Web.WebView2` | 1.0.4022.49 (match the WinForms build) | `MTM_WIP.Shared` | **Required by D19** — the print renderer prints generated HTML through WebView2. Also used by `009` for help topic bodies (D20). |
 | `WinUIEx` | 2.9.2 | app (`004`) *(to confirm placement)* | `WindowEx` on `MainWindow` |
@@ -113,6 +113,17 @@ Logging happens **before** presentation. `Fatal` terminates through `004`'s orde
 `Dialog_ErrorDetails.xaml` renders `Model_ErrorDetails` — three layers: a plain sentence, the affected operation, and expandable copyable technical detail. Layer one never contains a connection string, a password, or a stack trace.
 
 ### 2.3 Logging — Serilog
+
+Two sinks' worth of work, in order: a **local** file sink that always works, and a **best-effort copier** that pushes sealed files to the share.
+
+The local sink is the only sink. `%LOCALAPPDATA%\MTM_WIP\logs\app-.txt`, day-rolled, 30 retained, `shared: true`. The share is a destination for finished files, not a logging target — because `FileSink`'s constructor calls `Directory.CreateDirectory`, an unreachable share throws during logger construction and the application never starts, and its `FileShare.Read` open makes it single-writer so two machines cannot share a file. [`../000-pre-foundation/spec.md`](../000-pre-foundation/spec.md) D54 records the correction.
+
+Consequences the implementation must carry:
+
+- **Startup makes no network call.** Logger construction touches `%LOCALAPPDATA%` only. The ≤ 5 s cold-start budget (D57) is not spent on a share that may be down.
+- **The copier is asynchronous and idempotent.** It runs after a file is sealed by rollover, copies with overwrite-by-name, and never deletes the local original — the local folder remains the source of truth for that machine.
+- **A failing share is invisible to the user.** Failures go to `Serilog.Debugging.SelfLog` at most, never to an error dialog; a user cannot act on a share being down and must not be interrupted by it.
+- **The share location comes from configuration**, not a constant. `Helper_LogPath`'s hard-coded personal OneDrive path and network share are both deleted, and nothing replaces them in source.
 
 Replaces `LoggingUtility`/`Service_Logging` and `Helper_LogPath` entirely. Configuration (owned here, applied by `004`): file sink path `logs/app-.txt`, `rollingInterval: Day`, `retainedFileCountLimit: 30`, `shared: true`, plus the Thread and Environment enrichers. Structured properties replace the CSV columns `Timestamp, Level, Source, Message, Details`. Both hard-coded paths — the `X:\MH_RESOURCE\...` network share and the developer-specific OneDrive override — are deleted, as is the `%ProgramData%` fallback; `004` chooses the single writable per-machine folder. *(to confirm: whether `logs/` is written beside the network-share payload or redirected to `%LOCALAPPDATA%\MTM\WIP\logs` — an unpackaged app launched from a network share may not be writable.)*
 
@@ -150,7 +161,7 @@ The resource dictionaries live in `MTM_WIP/Themes/` — `Colors.Light.xaml`, `Co
 
 ### 2.11 Grids
 
-`Control_DataGrid` wraps Community Toolkit `DataGrid` and replaces `DataGridView` + `Service_DataGridView`. Spec §3.3 differences apply: `DataSource = DataTable` becomes `ItemsSource = IEnumerable<TModel>`; `CellFormatting` becomes a `RowStyleSelector` keyed on a row model that carries whatever decides the colour; `AutoSizeColumnsMode.Fill` becomes `DataGridLength(1, Star)`; per-user column state maps column descriptors onto the **frozen** `usr_dgv_settings` payload (no new format); header sorting is not offered. Delete-key interception becomes an accelerator with `CanExecute`. `Model_GridState` is the seam every grid screen reuses; each module still owns its row model and its colour rule.
+`Control_DataGrid` wraps `WinUI.TableView` and replaces `DataGridView` + `Service_DataGridView`. Spec §3.3 differences apply: `DataSource = DataTable` becomes `ItemsSource = IEnumerable<TModel>`; `CellFormatting` becomes a row-style selector keyed on a row model that carries whatever decides the colour; `AutoSizeColumnsMode.Fill` becomes a star-sized `TableViewColumn` width; per-user column state maps column descriptors onto the **frozen** `usr_dgv_settings` payload (no new format); header sorting is not offered. Delete-key interception becomes an accelerator with `CanExecute`. `Model_GridState` is the seam every grid screen reuses; each module still owns its row model and its colour rule. `TableView` also supplies the column options and visibility UI that `Component_ColumnOrderDialog` had to hand-roll.
 
 ### 2.12 Printing
 
@@ -186,7 +197,7 @@ The resource dictionaries live in `MTM_WIP/Themes/` — `Colors.Light.xaml`, `Co
 | Shortcut defaults | `sys_shortcuts`, seeded from `Assets/default_shortcuts.json` only when values differ | unchanged |
 | Grid layout | `usr_dgv_settings` via `usr_dgv_settings_Get`/`Set` | payload shape frozen |
 | Print settings | `%APPDATA%\MTM\PrintSettings\{GridName}.json` | same path, same shape |
-| Log files | Serilog `logs/app-*.txt` | replaces the three CSV files entirely |
+| Log files | Serilog `%LOCALAPPDATA%\MTM_WIP\logs\app-*.txt`, copied to the share | replaces the three CSV files entirely |
 
 ### 3.2 Severity vocabulary — the single mapping table
 
@@ -238,11 +249,11 @@ The exact low→`Information` and fatal→`High` pairings are the legacy behavio
 | 3 | `IMasterDataCache` entry types: typed records vs `IReadOnlyList<string>` | *(to confirm)* — depends on `002` DAO return shapes |
 | 4 | Exact new theme-mode settings key string | *(to confirm)* with `007`'s settings page |
 | 5 | `Themes/` location | **Resolved** — app-project `MTM_WIP/Themes/`, per `constitution.md` §2 Rule 9. Spec `001` was corrected from `Styles/` to `Themes/`. |
-| 6 | Serilog `logs/` folder when the app is launched from a network share | *(to confirm)* — relocate to `%LOCALAPPDATA%\MTM\WIP\logs` if the share is read-only |
+| 6 | Serilog `logs/` folder when the app is launched from a network share | **Resolved** — `000-pre-foundation` D54. The sink is local (`%LOCALAPPDATA%\MTM_WIP\logs`) and a copier pushes to the share; the share is never the sink. |
 | 7 | `WinUIEx` package placement (Shared vs app) | *(to confirm)* — `WindowEx` is consumed by `004`'s `MainWindow` |
 
 ### Assumptions
 
-1. `CommunityToolkit.WinUI.UI.Controls` 7.1.2 `DataGrid` serves 12+ screens; final acceptance is against `006`'s reference grid (re-checked by TASK-052).
+1. `WinUI.TableView` serves 12+ screens (`000-pre-foundation` D37); final acceptance is against `006`'s reference grid (re-checked by TASK-052). The archived `CommunityToolkit.WinUI.UI.Controls.DataGrid` is **not** used.
 2. A single `Popup`-based suggestion control serves both master-data and ERP sources.
 3. Windows 10 without Mica falls back to a solid `ThemeResource` background, not an unstyled default.

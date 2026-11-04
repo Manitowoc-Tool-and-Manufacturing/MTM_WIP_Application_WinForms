@@ -34,6 +34,10 @@
   - **Verify**: integration tests against `mtm_wip_application_winforms_test` in a rolled-back transaction submit one of each of the six shapes and assert `IsSuccess`, a non-empty `TrackingNumber` and the correct `FeedbackType` (`HelpSystem` for the helpfulness shape); a validation test asserts a bug report without `severity` fails; the bug form resolves a mapped page to its friendly name and an unmapped page to its codebase name without crashing; a grep shows the ViewModel uses `IDao_WindowFormMapping`/`IDao_UserControlMapping` only (no inline SQL, no static DAO).
 
 - [ ] **TASK-125** — Implement the content-coverage mechanism per [`plan.md`](./plan.md) §2.8: a documented convention tying each feature spec's declared user-visible screens to the help topic that covers them; a check (script or test) that lists the topics and flags any declared screen without a covering topic, wired into the build/test gate so an uncovered screen fails the gate.
+  - **Verify**: removing the topic that covers one screen makes the check fail and names both the screen and the missing topic.
+
+- [ ] **TASK-125a** — Apply the **authoring workflow** from [`../000-pre-foundation/spec.md`](../000-pre-foundation/spec.md) D62: each topic is drafted by the model from the corresponding legacy topic in the WinForms `Documentation/Help/JSON/` set, then edited and approved by the owner before the feature task that needed it is considered done. Record, per topic, which legacy topic it derives from and who approved it.
+  - **Verify**: every one of the 54 topics has a recorded source topic and an approver, and every topic for a screen changed by `005`–`008` was approved in the same change as that screen. A topic with no recorded approver is an unfinished task, not a documentation backlog item (Constitution Rule 13).
   - **Verify**: the check passes against the current 15 files with every declared screen covered; adding a synthetic screen declaration with no covering topic makes the check fail; the convention is documented in [`spec.md`](./spec.md) §3.7 and the declaration location is recorded in `spec.md` §4 (gap 10).
 
 ---

@@ -141,11 +141,12 @@ None. This spec reads and writes only the tables the procedures already address.
 | 3 | Whether `log_error` is still meant to be written. The DAO method exists but has no caller; live errors go to CSV and to `error_reports`. | Undecided. The DAO is ported so the surface is complete; wiring is `010`'s problem. |
 | 4 | Whether `MD_devtools_*` and `md_feedback_*` procedures are stable enough to test | Assumed yes. If a procedure cannot be exercised without disturbing production data, its DAO test is skipped with a written reason and the gap is raised. |
 | 5 | `Dao_Transactions` parses a result count out of the status message text | Fragile but current. Preserved exactly; not repaired here. |
-| 6 | The `md_sys_visual_*` procedures accept JSON parameters on a MySQL 5.7.24 server | Already in production use; no change. |
+| 6 | The `md_sys_visual_*` procedures accept JSON parameters | Already in production use on 5.7.24 and valid on the 8.4 LTS target; no change. |
 
 ### Assumptions
 
-1. `mtm_wip_application_winforms_test` exists on the same server and mirrors the production procedure set.
+1. `mtm_wip_application_winforms_test` exists on the same server and mirrors the production procedure set, **and is populated from the committed deterministic seed rather than from production data** (`000-pre-foundation` D56).
 2. Every procedure declares `OUT p_Status INT` and `OUT p_ErrorMsg VARCHAR(500)`.
 3. Integration tests may write to the test database, always inside a rolled-back transaction.
 4. The Visual ERP server is reachable from a developer machine or VPN; if not, the Visual tests are skipped with a reason.
+5. No synchronous database access occurs during application launch, because cold start is budgeted at ≤ 5 s from a network share (`000-pre-foundation` D57).

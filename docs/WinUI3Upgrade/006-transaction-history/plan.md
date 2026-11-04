@@ -151,7 +151,7 @@ The module-agnostic pieces — `GridColumnDescriptor`, `GridConfiguration`, `IRo
 | :--- | :--- | :--- |
 | `Model_Application_Variables.TransactionPageSize` | `IUserPreferences.TransactionPageSize` (default 50) | `003` |
 | `Model_Application_Variables.User`, `UserTypeAdmin` etc. | `ICurrentUserService.IsInRole(...)` | `003` |
-| Grid row-colour selection in `Service_DataGridView` | `IRowStyleSelector` over the typed row model | `003` + this module |
+| Grid row-colour selection in `Service_DataGridView` | Row-style selector over the typed row model | `003` + this module |
 | GDI+ print (`Core_TablePrinter`) | print document model + renderer | `003` |
 
 ### 3.2 DAO surface consumed (all from `002`, frozen procedures)

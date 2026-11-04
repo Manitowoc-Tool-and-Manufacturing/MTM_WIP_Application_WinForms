@@ -62,6 +62,8 @@ All seven surfaces open from the dashboard, render grids and charts natively wit
 
 ## 3. Behavioral Edge Cases & State Constraints
 
+> **Screen constraints** (`000-pre-foundation` D58, D59): every screen must be fully usable at **1366×768 with 100 % DPI**, and every interactive control carries `AutomationProperties.Name` matching its visible label plus a stable `AutomationId`. High contrast and text scaling are out of scope by decision.
+
 ### 3.1 The second database is read-only and frozen
 
 - The module never opens a `SqlConnection`, never builds a `SqlCommand`, and never writes a query string. It calls the orchestration service, which calls `Service_VisualDatabase` (ERP) and `IDao_VisualAnalytics` (main DB).

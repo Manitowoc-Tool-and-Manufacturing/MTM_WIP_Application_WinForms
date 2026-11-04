@@ -10,7 +10,7 @@
 
 ## 1. Executive Summary & Scope
 
-This spec ports the **Transactions screen** — search, results grid, detail panel, analytics cards, batch-lifecycle tree, admin delete, export and print — to `MTM_WIP.Module_Transactions`. It is also the **reference implementation for the shared grid**: the grid pattern proven here is extracted in TASK-095 and is what `007`–`011` consume, so the other eleven grid screens do not each re-derive how a Toolkit `DataGrid` binds typed rows, colours rows, and refuses header sorting.
+This spec ports the **Transactions screen** — search, results grid, detail panel, analytics cards, batch-lifecycle tree, admin delete, export and print — to `MTM_WIP.Module_Transactions`. It is also the **reference implementation for the shared grid**: the grid pattern proven here is extracted in TASK-095 and is what `007`–`011` consume, so the other eleven grid screens do not each re-derive how a `WinUI.TableView` binds typed rows, colours rows, and refuses header sorting.
 
 The WinForms host is `Forms\Transactions\Transactions.cs`, a `ThemedForm` at 1159×661 laid out as a title label plus a dock-filled grid panel plus a 207 px search panel, with a 24×24 "?" help button that navigates to help topics `transaction-history` / `transaction-overview`. Four controls compose the screen — `TransactionSearchControl`, `TransactionGridControl`, `TransactionDetailPanel`, `TransactionAnalyticsControl` — coordinated by `Model_Transactions_ViewModel`. `TransactionLifecycleForm` is a modal lifecycle viewer. All five map to WinUI artefacts below.
 
@@ -48,7 +48,7 @@ The transactions page renders a typed-row grid with per-type row colour and no h
 | `Controls\Transactions\TransactionAnalyticsControl.cs` | `ViewModel_TransactionAnalytics` + card section | Eleven summary cards, no charts, no tables; grid and analytics are mutually exclusive views toggled by one button (`Analytics`/`Grid`). |
 | `Forms\Transactions\TransactionLifecycleForm.cs` — modal viewer | `View_TransactionLifecycle.xaml` + `ViewModel_TransactionLifecycle` | Modal document-style secondary window (named here, per constitution Rule 6): TreeView + embedded detail panel + Export/Print/Close. |
 | `Model_Transactions_ViewModel` (orchestrator) | `ViewModel_TransactionsPage` (orchestrator) + four child ViewModels | Same split of responsibility; selection flows Results→Detail, Search→Results; grid/analytics exclusivity is a parent view-state property. See plan §2.1. |
-| `DataGridView` with `AutoGenerateColumns=false`, `CellFormatting` row colouring, `DataBindingComplete` re-apply | Toolkit `DataGrid` bound to `IEnumerable<Model_TransactionRow>` with an `IRowStyleSelector` | Toolkit grid binds `IEnumerable`, not `DataTable`; there is no `CellFormatting`, so the **row model carries the transaction type** and the style selector maps it to a brush. No `VirtualMode`, no context menu, no cell painting. |
+| `DataGridView` with `AutoGenerateColumns=false`, `CellFormatting` row colouring, `DataBindingComplete` re-apply | `WinUI.TableView` bound to `IEnumerable<Model_TransactionRow>` with a row-style selector | The grid binds `IEnumerable`, not `DataTable`; there is no `CellFormatting`, so the **row model carries the transaction type** and the style selector maps it to a brush. No `VirtualMode`, no context menu, no cell painting. This is a **new build** on `TableView`, not a port of the archived Toolkit `DataGrid` (`000-pre-foundation` D37). |
 | Column-header sort (sorts the current page only) | **Removed**; sort order text | Header sorting over server-paged data is a usability trap. The grid does not expose it; the fixed order is displayed. |
 | `Helper_ExportManager` / ClosedXML export, default `Transactions_yyyyMMdd_{user}.xlsx` | `Service_TransactionExport` | Same 12 columns in order: ID, Type, Batch, Part, From, To, Operation, Quantity, User, ItemType, Date, Notes. |
 | `Core_TablePrinter` / `PrintForm` (GDI+) | Shared print pipeline from `003` | Same document model: logo, title, timestamp, watermark, column widths, per-row colour, footer, page boundaries. |
@@ -68,6 +68,8 @@ The transactions page renders a typed-row grid with per-type row colour and no h
 ---
 
 ## 3. Behavioral Edge Cases & State Constraints
+
+> **Screen constraints** (`000-pre-foundation` D58, D59): every screen must be fully usable at **1366×768 with 100 % DPI**, and every interactive control carries `AutomationProperties.Name` matching its visible label plus a stable `AutomationId`. High contrast and text scaling are out of scope by decision.
 
 ### 3.1 Search semantics
 
@@ -101,7 +103,7 @@ The transactions page renders a typed-row grid with per-type row colour and no h
 | :--- | :--- | :--- |
 | ID | 80 | right |
 | Type | 100 | left |
-| Part Number | 150, Fill, min 100 | `DataGridLength(1, Star)` + `MinWidth=100` |
+| Part Number | 150, Fill, min 100 | Star-sized `TableViewColumn` + `MinWidth=100` |
 | Qty | 80 | right |
 | From | 120 | left |
 | To | 120 | left |
